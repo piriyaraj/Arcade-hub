@@ -208,20 +208,9 @@
       color: var(--ball);
       margin-bottom: 24px;
     }
-
-    /* Trail effect canvas overlay */
-    #trail-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 5;
-    }
   </style>
 </head>
 <body>
-
-<canvas id="trail-canvas"></canvas>
 
 <div id="overlay">
   <h2>BING BALL</h2>
@@ -278,8 +267,6 @@ const SLOT_COLORS = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6'
 // ─── Canvas Setup ─────────────────────────────────────────────────────────────
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-const trailCanvas = document.getElementById('trail-canvas');
-const tCtx = trailCanvas.getContext('2d');
 
 let W, H, boardX, boardY, boardW, boardH, slotW;
 
@@ -293,9 +280,6 @@ function resize() {
 
   canvas.width = W;
   canvas.height = H;
-
-  trailCanvas.width = window.innerWidth;
-  trailCanvas.height = window.innerHeight;
 
   boardX = 20;
   boardY = 20;
@@ -313,6 +297,7 @@ window.addEventListener('resize', () => {
 let pegs = [];
 let balls = [];
 let particles = [];
+let dropMarker = null;
 let score = 0;
 let ballsLeft = BALL_COUNT;
 let gameRunning = false;
@@ -347,21 +332,24 @@ function initPegs() {
 }
 
 // ─── Ball Factory ────────────────────────────────────────────────────────────
-function createBall() {
-  const x = boardX + boardW / 2 + (Math.random() - 0.5) * 60;
+function createBall(x) {
+  const finalX = (typeof x === 'number') ? x : (boardX + boardW / 2 + (Math.random() - 0.5) * 60);
   return {
-    x,
+    x: finalX,
     y: boardY + 2,
     vx: (Math.random() - 0.5) * 3,
     vy: 0,
     r: BALL_RADIUS,
     color: `hsl(${35 + Math.random() * 20}, 95%, 60%)`,
     glow: `hsl(${35 + Math.random() * 20}, 100%, 75%)`,
-    trail: [],
     active: true,
     landed: false,
     scoreGiven: false
   };
+}
+
+function createBallAt(x) {
+  return createBall(x);
 }
 
 // ─── Particles ────────────────────────────────────────────────────────────────
@@ -382,11 +370,11 @@ function spawnParticles(x, y, color, count = 8) {
 }
 
 // ─── Drop Ball ────────────────────────────────────────────────────────────────
-function dropBall() {
+function dropBall(x) {
   if (ballsLeft <= 0 || !gameRunning) return;
   ballsLeft--;
   ballsEl.textContent = ballsLeft;
-  balls.push(createBall());
+  balls.push(createBallAt(x));
   if (ballsLeft <= 0) {
     dropBtn.disabled = true;
   }
@@ -396,10 +384,6 @@ function dropBall() {
 function updateBalls() {
   for (let b of balls) {
     if (!b.active) continue;
-
-    // Trail
-    b.trail.push({ x: b.x, y: b.y });
-    if (b.trail.length > 14) b.trail.shift();
 
     b.vy += GRAVITY;
     b.vx *= FRICTION;
@@ -437,7 +421,7 @@ function updateBalls() {
         b.vy = (b.vy - 2 * dot * ny) * BOUNCE;
 
         if (window.sfx) window.sfx.playBounce();
-        spawnParticles(p.x, p.y, p.glow || '#6fa8e8', 5);
+        spawnParticles(p.x, p.y, '#6fa8e8', 5);
       }
     }
 
@@ -574,16 +558,6 @@ function render() {
   for (let b of balls) {
     if (!b.active && b.landed) continue;
 
-    // Trail
-    for (let t = 0; t < b.trail.length; t++) {
-      const ta = (t / b.trail.length) * 0.4;
-      const tr = b.r * (t / b.trail.length) * 0.7;
-      ctx.fillStyle = `rgba(255,200,50,${ta})`;
-      ctx.beginPath();
-      ctx.arc(b.trail[t].x, b.trail[t].y, tr, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
     // Ball glow
     const ballGrd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 2.5);
     ballGrd.addColorStop(0, `rgba(255,215,80,0.6)`);
@@ -608,6 +582,23 @@ function render() {
     ctx.beginPath();
     ctx.arc(b.x - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.35, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  // Drop marker visual feedback
+  if (dropMarker) {
+    ctx.strokeStyle = `rgba(244, 162, 10, ${dropMarker.alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(dropMarker.x, dropMarker.y, BALL_RADIUS * 2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(244, 162, 10, ${dropMarker.alpha * 0.3})`;
+    ctx.beginPath();
+    ctx.arc(dropMarker.x, dropMarker.y, BALL_RADIUS, 0, Math.PI * 2);
+    ctx.fill();
+
+    dropMarker.alpha -= 0.05;
+    if (dropMarker.alpha <= 0) dropMarker = null;
   }
 
   // Particles
@@ -641,11 +632,6 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
-}
-
-// ─── Trail Canvas (background glow overlay) ──────────────────────────────────
-function renderTrail() {
-  tCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
 }
 
 // ─── Game Loop ────────────────────────────────────────────────────────────────
@@ -704,6 +690,22 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && gameRunning && ballsLeft > 0) {
     e.preventDefault();
     dropBall();
+  }
+});
+
+// Canvas touch / click to drop in drop zone
+canvas.addEventListener('click', (e) => {
+  if (!gameRunning || ballsLeft <= 0) return;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const scaleY = H / rect.height;
+  const clickX = (e.clientX - rect.left) * scaleX;
+  const clickY = (e.clientY - rect.top) * scaleY;
+
+  if (clickX >= boardX && clickX <= boardX + boardW && clickY >= boardY && clickY <= boardY + ROW_SPACING) {
+    const clampedX = Math.max(boardX + BALL_RADIUS, Math.min(boardX + boardW - BALL_RADIUS, clickX));
+    dropMarker = { x: clampedX, y: clickY, alpha: 1.0 };
+    dropBall(clampedX);
   }
 });
 
