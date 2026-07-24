@@ -421,7 +421,7 @@ function updateBalls() {
         b.vy = (b.vy - 2 * dot * ny) * BOUNCE;
 
         if (window.sfx) window.sfx.playBounce();
-        spawnParticles(p.x, p.y, p.glow || '#6fa8e8', 5);
+        spawnParticles(p.x, p.y, '#6fa8e8', 5);
       }
     }
 
