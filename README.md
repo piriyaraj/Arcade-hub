@@ -8,6 +8,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 ### Available Games:
 - 🐍 **[Snake Game](snakegame.html)** — Classic snake arcade action.
 - 🎰 **[Bing Ball](bingball.html)** — Pachinko/Plinko style pin-drop game.
+- 🧱 **[Breakout](breakout.html)** — Classic breakout brick-destroying arcade game.
 
 ---
 
@@ -17,7 +18,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html README.md
+   git add index.html snakegame.html bingball.html breakout.html README.md
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
