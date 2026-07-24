@@ -259,6 +259,7 @@
   <button id="reset-btn">RESET</button>
 </div>
 
+<script src="audio.js"></script>
 <script>
 // ─── Constants ────────────────────────────────────────────────────────────────
 const BALL_COUNT = 10;
@@ -435,6 +436,7 @@ function updateBalls() {
         b.vx = (b.vx - 2 * dot * nx) * BOUNCE;
         b.vy = (b.vy - 2 * dot * ny) * BOUNCE;
 
+        if (window.sfx) window.sfx.playBounce();
         spawnParticles(p.x, p.y, p.glow || '#6fa8e8', 5);
       }
     }
@@ -458,6 +460,7 @@ function updateBalls() {
         b.scoreGiven = true;
         score += pts;
         scoreEl.textContent = score;
+        if (window.sfx) window.sfx.playScoreSlot();
         spawnParticles(b.x, floorY, SLOT_COLORS[slotIdx] || '#fff', 16);
         flashSlot(slotIdx);
       }
@@ -671,7 +674,9 @@ function startGame() {
 }
 
 function showGameOver() {
-  if (score > bestScore) {
+  if (window.sfx) window.sfx.playGameOver();
+  const isNewBest = score > bestScore;
+  if (isNewBest) {
     bestScore = score;
     localStorage.setItem('bingball_best', bestScore);
     bestEl.textContent = bestScore;

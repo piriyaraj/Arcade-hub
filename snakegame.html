@@ -241,8 +241,7 @@
 <div id="controls">
   <button class="play-btn" id="pause-btn">PAUSE</button>
   <button id="reset-btn">RESTART</button>
-</div>
-
+<script src="audio.js"></script>
 <script>
 // ─── Constants ────────────────────────────────────────────────────────────────
 const CELL_SIZE = 20;
@@ -345,6 +344,7 @@ function showGameOver() {
   gameOver = true;
   gameStarted = false;
   pauseBtn.disabled = true;
+  if (window.sfx) window.sfx.playGameOver();
 
   const isNewBest = score > bestScore;
   if (isNewBest) {
@@ -421,6 +421,7 @@ function update() {
   // Check food collision
   if (head.x === food.x && head.y === food.y) {
     score += 10;
+    if (window.sfx) window.sfx.playEat();
     spawnParticles(food.x, food.y, '#f43f5e', 15);
     spawnFood();
 
