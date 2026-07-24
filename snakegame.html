@@ -203,13 +203,96 @@
       color: var(--food);
       margin-bottom: 16px;
     }
+
+    /* Mobile D-pad and optimization styles */
+    #dpad {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin: 8px 0;
+      gap: 6px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .dpad-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    button.dpad-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(79, 131, 204, 0.4);
+      color: var(--text);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      transition: background 0.1s, transform 0.05s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      padding: 0;
+    }
+
+    button.dpad-btn:hover {
+      transform: none;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    button.dpad-btn:active {
+      background: var(--border);
+      border-color: var(--snake-glow);
+      transform: scale(0.92);
+      box-shadow: 0 0 10px rgba(134, 239, 172, 0.5);
+    }
+
+    .dpad-space {
+      width: 52px;
+      height: 52px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      header {
+        padding: 8px 20px 4px;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      #stats {
+        padding: 4px 0 2px;
+        gap: 16px;
+      }
+      .stat-value {
+        font-size: 1.2rem;
+      }
+      #canvas-wrap {
+        padding: 2px 12px 4px;
+      }
+      #dpad {
+        display: flex;
+      }
+      #controls {
+        padding: 4px 20px 12px;
+      }
+    }
   </style>
 </head>
 <body>
 
 <div id="overlay">
   <h2>SNAKE GAME</h2>
-  <p>Use arrow keys or WASD to control the snake. Eat the red food to grow and score points!</p>
+  <p>Use arrow keys/WASD or swipe/on-screen D-pad on mobile. Eat the red food to grow and score points!</p>
   <button class="play-btn" id="start-btn">START GAME</button>
 </div>
 
@@ -238,6 +321,20 @@
   <canvas id="game"></canvas>
 </div>
 
+<div id="dpad" class="mobile-only">
+  <div class="dpad-row">
+    <button id="dpad-up" class="dpad-btn">▲</button>
+  </div>
+  <div class="dpad-row">
+    <button id="dpad-left" class="dpad-btn">◀</button>
+    <div class="dpad-space"></div>
+    <button id="dpad-right" class="dpad-btn">▶</button>
+  </div>
+  <div class="dpad-row">
+    <button id="dpad-down" class="dpad-btn">▼</button>
+  </div>
+</div>
+
 <div id="controls">
   <button class="play-btn" id="pause-btn">PAUSE</button>
   <button id="reset-btn">RESTART</button>
@@ -259,7 +356,8 @@ let W, H, cols, rows;
 function resize() {
   const wrap = document.getElementById('canvas-wrap');
   const maxW = Math.min(wrap.clientWidth - 24, 520);
-  const maxH = window.innerHeight * 0.55;
+  const isMobile = window.innerWidth <= 768;
+  const maxH = window.innerHeight * (isMobile ? 0.38 : 0.55);
 
   cols = Math.floor(maxW / CELL_SIZE);
   rows = Math.floor(maxH / CELL_SIZE);
@@ -668,6 +766,109 @@ document.addEventListener('keydown', (e) => {
 startBtn.addEventListener('click', startGame);
 pauseBtn.addEventListener('click', togglePause);
 resetBtn.addEventListener('click', restartGame);
+
+// ─── Touch and Swipe Controls ──────────────────────────────────────────────────
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
+
+canvas.addEventListener('touchmove', (e) => {
+  // Prevent scrolling when swiping inside the game area
+  if (gameStarted && !gameOver && !gamePaused) {
+    if (e.cancelable) e.preventDefault();
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length === 1) {
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    handleSwipe(touchStartX, touchStartY, endX, endY);
+  }
+}, { passive: true });
+
+function handleSwipe(startX, startY, endX, endY) {
+  if (!gameStarted || gameOver || gamePaused) return;
+
+  const dx = endX - startX;
+  const dy = endY - startY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+  const threshold = 30; // Minimum swipe distance in pixels
+
+  if (Math.max(absDx, absDy) < threshold) return;
+
+  if (absDx > absDy) {
+    // Horizontal swipe
+    if (dx > 0) {
+      // Swipe Right
+      if (direction.x !== -1) {
+        nextDirection = { x: 1, y: 0 };
+      }
+    } else {
+      // Swipe Left
+      if (direction.x !== 1) {
+        nextDirection = { x: -1, y: 0 };
+      }
+    }
+  } else {
+    // Vertical swipe
+    if (dy > 0) {
+      // Swipe Down
+      if (direction.y !== -1) {
+        nextDirection = { x: 0, y: 1 };
+      }
+    } else {
+      // Swipe Up
+      if (direction.y !== 1) {
+        nextDirection = { x: 0, y: -1 };
+      }
+    }
+  }
+}
+
+// ─── Mobile D-pad Controls ─────────────────────────────────────────────────────
+const dpadUp = document.getElementById('dpad-up');
+const dpadDown = document.getElementById('dpad-down');
+const dpadLeft = document.getElementById('dpad-left');
+const dpadRight = document.getElementById('dpad-right');
+
+function handleDirectionChange(newDir) {
+  if (!gameStarted || gameOver || gamePaused) return;
+
+  if (newDir === 'UP' && direction.y !== 1) {
+    nextDirection = { x: 0, y: -1 };
+  } else if (newDir === 'DOWN' && direction.y !== -1) {
+    nextDirection = { x: 0, y: 1 };
+  } else if (newDir === 'LEFT' && direction.x !== 1) {
+    nextDirection = { x: -1, y: 0 };
+  } else if (newDir === 'RIGHT' && direction.x !== -1) {
+    nextDirection = { x: 1, y: 0 };
+  }
+}
+
+const handleDpadPress = (dir) => (e) => {
+  e.preventDefault();
+  handleDirectionChange(dir);
+};
+
+if (dpadUp && dpadDown && dpadLeft && dpadRight) {
+  dpadUp.addEventListener('touchstart', handleDpadPress('UP'), { passive: false });
+  dpadDown.addEventListener('touchstart', handleDpadPress('DOWN'), { passive: false });
+  dpadLeft.addEventListener('touchstart', handleDpadPress('LEFT'), { passive: false });
+  dpadRight.addEventListener('touchstart', handleDpadPress('RIGHT'), { passive: false });
+
+  dpadUp.addEventListener('mousedown', (e) => { e.preventDefault(); handleDirectionChange('UP'); });
+  dpadDown.addEventListener('mousedown', (e) => { e.preventDefault(); handleDirectionChange('DOWN'); });
+  dpadLeft.addEventListener('mousedown', (e) => { e.preventDefault(); handleDirectionChange('LEFT'); });
+  dpadRight.addEventListener('mousedown', (e) => { e.preventDefault(); handleDirectionChange('RIGHT'); });
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 resize();
