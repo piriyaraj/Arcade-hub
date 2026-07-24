@@ -208,20 +208,9 @@
       color: var(--ball);
       margin-bottom: 24px;
     }
-
-    /* Trail effect canvas overlay */
-    #trail-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 5;
-    }
   </style>
 </head>
 <body>
-
-<canvas id="trail-canvas"></canvas>
 
 <div id="overlay">
   <h2>BING BALL</h2>
@@ -278,8 +267,6 @@ const SLOT_COLORS = ['#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6'
 // ─── Canvas Setup ─────────────────────────────────────────────────────────────
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-const trailCanvas = document.getElementById('trail-canvas');
-const tCtx = trailCanvas.getContext('2d');
 
 let W, H, boardX, boardY, boardW, boardH, slotW;
 
@@ -293,9 +280,6 @@ function resize() {
 
   canvas.width = W;
   canvas.height = H;
-
-  trailCanvas.width = window.innerWidth;
-  trailCanvas.height = window.innerHeight;
 
   boardX = 20;
   boardY = 20;
@@ -357,7 +341,6 @@ function createBall() {
     r: BALL_RADIUS,
     color: `hsl(${35 + Math.random() * 20}, 95%, 60%)`,
     glow: `hsl(${35 + Math.random() * 20}, 100%, 75%)`,
-    trail: [],
     active: true,
     landed: false,
     scoreGiven: false
@@ -396,10 +379,6 @@ function dropBall() {
 function updateBalls() {
   for (let b of balls) {
     if (!b.active) continue;
-
-    // Trail
-    b.trail.push({ x: b.x, y: b.y });
-    if (b.trail.length > 14) b.trail.shift();
 
     b.vy += GRAVITY;
     b.vx *= FRICTION;
@@ -574,16 +553,6 @@ function render() {
   for (let b of balls) {
     if (!b.active && b.landed) continue;
 
-    // Trail
-    for (let t = 0; t < b.trail.length; t++) {
-      const ta = (t / b.trail.length) * 0.4;
-      const tr = b.r * (t / b.trail.length) * 0.7;
-      ctx.fillStyle = `rgba(255,200,50,${ta})`;
-      ctx.beginPath();
-      ctx.arc(b.trail[t].x, b.trail[t].y, tr, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
     // Ball glow
     const ballGrd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r * 2.5);
     ballGrd.addColorStop(0, `rgba(255,215,80,0.6)`);
@@ -641,11 +610,6 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
-}
-
-// ─── Trail Canvas (background glow overlay) ──────────────────────────────────
-function renderTrail() {
-  tCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
 }
 
 // ─── Game Loop ────────────────────────────────────────────────────────────────
