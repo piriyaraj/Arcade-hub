@@ -4,6 +4,86 @@
   "graph": {},
   "nodes": [
     {
+      "label": "audio.js",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "audio",
+      "community": 3,
+      "norm_label": "audio.js"
+    },
+    {
+      "label": "SoundFX",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "audio_soundfx",
+      "community": 3,
+      "norm_label": "soundfx"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "audio_soundfx_constructor",
+      "community": 3,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".init()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "audio_soundfx_init",
+      "community": 3,
+      "norm_label": ".init()"
+    },
+    {
+      "label": ".playEat()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "audio_soundfx_playeat",
+      "community": 3,
+      "norm_label": ".playeat()"
+    },
+    {
+      "label": ".playBounce()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "audio_soundfx_playbounce",
+      "community": 3,
+      "norm_label": ".playbounce()"
+    },
+    {
+      "label": ".playGameOver()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "audio_soundfx_playgameover",
+      "community": 3,
+      "norm_label": ".playgameover()"
+    },
+    {
+      "label": ".playScoreSlot()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "audio_soundfx_playscoreslot",
+      "community": 3,
+      "norm_label": ".playscoreslot()"
+    },
+    {
       "label": "test_dummy.py",
       "file_type": "code",
       "source_file": "test_dummy.py",
@@ -34,14 +114,44 @@
       "norm_label": "readme.md"
     },
     {
-      "label": "Test_Repo",
+      "label": "Arcade Game Portal",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "readme_test_repo",
+      "id": "readme_arcade_game_portal",
       "community": 0,
-      "norm_label": "test_repo"
+      "norm_label": "arcade game portal"
+    },
+    {
+      "label": "\ud83c\udfae Live Arcade Site (GitHub Pages)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "readme_live_arcade_site_github_pages",
+      "community": 0,
+      "norm_label": "\ud83c\udfae live arcade site (github pages)"
+    },
+    {
+      "label": "Available Games:",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "readme_available_games",
+      "community": 0,
+      "norm_label": "available games:"
+    },
+    {
+      "label": "\ud83d\ude80 Setting Up GitHub Pages",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "readme_setting_up_github_pages",
+      "community": 0,
+      "norm_label": "\ud83d\ude80 setting up github pages"
     },
     {
       "label": "mail.md",
@@ -55,6 +165,120 @@
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "audio",
+      "target": "audio_soundfx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_playbounce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_playeat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_playgameover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "audio_soundfx",
+      "target": "audio_soundfx_playscoreslot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "audio_soundfx_playbounce",
+      "target": "audio_soundfx_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "audio_soundfx_playeat",
+      "target": "audio_soundfx_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "audio_soundfx_playgameover",
+      "target": "audio_soundfx_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "audio_soundfx_playscoreslot",
+      "target": "audio_soundfx_init",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -72,10 +296,40 @@
       "source_location": "L1",
       "weight": 1.0,
       "source": "readme",
-      "target": "readme_test_repo",
+      "target": "readme_arcade_game_portal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "readme_arcade_game_portal",
+      "target": "readme_live_arcade_site_github_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "readme_arcade_game_portal",
+      "target": "readme_setting_up_github_pages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "readme_live_arcade_site_github_pages",
+      "target": "readme_available_games",
       "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "40f21f1a90b3e209a011f3d8f42582ce20c1a277"
+  "built_at_commit": "9edcde31743ecfebfc0835326553777bc6cd9ccb"
 }
