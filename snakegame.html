@@ -36,6 +36,27 @@
       padding: 16px 20px 8px;
       text-align: center;
       width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--snake-head);
+      background: rgba(255,255,255,0.05);
     }
 
     header h1 {
@@ -193,6 +214,7 @@
 </div>
 
 <header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
   <h1>SNAKE GAME</h1>
   <p>Eat food — grow longer — don't hit the walls!</p>
 </header>

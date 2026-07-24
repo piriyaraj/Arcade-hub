@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arcade Game Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --card-bg: #111827;
+      --card-hover: #1f293d;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #4ade80;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+    }
+
+    header {
+      width: 100%;
+      max-width: 1200px;
+      padding: 3rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1200px;
+      padding: 2rem 1.5rem 4rem;
+      flex: 1;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent-neon);
+      box-shadow: 0 20px 40px -15px rgba(0, 240, 255, 0.3);
+    }
+
+    .card-banner {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .snake-banner {
+      background: linear-gradient(135deg, #052e16, #14532d);
+    }
+
+    .bingball-banner {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+    }
+
+    .banner-icon {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .game-card:hover .banner-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .card-content {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .game-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .game-description {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--accent-neon);
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .game-card:hover .play-btn {
+      background: var(--accent-neon);
+      color: #000;
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="logo">ARCADE HUB</h1>
+    <p class="subtitle">Select a game to play directly in your browser</p>
+  </header>
+
+  <main>
+    <div class="game-grid">
+      <!-- Snake Game Card -->
+      <a href="snakegame.html" class="game-card">
+        <div class="card-banner snake-banner">
+          <div class="banner-icon">🐍</div>
+        </div>
+        <div class="card-content">
+          <div>
+            <h2 class="game-title">Snake Game</h2>
+            <p class="game-description">Classic arcade action. Guide the snake to eat food and grow longer without bumping into walls or yourself.</p>
+          </div>
+          <div class="play-btn">
+            Play Game &rarr;
+          </div>
+        </div>
+      </a>
+
+      <!-- Bing Ball Card -->
+      <a href="bingball.html" class="game-card">
+        <div class="card-banner bingball-banner">
+          <div class="banner-icon">🎰</div>
+        </div>
+        <div class="card-content">
+          <div>
+            <h2 class="game-title">Bing Ball</h2>
+            <p class="game-description">Pachinko / Plinko style arcade game. Drop balls through the pin grid to score points in target slots.</p>
+          </div>
+          <div class="play-btn">
+            Play Game &rarr;
+          </div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Pure HTML5 Arcade Portal &bull; Built with standard Web Technologies</p>
+  </footer>
+</body>
+</html>
