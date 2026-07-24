@@ -297,6 +297,7 @@ window.addEventListener('resize', () => {
 let pegs = [];
 let balls = [];
 let particles = [];
+let dropMarker = null;
 let score = 0;
 let ballsLeft = BALL_COUNT;
 let gameRunning = false;
@@ -331,10 +332,10 @@ function initPegs() {
 }
 
 // ─── Ball Factory ────────────────────────────────────────────────────────────
-function createBall() {
-  const x = boardX + boardW / 2 + (Math.random() - 0.5) * 60;
+function createBall(x) {
+  const finalX = (typeof x === 'number') ? x : (boardX + boardW / 2 + (Math.random() - 0.5) * 60);
   return {
-    x,
+    x: finalX,
     y: boardY + 2,
     vx: (Math.random() - 0.5) * 3,
     vy: 0,
@@ -345,6 +346,10 @@ function createBall() {
     landed: false,
     scoreGiven: false
   };
+}
+
+function createBallAt(x) {
+  return createBall(x);
 }
 
 // ─── Particles ────────────────────────────────────────────────────────────────
@@ -365,11 +370,11 @@ function spawnParticles(x, y, color, count = 8) {
 }
 
 // ─── Drop Ball ────────────────────────────────────────────────────────────────
-function dropBall() {
+function dropBall(x) {
   if (ballsLeft <= 0 || !gameRunning) return;
   ballsLeft--;
   ballsEl.textContent = ballsLeft;
-  balls.push(createBall());
+  balls.push(createBallAt(x));
   if (ballsLeft <= 0) {
     dropBtn.disabled = true;
   }
@@ -579,6 +584,23 @@ function render() {
     ctx.fill();
   }
 
+  // Drop marker visual feedback
+  if (dropMarker) {
+    ctx.strokeStyle = `rgba(244, 162, 10, ${dropMarker.alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(dropMarker.x, dropMarker.y, BALL_RADIUS * 2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(244, 162, 10, ${dropMarker.alpha * 0.3})`;
+    ctx.beginPath();
+    ctx.arc(dropMarker.x, dropMarker.y, BALL_RADIUS, 0, Math.PI * 2);
+    ctx.fill();
+
+    dropMarker.alpha -= 0.05;
+    if (dropMarker.alpha <= 0) dropMarker = null;
+  }
+
   // Particles
   for (let p of particles) {
     ctx.globalAlpha = p.life;
@@ -668,6 +690,22 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && gameRunning && ballsLeft > 0) {
     e.preventDefault();
     dropBall();
+  }
+});
+
+// Canvas touch / click to drop in drop zone
+canvas.addEventListener('click', (e) => {
+  if (!gameRunning || ballsLeft <= 0) return;
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const scaleY = H / rect.height;
+  const clickX = (e.clientX - rect.left) * scaleX;
+  const clickY = (e.clientY - rect.top) * scaleY;
+
+  if (clickX >= boardX && clickX <= boardX + boardW && clickY >= boardY && clickY <= boardY + ROW_SPACING) {
+    const clampedX = Math.max(boardX + BALL_RADIUS, Math.min(boardX + boardW - BALL_RADIUS, clickX));
+    dropMarker = { x: clampedX, y: clickY, alpha: 1.0 };
+    dropBall(clampedX);
   }
 });
 
