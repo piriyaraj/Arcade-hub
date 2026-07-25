@@ -950,6 +950,15 @@
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     setTimeout(() => {
+      if (score > bestScore) {
+        bestScore = score;
+        try {
+          localStorage.setItem('spaceinvaders_best', bestScore);
+        } catch (e) {
+          // Silently catch exceptions
+        }
+        bestEl.textContent = bestScore;
+      }
       initInvaders();
       // rebuild half/some HP for Bunkers as reward, up to max HP
       bunkers.forEach(bunker => {
