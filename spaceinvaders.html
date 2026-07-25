@@ -926,7 +926,7 @@
   function updateUI() {
     scoreEl.textContent = score;
     waveEl.textContent = wave;
-    livesEl.textContent = '❤️'.repeat(Math.max(0, lives));
+    livesEl.textContent = '❤️'.repeat(Math.min(Math.max(0, lives), 10));
 
     const isNewBest = score > bestScore;
     if (isNewBest) {
