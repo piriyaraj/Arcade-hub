@@ -982,6 +982,17 @@
     finalScoreContainer.classList.remove('hidden');
     startBtn.textContent = "REPLAY GAME";
     overlay.classList.remove('hidden');
+
+    // Save best score
+    if (score > bestScore) {
+      bestScore = score;
+      try {
+        localStorage.setItem('spaceinvaders_best', bestScore);
+      } catch (e) {
+        // Silently catch exceptions
+      }
+      bestEl.textContent = bestScore;
+    }
   }
 
   function togglePause() {
