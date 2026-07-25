@@ -390,6 +390,7 @@
     bestScore = 0;
   }
   bestEl.textContent = bestScore;
+  const originalBestScore = bestScore; // immutable pre-game record for triggerGameOver
 
   let lives = 3;
   let wave = 1;
@@ -983,8 +984,8 @@
     startBtn.textContent = "REPLAY GAME";
     overlay.classList.remove('hidden');
 
-    // Save best score
-    if (score > bestScore) {
+    // Save best score (compare against immutable originalBestScore, not mid-game bestScore)
+    if (score > originalBestScore) {
       bestScore = score;
       try {
         localStorage.setItem('spaceinvaders_best', bestScore.toString());
