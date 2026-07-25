@@ -660,7 +660,7 @@
     if (isNewBest) {
       bestScore = score;
       try {
-        localStorage.setItem('breakout_best', bestScore);
+        localStorage.setItem('breakout_best', String(bestScore));
       } catch (e) {
         // Silently fail - best score won't persist but game continues
       }
