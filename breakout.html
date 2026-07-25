@@ -270,14 +270,14 @@
   </ul>
   <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW HIGH SCORE! 🏆</div>
   <div class="final-score hidden" id="final-score">Score: 0</div>
-  <button class="game-btn play-btn" id="start-btn">START GAME</button>
+  <button class="game-btn play-btn" id="start-btn" aria-label="Start game">START GAME</button>
 </div>
 
 <header>
   <a href="index.html" class="back-btn">&larr; Home</a>
   <h1>BREAKOUT</h1>
   <p>Move the paddle and clear the bricks!</p>
-  <button class="mute-btn" id="mute-btn">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -304,8 +304,8 @@
 </div>
 
 <div id="controls">
-  <button class="game-btn play-btn" id="pause-btn" disabled>PAUSE</button>
-  <button class="game-btn" id="reset-btn">RESTART</button>
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
 <script src="audio.js"></script>
