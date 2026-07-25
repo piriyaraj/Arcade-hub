@@ -502,7 +502,7 @@
       const rect = canvas.getBoundingClientRect();
       const relativeX = e.touches[0].clientX - rect.left;
       mouseX = (relativeX / rect.width) * CANVAS_WIDTH;
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
     }
   }, { passive: false });
 
