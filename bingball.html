@@ -215,7 +215,7 @@
 <div id="overlay">
   <h2>BING BALL</h2>
   <p>Drop balls and watch them bounce through the pegs. Land in the high-value slots to score big!</p>
-  <button class="drop-btn" id="start-btn">START GAME</button>
+  <button class="drop-btn" id="start-btn" aria-label="Start Bing Ball Game">START GAME</button>
 </div>
 
 <header>
@@ -227,7 +227,7 @@
 <div id="stats">
   <div class="stat">
     <span class="stat-label">Score</span>
-    <span class="stat-value" id="score">0</span>
+    <span class="stat-value" id="score" aria-live="polite" aria-atomic="true">0</span>
   </div>
   <div class="stat">
     <span class="stat-label">Balls</span>
@@ -240,12 +240,12 @@
 </div>
 
 <div id="canvas-wrap">
-  <canvas id="game"></canvas>
+  <canvas id="game" aria-label="Bing Ball game canvas. Drop balls to bounce through pegs and land in high-value scoring slots."></canvas>
 </div>
 
 <div id="controls">
-  <button class="drop-btn" id="drop-btn" disabled>DROP BALL</button>
-  <button id="reset-btn">RESET</button>
+  <button class="drop-btn" id="drop-btn" aria-label="Drop a ball" disabled>DROP BALL</button>
+  <button id="reset-btn" aria-label="Reset game">RESET</button>
 </div>
 
 <script src="audio.js"></script>
