@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "bingball.html": {
-    "mtime": 1784955439.3178217,
-    "ast_hash": "c45079426cf10122d82f0992eff49ade",
+    "mtime": 1784949728.9319284,
+    "ast_hash": "fb43fd770bcc5aec03dd32fa5dc6eb5a",
     "semantic_hash": ""
   },
   "index.html": {
@@ -32,6 +32,8 @@
   "snakegame.html": {
     "mtime": 1784955437.9338346,
     "ast_hash": "ada73c10e0208f4f56610367e731b731",
+    "mtime": 1784955380.1503654,
+    "ast_hash": "61608c5e286b717a70571347c058ff9a",
     "semantic_hash": ""
   },
   "breakout.html": {
