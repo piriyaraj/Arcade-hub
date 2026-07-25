@@ -656,13 +656,13 @@
     if (player.cooldown > 0) player.cooldown--;
 
     // 3. Move Player Lasers
-    playerLasers.forEach((laser, index) => {
-      laser.y -= laser.speed;
+    for (let i = playerLasers.length - 1; i >= 0; i--) {
+      playerLasers[i].y -= playerLasers[i].speed;
       // boundary check
-      if (laser.y < 0) {
-        playerLasers.splice(index, 1);
+      if (playerLasers[i].y < 0) {
+        playerLasers.splice(i, 1);
       }
-    });
+    }
 
     // 4. Move Invaders
     let shiftDown = false;
@@ -710,41 +710,57 @@
     }
 
     // 6. Move Invader Lasers
-    invaderLasers.forEach((laser, index) => {
-      laser.y += laser.speed;
-      if (laser.y > CANVAS_HEIGHT) {
-        invaderLasers.splice(index, 1);
+    for (let i = invaderLasers.length - 1; i >= 0; i--) {
+      invaderLasers[i].y += invaderLasers[i].speed;
+      if (invaderLasers[i].y > CANVAS_HEIGHT) {
+        invaderLasers.splice(i, 1);
       }
-    });
+    }
 
     // 7. Hit Detection: Player lasers & Invaders
-    playerLasers.forEach((laser, lIndex) => {
-      invaders.forEach((invader, iIndex) => {
-        if (checkCollision(laser, invader)) {
+    const lasersToRemove = new Set();
+    const invadersToRemove = new Set();
+
+    for (let l = 0; l < playerLasers.length; l++) {
+      for (let iv = 0; iv < invaders.length; iv++) {
+        if (lasersToRemove.has(l) || invadersToRemove.has(iv)) continue;
+
+        if (checkCollision(playerLasers[l], invaders[iv])) {
           // Destory
-          createExplosion(invader.x + invader.width/2, invader.y + invader.height/2, invader.color);
+          createExplosion(invaders[iv].x + invaders[iv].width/2, invaders[iv].y + invaders[iv].height/2, invaders[iv].color);
           if (window.sfx) window.sfx.playBounce(); // hit sound
 
-          score += invader.points;
-          invaders.splice(iIndex, 1);
-          playerLasers.splice(lIndex, 1);
+          score += invaders[iv].points;
+          invadersToRemove.add(iv);
+          lasersToRemove.add(l);
           updateUI();
-
-          // Check Win Condition
-          if (invaders.length === 0) {
-            triggerWaveComplete();
-          }
         }
-      });
-    });
+      }
+    }
+
+    // Splice backwards
+    const sortedInvaders = Array.from(invadersToRemove).sort((a, b) => b - a);
+    for (const index of sortedInvaders) {
+      invaders.splice(index, 1);
+    }
+
+    const sortedLasers = Array.from(lasersToRemove).sort((a, b) => b - a);
+    for (const index of sortedLasers) {
+      playerLasers.splice(index, 1);
+    }
+
+    // Check Win Condition
+    if (invaders.length === 0) {
+      triggerWaveComplete();
+    }
 
     // 8. Hit Detection: Invader lasers & Player
-    invaderLasers.forEach((laser, lIndex) => {
-      if (checkCollision(laser, player)) {
+    for (let i = invaderLasers.length - 1; i >= 0; i--) {
+      if (checkCollision(invaderLasers[i], player)) {
         createExplosion(player.x + player.width/2, player.y + player.height/2, '#00f0ff');
         if (window.sfx) window.sfx.playGameOver(); // damaged sound
 
-        invaderLasers.splice(lIndex, 1);
+        invaderLasers.splice(i, 1);
         lives--;
         updateUI();
 
@@ -752,56 +768,59 @@
           triggerGameOver();
         }
       }
-    });
+    }
 
     // 9. Hit Detection: Lasers & Bunkers/Shields
     // Simple logic: check parts inside bunkers
     bunkers.forEach(bunker => {
       // Check player lasers colliding with bunker parts
-      playerLasers.forEach((laser, lIndex) => {
-        bunker.parts.forEach((part, pIndex) => {
-          if (checkCollision(laser, part)) {
-            playerLasers.splice(lIndex, 1);
-            part.hp--;
-            if (part.hp <= 0) {
-              bunker.parts.splice(pIndex, 1);
+      for (let l = playerLasers.length - 1; l >= 0; l--) {
+        for (let p = bunker.parts.length - 1; p >= 0; p--) {
+          if (checkCollision(playerLasers[l], bunker.parts[p])) {
+            playerLasers.splice(l, 1);
+            bunker.parts[p].hp--;
+            if (bunker.parts[p].hp <= 0) {
+              bunker.parts.splice(p, 1);
             }
+            break; // Laser is destroyed
           }
-        });
-      });
+        }
+      }
 
       // Check invader lasers colliding with bunker parts
-      invaderLasers.forEach((laser, lIndex) => {
-        bunker.parts.forEach((part, pIndex) => {
-          if (checkCollision(laser, part)) {
-            invaderLasers.splice(lIndex, 1);
-            part.hp--;
-            if (part.hp <= 0) {
-              bunker.parts.splice(pIndex, 1);
+      for (let l = invaderLasers.length - 1; l >= 0; l--) {
+        for (let p = bunker.parts.length - 1; p >= 0; p--) {
+          if (checkCollision(invaderLasers[l], bunker.parts[p])) {
+            invaderLasers.splice(l, 1);
+            bunker.parts[p].hp--;
+            if (bunker.parts[p].hp <= 0) {
+              bunker.parts.splice(p, 1);
             }
+            break; // Laser is destroyed
           }
-        });
-      });
+        }
+      }
 
       // Bunkers shouldn't survive in the way of invaders
-      invaders.forEach((invader) => {
-        bunker.parts.forEach((part, pIndex) => {
-          if (checkCollision(invader, part)) {
-            bunker.parts.splice(pIndex, 1);
+      for (let p = bunker.parts.length - 1; p >= 0; p--) {
+        for (let inv = 0; inv < invaders.length; inv++) {
+          if (checkCollision(invaders[inv], bunker.parts[p])) {
+            bunker.parts.splice(p, 1);
+            break; // Part is destroyed, stop checking for this part
           }
-        });
-      });
+        }
+      }
     });
 
     // 10. Update Particle/Explosion Effects
-    explosions.forEach((exp, index) => {
-      exp.x += exp.vx;
-      exp.y += exp.vy;
-      exp.life -= exp.decay;
-      if (exp.life <= 0) {
-        explosions.splice(index, 1);
+    for (let i = explosions.length - 1; i >= 0; i--) {
+      explosions[i].x += explosions[i].vx;
+      explosions[i].y += explosions[i].vy;
+      explosions[i].life -= explosions[i].decay;
+      if (explosions[i].life <= 0) {
+        explosions.splice(i, 1);
       }
-    });
+    }
   }
 
   // ─── Rendering Functions ─────────────────────────────────────────────────────
