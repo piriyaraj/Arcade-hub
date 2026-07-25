@@ -25,18 +25,20 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1784925190.4920454,
-    "ast_hash": "8d56a5b35d14b9bf41b204bf3b5002fa",
+    "mtime": 1784955443.4497838,
+    "ast_hash": "c7d12b70597651b20dc10353abd4cce3",
     "semantic_hash": ""
   },
   "snakegame.html": {
+    "mtime": 1784955437.9338346,
+    "ast_hash": "ada73c10e0208f4f56610367e731b731",
     "mtime": 1784955380.1503654,
     "ast_hash": "61608c5e286b717a70571347c058ff9a",
     "semantic_hash": ""
   },
   "breakout.html": {
-    "mtime": 1784923974.2492678,
-    "ast_hash": "6e56731a6d19787165394caadef4537e",
+    "mtime": 1784955441.3378034,
+    "ast_hash": "8d42f81bd12376ce48a3baaa41d6402e",
     "semantic_hash": ""
   }
 }
