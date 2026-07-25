@@ -465,7 +465,9 @@
     }, { passive: false });
 
     el.addEventListener('touchend', (e) => {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       endCallback();
     }, { passive: false });
 
