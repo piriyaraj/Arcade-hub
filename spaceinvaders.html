@@ -934,7 +934,7 @@
     if (isNewBest) {
       bestScore = score;
       try {
-        localStorage.setItem('spaceinvaders_best', bestScore);
+        localStorage.setItem('spaceinvaders_best', bestScore.toString());
       } catch (e) {
         // Silently catch exceptions
       }
@@ -955,7 +955,7 @@
       if (score > bestScore) {
         bestScore = score;
         try {
-          localStorage.setItem('spaceinvaders_best', bestScore);
+          localStorage.setItem('spaceinvaders_best', bestScore.toString());
         } catch (e) {
           // Silently catch exceptions
         }
@@ -987,7 +987,7 @@
     if (score > bestScore) {
       bestScore = score;
       try {
-        localStorage.setItem('spaceinvaders_best', bestScore);
+        localStorage.setItem('spaceinvaders_best', bestScore.toString());
       } catch (e) {
         // Silently catch exceptions
       }
