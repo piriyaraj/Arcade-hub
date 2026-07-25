@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1784923974.2492678,
-    "ast_hash": "ab5c9cf3b8a3e05ff856e58d4c43e6e4",
+    "mtime": 1784918617.8937442,
+    "ast_hash": "98a68ca5894005956c6b56b7fde1c7f1",
     "semantic_hash": ""
   },
   "mail.md": {
@@ -20,23 +20,18 @@
     "semantic_hash": ""
   },
   "bingball.html": {
-    "mtime": 1784948681.9289165,
-    "ast_hash": "591eda8718f36dc45dac01f828a150ed",
+    "mtime": 1784921707.5793273,
+    "ast_hash": "111d81b6db4de3829195d390773ba599",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1784925190.4920454,
-    "ast_hash": "8d56a5b35d14b9bf41b204bf3b5002fa",
+    "mtime": 1784918524.3788264,
+    "ast_hash": "041ee40821794826a063b928087b5475",
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1784925139.1572556,
+    "mtime": 1784921718.7432022,
     "ast_hash": "412470309c3966a767d91308b6f6248c",
-    "semantic_hash": ""
-  },
-  "breakout.html": {
-    "mtime": 1784923974.2492678,
-    "ast_hash": "6e56731a6d19787165394caadef4537e",
     "semantic_hash": ""
   }
 }
