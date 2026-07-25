@@ -382,6 +382,13 @@ window.addEventListener('resize', () => {
   }
 });
 
+// ─── XSS Prevention ─────────────────────────────────────────────────────────────
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
 // ─── Game State ──────────────────────────────────────────────────────────────
 let snake = [];
 let food = { x: 0, y: 0 };
@@ -468,9 +475,9 @@ function showGameOver() {
 
   overlay.innerHTML = `
     <h2>GAME OVER</h2>
-    <div class="final-score">${score}</div>
+    <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
-    <p>You reached a length of ${snake.length}!</p>
+    <p>You reached a length of ${escapeHtml(snake.length)}!</p>
     <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
   `;
   overlay.classList.remove('hidden');
@@ -496,7 +503,7 @@ function triggerGameVictory() {
 
   overlay.innerHTML = `
     <h2>VICTORY!</h2>
-    <div class="final-score">${score}</div>
+    <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>Incredible! You filled the entire board and won the game!</p>
     <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
