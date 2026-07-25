@@ -424,6 +424,10 @@ function initGame() {
 }
 
 function spawnFood() {
+  if (snake.length >= cols * rows) {
+    triggerGameVictory();
+    return;
+  }
   let newFood;
   do {
     newFood = {
@@ -458,6 +462,30 @@ function showGameOver() {
     <div class="final-score">${score}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>You reached a length of ${snake.length}!</p>
+    <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
+  `;
+  overlay.classList.remove('hidden');
+}
+
+function triggerGameVictory() {
+  gameOver = true;
+  gameStarted = false;
+  pauseBtn.disabled = true;
+  gameLoop = null;
+  if (window.sfx) window.sfx.playScoreSlot();
+
+  const isNewBest = score > bestScore;
+  if (isNewBest) {
+    bestScore = score;
+    localStorage.setItem('snake_best', bestScore);
+    bestEl.textContent = bestScore;
+  }
+
+  overlay.innerHTML = `
+    <h2>VICTORY!</h2>
+    <div class="final-score">${score}</div>
+    ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
+    <p>Incredible! You filled the entire board and won the game!</p>
     <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
   `;
   overlay.classList.remove('hidden');
@@ -671,7 +699,9 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 // ─── Game Loop ────────────────────────────────────────────────────────────────
-function gameLoop(timestamp) {
+function runGameLoop(timestamp) {
+  if (!gameLoop) return;
+
   if (gameStarted && !gameOver && !gamePaused) {
     if (timestamp - lastUpdate >= speed) {
       update();
@@ -684,6 +714,8 @@ function gameLoop(timestamp) {
   requestAnimationFrame(gameLoop);
 }
 
+let gameLoop = runGameLoop;
+
 // ─── Controls ─────────────────────────────────────────────────────────────────
 function startGame() {
   overlay.classList.add('hidden');
@@ -692,6 +724,10 @@ function startGame() {
   gamePaused = false;
   pauseBtn.disabled = false;
   pauseBtn.textContent = 'PAUSE';
+  if (!gameLoop) {
+    gameLoop = runGameLoop;
+    requestAnimationFrame(gameLoop);
+  }
   initGame();
 }
 
@@ -702,6 +738,10 @@ function restartGame() {
   gamePaused = false;
   pauseBtn.disabled = false;
   pauseBtn.textContent = 'PAUSE';
+  if (!gameLoop) {
+    gameLoop = runGameLoop;
+    requestAnimationFrame(gameLoop);
+  }
   initGame();
 }
 
