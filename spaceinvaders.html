@@ -929,7 +929,11 @@
   function updateUI() {
     scoreEl.textContent = score;
     waveEl.textContent = wave;
-    livesEl.textContent = '❤️'.repeat(Math.min(Math.max(0, lives), 10));
+    let hearts = '';
+    for (let i = 0; i < lives; i++) {
+        hearts += '❤️';
+    }
+    livesEl.textContent = hearts || '💀';
 
     const isNewBest = score > bestScore;
     if (isNewBest) {
