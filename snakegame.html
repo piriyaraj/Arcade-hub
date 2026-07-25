@@ -486,7 +486,11 @@ function triggerGameVictory() {
   const isNewBest = score > bestScore;
   if (isNewBest) {
     bestScore = score;
-    localStorage.setItem('snake_best', bestScore);
+    try {
+      localStorage.setItem('snake_best', bestScore);
+    } catch (e) {
+      // Silently fail - best score won't persist but game continues
+    }
     bestEl.textContent = bestScore;
   }
 
