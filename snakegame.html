@@ -388,7 +388,12 @@ let food = { x: 0, y: 0 };
 let direction = { x: 1, y: 0 };
 let nextDirection = { x: 1, y: 0 };
 let score = 0;
-let bestScore = parseInt(localStorage.getItem('snake_best') || '0');
+let bestScore = 0;
+try {
+  bestScore = parseInt(localStorage.getItem('snake_best') || '0');
+} catch (e) {
+  bestScore = 0;
+}
 let gameStarted = false;
 let gameOver = false;
 let gamePaused = false;
@@ -449,7 +454,11 @@ function showGameOver() {
   const isNewBest = score > bestScore;
   if (isNewBest) {
     bestScore = score;
-    localStorage.setItem('snake_best', bestScore);
+    try {
+      localStorage.setItem('snake_best', bestScore);
+    } catch (e) {
+      // Silently fail - best score won't persist but game continues
+    }
     bestEl.textContent = bestScore;
   }
 

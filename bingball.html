@@ -303,7 +303,12 @@ let score = 0;
 let ballsLeft = BALL_COUNT;
 let gameRunning = false;
 let gameOver = false;
-let bestScore = parseInt(localStorage.getItem('bingball_best') || '0');
+let bestScore = 0;
+try {
+  bestScore = parseInt(localStorage.getItem('bingball_best') || '0');
+} catch (e) {
+  bestScore = 0;
+}
 
 const scoreEl = document.getElementById('score');
 const ballsEl = document.getElementById('balls-left');
@@ -665,7 +670,11 @@ function showGameOver() {
   const isNewBest = score > bestScore;
   if (isNewBest) {
     bestScore = score;
-    localStorage.setItem('bingball_best', bestScore);
+    try {
+      localStorage.setItem('bingball_best', bestScore);
+    } catch (e) {
+      // Silently fail - best score won't persist but game continues
+    }
     bestEl.textContent = bestScore;
   }
 

@@ -355,7 +355,12 @@
   let baseSpeed = 5.0; // Total speed magnitude target
 
   let score = 0;
-  let bestScore = parseInt(localStorage.getItem('breakout_best') || '0');
+  let bestScore = 0;
+  try {
+    bestScore = parseInt(localStorage.getItem('breakout_best') || '0');
+  } catch (e) {
+    bestScore = 0;
+  }
   let lives = 3;
   let level = 1;
   let gameStarted = false;
@@ -654,7 +659,11 @@
     const isNewBest = score > bestScore;
     if (isNewBest) {
       bestScore = score;
-      localStorage.setItem('breakout_best', bestScore);
+      try {
+        localStorage.setItem('breakout_best', bestScore);
+      } catch (e) {
+        // Silently fail - best score won't persist but game continues
+      }
       bestEl.textContent = bestScore;
       highScoreBadge.classList.remove('hidden');
     } else {
