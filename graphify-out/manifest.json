@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1784984258.2560449,
-    "ast_hash": "d9928d239fde39b765871ed6477c2162",
+    "mtime": 1784984229.9363942,
+    "ast_hash": "165712e486cc7c484c61129b5eb22c19",
     "semantic_hash": ""
   },
   "breakout.html": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
-    "mtime": 1784986622.9486353,
-    "ast_hash": "372acb6f9da7f1c6c35c3e9e1d3d22b8",
+    "mtime": 1784981852.772846,
+    "ast_hash": "417f7ce84acc7e7d88d8fe8c0ffd0791",
     "semantic_hash": ""
   }
 }
