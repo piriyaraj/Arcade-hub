@@ -524,16 +524,16 @@
       for (let col = 0; col < COLS; col++) {
         let type = 'middle';
         let points = 20;
-        let color = 'var(--theme-purple)';
+        let color = '#a855f7';
 
         if (row === 0) {
           type = 'top';
           points = 40;
-          color = 'var(--theme-magenta)';
+          color = '#ff007f';
         } else if (row === ROWS - 1) {
           type = 'bottom';
           points = 10;
-          color = 'var(--theme-green)';
+          color = '#4ade80';
         }
 
         invaders.push({
@@ -741,7 +741,7 @@
     // 8. Hit Detection: Invader lasers & Player
     invaderLasers.forEach((laser, lIndex) => {
       if (checkCollision(laser, player)) {
-        createExplosion(player.x + player.width/2, player.y + player.height/2, 'var(--theme-neon)');
+        createExplosion(player.x + player.width/2, player.y + player.height/2, '#00f0ff');
         if (window.sfx) window.sfx.playGameOver(); // damaged sound
 
         invaderLasers.splice(lIndex, 1);
@@ -807,7 +807,7 @@
   // ─── Rendering Functions ─────────────────────────────────────────────────────
   function draw() {
     // Clear Board
-    ctx.fillStyle = 'var(--board-bg)';
+    ctx.fillStyle = '#070a13';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     // Draw Background Stars
@@ -826,8 +826,8 @@
 
     // Draw Player Ship (Neon styling)
     ctx.shadowBlur = 10;
-    ctx.shadowColor = 'var(--theme-neon)';
-    ctx.fillStyle = 'var(--theme-neon)';
+    ctx.shadowColor = '#00f0ff';
+    ctx.fillStyle = '#00f0ff';
 
     // Draw classic retro spaceshift shape using path
     ctx.beginPath();
@@ -840,9 +840,9 @@
     ctx.fill();
 
     // Draw Player Lasers
-    ctx.shadowColor = 'var(--theme-yellow)';
+    ctx.shadowColor = '#facc15';
     ctx.shadowBlur = 8;
-    ctx.fillStyle = 'var(--theme-yellow)';
+    ctx.fillStyle = '#facc15';
     playerLasers.forEach(laser => {
       ctx.fillRect(laser.x, laser.y, laser.width, laser.height);
     });
@@ -884,9 +884,9 @@
     });
 
     // Draw Invader Lasers
-    ctx.shadowColor = 'var(--theme-magenta)';
+    ctx.shadowColor = '#ff007f';
     ctx.shadowBlur = 8;
-    ctx.fillStyle = 'var(--theme-magenta)';
+    ctx.fillStyle = '#ff007f';
     invaderLasers.forEach(laser => {
       // Draw wavy or standard blocky beam
       ctx.fillRect(laser.x, laser.y, laser.width, laser.height);
