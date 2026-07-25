@@ -671,7 +671,7 @@ function showGameOver() {
   if (isNewBest) {
     bestScore = score;
     try {
-      localStorage.setItem('bingball_best', bestScore);
+      localStorage.setItem('bingball_best', String(bestScore));
     } catch (e) {
       // Silently fail - best score won't persist but game continues
     }
