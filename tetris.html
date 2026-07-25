@@ -645,6 +645,7 @@
     let cleared = 0;
     for (let y = ROWS - 1; y >= 0; y--) {
       if (board[y].every(cell => cell !== null)) {
+        const targetY = y;
         // Clear row, add new row at top
         const removedRow = board.splice(y, 1)[0];
         board.unshift(Array(COLS).fill(null));
@@ -652,7 +653,7 @@
         y++; // Re-check the current row index since board shifted down
 
         // Spawn line clear particles
-        spawnLineParticles(y);
+        spawnLineParticles(targetY, removedRow);
       }
     }
 
@@ -706,10 +707,10 @@
     }
   }
 
-  function spawnLineParticles(rowIdx) {
+  function spawnLineParticles(rowIdx, rowColors) {
     const yVal = rowIdx * CELL_SIZE + CELL_SIZE / 2;
     for (let c = 0; c < COLS; c++) {
-      const color = board[0][c] || '#00f0ff';
+      const color = (rowColors && rowColors[c]) || '#00f0ff';
       const xVal = c * CELL_SIZE + CELL_SIZE / 2;
       for (let i = 0; i < 4; i++) {
         particles.push(new Particle(xVal, yVal, color));
