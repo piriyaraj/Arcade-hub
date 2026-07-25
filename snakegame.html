@@ -293,7 +293,7 @@
 <div id="overlay">
   <h2>SNAKE GAME</h2>
   <p>Use arrow keys or WASD to control the snake. Swipe or tap the D-pad to control on mobile devices. Eat the red food to grow and score points!</p>
-  <button class="play-btn" id="start-btn">START GAME</button>
+  <button class="play-btn" id="start-btn" aria-label="Start Snake Game">START GAME</button>
 </div>
 
 <header>
@@ -305,7 +305,7 @@
 <div id="stats">
   <div class="stat">
     <span class="stat-label">Score</span>
-    <span class="stat-value" id="score">0</span>
+    <span class="stat-value" id="score" aria-live="polite" aria-atomic="true">0</span>
   </div>
   <div class="stat">
     <span class="stat-label">Length</span>
@@ -318,7 +318,7 @@
 </div>
 
 <div id="canvas-wrap">
-  <canvas id="game"></canvas>
+  <canvas id="game" aria-label="Snake game canvas. Control the snake with arrow keys or WASD to eat food and grow without hitting walls."></canvas>
 </div>
 
 <div id="dpad" class="mobile-only">
@@ -336,9 +336,8 @@
 </div>
 
 <div id="controls">
-  <button class="play-btn" id="pause-btn">PAUSE</button>
-  <button id="reset-btn">RESTART</button>
-</div>
+  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
+  <button id="reset-btn" aria-label="Restart game">RESTART</button>
 <script src="audio.js"></script>
 <script>
 // ─── Constants ────────────────────────────────────────────────────────────────
