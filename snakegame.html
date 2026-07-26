@@ -349,8 +349,15 @@ const INITIAL_SPEED = 120;
 const SPEED_INCREMENT = 2;
 const MIN_SPEED = 50;
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function safeGet(id) {
+  const el = document.getElementById(id);
+  if (!el) throw new Error('Element not found: ' + id);
+  return el;
+}
+
 // ─── Canvas Setup ─────────────────────────────────────────────────────────────
-const canvas = document.getElementById('game');
+const canvas = safeGet('game');
 const ctx = canvas.getContext('2d');
 
 let W, H, cols, rows;
