@@ -463,7 +463,7 @@ function updateBalls() {
   }
 
   // Clean up old settled balls
-  balls = balls.filter(b => b.active || (!b.landed));
+  balls = balls.filter(b => b.active);
 
   // Check game over
   if (ballsLeft <= 0 && balls.length === 0 && !gameOver) {
