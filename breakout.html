@@ -393,7 +393,7 @@
   const finalScoreEl = document.getElementById('final-score');
   const highScoreBadge = document.getElementById('high-score-badge');
 
-  bestEl.textContent = bestScore;
+  bestEl.textContent = String(bestScore);
 
   // Update mute button label based on global instance state
   function updateMuteButtonUI() {
@@ -639,7 +639,7 @@
   function updateUI() {
     scoreEl.textContent = score;
     levelEl.textContent = level;
-    bestEl.textContent = bestScore;
+    bestEl.textContent = String(bestScore);
 
     // Draw hearts for lives
     let hearts = '';
@@ -664,7 +664,7 @@
       } catch (e) {
         // Silently fail - best score won't persist but game continues
       }
-      bestEl.textContent = bestScore;
+      bestEl.textContent = String(bestScore);
       highScoreBadge.classList.remove('hidden');
     } else {
       highScoreBadge.classList.add('hidden');
