@@ -880,16 +880,18 @@
   startBtn.addEventListener('click', startGame);
   pauseBtn.addEventListener('click', pauseGame);
   resetBtn.addEventListener('click', () => {
-    overlay.classList.add('hidden');
-    initGame();
-    gameStarted = true;
-    gamePaused = false;
-    gameOver = false;
-    dropCounter = 0;
-    lastTime = 0;
-    pauseBtn.textContent = "PAUSE";
-    pauseBtn.classList.add('play-btn');
-    requestAnimationFrame(updateLoop);
+    if (confirm("Restart game? Any current progress will be lost.")) {
+      initGame();
+      gameStarted = true;
+      gamePaused = false;
+      gameOver = false;
+      dropCounter = 0;
+      lastTime = 0;
+      pauseBtn.textContent = "PAUSE";
+      pauseBtn.classList.add('play-btn');
+      overlay.classList.add('hidden');
+      requestAnimationFrame(updateLoop);
+    }
   });
 
   // Init Window Dimensions
