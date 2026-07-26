@@ -377,6 +377,9 @@
   const btnLeft = document.getElementById('btn-left');
   const btnRight = document.getElementById('btn-right');
   const btnFire = document.getElementById('btn-fire');
+  if (!btnLeft || !btnRight || !btnFire) {
+    console.warn('Mobile controls not found in DOM - mobile input disabled');
+  }
 
   // ─── Game Variables & Constants ─────────────────────────────────────────────
   const CANVAS_WIDTH = 600;
@@ -484,17 +487,23 @@
     });
   }
 
-  setupMobileButton(btnLeft, () => moveLeftActive = true, () => moveLeftActive = false);
-  setupMobileButton(btnRight, () => moveRightActive = true, () => moveRightActive = false);
+  if (btnLeft) {
+    setupMobileButton(btnLeft, () => moveLeftActive = true, () => moveLeftActive = false);
+  }
+  if (btnRight) {
+    setupMobileButton(btnRight, () => moveRightActive = true, () => moveRightActive = false);
+  }
 
-  btnFire.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (window.sfx) window.sfx.init();
-    firePlayerLaser();
-  }, { passive: false });
-  btnFire.addEventListener('click', (e) => {
-    firePlayerLaser();
-  });
+  if (btnFire) {
+    btnFire.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (window.sfx) window.sfx.init();
+      firePlayerLaser();
+    }, { passive: false });
+    btnFire.addEventListener('click', (e) => {
+      firePlayerLaser();
+    });
+  }
 
   // ─── Game Initialization ─────────────────────────────────────────────────────
   function initGame() {
