@@ -310,6 +310,9 @@
 
 <script src="audio.js"></script>
 <script>
+  // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
+  const safeGet = (id) => document.getElementById(id) ?? document.body;
+
   // ─── Game Constants ────────────────────────────────────────────────────────
   const CANVAS_WIDTH = 520;
   const CANVAS_HEIGHT = 400;
@@ -343,7 +346,7 @@
   ];
 
   // ─── Canvas & Context Setup ────────────────────────────────────────────────
-  const canvas = document.getElementById('game');
+  const canvas = safeGet('game');
   const ctx = canvas.getContext('2d');
 
   // ─── Game State Variables ──────────────────────────────────────────────────
@@ -377,21 +380,21 @@
   let mouseX = null;
 
   // DOM Elements
-  const scoreEl = document.getElementById('score');
-  const livesEl = document.getElementById('lives');
-  const levelEl = document.getElementById('level');
-  const bestEl = document.getElementById('best');
+  const scoreEl = safeGet('score');
+  const livesEl = safeGet('lives');
+  const levelEl = safeGet('level');
+  const bestEl = safeGet('best');
 
-  const pauseBtn = document.getElementById('pause-btn');
-  const resetBtn = document.getElementById('reset-btn');
-  const muteBtn = document.getElementById('mute-btn');
-  const overlay = document.getElementById('overlay');
-  const startBtn = document.getElementById('start-btn');
-  const overlayTitle = document.getElementById('overlay-title');
-  const overlayDesc = document.getElementById('overlay-desc');
-  const instructionsList = document.getElementById('instructions');
-  const finalScoreEl = document.getElementById('final-score');
-  const highScoreBadge = document.getElementById('high-score-badge');
+  const pauseBtn = safeGet('pause-btn');
+  const resetBtn = safeGet('reset-btn');
+  const muteBtn = safeGet('mute-btn');
+  const overlay = safeGet('overlay');
+  const startBtn = safeGet('start-btn');
+  const overlayTitle = safeGet('overlay-title');
+  const overlayDesc = safeGet('overlay-desc');
+  const instructionsList = safeGet('instructions');
+  const finalScoreEl = safeGet('final-score');
+  const highScoreBadge = safeGet('high-score-badge');
 
   bestEl.textContent = String(bestScore);
 
