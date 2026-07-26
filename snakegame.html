@@ -763,6 +763,8 @@ function restartGame() {
   initGame();
 }
 
+window.restartGame = restartGame;
+
 function togglePause() {
   if (!gameStarted || gameOver) return;
   gamePaused = !gamePaused;
