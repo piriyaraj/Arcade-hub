@@ -407,12 +407,12 @@
     constructor(x, y, color) {
       this.x = x;
       this.y = y;
+      this.radius = 2 + Math.random() * 2;
       this.vx = (Math.random() - 0.5) * 5;
       this.vy = (Math.random() - 0.5) * 5 + 1; // general shift downwards
       this.color = color;
       this.alpha = 1;
       this.decay = 0.02 + Math.random() * 0.02;
-      this.radius = 2 + Math.random() * 2;
     }
 
     update() {
