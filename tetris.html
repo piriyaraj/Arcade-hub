@@ -686,6 +686,7 @@
       this.vy = Math.sin(angle) * speed;
       this.alpha = 1.0;
       this.decay = Math.random() * 0.03 + 0.02;
+      this.r = 3 + Math.random() * 3;
     }
 
     update() {
@@ -701,7 +702,7 @@
       ctx.shadowBlur = 10;
       ctx.shadowColor = this.color;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, Math.random() * 3 + 2, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
