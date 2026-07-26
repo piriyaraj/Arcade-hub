@@ -459,7 +459,7 @@ function updateUI() {
 function showGameOver() {
   gameOver = true;
   gameStarted = false;
-  pauseBtn.disabled = true;
+  if (pauseBtn) pauseBtn.disabled = true;
   if (window.sfx) window.sfx.playGameOver();
 
   const isNewBest = score > bestScore;
@@ -486,7 +486,7 @@ function showGameOver() {
 function triggerGameVictory() {
   gameOver = true;
   gameStarted = false;
-  pauseBtn.disabled = true;
+  if (pauseBtn) pauseBtn.disabled = true;
   gameLoop = null;
   if (window.sfx) window.sfx.playScoreSlot();
 
@@ -742,8 +742,7 @@ function startGame() {
   gameStarted = true;
   gameOver = false;
   gamePaused = false;
-  pauseBtn.disabled = false;
-  pauseBtn.textContent = 'PAUSE';
+  if (pauseBtn) { pauseBtn.disabled = false; pauseBtn.textContent = 'PAUSE'; }
   if (!gameLoop) {
     gameLoop = runGameLoop;
     requestAnimationFrame(gameLoop);
@@ -756,8 +755,7 @@ function restartGame() {
   gameStarted = true;
   gameOver = false;
   gamePaused = false;
-  pauseBtn.disabled = false;
-  pauseBtn.textContent = 'PAUSE';
+  if (pauseBtn) { pauseBtn.disabled = false; pauseBtn.textContent = 'PAUSE'; }
   if (!gameLoop) {
     gameLoop = runGameLoop;
     requestAnimationFrame(gameLoop);
@@ -768,7 +766,7 @@ function restartGame() {
 function togglePause() {
   if (!gameStarted || gameOver) return;
   gamePaused = !gamePaused;
-  pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
+  if (pauseBtn) pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
 }
 
 // Keyboard controls
