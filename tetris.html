@@ -863,18 +863,18 @@
     }
   }
 
-  leftBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerMove(-1); }, { passive: false });
-  rightBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerMove(1); }, { passive: false });
-  downBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerDrop(); }, { passive: false });
-  rotBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerRotate(); }, { passive: false });
-  dropBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerHardDrop(); }, { passive: false });
+  if (leftBtn) { leftBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerMove(-1); }, { passive: false }); }
+  if (rightBtn) { rightBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerMove(1); }, { passive: false }); }
+  if (downBtn) { downBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerDrop(); }, { passive: false }); }
+  if (rotBtn) { rotBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerRotate(); }, { passive: false }); }
+  if (dropBtn) { dropBtn.addEventListener('touchstart', (e) => { preventDefaults(e); playerHardDrop(); }, { passive: false }); }
 
   // Add click handlers for hybrid devices or ease of QA
-  leftBtn.addEventListener('click', () => playerMove(-1));
-  rightBtn.addEventListener('click', () => playerMove(1));
-  downBtn.addEventListener('click', () => playerDrop());
-  rotBtn.addEventListener('click', () => playerRotate());
-  dropBtn.addEventListener('click', () => playerHardDrop());
+  if (leftBtn) { leftBtn.addEventListener('click', () => playerMove(-1)); }
+  if (rightBtn) { rightBtn.addEventListener('click', () => playerMove(1)); }
+  if (downBtn) { downBtn.addEventListener('click', () => playerDrop()); }
+  if (rotBtn) { rotBtn.addEventListener('click', () => playerRotate()); }
+  if (dropBtn) { dropBtn.addEventListener('click', () => playerHardDrop()); }
 
   // Game UI Controls
   startBtn.addEventListener('click', startGame);
