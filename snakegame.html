@@ -902,7 +902,6 @@ const dpadUp = document.getElementById('dpad-up');
 const dpadDown = document.getElementById('dpad-down');
 const dpadLeft = document.getElementById('dpad-left');
 const dpadRight = document.getElementById('dpad-right');
-const NO_OP = null;
 
 function handleDirectionChange(newDir) {
   if (!gameStarted || gameOver || gamePaused) return;
@@ -935,21 +934,21 @@ if (dpadUp && dpadDown && dpadLeft && dpadRight) {
   dpadRight.addEventListener('mousedown', (e) => { e.preventDefault(); handleDirectionChange('RIGHT'); });
 
   // Stop moving when finger/mouse leaves the button
-  dpadUp.addEventListener('touchend', () => handleDirectionChange(NO_OP));
-  dpadUp.addEventListener('mouseup', () => handleDirectionChange(NO_OP));
-  dpadUp.addEventListener('mouseleave', () => handleDirectionChange(NO_OP));
+  dpadUp.addEventListener('touchend', () => {});
+  dpadUp.addEventListener('mouseup', () => {});
+  dpadUp.addEventListener('mouseleave', () => {});
 
-  dpadDown.addEventListener('touchend', () => handleDirectionChange(NO_OP));
-  dpadDown.addEventListener('mouseup', () => handleDirectionChange(NO_OP));
-  dpadDown.addEventListener('mouseleave', () => handleDirectionChange(NO_OP));
+  dpadDown.addEventListener('touchend', () => {});
+  dpadDown.addEventListener('mouseup', () => {});
+  dpadDown.addEventListener('mouseleave', () => {});
 
-  dpadLeft.addEventListener('touchend', () => handleDirectionChange(NO_OP));
-  dpadLeft.addEventListener('mouseup', () => handleDirectionChange(NO_OP));
-  dpadLeft.addEventListener('mouseleave', () => handleDirectionChange(NO_OP));
+  dpadLeft.addEventListener('touchend', () => {});
+  dpadLeft.addEventListener('mouseup', () => {});
+  dpadLeft.addEventListener('mouseleave', () => {});
 
-  dpadRight.addEventListener('touchend', () => handleDirectionChange(NO_OP));
-  dpadRight.addEventListener('mouseup', () => handleDirectionChange(NO_OP));
-  dpadRight.addEventListener('mouseleave', () => handleDirectionChange(NO_OP));
+  dpadRight.addEventListener('touchend', () => {});
+  dpadRight.addEventListener('mouseup', () => {});
+  dpadRight.addEventListener('mouseleave', () => {});
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
