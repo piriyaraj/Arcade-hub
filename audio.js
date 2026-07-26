@@ -107,4 +107,4 @@ class SoundFX {
   }
 }
 
-window.sfx = new SoundFX();
+if (typeof window.sfx === 'undefined') { window.sfx = new SoundFX(); }
