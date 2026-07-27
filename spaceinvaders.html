@@ -62,6 +62,30 @@
       background: rgba(255,255,255,0.05);
     }
 
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     header h1 {
       font-size: 2rem;
       font-weight: 800;
@@ -276,6 +300,30 @@
       box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
     }
 
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     @media (max-width: 768px) {
       body {
         overflow-y: auto;
@@ -318,6 +366,7 @@
   <a href="index.html" class="back-btn">&larr; Home</a>
   <h1>SPACE INVADERS</h1>
   <p>Defend the galaxy from space invaders!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -373,6 +422,7 @@
   const startBtn = document.getElementById('start-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const resetBtn = document.getElementById('reset-btn');
+  const muteBtn = document.getElementById('mute-btn');
 
   // Mobile Buttons
   const btnLeft = document.getElementById('btn-left');
@@ -397,6 +447,37 @@
   }
   bestEl.textContent = bestScore;
   const originalBestScore = bestScore; // immutable pre-game record for triggerGameOver
+
+  // Mute/Unmute state loading & initialization
+  let soundMuted = false;
+  try {
+    soundMuted = localStorage.getItem('spaceinvaders_muted') === 'true';
+  } catch (e) {
+    soundMuted = false;
+  }
+
+  if (window.sfx) {
+    window.sfx.muted = soundMuted;
+  }
+
+  function updateMuteButtonUI() {
+    if (window.sfx) {
+      muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+  }
+
+  function toggleMute() {
+    if (window.sfx) {
+      window.sfx.muted = !window.sfx.muted;
+      try {
+        localStorage.setItem('spaceinvaders_muted', window.sfx.muted.toString());
+      } catch (e) {}
+      updateMuteButtonUI();
+      window.sfx.init();
+    }
+  }
+
+  updateMuteButtonUI();
 
   let lives = 3;
   let wave = 1;
@@ -456,6 +537,10 @@
     // Handle pause shortcut (Escape/P)
     if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && gameStarted && !gameOver) {
       togglePause();
+    }
+    // Handle mute shortcut (M)
+    if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+      toggleMute();
     }
   });
 
@@ -1062,6 +1147,10 @@
         togglePause();
       }
     }
+  });
+
+  muteBtn.addEventListener('click', () => {
+    toggleMute();
   });
 
 </script>
