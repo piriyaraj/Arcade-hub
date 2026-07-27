@@ -216,7 +216,7 @@
 <div id="overlay">
   <h2>BING BALL</h2>
   <p>Drop balls and watch them bounce through the pegs. Land in the high-value slots to score big!</p>
-  <button class="drop-btn" id="start-btn" aria-label="Start Bing Ball Game">START GAME</button>
+  <button class="drop-btn" id="start-btn" data-action="start" aria-label="Start Bing Ball Game">START GAME</button>
 </div>
 
 <header>
@@ -245,8 +245,8 @@
 </div>
 
 <div id="controls">
-  <button class="drop-btn" id="drop-btn" aria-label="Drop a ball" disabled>DROP BALL</button>
-  <button id="reset-btn" aria-label="Reset game">RESET</button>
+  <button class="drop-btn" id="drop-btn" data-action="drop" aria-label="Drop a ball" disabled>DROP BALL</button>
+  <button id="reset-btn" data-action="reset" aria-label="Reset game">RESET</button>
 </div>
 
 <script src="audio.js"></script>
@@ -683,7 +683,7 @@ function showGameOver() {
     <h2>GAME OVER</h2>
     <div class="final-score">${score.toLocaleString()}</div>
     <p>${score === bestScore ? '🏆 New High Score!' : `Best: ${bestScore.toLocaleString()}`}</p>
-    <button class="drop-btn" onclick="location.reload()">PLAY AGAIN</button>
+    <button id="play-again-btn" class="drop-btn" data-action="play-again">PLAY AGAIN</button>
   `;
   overlayEl.classList.remove('hidden');
   gameRunning = false;
@@ -691,9 +691,27 @@ function showGameOver() {
 }
 
 // ─── Controls ─────────────────────────────────────────────────────────────────
-startBtn.addEventListener('click', startGame);
-dropBtn.addEventListener('click', dropBall);
-resetBtn.addEventListener('click', () => location.reload());
+// Delegated click handler: route every [data-action] button through one place
+// so dynamically rendered buttons (e.g. PLAY AGAIN in the game-over overlay)
+// can be bound without inline onclick attributes (CSP-safe).
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  switch (btn.dataset.action) {
+    case 'start':
+      startGame();
+      break;
+    case 'drop':
+      dropBall();
+      break;
+    case 'reset':
+      location.reload();
+      break;
+    case 'play-again':
+      location.reload();
+      break;
+  }
+});
 
 // Keyboard: space to drop
 document.addEventListener('keydown', (e) => {
