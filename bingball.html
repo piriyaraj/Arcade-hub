@@ -306,7 +306,9 @@ let gameRunning = false;
 let gameOver = false;
 let bestScore = 0;
 try {
-  bestScore = parseInt(localStorage.getItem('bingball_best') || '0');
+  const raw = localStorage.getItem('bingball_best');
+  const parsed = parseInt(raw, 10);
+  bestScore = Number.isFinite(parsed) ? parsed : 0;
 } catch (e) {
   bestScore = 0;
 }
