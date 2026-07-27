@@ -64,6 +64,30 @@
       background: rgba(255,255,255,0.05);
     }
 
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     header h1 {
       font-size: 2rem;
       font-weight: 800;
@@ -283,6 +307,7 @@
   <a href="index.html" class="back-btn">&larr; Home</a>
   <h1>TETRIS</h1>
   <p>Rotate blocks — Complete lines — Keep the board clear!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -413,8 +438,42 @@
   const overlayDesc = document.getElementById('overlay-desc');
   const overlayScore = document.getElementById('overlay-score');
   const startBtn = document.getElementById('start-btn');
+  const muteBtn = document.getElementById('mute-btn');
 
   bestEl.textContent = bestScore;
+
+  // Mute/Unmute state loading & initialization
+  let soundMuted = false;
+  try {
+    soundMuted = localStorage.getItem('tetris_muted') === 'true';
+  } catch (e) {
+    soundMuted = false;
+  }
+
+  if (window.sfx) {
+    window.sfx.muted = soundMuted;
+  }
+
+  function updateMuteButtonUI() {
+    if (window.sfx) {
+      muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+  }
+
+  function toggleMute() {
+    if (window.sfx) {
+      window.sfx.muted = !window.sfx.muted;
+      try {
+        localStorage.setItem('tetris_muted', window.sfx.muted.toString());
+      } catch (e) {}
+      updateMuteButtonUI();
+      if (typeof window.sfx.init === 'function') {
+        window.sfx.init();
+      }
+    }
+  }
+
+  updateMuteButtonUI();
 
   // ─── Bag System (Random Generator) ───────────────────────────────────────────
   function generateBag() {
@@ -852,6 +911,12 @@
 
   window.addEventListener('keydown', handleKeyDown);
 
+  window.addEventListener('keydown', (e) => {
+    if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+      toggleMute();
+    }
+  });
+
   // Mobile Soft Controls
   const leftBtn = document.getElementById('ctrl-left');
   const rightBtn = document.getElementById('ctrl-right');
@@ -896,6 +961,8 @@
       requestAnimationFrame(updateLoop);
     }
   });
+
+  muteBtn.addEventListener('click', toggleMute);
 
   // Init Window Dimensions
   resize();
