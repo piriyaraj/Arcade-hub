@@ -10,7 +10,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "audio",
-      "community": 3,
+      "community": 4,
       "norm_label": "audio.js"
     },
     {
@@ -104,6 +104,236 @@
       "norm_label": "test_version()"
     },
     {
+      "label": "audio.test.js",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_audio_test",
+      "community": 4,
+      "norm_label": "audio.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_audio_test_test",
+      "community": 4,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "tests_audio_test_assert",
+      "community": 4,
+      "norm_label": "assert"
+    },
+    {
+      "label": "constructor()",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "tests_audio_test_constructor",
+      "community": 4,
+      "norm_label": "constructor()"
+    },
+    {
+      "label": "resume()",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "tests_audio_test_resume",
+      "community": 4,
+      "norm_label": "resume()"
+    },
+    {
+      "label": "createOscillator()",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "tests_audio_test_createoscillator",
+      "community": 4,
+      "norm_label": "createoscillator()"
+    },
+    {
+      "label": "createGain()",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "tests_audio_test_creategain",
+      "community": 4,
+      "norm_label": "creategain()"
+    },
+    {
+      "label": "{ SoundFX }",
+      "file_type": "code",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "tests_audio_test_soundfx",
+      "community": 4,
+      "norm_label": "{ soundfx }"
+    },
+    {
+      "label": "test_js_utilities.py",
+      "file_type": "code",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities",
+      "community": 5,
+      "norm_label": "test_js_utilities.py"
+    },
+    {
+      "label": "test_js_audio_utilities()",
+      "file_type": "code",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_test_js_audio_utilities",
+      "community": 5,
+      "norm_label": "test_js_audio_utilities()"
+    },
+    {
+      "label": "test_js_general_utilities()",
+      "file_type": "code",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_test_js_general_utilities",
+      "community": 5,
+      "norm_label": "test_js_general_utilities()"
+    },
+    {
+      "label": "Runs the JavaScript Node.js unit tests for audio.js and asserts success.",
+      "file_type": "rationale",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_rationale_6",
+      "community": 5,
+      "norm_label": "runs the javascript node.js unit tests for audio.js and asserts success."
+    },
+    {
+      "label": "Runs the JavaScript Node.js unit tests for utils.js and asserts success.",
+      "file_type": "rationale",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_rationale_25",
+      "community": 5,
+      "norm_label": "runs the javascript node.js unit tests for utils.js and asserts success."
+    },
+    {
+      "label": "utils.test.js",
+      "file_type": "code",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_utils_test",
+      "community": 6,
+      "norm_label": "utils.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_utils_test_test",
+      "community": 6,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "tests_utils_test_assert",
+      "community": 6,
+      "norm_label": "assert"
+    },
+    {
+      "label": "mockStorage",
+      "file_type": "code",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_utils_test_mockstorage",
+      "community": 6,
+      "norm_label": "mockstorage"
+    },
+    {
+      "label": "utils",
+      "file_type": "code",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "tests_utils_test_utils",
+      "community": 6,
+      "norm_label": "utils"
+    },
+    {
+      "label": "utils.js",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "utils",
+      "community": 7,
+      "norm_label": "utils.js"
+    },
+    {
+      "label": "getBestScore()",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "utils_getbestscore",
+      "community": 7,
+      "norm_label": "getbestscore()"
+    },
+    {
+      "label": "saveBestScore()",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "utils_savebestscore",
+      "community": 7,
+      "norm_label": "savebestscore()"
+    },
+    {
+      "label": "getMuteState()",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "utils_getmutestate",
+      "community": 7,
+      "norm_label": "getmutestate()"
+    },
+    {
+      "label": "saveMuteState()",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "utils_savemutestate",
+      "community": 7,
+      "norm_label": "savemutestate()"
+    },
+    {
       "label": "README.md",
       "file_type": "document",
       "source_file": "README.md",
@@ -166,13 +396,25 @@
   ],
   "links": [
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
       "source_file": "audio.js",
-      "source_location": "L2",
+      "source_location": "L113",
       "weight": 1.0,
+      "context": "collection",
       "source": "audio",
       "target": "audio_soundfx",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "audio",
       "confidence_score": 1.0
     },
     {
@@ -236,6 +478,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "audio_soundfx",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -292,6 +545,211 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_creategain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_createoscillator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_resume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_soundfx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/audio.test.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_audio_test",
+      "target": "tests_audio_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities",
+      "target": "tests_test_js_utilities_test_js_audio_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities",
+      "target": "tests_test_js_utilities_test_js_general_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities_rationale_6",
+      "target": "tests_test_js_utilities_test_js_audio_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities_rationale_25",
+      "target": "tests_test_js_utilities_test_js_general_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tests_utils_test",
+      "target": "tests_utils_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_utils_test",
+      "target": "tests_utils_test_mockstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_utils_test",
+      "target": "tests_utils_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_utils_test",
+      "target": "tests_utils_test_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/utils.test.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_utils_test",
+      "target": "utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "utils.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "utils",
+      "target": "utils_getbestscore",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "utils.js",
+      "source_location": "L50",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "utils",
+      "target": "utils_getmutestate",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "utils.js",
+      "source_location": "L49",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "utils",
+      "target": "utils_savebestscore",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "utils.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "utils",
+      "target": "utils_savemutestate",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -331,5 +789,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "828baf35ab9363bb942f226ed486ef757913e939"
+  "built_at_commit": "25f345c3ffbae5e3011ab7d3da4ca82a0fe3df73"
 }

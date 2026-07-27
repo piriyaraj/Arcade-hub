@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "audio.js": {
-    "mtime": 1785182253.3422997,
-    "ast_hash": "d09cc6e190a9b2a08383b3deddae1ba9",
+    "mtime": 1785188802.1190176,
+    "ast_hash": "af1cb97fbf0c08f92b74a60e7c9f1236",
     "semantic_hash": ""
   },
   "bingball.html": {
@@ -60,8 +60,28 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785187794.6378186,
-    "ast_hash": "17e28fd1ce7515ee503da046f219e712",
+    "mtime": 1785187919.568387,
+    "ast_hash": "9677c8cc813a31876281d4eb31eb156b",
+    "semantic_hash": ""
+  },
+  "tests/audio.test.js": {
+    "mtime": 1785188812.5548768,
+    "ast_hash": "ba9e3ecaf1c157059e8a7b6b6bf72161",
+    "semantic_hash": ""
+  },
+  "tests/test_js_utilities.py": {
+    "mtime": 1785188817.342812,
+    "ast_hash": "4e73e3a553e688b8394244fcb7678130",
+    "semantic_hash": ""
+  },
+  "tests/utils.test.js": {
+    "mtime": 1785188807.7629414,
+    "ast_hash": "90992399150506e232a9a7aee2ae95aa",
+    "semantic_hash": ""
+  },
+  "utils.js": {
+    "mtime": 1785188803.7589955,
+    "ast_hash": "09a7ac2d22f9137e45f405136759ee7d",
     "semantic_hash": ""
   }
 }

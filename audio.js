@@ -108,3 +108,7 @@ class SoundFX {
 }
 
 if (typeof window.sfx === 'undefined') { window.sfx = new SoundFX(); }
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = { SoundFX };
+}
