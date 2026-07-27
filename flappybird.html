@@ -310,7 +310,7 @@
     let score = 0;
     let highScore = 0;
     try {
-      const raw = localStorage.getItem('flappy_best_score');
+      const raw = localStorage.getItem('flappy_best');
       const parsed = parseInt(raw, 10);
       highScore = Number.isFinite(parsed) ? parsed : 0;
     } catch (e) {
@@ -389,7 +389,6 @@
             vx: -Math.random() * 1.5 - 0.5,
             vy: Math.random() * 1 - 0.5,
             radius: Math.random() * 2 + 1,
-            color: 'rgba(250, 204, 2 yellow1, 0.6)'.replace('yellow', '250, 204, 21'), // Fallback fix
             color: 'rgba(250, 204, 21, 0.6)',
             alpha: 0.8,
             decay: 0.04
@@ -449,7 +448,7 @@
       // Check high score
       if (score > highScore) {
         highScore = score;
-        localStorage.setItem('flappy_best_score', highScore);
+        try { localStorage.setItem('flappy_best', String(highScore)); } catch (e) {}
         bestEl.textContent = highScore;
       }
 
