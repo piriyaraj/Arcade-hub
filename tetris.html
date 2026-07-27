@@ -382,7 +382,9 @@
   let lineCount = 0;
   let bestScore = 0;
   try {
-    bestScore = parseInt(localStorage.getItem('tetris_best') || '0');
+    const raw = localStorage.getItem('tetris_best');
+    const parsed = parseInt(raw, 10);
+    bestScore = Number.isFinite(parsed) ? parsed : 0;
   } catch (e) {
     bestScore = 0;
   }
