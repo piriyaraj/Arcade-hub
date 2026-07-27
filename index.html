@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Arcade Game Portal - Play classic web arcade games like Snake, Bing Ball, and Breakout directly in your browser." />
   <title>Arcade Game Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b0f1a;
@@ -30,7 +27,7 @@
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Outfit', system-ui, sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -48,7 +45,6 @@
     }
 
     .logo {
-      font-family: 'Press Start 2P', monospace;
       font-size: 2.2rem;
       background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
       -webkit-background-clip: text;

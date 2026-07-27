@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Classic breakout brick-breaker arcade game. Bounce the ball, destroy neon bricks, and clear levels without draining your lives." />
   <title>Breakout - Arcade Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b0f1a;
@@ -598,11 +595,11 @@
       ctx.fillStyle = 'rgba(11, 15, 26, 0.6)';
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-      ctx.font = '800 24px Outfit';
+      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#00f0ff';
       ctx.textAlign = 'center';
       ctx.fillText('GAME PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-      ctx.font = '14px Outfit';
+      ctx.font = '14px system-ui, -apple-system, sans-serif';
       ctx.fillStyle = '#9aa0a6';
       ctx.fillText('Press SPACE or click RESUME to play', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
     }
@@ -622,7 +619,7 @@
         ctx.fillStyle = 'rgba(11, 15, 26, 0.15)';
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        ctx.font = '800 30px Outfit';
+        ctx.font = '800 30px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = (Math.floor(transitionFrames / 5) % 2 === 0) ? '#ff007f' : '#00f0ff';
         ctx.textAlign = 'center';
         ctx.fillText(`LEVEL ${level}!`, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
