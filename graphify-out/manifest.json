@@ -45,7 +45,7 @@
     "semantic_hash": ""
   },
   "tetris.html": {
-    "mtime": 1785185870.4926715,
+    "mtime": 1785187104.4335763,
     "ast_hash": "7ce0b91a0841f9875b554b32384f3d8a",
     "semantic_hash": ""
   },
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785185196.1212301,
-    "ast_hash": "9677c8cc813a31876281d4eb31eb156b",
+    "mtime": 1785187794.6378186,
+    "ast_hash": "17e28fd1ce7515ee503da046f219e712",
     "semantic_hash": ""
   }
 }
