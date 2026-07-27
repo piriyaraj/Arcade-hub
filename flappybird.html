@@ -308,7 +308,14 @@
     // Game States
     let state = 'start'; // 'start', 'playing', 'paused', 'gameover'
     let score = 0;
-    let highScore = parseInt(localStorage.getItem('flappy_best_score') || '0', 10);
+    let highScore = 0;
+    try {
+      const raw = localStorage.getItem('flappy_best_score');
+      const parsed = parseInt(raw, 10);
+      highScore = Number.isFinite(parsed) ? parsed : 0;
+    } catch (e) {
+      highScore = 0;
+    }
     bestEl.textContent = highScore;
 
     // Gameplay parameters
