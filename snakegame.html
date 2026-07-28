@@ -312,6 +312,14 @@
         padding: 4px 20px 12px;
       }
     }
+
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
@@ -332,7 +340,7 @@
 <div id="stats">
   <div class="stat">
     <span class="stat-label">Score</span>
-    <span class="stat-value" id="score" aria-live="polite" aria-atomic="true">0</span>
+    <span class="stat-value" aria-live="polite" aria-atomic="true"><span aria-hidden="true" style="margin-right: 5px;">●</span><span id="score">0</span></span>
   </div>
   <div class="stat">
     <span class="stat-label">Length</span>
@@ -345,7 +353,7 @@
 </div>
 
 <div id="canvas-wrap">
-  <canvas id="game" aria-label="Snake game canvas. Control the snake with arrow keys or WASD to eat food and grow without hitting walls."></canvas>
+  <canvas id="game" tabindex="0" aria-label="Snake game canvas. Control the snake with arrow keys or WASD to eat food and grow without hitting walls."></canvas>
 </div>
 
 <div id="dpad" class="mobile-only">
