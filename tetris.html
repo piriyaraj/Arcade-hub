@@ -420,6 +420,7 @@
     const parsed = parseInt(raw, 10);
     bestScore = Number.isFinite(parsed) ? parsed : 0;
   } catch (e) {
+    console.error('localStorage load failed:', e);
     bestScore = 0;
   }
   let gameStarted = false;
@@ -455,6 +456,7 @@
   try {
     soundMuted = localStorage.getItem('tetris_muted') === 'true';
   } catch (e) {
+    console.error('localStorage load failed:', e);
     soundMuted = false;
   }
 
@@ -473,7 +475,9 @@
       window.sfx.muted = !window.sfx.muted;
       try {
         localStorage.setItem('tetris_muted', window.sfx.muted.toString());
-      } catch (e) {}
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
       updateMuteButtonUI();
       if (typeof window.sfx.init === 'function') {
         window.sfx.init();
@@ -537,7 +541,9 @@
     if (window.sfx && typeof window.sfx.init === 'function') {
       try {
         window.sfx.init();
-      } catch (e) {}
+      } catch (e) {
+        console.error('Game operation failed:', e);
+      }
     }
     requestAnimationFrame(updateLoop);
   }
@@ -548,7 +554,9 @@
     if (window.sfx && typeof window.sfx.playGameOver === 'function') {
       try {
         window.sfx.playGameOver();
-      } catch (e) {}
+      } catch (e) {
+        console.error('Game operation failed:', e);
+      }
     }
 
     if (score > bestScore) {
@@ -556,7 +564,9 @@
       bestEl.textContent = bestScore;
       try {
         localStorage.setItem('tetris_best', bestScore.toString());
-      } catch (e) {}
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
     }
 
     overlayTitle.textContent = "GAME OVER";
