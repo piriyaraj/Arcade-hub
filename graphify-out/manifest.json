@@ -5,7 +5,7 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785200176.5494957,
+    "mtime": 1785200511.0096185,
     "ast_hash": "3f3282baa8a15e70a8fd13afdfbb6a3b",
     "semantic_hash": ""
   },
@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785200172.7335422,
-    "ast_hash": "1fbf8d3caa6d324fa398949c4ba20747",
+    "mtime": 1785200523.84547,
+    "ast_hash": "55262ea1865edd62f9a83c17bb3b10bc",
     "semantic_hash": ""
   },
   "snakegame.html": {
@@ -85,7 +85,7 @@
     "semantic_hash": ""
   },
   "2048.html": {
-    "mtime": 1785200158.245719,
+    "mtime": 1785200511.0096185,
     "ast_hash": "4d8a5fa1ed49c9f7dd1f987726fc79a9",
     "semantic_hash": ""
   }
