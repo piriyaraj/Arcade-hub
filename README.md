@@ -12,6 +12,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 👾 **[Space Invaders](spaceinvaders.html)** — Classic space invaders arcade shooter.
 - 🧩 **[Tetris](tetris.html)** — Classic falling block puzzle game.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
+- 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
 
 ---
 
@@ -21,7 +22,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html README.md
+   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html README.md
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
