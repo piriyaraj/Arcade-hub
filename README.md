@@ -13,6 +13,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🧩 **[Tetris](tetris.html)** — Classic falling block puzzle game.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
+- 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
 
 ---
 
