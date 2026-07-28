@@ -22,7 +22,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html README.md
+   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html README.md
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
