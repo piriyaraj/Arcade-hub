@@ -61,6 +61,30 @@
       background: rgba(255,255,255,0.05);
     }
 
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     header h1 {
       font-size: 2rem;
       font-weight: 800;
@@ -261,6 +285,7 @@
   <a href="index.html" class="back-btn">&larr; Home</a>
   <h1>FLAPPY NEON</h1>
   <p>Flap your wings and slide through neon barriers!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -299,6 +324,7 @@
     const startBtn = document.getElementById('start-btn');
     const pauseBtn = document.getElementById('pause-btn');
     const resetBtn = document.getElementById('reset-btn');
+    const muteBtn = document.getElementById('mute-btn');
 
     // Canvas Base Specs
     const WIDTH = canvas.width;
@@ -317,6 +343,47 @@
       highScore = 0;
     }
     bestEl.textContent = highScore;
+
+    // Mute/Unmute state loading & initialization
+    let soundMuted = false;
+    try {
+      soundMuted = localStorage.getItem('flappybird_muted') === 'true';
+    } catch (e) {
+      soundMuted = false;
+    }
+
+    if (window.sfx) {
+      window.sfx.muted = soundMuted;
+    }
+
+    function updateMuteButtonUI() {
+      if (window.sfx) {
+        muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+      }
+    }
+
+    function toggleMute() {
+      if (window.sfx) {
+        window.sfx.muted = !window.sfx.muted;
+        try {
+          localStorage.setItem('flappybird_muted', window.sfx.muted.toString());
+        } catch (e) {}
+        updateMuteButtonUI();
+        if (typeof window.sfx.init === 'function') {
+          window.sfx.init();
+        }
+      }
+    }
+
+    updateMuteButtonUI();
+    muteBtn.addEventListener('click', toggleMute);
+
+    // M-key shortcut
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+        toggleMute();
+      }
+    });
 
     // Gameplay parameters
     const GRAVITY = 0.32;
