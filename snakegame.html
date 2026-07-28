@@ -488,7 +488,7 @@ function showGameOver() {
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>You reached a length of ${escapeHtml(snake.length)}!</p>
-    <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
+    <button class="play-btn" data-action="restart">PLAY AGAIN</button>
   `;
   overlay.classList.remove('hidden');
 }
@@ -516,7 +516,7 @@ function triggerGameVictory() {
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>Incredible! You filled the entire board and won the game!</p>
-    <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
+    <button class="play-btn" data-action="restart">PLAY AGAIN</button>
   `;
   overlay.classList.remove('hidden');
 }
@@ -773,8 +773,6 @@ function restartGame() {
   initGame();
 }
 
-window.restartGame = restartGame;
-
 function togglePause() {
   if (!gameStarted || gameOver) return;
   gamePaused = !gamePaused;
@@ -835,6 +833,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ─── Event Listeners ───────────────────────────────────────────────────────────
+// Delegated click handler for play again/restart buttons inside overlays
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="restart"]');
+  if (btn) restartGame();
+});
+
 startBtn?.addEventListener('click', startGame);
 pauseBtn?.addEventListener('click', togglePause);
 resetBtn?.addEventListener('click', restartGame);

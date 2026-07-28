@@ -15,37 +15,37 @@
     "semantic_hash": ""
   },
   "audio.js": {
-    "mtime": 1785188802.1190176,
+    "mtime": 1785188915.9374928,
     "ast_hash": "af1cb97fbf0c08f92b74a60e7c9f1236",
     "semantic_hash": ""
   },
   "bingball.html": {
-    "mtime": 1785185196.1212301,
+    "mtime": 1785196837.8783894,
     "ast_hash": "6b29cc5983626c5af797d7cf892b9b9c",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785185196.1212301,
+    "mtime": 1785196332.3274627,
     "ast_hash": "dc8e612951016bacf72d736407458c87",
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1785182252.0743132,
-    "ast_hash": "a5282cb31727b85374c485addc26a2bf",
+    "mtime": 1785196880.0539334,
+    "ast_hash": "75b565d3951eb70d94caf5b98fb47217",
     "semantic_hash": ""
   },
   "breakout.html": {
-    "mtime": 1785182253.3422997,
+    "mtime": 1785196565.3772328,
     "ast_hash": "a41831c4ac67136cd7773a3113bd8f42",
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
-    "mtime": 1785185739.6663206,
+    "mtime": 1785196565.3812327,
     "ast_hash": "bef29e3f9d2584c20dfdd2e3038b1b56",
     "semantic_hash": ""
   },
   "tetris.html": {
-    "mtime": 1785187104.4335763,
+    "mtime": 1785196565.3812327,
     "ast_hash": "7ce0b91a0841f9875b554b32384f3d8a",
     "semantic_hash": ""
   },
@@ -60,27 +60,27 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785187919.568387,
-    "ast_hash": "9677c8cc813a31876281d4eb31eb156b",
+    "mtime": 1785196837.8783894,
+    "ast_hash": "83a95bd8dc5f56788762b887b07a88c6",
     "semantic_hash": ""
   },
   "tests/audio.test.js": {
-    "mtime": 1785188812.5548768,
+    "mtime": 1785188915.9414928,
     "ast_hash": "ba9e3ecaf1c157059e8a7b6b6bf72161",
     "semantic_hash": ""
   },
   "tests/test_js_utilities.py": {
-    "mtime": 1785188817.342812,
+    "mtime": 1785188915.9414928,
     "ast_hash": "4e73e3a553e688b8394244fcb7678130",
     "semantic_hash": ""
   },
   "tests/utils.test.js": {
-    "mtime": 1785188807.7629414,
+    "mtime": 1785188915.9414928,
     "ast_hash": "90992399150506e232a9a7aee2ae95aa",
     "semantic_hash": ""
   },
   "utils.js": {
-    "mtime": 1785188803.7589955,
+    "mtime": 1785188915.9414928,
     "ast_hash": "09a7ac2d22f9137e45f405136759ee7d",
     "semantic_hash": ""
   }
