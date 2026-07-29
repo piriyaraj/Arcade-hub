@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Classic Pong arcade game. Defeat the CPU in a fast-paced rally of paddles and power." />
+  <title>Pong - Arcade Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #111827;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: #4f83cc;
+      --paddle-glow: #00f0ff;
+      --cpu-glow: #ff007f;
+      --ball-glow: #facc15;
+      --accent-pink: #ff007f;
+      --accent-neon: #00f0ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--paddle-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-pink);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--paddle-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--paddle-glow);
+    }
+
+    #cpu-stat .stat-value {
+      color: var(--cpu-glow);
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      aspect-ratio: 600 / 400;
+      background-color: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(79, 131, 204, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(79, 131, 204, 0.1);
+      display: block;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button.game-btn {
+      background: linear-gradient(135deg, var(--border), var(--paddle-glow));
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 2px 12px rgba(79, 131, 204, 0.4);
+    }
+
+    button.game-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(79, 131, 204, 0.6);
+    }
+
+    button.game-btn:active { transform: translateY(0); }
+
+    button.play-btn {
+      background: linear-gradient(135deg, #00f0ff, #00b0ff);
+      box-shadow: 0 2px 12px rgba(0, 240, 255, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    button.play-btn:hover {
+      box-shadow: 0 4px 18px rgba(0, 240, 255, 0.6);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--paddle-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 340px;
+      line-height: 1.5;
+    }
+
+    #overlay .final-score {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--paddle-glow);
+      margin-bottom: 24px;
+    }
+
+    .high-score-badge {
+      font-size: 1.2rem;
+      color: var(--accent-pink);
+      margin-bottom: 16px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+    }
+
+    .instructions-list {
+      text-align: left;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      list-style-type: none;
+    }
+
+    .instructions-list li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">PONG</h2>
+  <p id="overlay-desc">Defeat the CPU in standard retro arcade style. First to 7 points wins!</p>
+  <ul class="instructions-list" id="instructions">
+    <li>🎮 Move: Up/Down arrow keys or W/S</li>
+    <li>⏸️ Pause: Spacebar or PAUSE button</li>
+    <li>⚡ Speed increases on paddle hits and every 3 matches!</li>
+  </ul>
+  <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW BEST STREAK! 🏆</div>
+  <div class="final-score hidden" id="final-score">Score: 0 - 0</div>
+  <button class="game-btn play-btn" id="start-btn" aria-label="Start game">START GAME</button>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>PONG</h1>
+  <p>Bounce the ball and defeat the CPU!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat" id="player-stat">
+    <span class="stat-label">Player</span>
+    <span class="stat-value" aria-live="polite" aria-atomic="true"><span aria-hidden="true" style="margin-right: 5px;">🏓</span><span id="player-score">0</span></span>
+  </div>
+  <div class="stat" id="cpu-stat">
+    <span class="stat-label">CPU</span>
+    <span class="stat-value" aria-live="polite" aria-atomic="true"><span aria-hidden="true" style="margin-right: 5px;">🤖</span><span id="cpu-score">0</span></span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Speed</span>
+    <span class="stat-value" id="speed-multiplier">100%</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best Streak</span>
+    <span class="stat-value" id="best-streak">0</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="600" height="400" tabindex="0" aria-label="Pong game canvas. Control the left paddle with Up and Down arrows or W and S to bounce the ball back to the CPU."></canvas>
+</div>
+
+<div id="controls">
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="audio.js"></script>
+<script>
+  // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
+  const safeGet = (id) => document.getElementById(id) ?? document.body;
+
+  // ─── Game Constants ────────────────────────────────────────────────────────
+  const CANVAS_WIDTH = 600;
+  const CANVAS_HEIGHT = 400;
+
+  const PADDLE_WIDTH = 12;
+  const PADDLE_HEIGHT = 80;
+  const PADDLE_SPEED = 7;
+  const BALL_RADIUS = 8;
+
+  const WIN_SCORE = 7;
+  const STARTING_BASE_SPEED = 5.0;
+  const MAX_BASE_SPEED = 10.0;
+  const MAX_BALL_SPEED = 18.0;
+
+  // ─── Canvas & Context Setup ────────────────────────────────────────────────
+  const canvas = safeGet('game');
+  const ctx = canvas.getContext('2d');
+
+  // ─── Game State Variables ──────────────────────────────────────────────────
+  let playerY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+  let cpuY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+
+  let ballX = CANVAS_WIDTH / 2;
+  let ballY = CANVAS_HEIGHT / 2;
+  let ballDX = 0;
+  let ballDY = 0;
+
+  let baseBallSpeed = STARTING_BASE_SPEED;
+  let activeSpeed = STARTING_BASE_SPEED;
+
+  let playerScore = 0;
+  let cpuScore = 0;
+  let ralliesPlayed = 0; // Tracks points scored this game
+  let matchStreak = 0;   // Current matches won consecutively
+  let bestStreak = 0;
+
+  try {
+    const raw = localStorage.getItem('pong_best_streak');
+    const parsed = parseInt(raw, 10);
+    bestStreak = Number.isFinite(parsed) ? parsed : 0;
+  } catch (e) {
+    bestStreak = 0;
+  }
+
+  let gameStarted = false;
+  let gameOver = false;
+  let gamePaused = false;
+
+  let particles = [];
+
+  // Input tracking
+  const keys = {
+    ArrowUp: false,
+    ArrowDown: false,
+    w: false,
+    s: false
+  };
+
+  // DOM Elements
+  const playerValEl = safeGet('player-score');
+  const cpuValEl = safeGet('cpu-score');
+  const speedEl = safeGet('speed-multiplier');
+  const bestStreakEl = safeGet('best-streak');
+
+  const pauseBtn = safeGet('pause-btn');
+  const resetBtn = safeGet('reset-btn');
+  const muteBtn = safeGet('mute-btn');
+  const overlay = safeGet('overlay');
+  const startBtn = safeGet('start-btn');
+  const overlayTitle = safeGet('overlay-title');
+  const overlayDesc = safeGet('overlay-desc');
+  const instructionsList = safeGet('instructions');
+  const finalScoreEl = safeGet('final-score');
+  const highScoreBadge = safeGet('high-score-badge');
+
+  bestStreakEl.textContent = String(bestStreak);
+
+  // Update mute button label based on global instance state
+  function updateMuteButtonUI() {
+    if (window.sfx) {
+      muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+  }
+
+  // ─── Particle System ───────────────────────────────────────────────────────
+  class Particle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.radius = 2 + Math.random() * 3;
+      this.vx = (Math.random() - 0.5) * 6;
+      this.vy = (Math.random() - 0.5) * 6;
+      this.color = color;
+      this.alpha = 1;
+      this.decay = 0.02 + Math.random() * 0.03;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= this.decay;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function spawnBounceParticles(bx, by, color) {
+    const numParticles = 8;
+    for (let i = 0; i < numParticles; i++) {
+      particles.push(new Particle(bx, by, color));
+    }
+  }
+
+  // ─── Input Handlers ────────────────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'Up') {
+      keys.ArrowUp = true;
+    } else if (e.key === 'ArrowDown' || e.key === 'Down') {
+      keys.ArrowDown = true;
+    } else if (e.key.toLowerCase() === 'w') {
+      keys.w = true;
+    } else if (e.key.toLowerCase() === 's') {
+      keys.s = true;
+    } else if (e.key === ' ' || e.key.toLowerCase() === 'p') {
+      if (gameStarted && !gameOver) {
+        togglePause();
+        e.preventDefault();
+      }
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'Up') {
+      keys.ArrowUp = false;
+    } else if (e.key === 'ArrowDown' || e.key === 'Down') {
+      keys.ArrowDown = false;
+    } else if (e.key.toLowerCase() === 'w') {
+      keys.w = false;
+    } else if (e.key.toLowerCase() === 's') {
+      keys.s = false;
+    }
+  });
+
+  muteBtn.addEventListener('click', () => {
+    if (window.sfx) {
+      window.sfx.muted = !window.sfx.muted;
+      updateMuteButtonUI();
+      window.sfx.init();
+    }
+  });
+
+  startBtn.addEventListener('click', () => {
+    if (window.sfx) window.sfx.init();
+    startNewGame();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (window.sfx) window.sfx.init();
+    initGameDetails();
+    if (gamePaused) togglePause();
+    startBtn.focus();
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    togglePause();
+  });
+
+  // ─── Game Loop & Controls Logic ───────────────────────────────────────────
+  function initGameDetails() {
+    playerScore = 0;
+    cpuScore = 0;
+    ralliesPlayed = 0;
+    baseBallSpeed = STARTING_BASE_SPEED;
+    activeSpeed = STARTING_BASE_SPEED;
+    gameOver = false;
+
+    // Reset paddles and ball
+    playerY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+    cpuY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+    resetBall(1); // Serve towards player
+
+    particles = [];
+    updateUI();
+
+    pauseBtn.disabled = true;
+    overlayTitle.textContent = "PONG";
+    overlayDesc.textContent = "Defeat the CPU in standard retro arcade style. First to 7 points wins!";
+    instructionsList.classList.remove('hidden');
+    finalScoreEl.classList.add('hidden');
+    highScoreBadge.classList.add('hidden');
+    startBtn.textContent = "START GAME";
+    overlay.classList.remove('hidden');
+  }
+
+  function resetBall(direction = null) {
+    ballX = CANVAS_WIDTH / 2;
+    ballY = CANVAS_HEIGHT / 2;
+
+    // Choose random starting angle pointing left/right
+    const angleRange = Math.PI / 4; // 45 degrees spread
+    let angle = (Math.random() - 0.5) * angleRange;
+
+    // Determine direction
+    const serveDirection = direction !== null ? direction : (Math.random() > 0.5 ? 1 : -1);
+    if (serveDirection === -1) {
+      angle = Math.PI - angle;
+    }
+
+    activeSpeed = baseBallSpeed;
+    ballDX = activeSpeed * Math.cos(angle);
+    ballDY = activeSpeed * Math.sin(angle);
+  }
+
+  function startNewGame() {
+    overlay.classList.add('hidden');
+    gameStarted = true;
+    gameOver = false;
+    gamePaused = false;
+    pauseBtn.disabled = false;
+
+    playerScore = 0;
+    cpuScore = 0;
+    ralliesPlayed = 0;
+    baseBallSpeed = STARTING_BASE_SPEED;
+    activeSpeed = STARTING_BASE_SPEED;
+    particles = [];
+
+    playerY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+    cpuY = (CANVAS_HEIGHT - PADDLE_HEIGHT) / 2;
+    resetBall();
+
+    updateUI();
+  }
+
+  function togglePause() {
+    gamePaused = !gamePaused;
+    pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
+
+    if (gamePaused) {
+      ctx.fillStyle = 'rgba(11, 15, 26, 0.65)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#00f0ff';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+      ctx.font = '14px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = '#9aa0a6';
+      ctx.fillText('Press SPACE or click RESUME to play', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
+    }
+  }
+
+  function handlePointScore(scoringEntity) {
+    if (window.sfx) window.sfx.playScoreSlot();
+
+    if (scoringEntity === 'player') {
+      playerScore++;
+    } else {
+      cpuScore++;
+    }
+
+    ralliesPlayed++;
+
+    // Check progression: Ball speed increases by 5% every 3 rallies (points completed)
+    if (ralliesPlayed % 3 === 0) {
+      baseBallSpeed = Math.min(MAX_BASE_SPEED, baseBallSpeed * 1.05);
+    }
+
+    updateUI();
+
+    if (playerScore >= WIN_SCORE || cpuScore >= WIN_SCORE) {
+      handleGameOver();
+    } else {
+      // Serve the ball towards the entity that was scored upon
+      resetBall(scoringEntity === 'player' ? 1 : -1);
+    }
+  }
+
+  function updateUI() {
+    playerValEl.textContent = playerScore;
+    cpuValEl.textContent = cpuScore;
+    speedEl.textContent = `${Math.round((activeSpeed / STARTING_BASE_SPEED) * 100)}%`;
+    bestStreakEl.textContent = String(bestStreak);
+  }
+
+  function handleGameOver() {
+    gameStarted = false;
+    gameOver = true;
+    pauseBtn.disabled = true;
+
+    if (window.sfx) window.sfx.playGameOver();
+
+    const playerWon = playerScore >= WIN_SCORE;
+    let isNewBest = false;
+
+    if (playerWon) {
+      matchStreak++;
+      if (matchStreak > bestStreak) {
+        bestStreak = matchStreak;
+        isNewBest = true;
+        try {
+          localStorage.setItem('pong_best_streak', String(bestStreak));
+        } catch (e) {
+          // Silently fail
+        }
+        bestStreakEl.textContent = String(bestStreak);
+      }
+    } else {
+      matchStreak = 0;
+    }
+
+    if (isNewBest) {
+      highScoreBadge.classList.remove('hidden');
+    } else {
+      highScoreBadge.classList.add('hidden');
+    }
+
+    if (playerWon) {
+      overlayTitle.textContent = "PLAYER WINS!";
+      overlayTitle.style.background = "linear-gradient(135deg, var(--paddle-glow), #00ff88)";
+      overlayTitle.style.webkitBackgroundClip = "text";
+      overlayDesc.textContent = `Excellent job! Match streak: ${matchStreak}. Can you beat it?`;
+    } else {
+      overlayTitle.textContent = "CPU WINS!";
+      overlayTitle.style.background = "linear-gradient(135deg, var(--accent-pink), #ff5500)";
+      overlayTitle.style.webkitBackgroundClip = "text";
+      overlayDesc.textContent = "Better luck next time! Try again to defeat the CPU and start a streak.";
+    }
+
+    instructionsList.classList.add('hidden');
+    finalScoreEl.textContent = `Score: ${playerScore} - ${cpuScore}`;
+    finalScoreEl.classList.remove('hidden');
+    startBtn.textContent = "PLAY AGAIN";
+    overlay.classList.remove('hidden');
+  }
+
+  // ─── Physics Engine ────────────────────────────────────────────────────────
+  function updatePhysics() {
+    if (!gameStarted || gamePaused || gameOver) return;
+
+    // 1. Move Player Paddle
+    if (keys.ArrowUp || keys.w) {
+      playerY -= PADDLE_SPEED;
+    }
+    if (keys.ArrowDown || keys.s) {
+      playerY += PADDLE_SPEED;
+    }
+    playerY = Math.max(0, Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, playerY));
+
+    // 2. Move CPU Paddle (AI controls)
+    // Scale AI speed with the current level difficulty (baseBallSpeed)
+    const currentCpuSpeed = 4.2 + (baseBallSpeed - STARTING_BASE_SPEED) * 0.4;
+    const cpuSpeedCap = 7.0;
+    const cpuSpeed = Math.min(cpuSpeedCap, currentCpuSpeed);
+
+    // AI logic: target the ball if it is moving towards CPU or is on CPU half
+    if (ballDX > 0 || ballX > CANVAS_WIDTH / 2) {
+      const cpuPaddleCenter = cpuY + PADDLE_HEIGHT / 2;
+      const verticalDiff = ballY - cpuPaddleCenter;
+
+      // Introduce an 8px deadband to prevent paddle jittering
+      if (Math.abs(verticalDiff) > 8) {
+        if (verticalDiff > 0) {
+          cpuY += Math.min(cpuSpeed, verticalDiff);
+        } else {
+          cpuY -= Math.min(cpuSpeed, Math.abs(verticalDiff));
+        }
+      }
+    }
+    cpuY = Math.max(0, Math.min(CANVAS_HEIGHT - PADDLE_HEIGHT, cpuY));
+
+    // 3. Move Ball
+    ballX += ballDX;
+    ballY += ballDY;
+
+    // 4. Wall Collisions (Top & Bottom only, horizontal boundary is scoring)
+    if (ballY - BALL_RADIUS < 0) {
+      ballY = BALL_RADIUS;
+      ballDY = -ballDY;
+      if (window.sfx) window.sfx.playBounce();
+      spawnBounceParticles(ballX, ballY, '#ffffff');
+    } else if (ballY + BALL_RADIUS > CANVAS_HEIGHT) {
+      ballY = CANVAS_HEIGHT - BALL_RADIUS;
+      ballDY = -ballDY;
+      if (window.sfx) window.sfx.playBounce();
+      spawnBounceParticles(ballX, ballY, '#ffffff');
+    }
+
+    // 5. Paddle Collision detection
+    // Player Paddle is at X = 20, width = 12 (covers range [20, 32])
+    // CPU Paddle is at X = 568, width = 12 (covers range [568, 580])
+
+    if (ballDX < 0) {
+      // Check collision on Player Paddle
+      if (ballX - BALL_RADIUS <= 32 && ballX + BALL_RADIUS >= 20) {
+        if (ballY >= playerY && ballY <= playerY + PADDLE_HEIGHT) {
+          // Bounce off player paddle
+          const relativeIntersectY = (playerY + PADDLE_HEIGHT / 2) - ballY;
+          const normalizedIntersectY = relativeIntersectY / (PADDLE_HEIGHT / 2);
+          const maxBounceAngle = Math.PI / 3.6; // ~50 degrees max deflection
+          const bounceAngle = normalizedIntersectY * maxBounceAngle;
+
+          activeSpeed = Math.min(MAX_BALL_SPEED, activeSpeed * 1.05);
+
+          ballDX = activeSpeed * Math.cos(bounceAngle);
+          ballDY = -activeSpeed * Math.sin(bounceAngle);
+
+          // Push ball past paddle face to prevent trapping
+          ballX = 32 + BALL_RADIUS;
+
+          if (window.sfx) window.sfx.playBounce();
+          spawnBounceParticles(ballX, ballY, 'var(--accent-neon)');
+          updateUI();
+        }
+      }
+    } else if (ballDX > 0) {
+      // Check collision on CPU Paddle
+      if (ballX + BALL_RADIUS >= 568 && ballX - BALL_RADIUS <= 580) {
+        if (ballY >= cpuY && ballY <= cpuY + PADDLE_HEIGHT) {
+          // Bounce off CPU paddle
+          const relativeIntersectY = (cpuY + PADDLE_HEIGHT / 2) - ballY;
+          const normalizedIntersectY = relativeIntersectY / (PADDLE_HEIGHT / 2);
+          const maxBounceAngle = Math.PI / 3.6;
+          const bounceAngle = normalizedIntersectY * maxBounceAngle;
+
+          activeSpeed = Math.min(MAX_BALL_SPEED, activeSpeed * 1.05);
+
+          ballDX = -activeSpeed * Math.cos(bounceAngle);
+          ballDY = -activeSpeed * Math.sin(bounceAngle);
+
+          // Push ball past paddle face
+          ballX = 568 - BALL_RADIUS;
+
+          if (window.sfx) window.sfx.playBounce();
+          spawnBounceParticles(ballX, ballY, 'var(--accent-pink)');
+          updateUI();
+        }
+      }
+    }
+
+    // 6. Scoring conditions
+    if (ballX - BALL_RADIUS < 0) {
+      // CPU Scores
+      handlePointScore('cpu');
+    } else if (ballX + BALL_RADIUS > CANVAS_WIDTH) {
+      // Player Scores
+      handlePointScore('player');
+    }
+
+    // 7. Update Particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      particles[i].update();
+      if (particles[i].alpha <= 0) {
+        particles.splice(i, 1);
+      }
+    }
+  }
+
+  // ─── Drawing Engine ────────────────────────────────────────────────────────
+  function draw() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Draw grid background lines (matching snake/bingball retro aesthetics)
+    ctx.strokeStyle = 'rgba(31, 41, 55, 0.4)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < CANVAS_WIDTH; x += 20) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, CANVAS_HEIGHT);
+      ctx.stroke();
+    }
+    for (let y = 0; y < CANVAS_HEIGHT; y += 20) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(CANVAS_WIDTH, y);
+      ctx.stroke();
+    }
+
+    // Draw Center Court Line (Classic Pong dashed line)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([15, 10]);
+    ctx.beginPath();
+    ctx.moveTo(CANVAS_WIDTH / 2, 0);
+    ctx.lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+    ctx.stroke();
+    ctx.setLineDash([]); // Reset line dash
+
+    // Draw scores in the background of the canvas
+    ctx.save();
+    ctx.font = '800 80px "Courier New", Courier, monospace';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(playerScore), CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2);
+    ctx.fillText(String(cpuScore), 3 * CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2);
+    ctx.restore();
+
+    // Draw Particles
+    particles.forEach(p => p.draw());
+
+    // Draw Player Paddle (Cyan)
+    ctx.save();
+    ctx.fillStyle = '#00f0ff';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(0, 240, 255, 0.6)';
+    ctx.beginPath();
+    ctx.roundRect(20, playerY, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
+    ctx.fill();
+    ctx.restore();
+
+    // Draw CPU Paddle (Pink)
+    ctx.save();
+    ctx.fillStyle = '#ff007f';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(255, 0, 127, 0.6)';
+    ctx.beginPath();
+    ctx.roundRect(CANVAS_WIDTH - 20 - PADDLE_WIDTH, cpuY, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
+    ctx.fill();
+    ctx.restore();
+
+    // Draw Ball
+    if (gameStarted && !gameOver) {
+      ctx.save();
+      ctx.fillStyle = '#facc15';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#eab308';
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, BALL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ─── Main Animation Loop ───────────────────────────────────────────────────
+  function loop() {
+    updatePhysics();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // Run the initializer and bootstrap animation loop
+  initGameDetails();
+  updateMuteButtonUI();
+  loop();
+</script>
+</body>
+</html>
