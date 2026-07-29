@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785326333.0659704,
-    "ast_hash": "a4e9aaa845d0e6f1cbbe57237d08f253",
+    "mtime": 1785348920.258597,
+    "ast_hash": "d2043303e82a86c1a8a6ea4483ad5be9",
     "semantic_hash": ""
   },
   "mail.md": {
@@ -20,32 +20,32 @@
     "semantic_hash": ""
   },
   "bingball.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.9033391,
     "ast_hash": "51572ca1d725416fc683cf901a005506",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785329906.611443,
+    "mtime": 1785348444.911339,
     "ast_hash": "0a1e9f2e0cd1f9c63b8f18fafe6b8b93",
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1785326886.2469587,
+    "mtime": 1785348444.915339,
     "ast_hash": "9b17a6c4934614066057fd8e78d71af4",
     "semantic_hash": ""
   },
   "breakout.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.9033391,
     "ast_hash": "f554622a6351675e09bc82c835425d88",
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
-    "mtime": 1785326886.2469587,
+    "mtime": 1785348444.919339,
     "ast_hash": "0cbf09975b4788a85bd5d1c121121ff3",
     "semantic_hash": ""
   },
   "tetris.html": {
-    "mtime": 1785326886.2469587,
+    "mtime": 1785348444.919339,
     "ast_hash": "de93db55d311e919602d150e6932b5d0",
     "semantic_hash": ""
   },
@@ -60,7 +60,7 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.907339,
     "ast_hash": "1981b5a796b9170e708f4f9c9f98b25f",
     "semantic_hash": ""
   },
@@ -75,83 +75,88 @@
     "semantic_hash": ""
   },
   "tests/utils.test.js": {
-    "mtime": 1785218286.417982,
-    "ast_hash": "90992399150506e232a9a7aee2ae95aa",
+    "mtime": 1785348986.2886207,
+    "ast_hash": "4ae861f5532cdb54afd6afa3a3e7788c",
     "semantic_hash": ""
   },
   "utils.js": {
-    "mtime": 1785310807.3755887,
-    "ast_hash": "3bb21ac318fed61e004c5fc1af28569a",
+    "mtime": 1785348982.3247352,
+    "ast_hash": "13be0ae5dc790d2b34bfdc294b073353",
     "semantic_hash": ""
   },
   "2048.html": {
-    "mtime": 1785329906.563444,
+    "mtime": 1785348444.8993392,
     "ast_hash": "090e2dd7e3b094ac78923ca6ee4b9981",
     "semantic_hash": ""
   },
   "pong.html": {
-    "mtime": 1785326886.2469587,
+    "mtime": 1785348444.915339,
     "ast_hash": "856ec4d58356a15efed4eed7284ce93d",
     "semantic_hash": ""
   },
   "flappybyte.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.911339,
     "ast_hash": "1a2f4d270b20443d9546679992bb010a",
     "semantic_hash": ""
   },
   "asteroids.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.9033391,
     "ast_hash": "8919fa0bf7e1d05c9555aa547e15d327",
     "semantic_hash": ""
   },
   "towerdefense.html": {
-    "mtime": 1785329906.611443,
+    "mtime": 1785348444.923339,
     "ast_hash": "dd5f0148fb6ea0f5c098849125ee7c96",
     "semantic_hash": ""
   },
   "cyberrunner.html": {
-    "mtime": 1785326886.2429588,
+    "mtime": 1785348444.907339,
     "ast_hash": "732cd2985af9d3197df1a00182a4646b",
     "semantic_hash": ""
   },
   "src/__init__.py": {
-    "mtime": 1785330486.0827215,
+    "mtime": 1785336242.9580152,
     "ast_hash": "81296d74bbada68529e80bc0dfb56a7b",
     "semantic_hash": ""
   },
   "src/queue/__init__.py": {
-    "mtime": 1785330577.8534234,
+    "mtime": 1785336243.0060146,
     "ast_hash": "1d2a8dff95fe6bdc550ec0c64847ff14",
     "semantic_hash": ""
   },
   "src/queue/handler.py": {
-    "mtime": 1785330477.894838,
+    "mtime": 1785346704.3554504,
     "ast_hash": "9e8a8cbf44afa93514312ca010cc1585",
     "semantic_hash": ""
   },
   "src/scheduler/__init__.py": {
-    "mtime": 1785330579.6853974,
+    "mtime": 1785336243.0220144,
     "ast_hash": "acbfcc8bf07fc26a0ee352f346247931",
     "semantic_hash": ""
   },
   "src/scheduler/scheduler.py": {
-    "mtime": 1785330480.226805,
+    "mtime": 1785336243.0260143,
     "ast_hash": "f81a27cf9cff99c47839b207bb216c4e",
     "semantic_hash": ""
   },
   "src/tasks/__init__.py": {
-    "mtime": 1785330489.8946674,
+    "mtime": 1785336243.0300143,
     "ast_hash": "42d0b2df76c3f7281c9321278070634c",
     "semantic_hash": ""
   },
   "src/tasks/validation.py": {
-    "mtime": 1785330472.83891,
+    "mtime": 1785336243.0380142,
     "ast_hash": "a02ff93e05f5c18bb356917fce72e3f7",
     "semantic_hash": ""
   },
   "tests/test_task_queue.py": {
-    "mtime": 1785330584.3493319,
+    "mtime": 1785346704.3554504,
     "ast_hash": "687a5b09b2a1488aaa07de639be7726f",
+    "semantic_hash": ""
+  },
+  "tests/test_utils_reset.py": {
+    "mtime": 1785348992.2684488,
+    "ast_hash": "5157ae19a78e156e165787d7feda77b5",
     "semantic_hash": ""
   }
 }

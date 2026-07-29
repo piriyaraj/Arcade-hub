@@ -20,7 +20,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "audio_soundfx",
-      "community": 3,
+      "community": 4,
       "norm_label": "soundfx"
     },
     {
@@ -30,7 +30,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "audio_soundfx_constructor",
-      "community": 3,
+      "community": 4,
       "norm_label": ".constructor()"
     },
     {
@@ -40,7 +40,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "audio_soundfx_init",
-      "community": 3,
+      "community": 4,
       "norm_label": ".init()"
     },
     {
@@ -50,7 +50,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "audio_soundfx_playeat",
-      "community": 3,
+      "community": 4,
       "norm_label": ".playeat()"
     },
     {
@@ -60,7 +60,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "audio_soundfx_playbounce",
-      "community": 3,
+      "community": 4,
       "norm_label": ".playbounce()"
     },
     {
@@ -70,7 +70,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "audio_soundfx_playgameover",
-      "community": 3,
+      "community": 4,
       "norm_label": ".playgameover()"
     },
     {
@@ -80,8 +80,298 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "audio_soundfx_playscoreslot",
-      "community": 3,
+      "community": 4,
       "norm_label": ".playscoreslot()"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_init",
+      "community": 9,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/queue/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_queue_init",
+      "community": 7,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "handler.py",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_queue_handler",
+      "community": 7,
+      "norm_label": "handler.py"
+    },
+    {
+      "label": "DLQHandler",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "src_queue_handler_dlqhandler",
+      "community": 8,
+      "norm_label": "dlqhandler"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_queue_handler_dlqhandler_init",
+      "community": 8,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".handle_failure()",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_queue_handler_dlqhandler_handle_failure",
+      "community": 8,
+      "norm_label": ".handle_failure()"
+    },
+    {
+      "label": "TaskQueue",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "src_queue_handler_taskqueue",
+      "community": 7,
+      "norm_label": "taskqueue"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "src_queue_handler_taskqueue_init",
+      "community": 7,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".submit()",
+      "file_type": "code",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "src_queue_handler_taskqueue_submit",
+      "community": 8,
+      "norm_label": ".submit()"
+    },
+    {
+      "label": "DLQ (dead-letter queue) handler.     Stores and formats failed tasks.",
+      "file_type": "rationale",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_queue_handler_rationale_10",
+      "community": 8,
+      "norm_label": "dlq (dead-letter queue) handler.     stores and formats failed tasks."
+    },
+    {
+      "label": "Processes a task failure and saves it to the DLQ.",
+      "file_type": "rationale",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_queue_handler_rationale_18",
+      "community": 8,
+      "norm_label": "processes a task failure and saves it to the dlq."
+    },
+    {
+      "label": "Submits a task to the queue after validation.",
+      "file_type": "rationale",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "src_queue_handler_rationale_63",
+      "community": 8,
+      "norm_label": "submits a task to the queue after validation."
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/scheduler/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_scheduler_init",
+      "community": 7,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "scheduler.py",
+      "file_type": "code",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_scheduler_scheduler",
+      "community": 7,
+      "norm_label": "scheduler.py"
+    },
+    {
+      "label": "TaskScheduler",
+      "file_type": "code",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_scheduler_scheduler_taskscheduler",
+      "community": 7,
+      "norm_label": "taskscheduler"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "src_scheduler_scheduler_taskscheduler_init",
+      "community": 7,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".schedule_task()",
+      "file_type": "code",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "src_scheduler_scheduler_taskscheduler_schedule_task",
+      "community": 7,
+      "norm_label": ".schedule_task()"
+    },
+    {
+      "label": "Schedules a task by submitting it to the queue.",
+      "file_type": "rationale",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "src_scheduler_scheduler_rationale_11",
+      "community": 7,
+      "norm_label": "schedules a task by submitting it to the queue."
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "src/tasks/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_tasks_init",
+      "community": 3,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "validation.py",
+      "file_type": "code",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_tasks_validation",
+      "community": 3,
+      "norm_label": "validation.py"
+    },
+    {
+      "label": "TaskType",
+      "file_type": "code",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_tasks_validation_tasktype",
+      "community": 3,
+      "norm_label": "tasktype"
+    },
+    {
+      "label": "str",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "str",
+      "community": 3,
+      "norm_label": "str"
+    },
+    {
+      "label": "Enum",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "enum",
+      "community": 3,
+      "norm_label": "enum"
+    },
+    {
+      "label": "TaskValidationError",
+      "file_type": "code",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "src_tasks_validation_taskvalidationerror",
+      "community": 3,
+      "norm_label": "taskvalidationerror"
+    },
+    {
+      "label": "Exception",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "exception",
+      "community": 3,
+      "norm_label": "exception"
+    },
+    {
+      "label": "validate_task_payload()",
+      "file_type": "code",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_tasks_validation_validate_task_payload",
+      "community": 3,
+      "norm_label": "validate_task_payload()"
+    },
+    {
+      "label": "sanitize_payload()",
+      "file_type": "code",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "src_tasks_validation_sanitize_payload",
+      "community": 3,
+      "norm_label": "sanitize_payload()"
+    },
+    {
+      "label": "Validates the task payload.     Must contain a non-empty string 'title' and a va",
+      "file_type": "rationale",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_tasks_validation_rationale_17",
+      "community": 3,
+      "norm_label": "validates the task payload.     must contain a non-empty string 'title' and a va"
+    },
+    {
+      "label": "Returns a sanitized copy of the payload with potential secrets/credentials redac",
+      "file_type": "rationale",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "src_tasks_validation_rationale_76",
+      "community": 3,
+      "norm_label": "returns a sanitized copy of the payload with potential secrets/credentials redac"
     },
     {
       "label": "test_dummy.py",
@@ -234,6 +524,96 @@
       "norm_label": "runs the javascript node.js unit tests for utils.js and asserts success."
     },
     {
+      "label": "test_task_queue.py",
+      "file_type": "code",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_task_queue",
+      "community": 3,
+      "norm_label": "test_task_queue.py"
+    },
+    {
+      "label": "test_empty_title_rejected()",
+      "file_type": "code",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_test_empty_title_rejected",
+      "community": 3,
+      "norm_label": "test_empty_title_rejected()"
+    },
+    {
+      "label": "test_missing_type_rejected()",
+      "file_type": "code",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_test_missing_type_rejected",
+      "community": 3,
+      "norm_label": "test_missing_type_rejected()"
+    },
+    {
+      "label": "test_valid_submission_passes_through()",
+      "file_type": "code",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_test_valid_submission_passes_through",
+      "community": 7,
+      "norm_label": "test_valid_submission_passes_through()"
+    },
+    {
+      "label": "test_dlq_entry_contains_full_error_context()",
+      "file_type": "code",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
+      "community": 8,
+      "norm_label": "test_dlq_entry_contains_full_error_context()"
+    },
+    {
+      "label": "(a) submission with empty title is rejected",
+      "file_type": "rationale",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_rationale_8",
+      "community": 3,
+      "norm_label": "(a) submission with empty title is rejected"
+    },
+    {
+      "label": "(b) submission with missing/invalid type is rejected",
+      "file_type": "rationale",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_rationale_34",
+      "community": 3,
+      "norm_label": "(b) submission with missing/invalid type is rejected"
+    },
+    {
+      "label": "(c) valid submission passes through",
+      "file_type": "rationale",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_rationale_59",
+      "community": 7,
+      "norm_label": "(c) valid submission passes through"
+    },
+    {
+      "label": "(d) DLQ entry contains full error context (original error message, stack trace,",
+      "file_type": "rationale",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L83",
+      "_origin": "ast",
+      "id": "tests_test_task_queue_rationale_83",
+      "community": 8,
+      "norm_label": "(d) dlq entry contains full error context (original error message, stack trace,"
+    },
+    {
       "label": "utils.test.js",
       "file_type": "code",
       "source_file": "tests/utils.test.js",
@@ -290,7 +670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils",
-      "community": 7,
+      "community": 6,
       "norm_label": "utils.js"
     },
     {
@@ -300,7 +680,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "utils_getbestscore",
-      "community": 7,
+      "community": 6,
       "norm_label": "getbestscore()"
     },
     {
@@ -310,7 +690,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "utils_savebestscore",
-      "community": 7,
+      "community": 6,
       "norm_label": "savebestscore()"
     },
     {
@@ -320,7 +700,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "utils_getmutestate",
-      "community": 7,
+      "community": 6,
       "norm_label": "getmutestate()"
     },
     {
@@ -330,7 +710,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "utils_savemutestate",
-      "community": 7,
+      "community": 6,
       "norm_label": "savemutestate()"
     },
     {
@@ -533,6 +913,610 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_queue_init",
+      "target": "src_queue_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_queue_init",
+      "target": "src_queue_handler_dlqhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_queue_init",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_queue_handler",
+      "target": "src_queue_handler_dlqhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "src_queue_handler",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_queue_handler",
+      "target": "src_tasks_validation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_queue_handler",
+      "target": "src_tasks_validation_validate_task_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler",
+      "target": "src_queue_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_queue_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_queue_handler_dlqhandler",
+      "target": "src_queue_handler_dlqhandler_handle_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_queue_handler_dlqhandler",
+      "target": "src_queue_handler_dlqhandler_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_queue_handler_rationale_10",
+      "target": "src_queue_handler_dlqhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_queue_handler_dlqhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
+      "target": "src_queue_handler_dlqhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_queue_handler_rationale_18",
+      "target": "src_queue_handler_dlqhandler_handle_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "src_queue_handler_taskqueue_submit",
+      "target": "src_queue_handler_dlqhandler_handle_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "src_queue_handler_taskqueue",
+      "target": "src_queue_handler_taskqueue_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "src_queue_handler_taskqueue",
+      "target": "src_queue_handler_taskqueue_submit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L2",
+      "weight": 0.8,
+      "source": "src_scheduler_scheduler_taskscheduler",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler_taskscheduler_init",
+      "target": "src_queue_handler_taskqueue"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_empty_title_rejected",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_missing_type_rejected",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_valid_submission_passes_through",
+      "target": "src_queue_handler_taskqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/queue/handler.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "src_queue_handler_rationale_63",
+      "target": "src_queue_handler_taskqueue_submit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/queue/handler.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "src_queue_handler_taskqueue_submit",
+      "target": "src_tasks_validation_validate_task_payload"
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_scheduler_init",
+      "target": "src_scheduler_scheduler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_scheduler_init",
+      "target": "src_scheduler_scheduler_taskscheduler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler",
+      "target": "src_scheduler_scheduler_taskscheduler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler_taskscheduler",
+      "target": "src_scheduler_scheduler_taskscheduler_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler_taskscheduler",
+      "target": "src_scheduler_scheduler_taskscheduler_schedule_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scheduler/scheduler.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_scheduler_scheduler_rationale_11",
+      "target": "src_scheduler_scheduler_taskscheduler_schedule_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_tasks_init",
+      "target": "src_tasks_validation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_tasks_init",
+      "target": "src_tasks_validation_tasktype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_tasks_init",
+      "target": "src_tasks_validation_taskvalidationerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_tasks_init",
+      "target": "src_tasks_validation_validate_task_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_tasks_validation",
+      "target": "enum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "src_tasks_validation",
+      "target": "src_tasks_validation_sanitize_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_tasks_validation",
+      "target": "src_tasks_validation_tasktype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_tasks_validation",
+      "target": "src_tasks_validation_taskvalidationerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_tasks_validation",
+      "target": "src_tasks_validation_validate_task_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_tasks_validation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_tasks_validation_tasktype",
+      "target": "enum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_tasks_validation_tasktype",
+      "target": "str",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_tasks_validation_tasktype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_tasks_validation_taskvalidationerror",
+      "target": "exception",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_tasks_validation_validate_task_payload",
+      "target": "src_tasks_validation_taskvalidationerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_tasks_validation_taskvalidationerror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
+      "target": "src_tasks_validation_taskvalidationerror"
+    },
+    {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_empty_title_rejected",
+      "target": "src_tasks_validation_taskvalidationerror"
+    },
+    {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_test_missing_type_rejected",
+      "target": "src_tasks_validation_taskvalidationerror"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_tasks_validation_rationale_17",
+      "target": "src_tasks_validation_validate_task_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "src_tasks_validation_validate_task_payload",
+      "target": "src_tasks_validation_sanitize_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "src_tasks_validation_validate_task_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/tasks/validation.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "src_tasks_validation_rationale_76",
+      "target": "src_tasks_validation_sanitize_payload",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "test_dummy.py",
@@ -650,6 +1634,86 @@
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_25",
       "target": "tests_test_js_utilities_test_js_general_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "tests_test_task_queue_test_empty_title_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "tests_test_task_queue_test_missing_type_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "tests_test_task_queue",
+      "target": "tests_test_task_queue_test_valid_submission_passes_through",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_rationale_8",
+      "target": "tests_test_task_queue_test_empty_title_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_rationale_34",
+      "target": "tests_test_task_queue_test_missing_type_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_rationale_59",
+      "target": "tests_test_task_queue_test_valid_submission_passes_through",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_task_queue.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "tests_test_task_queue_rationale_83",
+      "target": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
       "confidence_score": 1.0
     },
     {
@@ -789,5 +1853,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0a764e964eb71b9290e1353d865d4d87a4164889"
+  "built_at_commit": "ee85b4bb9c365469ee25436af64bb9140d2f1e1f"
 }
