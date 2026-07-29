@@ -724,20 +724,20 @@
       "norm_label": "mockstorage"
     },
     {
-      "label": "consoleErrors",
+      "label": "calls",
       "file_type": "code",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L21",
+      "source_location": "L6",
       "_origin": "ast",
-      "id": "tests_leaderboard_test_consoleerrors",
+      "id": "tests_leaderboard_test_calls",
       "community": 13,
-      "norm_label": "consoleerrors"
+      "norm_label": "calls"
     },
     {
       "label": "{ Leaderboard }",
       "file_type": "code",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L27",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "tests_leaderboard_test_leaderboard",
       "community": 13,
@@ -1940,7 +1940,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L27",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "tests_leaderboard_test",
       "target": "leaderboard",
@@ -1962,7 +1962,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L27",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "tests_leaderboard_test",
       "target": "leaderboard_leaderboard",
@@ -2758,17 +2758,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L21",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "tests_leaderboard_test",
-      "target": "tests_leaderboard_test_consoleerrors",
+      "target": "tests_leaderboard_test_calls",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/leaderboard.test.js",
-      "source_location": "L27",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "tests_leaderboard_test",
       "target": "tests_leaderboard_test_leaderboard",
@@ -3622,5 +3622,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2423dfd101ffe08c07a7fc6434818ed079c29d7c"
+  "built_at_commit": "fed4c09c07ea77fc9c3c5c80c9640e3deda4e976"
 }
