@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1785229178.347348,
-    "ast_hash": "55262ea1865edd62f9a83c17bb3b10bc",
+    "mtime": 1785271065.4527202,
+    "ast_hash": "0d2749cb5f446c459dc2e9b891d3c9d0",
     "semantic_hash": ""
   },
   "snakegame.html": {
@@ -87,6 +87,11 @@
   "2048.html": {
     "mtime": 1785250056.847632,
     "ast_hash": "090e2dd7e3b094ac78923ca6ee4b9981",
+    "semantic_hash": ""
+  },
+  "pong.html": {
+    "mtime": 1785271001.9575193,
+    "ast_hash": "856ec4d58356a15efed4eed7284ce93d",
     "semantic_hash": ""
   }
 }
