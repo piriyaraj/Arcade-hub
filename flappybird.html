@@ -319,6 +319,7 @@
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
+<script src="utils.js"></script>
 <script src="audio.js"></script>
 <script>
   (function() {
@@ -359,23 +360,15 @@
     let state = 'start'; // 'start', 'playing', 'paused', 'gameover'
     let score = 0;
     let highScore = 0;
-    try {
-      const raw = localStorage.getItem('flappy_best');
-      const parsed = parseInt(raw, 10);
-      highScore = Number.isFinite(parsed) ? parsed : 0;
-    } catch (e) {
-      console.error('localStorage load failed:', e);
-      highScore = 0;
+    if (typeof window.getBestScore === 'function') {
+      highScore = window.getBestScore('flappy');
     }
     bestEl.textContent = highScore;
 
     // Mute/Unmute state loading & initialization
     let soundMuted = false;
-    try {
-      soundMuted = localStorage.getItem('flappybird_muted') === 'true';
-    } catch (e) {
-      console.error('localStorage load failed:', e);
-      soundMuted = false;
+    if (typeof window.getMuteState === 'function') {
+      soundMuted = window.getMuteState('flappybird');
     }
 
     if (window.sfx) {
@@ -391,10 +384,8 @@
     function toggleMute() {
       if (window.sfx) {
         window.sfx.muted = !window.sfx.muted;
-        try {
-          localStorage.setItem('flappybird_muted', window.sfx.muted.toString());
-        } catch (e) {
-          console.error('localStorage save failed:', e);
+        if (typeof window.saveMuteState === 'function') {
+          window.saveMuteState('flappybird', window.sfx.muted);
         }
         updateMuteButtonUI();
         if (typeof window.sfx.init === 'function') {
@@ -543,10 +534,8 @@
       // Check high score
       if (score > highScore) {
         highScore = score;
-        try {
-          localStorage.setItem('flappy_best', String(highScore));
-        } catch (e) {
-          console.error('localStorage save failed:', e);
+        if (typeof window.saveBestScore === 'function') {
+          window.saveBestScore('flappy', highScore);
         }
         bestEl.textContent = highScore;
       }
