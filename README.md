@@ -14,6 +14,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
+- 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 
 ---
 
@@ -23,7 +24,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html README.md
+   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html flappybyte.html README.md
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
