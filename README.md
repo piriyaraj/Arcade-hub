@@ -16,6 +16,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
+- 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
 
 ---
 
