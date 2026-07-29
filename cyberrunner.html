@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Cyber Runner - Dodge laser fences and cyber drones in a fast-paced retro sci-fi neon runner." />
+  <title>Cyber Runner - Arcade Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #111827;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: #4f83cc;
+      --runner-glow: #00f0ff;
+      --obstacle-glow: #ff007f;
+      --node-glow: #4ade80;
+      --accent-pink: #ff007f;
+      --accent-neon: #00f0ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--runner-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-pink);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--runner-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--runner-glow);
+    }
+
+    #multiplier-stat .stat-value {
+      color: var(--node-glow);
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      aspect-ratio: 600 / 300;
+      background-color: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(79, 131, 204, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(79, 131, 204, 0.1);
+      display: block;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button.game-btn {
+      background: linear-gradient(135deg, var(--border), var(--runner-glow));
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 2px 12px rgba(79, 131, 204, 0.4);
+    }
+
+    button.game-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(79, 131, 204, 0.6);
+    }
+
+    button.game-btn:active { transform: translateY(0); }
+
+    button.play-btn {
+      background: linear-gradient(135deg, #00f0ff, #00b0ff);
+      box-shadow: 0 2px 12px rgba(0, 240, 255, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    button.play-btn:hover {
+      box-shadow: 0 4px 18px rgba(0, 240, 255, 0.6);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--runner-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.5;
+    }
+
+    #overlay .final-score {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--runner-glow);
+      margin-bottom: 24px;
+    }
+
+    .high-score-badge {
+      font-size: 1.2rem;
+      color: var(--accent-pink);
+      margin-bottom: 16px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+    }
+
+    .instructions-list {
+      text-align: left;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      list-style-type: none;
+    }
+
+    .instructions-list li {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Mobile buttons */
+    #mobile-controls {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 16px 8px;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .mobile-action-btn {
+      flex: 1;
+      height: 60px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(79, 131, 204, 0.4);
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      transition: background 0.1s, transform 0.05s, border-color 0.1s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-action-btn:active {
+      transform: scale(0.95);
+      background: rgba(79, 131, 204, 0.2);
+    }
+
+    #btn-jump:active {
+      border-color: var(--runner-glow);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    #btn-duck:active {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      #mobile-controls {
+        display: flex;
+      }
+    }
+
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">CYBER RUNNER</h2>
+  <p id="overlay-desc">Dash through a neon-lit cyberpunk grid. Avoid high drones and low laser walls!</p>
+  <ul class="instructions-list" id="instructions">
+    <li>🚀 Jump: Up Arrow, W, or Spacebar (Avoid floor laser walls & spikes)</li>
+    <li>🛡️ Duck: Down Arrow or S (Slide under floating hacker drones)</li>
+    <li>⚡ Gain speed & collect Green Data Nodes for bonus score!</li>
+    <li>⏸️ Pause: Escape, P, or click PAUSE button</li>
+  </ul>
+  <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW HIGH SCORE! 🏆</div>
+  <div class="final-score hidden" id="final-score">Score: 0</div>
+  <button class="game-btn play-btn" id="start-btn" aria-label="Start game">START RUN</button>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>CYBER RUNNER</h1>
+  <p>Dodge obstacles and extract data nodes!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat" id="score-stat">
+    <span class="stat-label">Score</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat" id="multiplier-stat">
+    <span class="stat-label">Speed</span>
+    <span class="stat-value" id="speed-val">1.0x</span>
+  </div>
+  <div class="stat" id="highscore-stat">
+    <span class="stat-label">High Score</span>
+    <span class="stat-value" id="highscore-val">0</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="600" height="300" tabindex="0" aria-label="Cyber Runner game canvas. Control your cyber avatar to jump or slide to avoid obstacles."></canvas>
+</div>
+
+<div id="mobile-controls">
+  <button id="btn-jump" class="mobile-action-btn">▲ JUMP</button>
+  <button id="btn-duck" class="mobile-action-btn">▼ DUCK</button>
+</div>
+
+<div id="controls">
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="audio.js"></script>
+<script>
+  // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
+  const safeGet = (id) => document.getElementById(id) ?? document.body;
+
+  // ─── Canvas & Context Setup ────────────────────────────────────────────────
+  const canvas = safeGet('game');
+  const ctx = canvas.getContext('2d');
+
+  const CANVAS_WIDTH = 600;
+  const CANVAS_HEIGHT = 300;
+  const GROUND_Y = 240;
+
+  // ─── Game Variables ────────────────────────────────────────────────────────
+  let gameStarted = false;
+  let gameOver = false;
+  let gamePaused = false;
+
+  let score = 0;
+  let distance = 0;
+  let gameSpeed = 5.5;
+  const MAX_SPEED = 12.0;
+
+  let highscore = 0;
+  try {
+    const raw = localStorage.getItem('cyberrunner_best');
+    const parsed = parseInt(raw, 10);
+    highscore = Number.isFinite(parsed) ? parsed : 0;
+  } catch (e) {
+    highscore = 0;
+  }
+
+  // ─── Runner Object ─────────────────────────────────────────────────────────
+  const runner = {
+    x: 80,
+    y: GROUND_Y - 45,
+    width: 25,
+    height: 45,
+    normalHeight: 45,
+    duckHeight: 22,
+    normalWidth: 25,
+    duckWidth: 35,
+    vy: 0,
+    gravity: 0.6,
+    jumpForce: -11,
+    isJumping: false,
+    isDucking: false,
+    particlesTrail: [],
+
+    reset() {
+      this.y = GROUND_Y - this.normalHeight;
+      this.width = this.normalWidth;
+      this.height = this.normalHeight;
+      this.vy = 0;
+      this.isJumping = false;
+      this.isDucking = false;
+      this.particlesTrail = [];
+    },
+
+    jump() {
+      if (!this.isJumping && !this.isDucking) {
+        this.vy = this.jumpForce;
+        this.isJumping = true;
+        if (window.sfx) window.sfx.playBounce();
+      }
+    },
+
+    duck(isDucking) {
+      if (this.isJumping) return;
+      this.isDucking = isDucking;
+      if (isDucking) {
+        this.height = this.duckHeight;
+        this.width = this.duckWidth;
+        this.y = GROUND_Y - this.duckHeight;
+      } else {
+        this.height = this.normalHeight;
+        this.width = this.normalWidth;
+        this.y = GROUND_Y - this.normalHeight;
+      }
+    },
+
+    update() {
+      // Apply gravity
+      if (this.isJumping) {
+        this.vy += this.gravity;
+        this.y += this.vy;
+
+        // Ground check
+        if (this.y >= GROUND_Y - this.height) {
+          this.y = GROUND_Y - this.height;
+          this.vy = 0;
+          this.isJumping = false;
+        }
+      }
+
+      // Add running particle effect if moving on ground
+      if (!this.isJumping && gameStarted && !gameOver && !gamePaused) {
+        if (Math.random() < 0.25) {
+          this.particlesTrail.push(new TrailParticle(this.x, GROUND_Y - 3, 'var(--runner-glow)'));
+        }
+      }
+
+      // Update trail particles
+      for (let i = this.particlesTrail.length - 1; i >= 0; i--) {
+        this.particlesTrail[i].update();
+        if (this.particlesTrail[i].alpha <= 0) {
+          this.particlesTrail.splice(i, 1);
+        }
+      }
+    },
+
+    draw() {
+      // Draw trails
+      this.particlesTrail.forEach(p => p.draw());
+
+      // Draw cyber runner body
+      ctx.save();
+      ctx.fillStyle = gameOver ? 'var(--accent-pink)' : 'var(--runner-glow)';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = gameOver ? 'var(--accent-pink)' : 'var(--runner-glow)';
+
+      if (this.isDucking) {
+        // Ducking slide shape: parallelogram / streamlined capsule
+        ctx.beginPath();
+        ctx.roundRect(this.x, this.y, this.width, this.height, 6);
+        ctx.fill();
+        // Inner core
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.roundRect(this.x + 8, this.y + 4, this.width - 16, this.height - 8, 4);
+        ctx.fill();
+      } else {
+        // Standing model: cool cyber-polygon / robotic silhouette
+        ctx.beginPath();
+        ctx.roundRect(this.x, this.y, this.width, this.height, 4);
+        ctx.fill();
+
+        // Face visor line
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(this.x + 12, this.y + 8, 11, 4);
+
+        // Animated neon running limbs (glow lines)
+        if (!this.isJumping && !gameOver && !gamePaused) {
+          const legPhase = Date.now() * 0.015;
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          // Leg 1
+          ctx.moveTo(this.x + 6, this.y + this.height);
+          ctx.lineTo(this.x + 6 + Math.sin(legPhase) * 6, this.y + this.height + 4);
+          // Leg 2
+          ctx.moveTo(this.x + this.width - 6, this.y + this.height);
+          ctx.lineTo(this.x + this.width - 6 - Math.sin(legPhase) * 6, this.y + this.height + 4);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+  };
+
+  // ─── Particle Classes ──────────────────────────────────────────────────────
+  class TrailParticle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.radius = 1 + Math.random() * 2;
+      this.vx = -gameSpeed * 0.7 - Math.random() * 2;
+      this.vy = (Math.random() - 0.5) * 1.5;
+      this.alpha = 0.8;
+      this.decay = 0.03 + Math.random() * 0.02;
+      this.color = color;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= this.decay;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  class BurstParticle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.radius = 2 + Math.random() * 3;
+      this.vx = (Math.random() - 0.5) * 8;
+      this.vy = (Math.random() - 0.5) * 8;
+      this.alpha = 1.0;
+      this.decay = 0.02 + Math.random() * 0.02;
+      this.color = color;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+      this.alpha -= this.decay;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  let burstParticles = [];
+
+  function spawnBurstParticles(x, y, color, count = 12) {
+    for (let i = 0; i < count; i++) {
+      burstParticles.push(new BurstParticle(x, y, color));
+    }
+  }
+
+  // ─── Obstacles & Collectibles Systems ──────────────────────────────────────
+  let obstacles = [];
+  let collectibles = [];
+  let obstacleTimer = 0;
+  let nextSpawnDistance = 120; // Frames or distance markers
+
+  class Obstacle {
+    constructor(type) {
+      this.type = type; // 'fence', 'spike', 'drone', 'double_spike'
+      this.x = CANVAS_WIDTH + 50;
+      this.markedForDeletion = false;
+
+      if (type === 'fence') {
+        this.width = 16;
+        this.height = 36;
+        this.y = GROUND_Y - this.height;
+        this.color = 'var(--accent-pink)';
+      } else if (type === 'spike') {
+        this.width = 24;
+        this.height = 28;
+        this.y = GROUND_Y - this.height;
+        this.color = '#ffaa00';
+      } else if (type === 'double_spike') {
+        this.width = 44;
+        this.height = 28;
+        this.y = GROUND_Y - this.height;
+        this.color = '#ff6600';
+      } else if (type === 'drone') {
+        this.width = 24;
+        this.height = 22;
+        this.y = GROUND_Y - 58; // Heights: runner Normal=45, vis=GROUND_Y-45=195. Target drone: covers ~GROUND_Y - 58 to GROUND_Y - 36 (182 - 204). Standing player (top 195) hits it. Ducking (top 218) clears under 204.
+        this.color = '#e0a3ff';
+        this.hoverOffset = Math.random() * Math.PI * 2;
+      }
+    }
+
+    update() {
+      this.x -= gameSpeed;
+      if (this.x < -this.width - 50) {
+        this.markedForDeletion = true;
+      }
+
+      // Special movement
+      if (this.type === 'drone') {
+        // Floating sinusoidal sweep
+        this.y = (GROUND_Y - 60) + Math.sin(Date.now() * 0.008 + this.hoverOffset) * 6;
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.fillStyle = this.color;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = this.color;
+
+      if (this.type === 'fence') {
+        // Cyber Neon laser barrier
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        // Draw warning lights
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(this.x + 2, this.y + 2, this.width - 4, 3);
+        ctx.fillRect(this.x + 2, this.y + this.height - 5, this.width - 4, 3);
+      } else if (this.type === 'spike' || this.type === 'double_spike') {
+        // Triangular sci-fi spike traps
+        ctx.beginPath();
+        if (this.type === 'spike') {
+          ctx.moveTo(this.x, GROUND_Y);
+          ctx.lineTo(this.x + this.width / 2, this.y);
+          ctx.lineTo(this.x + this.width, GROUND_Y);
+        } else {
+          // Double spike
+          ctx.moveTo(this.x, GROUND_Y);
+          ctx.lineTo(this.x + this.width * 0.25, this.y);
+          ctx.lineTo(this.x + this.width * 0.5, GROUND_Y);
+          ctx.lineTo(this.x + this.width * 0.75, this.y);
+          ctx.lineTo(this.x + this.width, GROUND_Y);
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        // Inner glowing border
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      } else if (this.type === 'drone') {
+        // Cyber hacker drone details
+        ctx.beginPath();
+        ctx.roundRect(this.x, this.y, this.width, this.height, 4);
+        ctx.fill();
+
+        // Rotor wing blades
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(this.x - 4, this.y + 4);
+        ctx.lineTo(this.x + this.width + 4, this.y + 4);
+        ctx.stroke();
+
+        // Single red glowing search eye
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  class Collectible {
+    constructor() {
+      this.width = 16;
+      this.height = 16;
+      this.x = CANVAS_WIDTH + 60;
+      // High or low spawn points
+      this.y = Math.random() > 0.5 ? GROUND_Y - 30 : GROUND_Y - 75;
+      this.markedForDeletion = false;
+      this.color = 'var(--node-glow)';
+      this.pulsePhase = Math.random() * Math.PI;
+    }
+
+    update() {
+      this.x -= gameSpeed;
+      if (this.x < -this.width - 50) {
+        this.markedForDeletion = true;
+      }
+    }
+
+    draw() {
+      const radius = 6 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2;
+      ctx.save();
+      ctx.fillStyle = this.color;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = this.color;
+
+      // Floating data token diamond/sphere
+      ctx.beginPath();
+      ctx.translate(this.x + 8, this.y + 8);
+      ctx.rotate(Date.now() * 0.003 + this.pulsePhase);
+      ctx.rect(-radius / 2, -radius / 2, radius, radius);
+      ctx.fill();
+
+      // Outer rings
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, radius + 2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  }
+
+  function spawnEntity() {
+    obstacleTimer++;
+    if (obstacleTimer >= nextSpawnDistance) {
+      obstacleTimer = 0;
+      // Randomize next spawn gap
+      nextSpawnDistance = 100 + Math.random() * 80;
+
+      // Spawn item or obstacle
+      const randomValue = Math.random();
+      if (randomValue < 0.70) {
+        // Spawn Obstacle
+        const types = ['fence', 'spike', 'drone', 'double_spike'];
+        const chosenType = types[Math.floor(Math.random() * types.length)];
+        obstacles.push(new Obstacle(chosenType));
+      } else {
+        // Spawn Collectible
+        collectibles.push(new Collectible());
+      }
+    }
+  }
+
+  function checkCollision(rect1, rect2) {
+    return (
+      rect1.x < rect2.x + rect2.width &&
+      rect1.x + rect1.width > rect2.x &&
+      rect1.y < rect2.y + rect2.height &&
+      rect1.y + rect1.height > rect2.y
+    );
+  }
+
+  // ─── Input Handlers ────────────────────────────────────────────────────────
+  const keys = { KeyW: false, ArrowUp: false, Space: false, KeyS: false, ArrowDown: false };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.repeat) return; // Prevent toggle spam
+
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
+      keys[e.code] = true;
+      if (gameStarted && !gameOver && !gamePaused) {
+        runner.jump();
+      } else if (!gameStarted || gameOver) {
+        startNewGame();
+      }
+      e.preventDefault();
+    } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      keys[e.code] = true;
+      if (gameStarted && !gameOver && !gamePaused) {
+        runner.duck(true);
+      }
+      e.preventDefault();
+    } else if (e.code === 'Escape' || e.key.toLowerCase() === 'p') {
+      if (gameStarted && !gameOver) {
+        togglePause();
+      }
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
+      keys[e.code] = false;
+    } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      keys[e.code] = false;
+      // Only stop ducking if BOTH duck keys are released
+      const stillDucking = keys.ArrowDown || keys.KeyS;
+      if (!stillDucking && gameStarted && !gameOver && !gamePaused) {
+        runner.duck(false);
+      }
+    }
+  });
+
+  // Mobile Buttons Control
+  const btnJump = safeGet('btn-jump');
+  const btnDuck = safeGet('btn-duck');
+
+  btnJump.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameStarted && !gameOver && !gamePaused) {
+      runner.jump();
+    } else if (!gameStarted || gameOver) {
+      startNewGame();
+    }
+  }, { passive: false });
+
+  btnDuck.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameStarted && !gameOver && !gamePaused) {
+      runner.duck(true);
+    }
+  }, { passive: false });
+
+  btnDuck.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (gameStarted && !gameOver && !gamePaused) {
+      runner.duck(false);
+    }
+  }, { passive: false });
+
+  // DOM Buttons Setup
+  const startBtn = safeGet('start-btn');
+  const resetBtn = safeGet('reset-btn');
+  const muteBtn = safeGet('mute-btn');
+  const pauseBtn = safeGet('pause-btn');
+
+  const overlay = safeGet('overlay');
+  const overlayTitle = safeGet('overlay-title');
+  const overlayDesc = safeGet('overlay-desc');
+  const instructionsList = safeGet('instructions');
+  const finalScoreEl = safeGet('final-score');
+  const highScoreBadge = safeGet('high-score-badge');
+
+  startBtn.addEventListener('click', () => {
+    if (window.sfx) window.sfx.init();
+    startNewGame();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (window.sfx) window.sfx.init();
+    initGameDetails();
+    if (gamePaused) togglePause();
+    startBtn.focus();
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    togglePause();
+  });
+
+  // Mute Audio Toggle
+  let soundMuted = false;
+  try {
+    soundMuted = localStorage.getItem('cyberrunner_muted') === 'true';
+  } catch (e) {
+    soundMuted = false;
+  }
+
+  if (window.sfx) {
+    window.sfx.muted = soundMuted;
+  }
+
+  function updateMuteButtonUI() {
+    if (window.sfx) {
+      muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+  }
+
+  function toggleMute() {
+    if (window.sfx) {
+      window.sfx.muted = !window.sfx.muted;
+      try {
+        localStorage.setItem('cyberrunner_muted', window.sfx.muted.toString());
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
+      updateMuteButtonUI();
+      if (typeof window.sfx.init === 'function') {
+        window.sfx.init();
+      }
+    }
+  }
+
+  updateMuteButtonUI();
+  muteBtn.addEventListener('click', toggleMute);
+
+  // M-key shortcut
+  window.addEventListener('keydown', (e) => {
+    if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+      toggleMute();
+    }
+  });
+
+  // ─── Game Loop & Controls Logic ───────────────────────────────────────────
+  function initGameDetails() {
+    score = 0;
+    distance = 0;
+    gameSpeed = 5.5;
+    gameOver = false;
+    obstacles = [];
+    collectibles = [];
+    burstParticles = [];
+    obstacleTimer = 0;
+    nextSpawnDistance = 120;
+
+    runner.reset();
+    updateUI();
+
+    pauseBtn.disabled = true;
+    overlayTitle.textContent = "CYBER RUNNER";
+    overlayDesc.textContent = "Dash through a neon-lit cyberpunk grid. Avoid high drones and low laser walls!";
+    instructionsList.classList.remove('hidden');
+    finalScoreEl.classList.add('hidden');
+    highScoreBadge.classList.add('hidden');
+    startBtn.textContent = "START RUN";
+    overlay.classList.remove('hidden');
+  }
+
+  function startNewGame() {
+    overlay.classList.add('hidden');
+    gameStarted = true;
+    gameOver = false;
+    gamePaused = false;
+    pauseBtn.disabled = false;
+
+    score = 0;
+    distance = 0;
+    gameSpeed = 5.5;
+    obstacles = [];
+    collectibles = [];
+    burstParticles = [];
+    obstacleTimer = 0;
+    nextSpawnDistance = 80; // Start spawn quickly
+
+    runner.reset();
+    updateUI();
+  }
+
+  function togglePause() {
+    gamePaused = !gamePaused;
+    pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
+
+    if (gamePaused) {
+      ctx.fillStyle = 'rgba(11, 15, 26, 0.7)';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = 'var(--runner-glow)';
+      ctx.textAlign = 'center';
+      ctx.fillText('SYSTEM PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+
+      ctx.font = '14px system-ui, -apple-system, sans-serif';
+      ctx.fillStyle = 'var(--text-dim)';
+      ctx.fillText('Press SPACE/ESC or click RESUME to restart run', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
+    }
+  }
+
+  function handleGameOver() {
+    gameStarted = false;
+    gameOver = true;
+    pauseBtn.disabled = true;
+
+    if (window.sfx) window.sfx.playGameOver();
+    spawnBurstParticles(runner.x + runner.width / 2, runner.y + runner.height / 2, 'var(--accent-pink)', 30);
+
+    const isNewHigh = score > highscore;
+    if (isNewHigh) {
+      highscore = score;
+      try {
+        localStorage.setItem('cyberrunner_best', String(highscore));
+      } catch (e) {
+        // Fail silently
+      }
+    }
+
+    if (isNewHigh) {
+      highScoreBadge.classList.remove('hidden');
+    } else {
+      highScoreBadge.classList.add('hidden');
+    }
+
+    overlayTitle.textContent = "GRID DE-SYNC";
+    overlayTitle.style.background = "linear-gradient(135deg, var(--accent-pink), #ff5500)";
+    overlayTitle.style.webkitBackgroundClip = "text";
+    overlayDesc.textContent = "You collided with a cybersecurity obstacle thread! Re-sync connection to retry.";
+
+    instructionsList.classList.add('hidden');
+    finalScoreEl.textContent = `Extracted: ${score} Data Units`;
+    finalScoreEl.classList.remove('hidden');
+    startBtn.textContent = "RE-SYNC NODE";
+    overlay.classList.remove('hidden');
+  }
+
+  function updateUI() {
+    safeGet('score-val').textContent = score;
+    safeGet('speed-val').textContent = `${gameSpeed.toFixed(1)}x`;
+    safeGet('highscore-val').textContent = highscore;
+  }
+
+  // ─── Physics Engine ────────────────────────────────────────────────────────
+  function updatePhysics() {
+    if (!gameStarted || gamePaused || gameOver) return;
+
+    // Increment distance scorecard
+    distance++;
+    if (distance % 5 === 0) {
+      score += 1;
+    }
+
+    // Dynamic speed ramp
+    if (distance > 0 && distance % 350 === 0) {
+      gameSpeed = Math.min(MAX_SPEED, gameSpeed + 0.4);
+      updateUI();
+    }
+
+    // Spawn obstacles/nodes
+    spawnEntity();
+
+    // Update Runner
+    runner.update();
+
+    // Update Obstacles
+    obstacles.forEach(obs => {
+      obs.update();
+      // Collision check
+      if (checkCollision(runner, obs)) {
+        handleGameOver();
+      }
+    });
+    obstacles = obstacles.filter(obs => !obs.markedForDeletion);
+
+    // Update Collectibles
+    collectibles.forEach(col => {
+      col.update();
+      // Collision check (Item Extraction)
+      if (checkCollision(runner, col)) {
+        col.markedForDeletion = true;
+        score += 50;
+        if (window.sfx) window.sfx.playEat();
+
+        // Spawn success burst particles
+        spawnBurstParticles(col.x + 8, col.y + 8, 'var(--node-glow)', 15);
+        updateUI();
+      }
+    });
+    collectibles = collectibles.filter(col => !col.markedForDeletion);
+
+    // Update Burst Particles
+    for (let i = burstParticles.length - 1; i >= 0; i--) {
+      burstParticles[i].update();
+      if (burstParticles[i].alpha <= 0) {
+        burstParticles.splice(i, 1);
+      }
+    }
+  }
+
+  // ─── Drawing Engine ────────────────────────────────────────────────────────
+  let backgroundScroll = 0;
+
+  function draw() {
+    // Clear screen
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // 1. Draw Parallax Skylines
+    ctx.save();
+    backgroundScroll -= gameSpeed * 0.15;
+    if (backgroundScroll <= -200) {
+      backgroundScroll = 0;
+    }
+
+    ctx.fillStyle = 'rgba(79, 131, 204, 0.08)';
+    for (let i = 0; i < 6; i++) {
+      const h = 80 + Math.sin(i * 1.5) * 40;
+      const w = 60 + Math.cos(i) * 20;
+      ctx.fillRect(backgroundScroll + i * 140, GROUND_Y - h, w, h);
+    }
+    ctx.restore();
+
+    // 2. Draw Floor grid line (Perspective depth blocks)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(79, 131, 204, 0.4)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y);
+    ctx.lineTo(CANVAS_WIDTH, GROUND_Y);
+    ctx.stroke();
+
+    // Draw scrolling grid lines on the ground
+    const gridSpeed = gameSpeed;
+    const gridLineOffset = (distance * gridSpeed) % 40;
+    ctx.strokeStyle = 'rgba(79, 131, 204, 0.15)';
+    ctx.lineWidth = 1.5;
+    for (let x = CANVAS_WIDTH; x >= -40; x -= 40) {
+      ctx.beginPath();
+      ctx.moveTo(x - gridLineOffset, GROUND_Y);
+      ctx.lineTo(x - gridLineOffset - 25, CANVAS_HEIGHT);
+      ctx.stroke();
+    }
+
+    // Depth perspective grid deck
+    for (let y = GROUND_Y; y < CANVAS_HEIGHT; y += 15) {
+      ctx.strokeStyle = 'rgba(79, 131, 204, 0.1)';
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(CANVAS_WIDTH, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 3. Draw Collectibles
+    collectibles.forEach(col => col.draw());
+
+    // 4. Draw Obstacles
+    obstacles.forEach(obs => obs.draw());
+
+    // 5. Draw Runner
+    runner.draw();
+
+    // 6. Draw Burst Particles
+    burstParticles.forEach(p => p.draw());
+  }
+
+  // ─── Main Animation Loop ───────────────────────────────────────────────────
+  function loop() {
+    updatePhysics();
+    if (!gamePaused) {
+      draw();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  // Run the initializer and bootstrap animation loop
+  initGameDetails();
+  loop();
+</script>
+</body>
+</html>

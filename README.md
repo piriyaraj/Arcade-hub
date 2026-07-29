@@ -17,6 +17,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
 - 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
+- 🏃‍♂️ **[Cyber Runner](cyberrunner.html)** — Dodge laser fences and cyber hacker drones in a fast-paced neon runner.
 
 ---
 
