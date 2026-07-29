@@ -11,5 +11,7 @@
   "9": "__init__.py",
   "10": "test_utils_reset.py",
   "11": "test_audio.py",
-  "12": "get_repo_root"
+  "12": "get_repo_root",
+  "13": "architecture.test.js",
+  "14": "get_repo_root"
 }

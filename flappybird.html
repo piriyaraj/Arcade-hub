@@ -6,6 +6,9 @@
   <meta name="description" content="Play classic Flappy Bird in a polished neon space-arcade style. Flap through barriers and beat the high score." />
   <title>Flappy Neon</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
   <style>
     :root {
       --bg: #0b0f1a;
@@ -322,6 +325,19 @@
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
 
+    function getThemeColor(key, fallback) {
+      if (window.ThemeManager) {
+        return window.ThemeManager.getColor(key) || fallback;
+      }
+      return fallback;
+    }
+
+    window.addEventListener('themechange', () => {
+      if (state === 'start' || state === 'paused' || state === 'gameover') {
+        draw();
+      }
+    });
+
     const scoreEl = document.getElementById('score');
     const bestEl = document.getElementById('best');
     const overlay = document.getElementById('overlay');
@@ -557,8 +573,21 @@
     // Input handlers
     function handleAction(e) {
       if (e) {
-        if (e.type === 'keydown' && e.code !== 'Space' && e.code !== 'ArrowUp' && e.code !== 'KeyW') {
-          return; // Ignore other keys
+        if (e.type === 'keydown') {
+          const isAction = window.KeyManager ? window.KeyManager.isKey(e, 'action') : (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW');
+          const isPause = window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.code === 'KeyP');
+
+          if (isPause) {
+            e.preventDefault();
+            if (state === 'playing' || state === 'paused') {
+              togglePause();
+            }
+            return;
+          }
+
+          if (!isAction) {
+            return; // Ignore other keys
+          }
         }
         e.preventDefault();
       }
@@ -711,7 +740,7 @@
     // Main Draw Logic
     function draw() {
       // Clear Screen
-      ctx.fillStyle = '#070a13';
+      ctx.fillStyle = getThemeColor('--board-bg', '#070a13');
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
       // Draw Parallax Stars
@@ -738,7 +767,7 @@
         ctx.fillRect(pipe.x, 0, pipe.width, topHeight);
 
         // Top Pipe neon border
-        ctx.strokeStyle = '#00f0ff';
+        ctx.strokeStyle = getThemeColor('--theme-neon', '#00f0ff');
         ctx.lineWidth = 2;
         ctx.strokeRect(pipe.x, -10, pipe.width, topHeight + 10);
 
@@ -777,11 +806,11 @@
       });
 
       // Draw Grid / Neon Floor
-      ctx.fillStyle = '#0b0f1a';
+      ctx.fillStyle = getThemeColor('--bg', '#0b0f1a');
       ctx.fillRect(0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y);
 
       // Floor line with cyan glow
-      ctx.strokeStyle = '#ff007f';
+      ctx.strokeStyle = getThemeColor('--accent-pink', '#ff007f');
       ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(0, GROUND_Y);
@@ -789,7 +818,8 @@
       ctx.stroke();
 
       // Scrolling grid lines on the floor
-      ctx.strokeStyle = 'rgba(255, 0, 127, 0.2)';
+      let floorGridColor = getThemeColor('--accent-pink', '#ff007f');
+      ctx.strokeStyle = floorGridColor.startsWith('#') ? floorGridColor + '33' : 'rgba(255, 0, 127, 0.2)';
       ctx.lineWidth = 1;
       for (let x = groundOffset; x < WIDTH; x += 24) {
         ctx.beginPath();
@@ -805,17 +835,17 @@
 
       // Glow effect for Bird
       ctx.shadowBlur = 15;
-      ctx.shadowColor = '#facc15';
+      ctx.shadowColor = getThemeColor('--theme-yellow', '#facc15');
 
       // Body (cute saucer shape / spaceship shape)
-      ctx.fillStyle = '#edf2f7';
-      ctx.fillStyle = '#facc15';
+      ctx.fillStyle = getThemeColor('--theme-yellow', '#facc15');
       ctx.beginPath();
       ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
       ctx.fill();
 
       // Wing (flapping animation)
-      ctx.fillStyle = '#f59e0b';
+      let wingColor = getThemeColor('--theme-yellow', '#f59e0b');
+      ctx.fillStyle = wingColor.startsWith('#') ? wingColor + 'cc' : wingColor;
       const wingFlap = Math.sin(bird.wingTimer) * 6;
       ctx.beginPath();
       ctx.ellipse(-6, 2, 7, 5 + wingFlap / 2, 0, 0, Math.PI * 2);
@@ -833,13 +863,13 @@
       ctx.fill();
 
       // Cheek / Neon blush
-      ctx.fillStyle = '#ff007f';
+      ctx.fillStyle = getThemeColor('--theme-pink', '#ff007f');
       ctx.beginPath();
       ctx.arc(4, 2, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       // Beak / Thruster
-      ctx.fillStyle = '#ff7849';
+      ctx.fillStyle = getThemeColor('--accent-pink', '#ff7849');
       ctx.beginPath();
       ctx.moveTo(11, -2);
       ctx.lineTo(19, 1);
