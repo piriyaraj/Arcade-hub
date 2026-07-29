@@ -14,14 +14,14 @@
       "norm_label": "audio.js"
     },
     {
-      "label": "SoundFX",
+      "label": "AudioManager",
       "file_type": "code",
       "source_file": "audio.js",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "audio_soundfx",
-      "community": 4,
-      "norm_label": "soundfx"
+      "id": "audio_audiomanager",
+      "community": 8,
+      "norm_label": "audiomanager"
     },
     {
       "label": ".constructor()",
@@ -29,59 +29,149 @@
       "source_file": "audio.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "audio_soundfx_constructor",
-      "community": 4,
+      "id": "audio_audiomanager_constructor",
+      "community": 8,
       "norm_label": ".constructor()"
+    },
+    {
+      "label": ".clampVolume()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "audio_audiomanager_clampvolume",
+      "community": 8,
+      "norm_label": ".clampvolume()"
+    },
+    {
+      "label": ".loadSettings()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "audio_audiomanager_loadsettings",
+      "community": 8,
+      "norm_label": ".loadsettings()"
+    },
+    {
+      "label": ".saveSettings()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "audio_audiomanager_savesettings",
+      "community": 8,
+      "norm_label": ".savesettings()"
+    },
+    {
+      "label": ".masterVolume()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "audio_audiomanager_mastervolume",
+      "community": 8,
+      "norm_label": ".mastervolume()"
+    },
+    {
+      "label": ".sfxVolume()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "audio_audiomanager_sfxvolume",
+      "community": 8,
+      "norm_label": ".sfxvolume()"
+    },
+    {
+      "label": ".musicVolume()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "audio_audiomanager_musicvolume",
+      "community": 8,
+      "norm_label": ".musicvolume()"
+    },
+    {
+      "label": ".muted()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "audio_audiomanager_muted",
+      "community": 8,
+      "norm_label": ".muted()"
+    },
+    {
+      "label": ".toggleMute()",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "audio_audiomanager_togglemute",
+      "community": 8,
+      "norm_label": ".togglemute()"
     },
     {
       "label": ".init()",
       "file_type": "code",
       "source_file": "audio.js",
-      "source_location": "L8",
+      "source_location": "L96",
       "_origin": "ast",
-      "id": "audio_soundfx_init",
-      "community": 4,
+      "id": "audio_audiomanager_init",
+      "community": 8,
       "norm_label": ".init()"
     },
     {
       "label": ".playEat()",
       "file_type": "code",
       "source_file": "audio.js",
-      "source_location": "L20",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "audio_soundfx_playeat",
-      "community": 4,
+      "id": "audio_audiomanager_playeat",
+      "community": 8,
       "norm_label": ".playeat()"
     },
     {
       "label": ".playBounce()",
       "file_type": "code",
       "source_file": "audio.js",
-      "source_location": "L42",
+      "source_location": "L131",
       "_origin": "ast",
-      "id": "audio_soundfx_playbounce",
-      "community": 4,
+      "id": "audio_audiomanager_playbounce",
+      "community": 8,
       "norm_label": ".playbounce()"
     },
     {
       "label": ".playGameOver()",
       "file_type": "code",
       "source_file": "audio.js",
-      "source_location": "L64",
+      "source_location": "L154",
       "_origin": "ast",
-      "id": "audio_soundfx_playgameover",
-      "community": 4,
+      "id": "audio_audiomanager_playgameover",
+      "community": 8,
       "norm_label": ".playgameover()"
     },
     {
       "label": ".playScoreSlot()",
       "file_type": "code",
       "source_file": "audio.js",
-      "source_location": "L86",
+      "source_location": "L177",
       "_origin": "ast",
-      "id": "audio_soundfx_playscoreslot",
-      "community": 4,
+      "id": "audio_audiomanager_playscoreslot",
+      "community": 8,
       "norm_label": ".playscoreslot()"
+    },
+    {
+      "label": "SoundFX",
+      "file_type": "code",
+      "source_file": "audio.js",
+      "source_location": "L202",
+      "_origin": "ast",
+      "id": "audio_soundfx",
+      "community": 4,
+      "norm_label": "soundfx"
     },
     {
       "label": "__init__.py",
@@ -120,7 +210,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler",
-      "community": 8,
+      "community": 7,
       "norm_label": "dlqhandler"
     },
     {
@@ -130,7 +220,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler_init",
-      "community": 8,
+      "community": 7,
       "norm_label": ".__init__()"
     },
     {
@@ -140,7 +230,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler_handle_failure",
-      "community": 8,
+      "community": 7,
       "norm_label": ".handle_failure()"
     },
     {
@@ -170,7 +260,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_queue_handler_taskqueue_submit",
-      "community": 8,
+      "community": 7,
       "norm_label": ".submit()"
     },
     {
@@ -180,7 +270,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_10",
-      "community": 8,
+      "community": 7,
       "norm_label": "dlq (dead-letter queue) handler.     stores and formats failed tasks."
     },
     {
@@ -190,7 +280,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_18",
-      "community": 8,
+      "community": 7,
       "norm_label": "processes a task failure and saves it to the dlq."
     },
     {
@@ -200,7 +290,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_63",
-      "community": 8,
+      "community": 7,
       "norm_label": "submits a task to the queue after validation."
     },
     {
@@ -474,6 +564,96 @@
       "norm_label": "{ soundfx }"
     },
     {
+      "label": "test_audio.py",
+      "file_type": "code",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_audio",
+      "community": 11,
+      "norm_label": "test_audio.py"
+    },
+    {
+      "label": "test_audio_manager_state_initialization()",
+      "file_type": "code",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_test_audio_test_audio_manager_state_initialization",
+      "community": 11,
+      "norm_label": "test_audio_manager_state_initialization()"
+    },
+    {
+      "label": "test_audio_manager_persistence_clamping_load()",
+      "file_type": "code",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "tests_test_audio_test_audio_manager_persistence_clamping_load",
+      "community": 11,
+      "norm_label": "test_audio_manager_persistence_clamping_load()"
+    },
+    {
+      "label": "test_audio_manager_persistence_clamping_set()",
+      "file_type": "code",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "tests_test_audio_test_audio_manager_persistence_clamping_set",
+      "community": 11,
+      "norm_label": "test_audio_manager_persistence_clamping_set()"
+    },
+    {
+      "label": "test_audio_manager_mute_toggle_logic()",
+      "file_type": "code",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L151",
+      "_origin": "ast",
+      "id": "tests_test_audio_test_audio_manager_mute_toggle_logic",
+      "community": 11,
+      "norm_label": "test_audio_manager_mute_toggle_logic()"
+    },
+    {
+      "label": "Verify default volume and mute states when localStorage is empty.",
+      "file_type": "rationale",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "tests_test_audio_rationale_6",
+      "community": 11,
+      "norm_label": "verify default volume and mute states when localstorage is empty."
+    },
+    {
+      "label": "Verify that loading invalid settings from localStorage clamps them safely.",
+      "file_type": "rationale",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "tests_test_audio_rationale_48",
+      "community": 11,
+      "norm_label": "verify that loading invalid settings from localstorage clamps them safely."
+    },
+    {
+      "label": "Verify that setters clamp values to [0.0, 1.0] and update localStorage.",
+      "file_type": "rationale",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_audio_rationale_96",
+      "community": 11,
+      "norm_label": "verify that setters clamp values to [0.0, 1.0] and update localstorage."
+    },
+    {
+      "label": "Verify that toggleMute works as expected and updates state and localStorage.",
+      "file_type": "rationale",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "tests_test_audio_rationale_152",
+      "community": 11,
+      "norm_label": "verify that togglemute works as expected and updates state and localstorage."
+    },
+    {
       "label": "test_js_utilities.py",
       "file_type": "code",
       "source_file": "tests/test_js_utilities.py",
@@ -570,7 +750,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
-      "community": 8,
+      "community": 7,
       "norm_label": "test_dlq_entry_contains_full_error_context()"
     },
     {
@@ -610,7 +790,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_task_queue_rationale_83",
-      "community": 8,
+      "community": 7,
       "norm_label": "(d) dlq entry contains full error context (original error message, stack trace,"
     },
     {
@@ -839,7 +1019,18 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "audio.js",
-      "source_location": "L113",
+      "source_location": "L214",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "audio",
+      "target": "audio_audiomanager",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "audio.js",
+      "source_location": "L214",
       "weight": 1.0,
       "context": "collection",
       "source": "audio",
@@ -861,50 +1052,60 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "audio.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_clampvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_constructor",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_constructor",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "audio.js",
-      "source_location": "L8",
+      "source_location": "L96",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_init",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_init",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "audio.js",
-      "source_location": "L42",
+      "source_location": "L19",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_playbounce",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_loadsettings",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "audio.js",
-      "source_location": "L20",
+      "source_location": "L59",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_playeat",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_mastervolume",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "audio.js",
-      "source_location": "L64",
+      "source_location": "L77",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_playgameover",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_musicvolume",
       "confidence_score": 1.0
     },
     {
@@ -913,8 +1114,221 @@
       "source_file": "audio.js",
       "source_location": "L86",
       "weight": 1.0,
-      "source": "audio_soundfx",
-      "target": "audio_soundfx_playscoreslot",
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_muted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_playbounce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_playeat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_playgameover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_playscoreslot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_savesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_sfxvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "audio_audiomanager",
+      "target": "audio_audiomanager_togglemute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "audio_audiomanager_constructor",
+      "target": "audio_audiomanager_loadsettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "audio_audiomanager_loadsettings",
+      "target": "audio_audiomanager_clampvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "audio_audiomanager_mastervolume",
+      "target": "audio_audiomanager_clampvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "audio_audiomanager_musicvolume",
+      "target": "audio_audiomanager_clampvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "audio_audiomanager_sfxvolume",
+      "target": "audio_audiomanager_clampvolume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "audio_audiomanager_mastervolume",
+      "target": "audio_audiomanager_savesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "audio_audiomanager_musicvolume",
+      "target": "audio_audiomanager_savesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "audio_audiomanager_muted",
+      "target": "audio_audiomanager_savesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "audio_audiomanager_sfxvolume",
+      "target": "audio_audiomanager_savesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "audio_audiomanager_playbounce",
+      "target": "audio_audiomanager_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "audio_audiomanager_playeat",
+      "target": "audio_audiomanager_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "audio_audiomanager_playgameover",
+      "target": "audio_audiomanager_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "audio.js",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "audio_audiomanager_playscoreslot",
+      "target": "audio_audiomanager_init",
       "confidence_score": 1.0
     },
     {
@@ -926,50 +1340,6 @@
       "weight": 1.0,
       "source": "tests_audio_test",
       "target": "audio_soundfx",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "audio.js",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "audio_soundfx_playbounce",
-      "target": "audio_soundfx_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "audio.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "audio_soundfx_playeat",
-      "target": "audio_soundfx_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "audio.js",
-      "source_location": "L66",
-      "weight": 1.0,
-      "source": "audio_soundfx_playgameover",
-      "target": "audio_soundfx_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "audio.js",
-      "source_location": "L88",
-      "weight": 1.0,
-      "source": "audio_soundfx_playscoreslot",
-      "target": "audio_soundfx_init",
       "confidence_score": 1.0
     },
     {
@@ -1659,6 +2029,86 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "tests_test_audio",
+      "target": "tests_test_audio_test_audio_manager_mute_toggle_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "tests_test_audio",
+      "target": "tests_test_audio_test_audio_manager_persistence_clamping_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_test_audio",
+      "target": "tests_test_audio_test_audio_manager_persistence_clamping_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_audio",
+      "target": "tests_test_audio_test_audio_manager_state_initialization",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_test_audio_rationale_6",
+      "target": "tests_test_audio_test_audio_manager_state_initialization",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "tests_test_audio_rationale_48",
+      "target": "tests_test_audio_test_audio_manager_persistence_clamping_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_audio_rationale_96",
+      "target": "tests_test_audio_test_audio_manager_persistence_clamping_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_audio.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "tests_test_audio_rationale_152",
+      "target": "tests_test_audio_test_audio_manager_mute_toggle_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
       "source_location": "L5",
       "weight": 1.0,
@@ -1964,5 +2414,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8b4046c3ad783812136c12c43c2a08772e5c0d08"
+  "built_at_commit": "d34fe4334b613aead891dcb10ff646f1fd8eea73"
 }

@@ -465,35 +465,18 @@ const muteBtn = document.getElementById('mute-btn');
 bestEl.textContent = bestScore;
 
 // Mute/Unmute state loading & initialization
-let soundMuted = false;
-try {
-  soundMuted = localStorage.getItem('snakegame_muted') === 'true';
-} catch (e) {
-  console.error('localStorage load failed:', e);
-  soundMuted = false;
-}
-
-if (window.sfx) {
-  window.sfx.muted = soundMuted;
-}
-
 function updateMuteButtonUI() {
-  if (window.sfx) {
-    muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+  if (window.audioManager) {
+    muteBtn.textContent = window.audioManager.muted ? '🔇 Sound Off' : '🔊 Sound On';
   }
 }
 
 function toggleMute() {
-  if (window.sfx) {
-    window.sfx.muted = !window.sfx.muted;
-    try {
-      localStorage.setItem('snakegame_muted', window.sfx.muted.toString());
-    } catch (e) {
-      console.error('localStorage save failed:', e);
-    }
+  if (window.audioManager) {
+    window.audioManager.toggleMute();
     updateMuteButtonUI();
-    if (typeof window.sfx.init === 'function') {
-      window.sfx.init();
+    if (typeof window.audioManager.init === 'function') {
+      window.audioManager.init();
     }
   }
 }
@@ -549,7 +532,7 @@ function showGameOver() {
   gameOver = true;
   gameStarted = false;
   if (pauseBtn) pauseBtn.disabled = true;
-  if (window.sfx) window.sfx.playGameOver();
+  if (window.audioManager) window.audioManager.playGameOver();
 
   const isNewBest = score > bestScore;
   if (isNewBest) {
@@ -578,7 +561,7 @@ function triggerGameVictory() {
   gameStarted = false;
   if (pauseBtn) pauseBtn.disabled = true;
   gameLoop = null;
-  if (window.sfx) window.sfx.playScoreSlot();
+  if (window.audioManager) window.audioManager.playScoreSlot();
 
   const isNewBest = score > bestScore;
   if (isNewBest) {
@@ -660,7 +643,7 @@ function update() {
   // Check food collision
   if (head.x === food.x && head.y === food.y) {
     score += 10;
-    if (window.sfx) window.sfx.playEat();
+    if (window.audioManager) window.audioManager.playEat();
     spawnParticles(food.x, food.y, '#f43f5e', 15);
     spawnFood();
 

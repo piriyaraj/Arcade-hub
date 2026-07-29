@@ -1,8 +1,96 @@
 // Web Audio API Synthesizer Helper for Retro Game Sound Effects
-class SoundFX {
+class AudioManager {
   constructor() {
     this.ctx = null;
-    this.muted = false;
+    this._masterVolume = 1.0;
+    this._sfxVolume = 1.0;
+    this._musicVolume = 1.0;
+    this._muted = false;
+
+    this.loadSettings();
+  }
+
+  clampVolume(val) {
+    const num = parseFloat(val);
+    if (isNaN(num)) return 1.0;
+    return Math.max(0.0, Math.min(1.0, num));
+  }
+
+  loadSettings() {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const master = localStorage.getItem('audio_master_volume');
+        this._masterVolume = master !== null ? this.clampVolume(master) : 1.0;
+
+        const sfx = localStorage.getItem('audio_sfx_volume');
+        this._sfxVolume = sfx !== null ? this.clampVolume(sfx) : 1.0;
+
+        const music = localStorage.getItem('audio_music_volume');
+        this._musicVolume = music !== null ? this.clampVolume(music) : 1.0;
+
+        const muted = localStorage.getItem('audio_muted');
+        this._muted = muted !== null ? muted === 'true' : false;
+      } catch (e) {
+        this._masterVolume = 1.0;
+        this._sfxVolume = 1.0;
+        this._musicVolume = 1.0;
+        this._muted = false;
+      }
+    }
+  }
+
+  saveSettings() {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('audio_master_volume', this._masterVolume.toString());
+        localStorage.setItem('audio_sfx_volume', this._sfxVolume.toString());
+        localStorage.setItem('audio_music_volume', this._musicVolume.toString());
+        localStorage.setItem('audio_muted', this._muted.toString());
+      } catch (e) {
+        // Ignore storage write errors
+      }
+    }
+  }
+
+  get masterVolume() {
+    return this._masterVolume;
+  }
+
+  set masterVolume(val) {
+    this._masterVolume = this.clampVolume(val);
+    this.saveSettings();
+  }
+
+  get sfxVolume() {
+    return this._sfxVolume;
+  }
+
+  set sfxVolume(val) {
+    this._sfxVolume = this.clampVolume(val);
+    this.saveSettings();
+  }
+
+  get musicVolume() {
+    return this._musicVolume;
+  }
+
+  set musicVolume(val) {
+    this._musicVolume = this.clampVolume(val);
+    this.saveSettings();
+  }
+
+  get muted() {
+    return this._muted;
+  }
+
+  set muted(val) {
+    this._muted = !!val;
+    this.saveSettings();
+  }
+
+  toggleMute() {
+    this.muted = !this.muted;
+    return this.muted;
   }
 
   init() {
@@ -29,8 +117,9 @@ class SoundFX {
     osc.frequency.setValueAtTime(300, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
 
-    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+    const volume = 0.2 * this._masterVolume * this._sfxVolume;
+    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.05), this.ctx.currentTime + 0.08);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -51,8 +140,9 @@ class SoundFX {
     osc.frequency.setValueAtTime(450, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.05);
 
-    gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+    const volume = 0.15 * this._masterVolume * this._sfxVolume;
+    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.07), this.ctx.currentTime + 0.05);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -73,8 +163,9 @@ class SoundFX {
     osc.frequency.setValueAtTime(250, this.ctx.currentTime);
     osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.4);
 
-    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+    const volume = 0.2 * this._masterVolume * this._sfxVolume;
+    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(Math.max(0.001, volume * 0.05), this.ctx.currentTime + 0.4);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
@@ -95,8 +186,9 @@ class SoundFX {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now + i * 0.06);
 
-      gain.gain.setValueAtTime(0.15, now + i * 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.06 + 0.1);
+      const volume = 0.15 * this._masterVolume * this._sfxVolume;
+      gain.gain.setValueAtTime(volume, now + i * 0.06);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.07), now + i * 0.06 + 0.1);
 
       osc.connect(gain);
       gain.connect(this.ctx.destination);
@@ -107,8 +199,17 @@ class SoundFX {
   }
 }
 
-if (typeof window.sfx === 'undefined') { window.sfx = new SoundFX(); }
+class SoundFX extends AudioManager {}
+
+if (typeof window !== 'undefined') {
+  if (typeof window.audioManager === 'undefined') {
+    window.audioManager = new AudioManager();
+  }
+  if (typeof window.sfx === 'undefined') {
+    window.sfx = window.audioManager;
+  }
+}
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = { SoundFX };
+  module.exports = { AudioManager, SoundFX };
 }
