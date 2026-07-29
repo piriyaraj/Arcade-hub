@@ -40,11 +40,22 @@ function saveMuteState(gameKey, muted) {
   }
 }
 
+function resetScore(gameKey) {
+  try {
+    localStorage.removeItem(gameKey + '_best');
+    return true;
+  } catch (e) {
+    console.error('localStorage remove failed:', e);
+    return false;
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.getBestScore = getBestScore;
   window.saveBestScore = saveBestScore;
   window.getMuteState = getMuteState;
   window.saveMuteState = saveMuteState;
+  window.resetScore = resetScore;
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
@@ -52,6 +63,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     getBestScore,
     saveBestScore,
     getMuteState,
-    saveMuteState
+    saveMuteState,
+    resetScore
   };
 }

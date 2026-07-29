@@ -68,3 +68,20 @@ test('saveMuteState persists muted status and returns true', () => {
   assert.strictEqual(result, true);
   assert.strictEqual(mockStorage['game_muted'], 'true');
 });
+
+test('resetScore removes best score from localStorage and returns true', () => {
+  mockStorage['game_best'] = '500';
+  const result = utils.resetScore('game');
+  assert.strictEqual(result, true);
+  assert.strictEqual(mockStorage['game_best'], undefined);
+});
+
+test('resetScore returns false if localStorage.removeItem fails/throws', () => {
+  const originalRemoveItem = global.localStorage.removeItem;
+  global.localStorage.removeItem = () => { throw new Error('fail'); };
+
+  const result = utils.resetScore('game');
+  assert.strictEqual(result, false);
+
+  global.localStorage.removeItem = originalRemoveItem;
+});

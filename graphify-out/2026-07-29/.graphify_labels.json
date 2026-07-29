@@ -6,5 +6,7 @@
   "4": "audio.test.js",
   "5": "test_js_utilities.py",
   "6": "utils.test.js",
-  "7": "utils.js"
+  "7": "utils.js",
+  "8": "DLQHandler",
+  "9": "__init__.py"
 }
