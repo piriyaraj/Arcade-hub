@@ -44,4 +44,27 @@ To publish this project to GitHub Pages:
 Your site will automatically deploy and be accessible at:
 `https://<your-github-username>.github.io/<repository-name>/`
 
+---
+
+## 🏗️ Architecture
+
+The portal exposes shared utility modules to coordinate layout, persistence, settings, and features:
+
+### 1. `ThemeManager` (`theme.js` & `styles/theme.css`)
+Provides standard switching between `light`, `dark`, and `retro-neon` themes:
+- Persists user preferences inside `localStorage` under the key `arcade-theme`.
+- Automatically injects theme-specific CSS variables to `:root` and applies theme body classes.
+- Publishes the CustomEvent `themechange` when the active theme is changed, dynamically notifying running canvas game loops to update colors.
+
+### 2. `KeyManager` (`input.js`)
+Centralizes controls and custom mappings for essential gameplay actions:
+- Binds standard custom keys for `action` (e.g. flap/jump/shoot) and `pause` controls.
+- Loads and persists key bindings inside `localStorage` under `arcade-keybindings`.
+- Exposes an interactive Keybindings Settings Modal allowing custom keyboard mapping at runtime.
+
+### 3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`)
+Combines score entries across all games into a global scoreboard:
+- Aggregates the local high score records for all 13 arcade games.
+- Provides search, sort, and reset capabilities via a responsive dashboard.
+
 <!-- Test PR engine flow -->

@@ -1,0 +1,120 @@
+:root {
+  /* Default variables (dark) */
+  --bg: #0b0f1a;
+  --board-bg: #111827;
+  --card-bg: #111827;
+  --card-hover: #1f293d;
+  --text: #e8eaed;
+  --text-dim: #9aa0a6;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent-neon: #00f0ff;
+  --accent-pink: #ff007f;
+  --accent-green: #4ade80;
+  --racer-glow: #00f0ff;
+  --obstacle-glow: #ff007f;
+  --node-glow: #4ade80;
+  --paddle-glow: #00f0ff;
+  --cpu-glow: #ff007f;
+  --ball-glow: #facc15;
+  --theme-neon: #00f0ff;
+  --theme-yellow: #facc15;
+  --theme-pink: #ff007f;
+  --theme-green: #4ade80;
+}
+
+body.theme-light {
+  --bg: #f3f4f6;
+  --board-bg: #e5e7eb;
+  --card-bg: #ffffff;
+  --card-hover: #f9fafb;
+  --text: #000000;
+  --text-dim: #4b5563;
+  --border: #cccccc;
+  --accent-neon: #0080ff;
+  --accent-pink: #e60073;
+  --accent-green: #00994d;
+  --racer-glow: #0080ff;
+  --obstacle-glow: #e60073;
+  --node-glow: #00994d;
+  --paddle-glow: #0080ff;
+  --cpu-glow: #e60073;
+  --ball-glow: #e6b800;
+  --theme-neon: #0080ff;
+  --theme-yellow: #d4af37;
+  --theme-pink: #e60073;
+  --theme-green: #00994d;
+}
+
+body.theme-dark {
+  --bg: #0b0f1a;
+  --board-bg: #111827;
+  --card-bg: #111827;
+  --card-hover: #1f293d;
+  --text: #e8eaed;
+  --text-dim: #9aa0a6;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent-neon: #00f0ff;
+  --accent-pink: #ff007f;
+  --accent-green: #4ade80;
+  --racer-glow: #00f0ff;
+  --obstacle-glow: #ff007f;
+  --node-glow: #4ade80;
+  --paddle-glow: #00f0ff;
+  --cpu-glow: #ff007f;
+  --ball-glow: #facc15;
+  --theme-neon: #00f0ff;
+  --theme-yellow: #facc15;
+  --theme-pink: #ff007f;
+  --theme-green: #4ade80;
+}
+
+body.theme-retro-neon {
+  --bg: #05000a;
+  --board-bg: #0c0014;
+  --card-bg: #0c0014;
+  --card-hover: #170026;
+  --text: #39ff14;
+  --text-dim: #ff007f;
+  --border: #ff00ff;
+  --accent-neon: #00ffff;
+  --accent-pink: #ff00ff;
+  --accent-green: #39ff14;
+  --racer-glow: #00ffff;
+  --obstacle-glow: #ff007f;
+  --node-glow: #39ff14;
+  --paddle-glow: #00ffff;
+  --cpu-glow: #ff00ff;
+  --ball-glow: #ffff00;
+  --theme-neon: #00ffff;
+  --theme-yellow: #ffff00;
+  --theme-pink: #ff00ff;
+  --theme-green: #39ff14;
+}
+
+/* Theme selector header controls styling */
+.theme-selector-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.theme-select {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  padding-right: 4px;
+}
+
+.theme-select option {
+  background: var(--bg);
+  color: var(--text);
+}

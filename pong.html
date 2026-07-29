@@ -6,6 +6,9 @@
   <meta name="description" content="Classic Pong arcade game. Defeat the CPU in a fast-paced rally of paddles and power." />
   <title>Pong - Arcade Hub</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
   <style>
     :root {
       --bg: #0b0f1a;
@@ -326,6 +329,20 @@
   // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
   const safeGet = (id) => document.getElementById(id) ?? document.body;
 
+  // ─── Theme Helper ──────────────────────────────────────────────────────────
+  function getThemeColor(key, fallback) {
+    if (window.ThemeManager) {
+      return window.ThemeManager.getColor(key) || fallback;
+    }
+    return fallback;
+  }
+
+  window.addEventListener('themechange', () => {
+    if (gamePaused || gameOver || !gameStarted) {
+      draw();
+    }
+  });
+
   // ─── Game Constants ────────────────────────────────────────────────────────
   const CANVAS_WIDTH = 600;
   const CANVAS_HEIGHT = 400;
@@ -459,7 +476,7 @@
       keys.w = true;
     } else if (e.key.toLowerCase() === 's') {
       keys.s = true;
-    } else if (e.key === ' ' || e.key.toLowerCase() === 'p') {
+    } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.key === ' ' || e.key.toLowerCase() === 'p')) {
       if (gameStarted && !gameOver) {
         togglePause();
         e.preventDefault();
@@ -575,16 +592,22 @@
     pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
 
     if (gamePaused) {
-      ctx.fillStyle = 'rgba(11, 15, 26, 0.65)';
+      let bgVal = getThemeColor('--board-bg', '#111827');
+      if (bgVal.startsWith('#')) {
+        ctx.fillStyle = bgVal + 'b3'; // add transparency
+      } else {
+        ctx.fillStyle = 'rgba(11, 15, 26, 0.65)';
+      }
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
       ctx.font = '800 24px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#00f0ff';
+      ctx.fillStyle = getThemeColor('--accent-neon', '#00f0ff');
       ctx.textAlign = 'center';
       ctx.fillText('GAME PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
       ctx.font = '14px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = '#9aa0a6';
-      ctx.fillText('Press SPACE or click RESUME to play', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
+      ctx.fillStyle = getThemeColor('--text-dim', '#9aa0a6');
+      const pauseKeyName = (window.KeyManager && window.KeyManager.bindings.pause) ? window.KeyManager.bindings.pause.replace('Key', '') : 'P';
+      ctx.fillText('Press ' + pauseKeyName + ' or click RESUME to play', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
     }
   }
 
@@ -837,32 +860,32 @@
     // Draw Particles
     particles.forEach(p => p.draw());
 
-    // Draw Player Paddle (Cyan)
+    // Draw Player Paddle (Cyan - accent-neon)
     ctx.save();
-    ctx.fillStyle = '#00f0ff';
+    ctx.fillStyle = getThemeColor('--paddle-glow', '#00f0ff');
     ctx.shadowBlur = 10;
-    ctx.shadowColor = 'rgba(0, 240, 255, 0.6)';
+    ctx.shadowColor = getThemeColor('--paddle-glow', '#00f0ff');
     ctx.beginPath();
     ctx.roundRect(20, playerY, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
     ctx.fill();
     ctx.restore();
 
-    // Draw CPU Paddle (Pink)
+    // Draw CPU Paddle (Pink - accent-pink)
     ctx.save();
-    ctx.fillStyle = '#ff007f';
+    ctx.fillStyle = getThemeColor('--cpu-glow', '#ff007f');
     ctx.shadowBlur = 10;
-    ctx.shadowColor = 'rgba(255, 0, 127, 0.6)';
+    ctx.shadowColor = getThemeColor('--cpu-glow', '#ff007f');
     ctx.beginPath();
     ctx.roundRect(CANVAS_WIDTH - 20 - PADDLE_WIDTH, cpuY, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
     ctx.fill();
     ctx.restore();
 
-    // Draw Ball
+    // Draw Ball (Yellow - ball-glow)
     if (gameStarted && !gameOver) {
       ctx.save();
-      ctx.fillStyle = '#facc15';
+      ctx.fillStyle = getThemeColor('--ball-glow', '#facc15');
       ctx.shadowBlur = 12;
-      ctx.shadowColor = '#eab308';
+      ctx.shadowColor = getThemeColor('--ball-glow', '#facc15');
       ctx.beginPath();
       ctx.arc(ballX, ballY, BALL_RADIUS, 0, Math.PI * 2);
       ctx.fill();

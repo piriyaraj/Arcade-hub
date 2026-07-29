@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Arcade Game Portal - Leaderboard Dashboard">
+  <title>Leaderboard - Arcade Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <style>
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+      padding: 0 1.5rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 800px;
+      padding: 3rem 0 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    main {
+      width: 100%;
+      max-width: 800px;
+      flex: 1;
+      padding-bottom: 4rem;
+    }
+
+    .dashboard-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      flex: 1;
+      min-width: 200px;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-neon);
+    }
+
+    .select-control {
+      background: var(--board-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-control:focus {
+      border-color: var(--accent-neon);
+    }
+
+    .btn-danger {
+      background: rgba(255, 0, 127, 0.1);
+      border: 1px solid var(--accent-pink);
+      color: var(--accent-pink);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      background: var(--accent-pink);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      border-bottom: 2px solid var(--border);
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .game-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+    }
+
+    .game-icon {
+      font-size: 1.5rem;
+    }
+
+    .score-cell {
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent-neon);
+      text-align: right;
+    }
+
+    .no-scores {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--text-dim);
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">&larr; Home</a>
+    <h1 class="logo">Leaderboard</h1>
+  </header>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="controls-row">
+        <input type="text" id="search" class="search-input" placeholder="Search games...">
+
+        <select id="sort" class="select-control" aria-label="Sort Order">
+          <option value="score-desc">Score: High to Low</option>
+          <option value="score-asc">Score: Low to High</option>
+          <option value="name-asc">Name: A to Z</option>
+          <option value="name-desc">Name: Z to A</option>
+        </select>
+
+        <button id="reset-all" class="btn-danger">Clear Scores</button>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th style="text-align: right;">High Score</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <!-- Populated via Javascript -->
+          </tbody>
+        </table>
+        <div id="empty-state" class="no-scores" style="display: none;">
+          No matching games found.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Pure HTML5 Arcade Portal &bull; Built with standard Web Technologies</p>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="leaderboard.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search');
+      const sortSelect = document.getElementById('sort');
+      const resetBtn = document.getElementById('reset-all');
+      const tbody = document.getElementById('leaderboard-body');
+      const emptyState = document.getElementById('empty-state');
+
+      function render() {
+        const query = searchInput.value.toLowerCase().trim();
+        const sortBy = sortSelect.value;
+
+        let scores = window.Leaderboard.getScores();
+
+        // Filter
+        if (query) {
+          scores = scores.filter(s => s.name.toLowerCase().includes(query));
+        }
+
+        // Sort
+        scores.sort((a, b) => {
+          if (sortBy === 'score-desc') {
+            return b.score - a.score;
+          } else if (sortBy === 'score-asc') {
+            return a.score - b.score;
+          } else if (sortBy === 'name-asc') {
+            return a.name.localeCompare(b.name);
+          } else if (sortBy === 'name-desc') {
+            return b.name.localeCompare(a.name);
+          }
+          return 0;
+        });
+
+        // Render
+        tbody.innerHTML = '';
+        if (scores.length === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          emptyState.style.display = 'none';
+          scores.forEach(s => {
+            const tr = document.createElement('tr');
+
+            const tdGame = document.createElement('td');
+            const gameDiv = document.createElement('div');
+            gameDiv.className = 'game-cell';
+
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'game-icon';
+            iconSpan.textContent = s.icon;
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = s.name;
+
+            gameDiv.appendChild(iconSpan);
+            gameDiv.appendChild(nameSpan);
+            tdGame.appendChild(gameDiv);
+
+            const tdScore = document.createElement('td');
+            tdScore.className = 'score-cell';
+            tdScore.textContent = s.score.toLocaleString();
+
+            tr.appendChild(tdGame);
+            tr.appendChild(tdScore);
+            tbody.appendChild(tr);
+          });
+        }
+      }
+
+      searchInput.addEventListener('input', render);
+      sortSelect.addEventListener('change', render);
+
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all high scores?')) {
+          window.Leaderboard.resetAllScores();
+          render();
+        }
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>

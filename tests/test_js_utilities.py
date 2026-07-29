@@ -38,3 +38,22 @@ def test_js_general_utilities():
     print(result.stderr, file=sys.stderr)
 
     assert result.returncode == 0, f"JS test utils.test.js failed with code {result.returncode}"
+
+
+def test_js_architecture_utilities():
+    """Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.js and asserts success."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "architecture.test.js")
+
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True
+    )
+
+    print("STDOUT:")
+    print(result.stdout)
+    print("STDERR:", file=sys.stderr)
+    print(result.stderr, file=sys.stderr)
+
+    assert result.returncode == 0, f"JS test architecture.test.js failed with code {result.returncode}"

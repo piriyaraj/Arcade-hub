@@ -6,6 +6,9 @@
   <meta name="description" content="CyberRacer - Steer through the grid, dodge traffic and cyber laser barricades, and collect data nodes at high speeds." />
   <title>CyberRacer - Arcade Hub</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
   <style>
     :root {
       --bg: #0b0f1a;
@@ -383,6 +386,25 @@
   // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
   const safeGet = (id) => document.getElementById(id) ?? document.body;
 
+  // ─── Theme Helper ──────────────────────────────────────────────────────────
+  function getThemeColor(key, fallback) {
+    if (window.ThemeManager) {
+      return window.ThemeManager.getColor(key) || fallback;
+    }
+    return fallback;
+  }
+
+  window.addEventListener('themechange', () => {
+    if (!gameStarted || gamePaused || gameOver) {
+      // Redraw game components
+      drawTrack();
+      if (typeof player !== 'undefined' && player) player.draw();
+      if (typeof obstacles !== 'undefined') obstacles.forEach(obs => obs.draw());
+      if (typeof energyCores !== 'undefined') energyCores.forEach(core => core.draw());
+      if (typeof particles !== 'undefined') particles.forEach(p => p.draw());
+    }
+  });
+
   // ─── Canvas & Context Setup ────────────────────────────────────────────────
   const canvas = safeGet('game');
   const ctx = canvas.getContext('2d');
@@ -460,7 +482,7 @@
 
       ctx.save();
       // Apply neon color glow effect
-      const glowColor = gameOver ? 'var(--accent-pink)' : 'var(--racer-glow)';
+      const glowColor = gameOver ? getThemeColor('--accent-pink', '#ff007f') : getThemeColor('--racer-glow', '#00f0ff');
       ctx.shadowBlur = 15;
       ctx.shadowColor = glowColor;
 
@@ -541,7 +563,7 @@
     draw() {
       ctx.save();
       ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
+      ctx.fillStyle = getThemeColor(this.color, '#00f0ff');
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -572,9 +594,9 @@
     draw() {
       ctx.save();
       ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
+      ctx.fillStyle = getThemeColor(this.color, '#00f0ff');
       ctx.shadowBlur = 10;
-      ctx.shadowColor = this.color;
+      ctx.shadowColor = getThemeColor(this.color, '#00f0ff');
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -667,9 +689,9 @@
 
     draw() {
       ctx.save();
-      ctx.fillStyle = this.color;
+      ctx.fillStyle = getThemeColor(this.color, '#ff0055');
       ctx.shadowBlur = 12;
-      ctx.shadowColor = this.color;
+      ctx.shadowColor = getThemeColor(this.color, '#ff0055');
 
       if (this.type === 'traffic') {
         // Draw cyber traffic car
@@ -749,9 +771,9 @@
     draw() {
       const radius = 7 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2.5;
       ctx.save();
-      ctx.fillStyle = this.color;
+      ctx.fillStyle = getThemeColor(this.color, '#4ade80');
       ctx.shadowBlur = 12;
-      ctx.shadowColor = this.color;
+      ctx.shadowColor = getThemeColor(this.color, '#4ade80');
 
       ctx.beginPath();
       // Spin and tilt Diamond Energy Core
@@ -792,7 +814,7 @@
     } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       keys[e.code] = true;
       e.preventDefault();
-    } else if (e.code === 'Escape' || e.key.toLowerCase() === 'p') {
+    } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.code === 'Escape' || e.key.toLowerCase() === 'p')) {
       if (gameStarted && !gameOver) {
         togglePause();
       }
@@ -1030,11 +1052,11 @@
   // ─── Rendering Methods ───
   function drawTrack() {
     // Clear whole canvas with cyber mesh gradient color
-    ctx.fillStyle = '#080d19';
+    ctx.fillStyle = getThemeColor('--bg', '#080d19');
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     // Grid details on shoulders
-    ctx.strokeStyle = 'rgba(79, 131, 204, 0.1)';
+    ctx.strokeStyle = getThemeColor('--border', 'rgba(79, 131, 204, 0.1)');
     ctx.lineWidth = 1;
 
     // Horizontal grid lines scrolling down
@@ -1066,14 +1088,15 @@
     }
 
     // Paint Road background
-    ctx.fillStyle = '#111827'; // Dark dashboard gray
+    ctx.fillStyle = getThemeColor('--board-bg', '#111827'); // Dark dashboard gray
     ctx.fillRect(ROAD_LEFT, 0, ROAD_WIDTH, CANVAS_HEIGHT);
 
     // Left and Right neon fence boundaries
     ctx.save();
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
+    let boundaryColor = getThemeColor('--racer-glow', '#00f0ff');
+    ctx.strokeStyle = boundaryColor;
     ctx.shadowBlur = 10;
-    ctx.shadowColor = 'var(--racer-glow)';
+    ctx.shadowColor = boundaryColor;
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.moveTo(ROAD_LEFT, 0);
