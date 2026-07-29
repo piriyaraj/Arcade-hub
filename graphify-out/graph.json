@@ -1344,6 +1344,116 @@
       "norm_label": "runs a node.js snippet to verify that resetscore recovers from localstorage fail"
     },
     {
+      "label": "theme.test.js",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_theme_test",
+      "community": 7,
+      "norm_label": "theme.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_theme_test_test",
+      "community": 7,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "tests_theme_test_assert",
+      "community": 7,
+      "norm_label": "assert"
+    },
+    {
+      "label": "mockStorage",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_theme_test_mockstorage",
+      "community": 7,
+      "norm_label": "mockstorage"
+    },
+    {
+      "label": "listeners",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "tests_theme_test_listeners",
+      "community": 7,
+      "norm_label": "listeners"
+    },
+    {
+      "label": "dispatchedEvents",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "tests_theme_test_dispatchedevents",
+      "community": 7,
+      "norm_label": "dispatchedevents"
+    },
+    {
+      "label": "constructor()",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "tests_theme_test_constructor",
+      "community": 7,
+      "norm_label": "constructor()"
+    },
+    {
+      "label": "documentElementStyle",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "tests_theme_test_documentelementstyle",
+      "community": 7,
+      "norm_label": "documentelementstyle"
+    },
+    {
+      "label": "bodyClasses",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "tests_theme_test_bodyclasses",
+      "community": 7,
+      "norm_label": "bodyclasses"
+    },
+    {
+      "label": "resetMocks()",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "tests_theme_test_resetmocks",
+      "community": 7,
+      "norm_label": "resetmocks()"
+    },
+    {
+      "label": "{ ThemeManager }",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L89",
+      "_origin": "ast",
+      "id": "tests_theme_test_thememanager",
+      "community": 7,
+      "norm_label": "{ thememanager }"
+    },
+    {
       "label": "utils.test.js",
       "file_type": "code",
       "source_file": "tests/utils.test.js",
@@ -1400,7 +1510,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "theme",
-      "community": 13,
+      "community": 7,
       "norm_label": "theme.js"
     },
     {
@@ -1410,7 +1520,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "theme_thememanager",
-      "community": 13,
+      "community": 7,
       "norm_label": "thememanager"
     },
     {
@@ -3467,6 +3577,128 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_bodyclasses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_dispatchedevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_documentelementstyle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_listeners",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_mockstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_resetmocks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "tests_theme_test_thememanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "theme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "tests_theme_test",
+      "target": "theme_thememanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/utils.test.js",
       "source_location": "L2",
       "weight": 1.0,
@@ -3662,5 +3894,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f5bb69c65d6f5583a94d4bc29604e3d791d475ae"
+  "built_at_commit": "9788abbd1c7b2b361784e77c0ae4430d5f5920a5"
 }

@@ -78,13 +78,31 @@ const ThemeManager = {
     this.applyTheme(this.currentTheme);
     this.setupUI();
   },
+  getTheme() {
+    return this.currentTheme;
+  },
   setTheme(theme) {
     if (this.themes[theme]) {
+      const oldTheme = this.currentTheme;
       this.currentTheme = theme;
       localStorage.setItem('arcade-theme', theme);
       this.applyTheme(theme);
-      window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+      window.dispatchEvent(new CustomEvent('themechange', {
+        detail: {
+          theme,
+          oldTheme,
+          newTheme: theme
+        }
+      }));
     }
+  },
+  cycleTheme() {
+    const list = Object.keys(this.themes);
+    const currentIndex = list.indexOf(this.currentTheme);
+    const nextIndex = (currentIndex + 1) % list.length;
+    const nextTheme = list[nextIndex];
+    this.setTheme(nextTheme);
+    return nextTheme;
   },
   applyTheme(theme) {
     const root = document.documentElement;
