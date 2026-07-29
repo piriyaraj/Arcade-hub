@@ -340,7 +340,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_scheduler_init",
-      "community": 7,
+      "community": 3,
       "norm_label": "__init__.py"
     },
     {
@@ -350,7 +350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_scheduler_scheduler",
-      "community": 7,
+      "community": 3,
       "norm_label": "scheduler.py"
     },
     {
@@ -360,7 +360,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler",
-      "community": 7,
+      "community": 3,
       "norm_label": "taskscheduler"
     },
     {
@@ -370,7 +370,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler_init",
-      "community": 7,
+      "community": 3,
       "norm_label": ".__init__()"
     },
     {
@@ -380,7 +380,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler_schedule_task",
-      "community": 7,
+      "community": 3,
       "norm_label": ".schedule_task()"
     },
     {
@@ -390,7 +390,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_rationale_11",
-      "community": 7,
+      "community": 3,
       "norm_label": "schedules a task by submitting it to the queue."
     },
     {
@@ -682,6 +682,66 @@
       "id": "tests_audio_test_soundfx",
       "community": 4,
       "norm_label": "{ soundfx }"
+    },
+    {
+      "label": "leaderboard.test.js",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test",
+      "community": 13,
+      "norm_label": "leaderboard.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test_test",
+      "community": 13,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test_assert",
+      "community": 13,
+      "norm_label": "assert"
+    },
+    {
+      "label": "mockStorage",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test_mockstorage",
+      "community": 13,
+      "norm_label": "mockstorage"
+    },
+    {
+      "label": "consoleErrors",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test_consoleerrors",
+      "community": 13,
+      "norm_label": "consoleerrors"
+    },
+    {
+      "label": "{ Leaderboard }",
+      "file_type": "code",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "tests_leaderboard_test_leaderboard",
+      "community": 13,
+      "norm_label": "{ leaderboard }"
     },
     {
       "label": "test_audio.py",
@@ -1074,6 +1134,16 @@
       "norm_label": "test_js_architecture_utilities()"
     },
     {
+      "label": "test_js_leaderboard_utilities()",
+      "file_type": "code",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_test_js_leaderboard_utilities",
+      "community": 5,
+      "norm_label": "test_js_leaderboard_utilities()"
+    },
+    {
       "label": "Runs the JavaScript Node.js unit tests for audio.js and asserts success.",
       "file_type": "rationale",
       "source_file": "tests/test_js_utilities.py",
@@ -1102,6 +1172,16 @@
       "id": "tests_test_js_utilities_rationale_44",
       "community": 5,
       "norm_label": "runs the javascript node.js unit tests for theme.js, input.js, and leaderboard.j"
+    },
+    {
+      "label": "Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success.",
+      "file_type": "rationale",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_rationale_63",
+      "community": 5,
+      "norm_label": "runs the javascript node.js unit tests for leaderboard.js and asserts success."
     },
     {
       "label": "test_task_queue.py",
@@ -1856,6 +1936,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "leaderboard",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -1863,6 +1954,17 @@
       "source_location": "L39",
       "weight": 1.0,
       "source": "tests_architecture_test",
+      "target": "leaderboard_leaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
       "target": "leaderboard_leaderboard",
       "confidence_score": 1.0
     },
@@ -2645,6 +2747,56 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "tests_leaderboard_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "tests_leaderboard_test_consoleerrors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "tests_leaderboard_test_leaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "tests_leaderboard_test_mockstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/leaderboard.test.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_leaderboard_test",
+      "target": "tests_leaderboard_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_audio.py",
       "source_location": "L151",
       "weight": 1.0,
@@ -3103,6 +3255,16 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities",
+      "target": "tests_test_js_utilities_test_js_leaderboard_utilities",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
@@ -3130,6 +3292,16 @@
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_44",
       "target": "tests_test_js_utilities_test_js_architecture_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities_rationale_63",
+      "target": "tests_test_js_utilities_test_js_leaderboard_utilities",
       "confidence_score": 1.0
     },
     {
@@ -3450,5 +3622,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c4c596f2088b0d6c55449e15811a1e36c4b6c965"
+  "built_at_commit": "2423dfd101ffe08c07a7fc6434818ed079c29d7c"
 }

@@ -17,14 +17,17 @@ const utils = require('../utils.js');
 test('getBestScore returns parsed number if valid', () => {
   mockStorage['game_best'] = '150';
   assert.strictEqual(utils.getBestScore('game'), 150);
+  assert.strictEqual(utils.loadHighScore('game'), 150);
 });
 
 test('getBestScore returns 0 if localStorage contains invalid number', () => {
   mockStorage['game_best'] = 'not-a-number';
   assert.strictEqual(utils.getBestScore('game'), 0);
+  assert.strictEqual(utils.loadHighScore('game'), 0);
 
   mockStorage['game_best'] = 'NaN';
   assert.strictEqual(utils.getBestScore('game'), 0);
+  assert.strictEqual(utils.loadHighScore('game'), 0);
 });
 
 test('getBestScore returns 0 if localStorage fails/throws', () => {
@@ -32,6 +35,7 @@ test('getBestScore returns 0 if localStorage fails/throws', () => {
   global.localStorage.getItem = () => { throw new Error('fail'); };
 
   assert.strictEqual(utils.getBestScore('game'), 0);
+  assert.strictEqual(utils.loadHighScore('game'), 0);
 
   global.localStorage.getItem = originalGetItem;
 });
@@ -40,6 +44,10 @@ test('saveBestScore persists score and returns true on success', () => {
   const result = utils.saveBestScore('game', 300);
   assert.strictEqual(result, true);
   assert.strictEqual(mockStorage['game_best'], '300');
+
+  const result2 = utils.saveHighScore('game', 400);
+  assert.strictEqual(result2, true);
+  assert.strictEqual(mockStorage['game_best'], '400');
 });
 
 test('saveBestScore returns false if localStorage fails/throws', () => {
@@ -48,6 +56,9 @@ test('saveBestScore returns false if localStorage fails/throws', () => {
 
   const result = utils.saveBestScore('game', 300);
   assert.strictEqual(result, false);
+
+  const result2 = utils.saveHighScore('game', 300);
+  assert.strictEqual(result2, false);
 
   global.localStorage.setItem = originalSetItem;
 });
