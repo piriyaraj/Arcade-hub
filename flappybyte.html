@@ -567,10 +567,15 @@
     // Input handlers
     function handleAction(e) {
       if (e) {
-        if (e.type === 'keydown' && e.code !== 'Space' && e.code !== 'ArrowUp' && e.code !== 'KeyW') {
-          return; // Ignore other keys
+        if (e.type === 'keydown') {
+          if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+            e.preventDefault();
+          } else {
+            return;
+          }
+        } else {
+          e.preventDefault();
         }
-        e.preventDefault();
       }
 
       if (state === 'start') {
@@ -583,7 +588,6 @@
     }
 
     window.addEventListener('keydown', handleAction);
-    canvas.addEventListener('mousedown', handleAction);
     canvas.addEventListener('touchstart', function(e) {
       handleAction(e);
     }, { passive: false });
