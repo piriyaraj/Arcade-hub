@@ -370,6 +370,7 @@
     const parsed = parseInt(raw, 10);
     bestScore = Number.isFinite(parsed) ? parsed : 0;
   } catch (e) {
+    console.error('localStorage load failed:', e);
     bestScore = 0;
   }
   let lives = 3;
@@ -673,6 +674,7 @@
       try {
         localStorage.setItem('breakout_best', String(bestScore));
       } catch (e) {
+        console.error('localStorage save failed:', e);
         // Silently fail - best score won't persist but game continues
       }
       bestEl.textContent = String(bestScore);

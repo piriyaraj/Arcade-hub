@@ -343,6 +343,7 @@ try {
   const parsed = parseInt(raw, 10);
   bestScore = Number.isFinite(parsed) ? parsed : 0;
 } catch (e) {
+  console.error('localStorage load failed:', e);
   bestScore = 0;
 }
 
@@ -362,6 +363,7 @@ let soundMuted = false;
 try {
   soundMuted = localStorage.getItem('bingball_muted') === 'true';
 } catch (e) {
+  console.error('localStorage load failed:', e);
   soundMuted = false;
 }
 
@@ -380,7 +382,9 @@ function toggleMute() {
     window.sfx.muted = !window.sfx.muted;
     try {
       localStorage.setItem('bingball_muted', window.sfx.muted.toString());
-    } catch (e) {}
+    } catch (e) {
+      console.error('localStorage save failed:', e);
+    }
     updateMuteButtonUI();
     if (typeof window.sfx.init === 'function') {
       window.sfx.init();
@@ -751,6 +755,7 @@ function showGameOver() {
     try {
       localStorage.setItem('bingball_best', String(bestScore));
     } catch (e) {
+      console.error('localStorage save failed:', e);
       // Silently fail - best score won't persist but game continues
     }
     bestEl.textContent = bestScore;

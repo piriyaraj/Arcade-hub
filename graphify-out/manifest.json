@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785271075.6405923,
-    "ast_hash": "cf80a0d3c3a1511425e4b6feb62a61cb",
+    "mtime": 1785270450.1125774,
+    "ast_hash": "d1183919621c1e3f80a4dba5f4810842",
     "semantic_hash": ""
   },
   "mail.md": {
@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "bingball.html": {
-    "mtime": 1785270857.2313478,
-    "ast_hash": "6b4a90018550bb976fa0c6af2de9c07b",
+    "mtime": 1785270562.4711175,
+    "ast_hash": "51572ca1d725416fc683cf901a005506",
     "semantic_hash": ""
   },
   "index.html": {
@@ -30,23 +30,23 @@
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1785270857.2313478,
-    "ast_hash": "d72e439813fc2650dc46946c9593c29c",
+    "mtime": 1785270570.5110137,
+    "ast_hash": "9b17a6c4934614066057fd8e78d71af4",
     "semantic_hash": ""
   },
   "breakout.html": {
-    "mtime": 1785270857.2313478,
-    "ast_hash": "f8d79eea8a47c91561836b32c6219e6f",
+    "mtime": 1785270493.3160143,
+    "ast_hash": "f554622a6351675e09bc82c835425d88",
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
-    "mtime": 1785270857.2393477,
-    "ast_hash": "21a8aca16afafa8d052fc54bf16c8efb",
+    "mtime": 1785270582.650857,
+    "ast_hash": "0cbf09975b4788a85bd5d1c121121ff3",
     "semantic_hash": ""
   },
   "tetris.html": {
-    "mtime": 1785270857.2393477,
-    "ast_hash": "3d465397e2ce03d55c4a20753581a0ee",
+    "mtime": 1785270595.0466971,
+    "ast_hash": "de93db55d311e919602d150e6932b5d0",
     "semantic_hash": ""
   },
   "favicon.svg": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785270857.2313478,
-    "ast_hash": "04422a1cf4b11e2eee796be92e37024c",
+    "mtime": 1785270556.2391982,
+    "ast_hash": "1981b5a796b9170e708f4f9c9f98b25f",
     "semantic_hash": ""
   },
   "tests/audio.test.js": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "utils.js": {
-    "mtime": 1785270857.2393477,
-    "ast_hash": "09a7ac2d22f9137e45f405136759ee7d",
+    "mtime": 1785270483.9161367,
+    "ast_hash": "3bb21ac318fed61e004c5fc1af28569a",
     "semantic_hash": ""
   },
   "2048.html": {

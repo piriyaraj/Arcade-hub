@@ -348,6 +348,7 @@
       const parsed = parseInt(raw, 10);
       highScore = Number.isFinite(parsed) ? parsed : 0;
     } catch (e) {
+      console.error('localStorage load failed:', e);
       highScore = 0;
     }
     bestEl.textContent = highScore;
@@ -357,6 +358,7 @@
     try {
       soundMuted = localStorage.getItem('flappybird_muted') === 'true';
     } catch (e) {
+      console.error('localStorage load failed:', e);
       soundMuted = false;
     }
 
@@ -375,7 +377,9 @@
         window.sfx.muted = !window.sfx.muted;
         try {
           localStorage.setItem('flappybird_muted', window.sfx.muted.toString());
-        } catch (e) {}
+        } catch (e) {
+          console.error('localStorage save failed:', e);
+        }
         updateMuteButtonUI();
         if (typeof window.sfx.init === 'function') {
           window.sfx.init();
@@ -523,7 +527,11 @@
       // Check high score
       if (score > highScore) {
         highScore = score;
-        try { localStorage.setItem('flappy_best', String(highScore)); } catch (e) {}
+        try {
+          localStorage.setItem('flappy_best', String(highScore));
+        } catch (e) {
+          console.error('localStorage save failed:', e);
+        }
         bestEl.textContent = highScore;
       }
 

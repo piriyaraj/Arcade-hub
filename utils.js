@@ -6,6 +6,7 @@ function getBestScore(gameKey) {
     const parsed = parseInt(raw, 10);
     return Number.isFinite(parsed) ? parsed : 0;
   } catch (e) {
+    console.error('localStorage load failed:', e);
     return 0;
   }
 }
@@ -15,6 +16,7 @@ function saveBestScore(gameKey, score) {
     localStorage.setItem(gameKey + '_best', score.toString());
     return true;
   } catch (e) {
+    console.error('localStorage save failed:', e);
     return false;
   }
 }
@@ -23,6 +25,7 @@ function getMuteState(gameKey) {
   try {
     return localStorage.getItem(gameKey + '_muted') === 'true';
   } catch (e) {
+    console.error('localStorage load failed:', e);
     return false;
   }
 }
@@ -32,6 +35,7 @@ function saveMuteState(gameKey, muted) {
     localStorage.setItem(gameKey + '_muted', muted.toString());
     return true;
   } catch (e) {
+    console.error('localStorage save failed:', e);
     return false;
   }
 }

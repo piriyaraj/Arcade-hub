@@ -451,6 +451,7 @@
     const parsed = parseInt(raw, 10);
     bestScore = Number.isFinite(parsed) ? parsed : 0;
   } catch (e) {
+    console.error('localStorage load failed:', e);
     bestScore = 0;
   }
   bestEl.textContent = bestScore;
@@ -461,6 +462,7 @@
   try {
     soundMuted = localStorage.getItem('spaceinvaders_muted') === 'true';
   } catch (e) {
+    console.error('localStorage load failed:', e);
     soundMuted = false;
   }
 
@@ -479,7 +481,9 @@
       window.sfx.muted = !window.sfx.muted;
       try {
         localStorage.setItem('spaceinvaders_muted', window.sfx.muted.toString());
-      } catch (e) {}
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
       updateMuteButtonUI();
       window.sfx.init();
     }
@@ -1046,6 +1050,7 @@
       try {
         localStorage.setItem('spaceinvaders_best', bestScore.toString());
       } catch (e) {
+        console.error('localStorage save failed:', e);
         // Silently catch exceptions
       }
       bestEl.textContent = bestScore;
@@ -1067,6 +1072,7 @@
         try {
           localStorage.setItem('spaceinvaders_best', bestScore.toString());
         } catch (e) {
+          console.error('localStorage save failed:', e);
           // Silently catch exceptions
         }
         bestEl.textContent = bestScore;
@@ -1099,6 +1105,7 @@
       try {
         localStorage.setItem('spaceinvaders_best', bestScore.toString());
       } catch (e) {
+        console.error('localStorage save failed:', e);
         // Silently catch exceptions
       }
       bestEl.textContent = bestScore;
