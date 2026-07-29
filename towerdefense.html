@@ -432,8 +432,10 @@
       if (window.sfx) window.sfx.init();
     });
 
-    // Handle canvas click to place a tower
-    canvas.addEventListener('click', (e) => {
+    // Handle canvas click/touch to place a tower
+    let lastTouchTime = 0;
+
+    function handleCanvasPlace(e) {
       if (state !== 'playing') return;
       if (window.sfx) window.sfx.init();
 
@@ -480,7 +482,20 @@
       } else {
         spawnWarningText(col * GRID_SIZE + GRID_SIZE/2, row * GRID_SIZE + GRID_SIZE/2, "Insufficient Funds");
       }
+    }
+
+    canvas.addEventListener('click', (e) => {
+      if (Date.now() - lastTouchTime < 500) return;
+      handleCanvasPlace(e);
     });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      lastTouchTime = Date.now();
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        handleCanvasPlace(e.changedTouches[0]);
+      }
+    }, { passive: false });
 
     function spawnWarningText(x, y, text) {
       if (window.sfx) window.sfx.playGameOver();
