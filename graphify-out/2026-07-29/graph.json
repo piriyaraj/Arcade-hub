@@ -614,6 +614,56 @@
       "norm_label": "(d) dlq entry contains full error context (original error message, stack trace,"
     },
     {
+      "label": "test_utils_reset.py",
+      "file_type": "code",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_utils_reset",
+      "community": 10,
+      "norm_label": "test_utils_reset.py"
+    },
+    {
+      "label": "test_js_reset_score_success()",
+      "file_type": "code",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_test_utils_reset_test_js_reset_score_success",
+      "community": 10,
+      "norm_label": "test_js_reset_score_success()"
+    },
+    {
+      "label": "test_js_reset_score_failure()",
+      "file_type": "code",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "tests_test_utils_reset_test_js_reset_score_failure",
+      "community": 10,
+      "norm_label": "test_js_reset_score_failure()"
+    },
+    {
+      "label": "Runs a Node.js snippet to verify that resetScore removes from localStorage and r",
+      "file_type": "rationale",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "tests_test_utils_reset_rationale_6",
+      "community": 10,
+      "norm_label": "runs a node.js snippet to verify that resetscore removes from localstorage and r"
+    },
+    {
+      "label": "Runs a Node.js snippet to verify that resetScore recovers from localStorage fail",
+      "file_type": "rationale",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "tests_test_utils_reset_rationale_39",
+      "community": 10,
+      "norm_label": "runs a node.js snippet to verify that resetscore recovers from localstorage fail"
+    },
+    {
       "label": "utils.test.js",
       "file_type": "code",
       "source_file": "tests/utils.test.js",
@@ -712,6 +762,16 @@
       "id": "utils_savemutestate",
       "community": 6,
       "norm_label": "savemutestate()"
+    },
+    {
+      "label": "resetScore()",
+      "file_type": "code",
+      "source_file": "utils.js",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "utils_resetscore",
+      "community": 6,
+      "norm_label": "resetscore()"
     },
     {
       "label": "README.md",
@@ -1719,6 +1779,46 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_test_utils_reset",
+      "target": "tests_test_utils_reset_test_js_reset_score_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_utils_reset",
+      "target": "tests_test_utils_reset_test_js_reset_score_success",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_test_utils_reset_rationale_6",
+      "target": "tests_test_utils_reset_test_js_reset_score_success",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_utils_reset.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_test_utils_reset_rationale_39",
+      "target": "tests_test_utils_reset_test_js_reset_score_failure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/utils.test.js",
       "source_location": "L2",
       "weight": 1.0,
@@ -1771,7 +1871,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L52",
+      "source_location": "L63",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -1782,7 +1882,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L54",
+      "source_location": "L65",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -1793,7 +1893,18 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L53",
+      "source_location": "L67",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "utils",
+      "target": "utils_resetscore",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "utils.js",
+      "source_location": "L64",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -1804,7 +1915,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L55",
+      "source_location": "L66",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -1853,5 +1964,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ee85b4bb9c365469ee25436af64bb9140d2f1e1f"
+  "built_at_commit": "8b4046c3ad783812136c12c43c2a08772e5c0d08"
 }

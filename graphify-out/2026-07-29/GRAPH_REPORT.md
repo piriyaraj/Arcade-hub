@@ -1,16 +1,16 @@
 # Graph Report - test-repo  (2026-07-29)
 
 ## Corpus Check
-- 16 files · ~41,728 words
+- 17 files · ~42,023 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 77 nodes · 103 edges · 10 communities
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.6)
+- 83 nodes · 108 edges · 11 communities
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ee85b4bb`
+- Built from commit: `8b4046c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,6 +22,7 @@
 - utils.test.js
 - utils.js
 - DLQHandler
+- test_utils_reset.py
 
 ## God Nodes (most connected - your core abstractions)
 1. `TaskQueue` - 12 edges
@@ -50,7 +51,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 0 thin omitted)
+## Communities (11 total, 0 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.40
@@ -69,7 +70,7 @@ Cohesion: 0.40
 Nodes (4): Runs the JavaScript Node.js unit tests for utils.js and asserts success., Runs the JavaScript Node.js unit tests for audio.js and asserts success., test_js_audio_utilities(), test_js_general_utilities()
 
 ### Community 6 - "utils.test.js"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (4): assert, mockStorage, test, utils
 
 ### Community 7 - "utils.js"
@@ -80,6 +81,10 @@ Nodes (5): TaskQueue, Schedules a task by submitting it to the queue., TaskSched
 Cohesion: 0.22
 Nodes (6): DLQHandler, DLQ (dead-letter queue) handler.     Stores and formats failed tasks., Processes a task failure and saves it to the DLQ., Submits a task to the queue after validation., (d) DLQ entry contains full error context (original error message, stack trace,, test_dlq_entry_contains_full_error_context()
 
+### Community 10 - "test_utils_reset.py"
+Cohesion: 0.40
+Nodes (4): Runs a Node.js snippet to verify that resetScore recovers from localStorage fail, Runs a Node.js snippet to verify that resetScore removes from localStorage and r, test_js_reset_score_failure(), test_js_reset_score_success()
+
 ## Knowledge Gaps
 - **9 isolated node(s):** `test`, `assert`, `{ SoundFX }`, `test`, `assert` (+4 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -88,12 +93,12 @@ Nodes (6): DLQHandler, DLQ (dead-letter queue) handler.     Stores and formats f
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `TaskQueue` connect `utils.js` to `DLQHandler`, `SoundFX`?**
-  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **Why does `DLQHandler` connect `DLQHandler` to `SoundFX`, `utils.js`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Why does `validate_task_payload()` connect `SoundFX` to `DLQHandler`, `utils.js`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _21 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _23 weakly-connected nodes found - possible documentation gaps or missing edges._
