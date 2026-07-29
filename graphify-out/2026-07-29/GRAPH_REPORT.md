@@ -1,16 +1,16 @@
 # Graph Report - test-repo  (2026-07-29)
 
 ## Corpus Check
-- 25 files · ~50,893 words
+- 25 files · ~51,816 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 155 nodes · 199 edges · 14 communities (13 shown, 1 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
+- 157 nodes · 201 edges · 14 communities (13 shown, 1 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2423dfd1`
+- Built from commit: `f5bb69c6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -69,8 +69,8 @@ Cohesion: 0.22
 Nodes (4): SoundFX, assert, { SoundFX }, test
 
 ### Community 5 - "test_js_utilities.py"
-Cohesion: 0.22
-Nodes (8): Runs the JavaScript Node.js unit tests for utils.js and asserts success., Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j, Runs the JavaScript Node.js unit tests for audio.js and asserts success., Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success., test_js_architecture_utilities(), test_js_audio_utilities(), test_js_general_utilities(), test_js_leaderboard_utilities()
+Cohesion: 0.18
+Nodes (10): Runs the JavaScript Node.js unit tests for utils.js and asserts success., Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j, Runs the JavaScript Node.js unit tests for audio.js and asserts success., Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success., Verify that utils.test.html exists and references progress assertions and utils., test_js_architecture_utilities(), test_js_audio_utilities(), test_js_general_utilities() (+2 more)
 
 ### Community 6 - "utils.test.js"
 Cohesion: 0.18
@@ -105,11 +105,11 @@ Nodes (12): get_repo_root(), Verify that all architecture files exist., Verify t
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _56 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _57 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SoundFX` be split into smaller, more focused modules?**
   _Cohesion score 0.09759759759759759 - nodes in this community are weakly interconnected._
 - **Should `architecture.test.js` be split into smaller, more focused modules?**
