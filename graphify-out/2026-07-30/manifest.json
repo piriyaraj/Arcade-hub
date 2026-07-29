@@ -60,7 +60,7 @@
     "semantic_hash": ""
   },
   "flappybird.html": {
-    "mtime": 1785366291.68643,
+    "mtime": 1785365203.5509646,
     "ast_hash": "8a0fdacc6bc6c991afce54bff466e983",
     "semantic_hash": ""
   },
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "theme.js": {
-    "mtime": 1785366316.6061347,
-    "ast_hash": "f16938f6f466b68a1a0821245604bebc",
+    "mtime": 1785365267.9702604,
+    "ast_hash": "236f958239ba2479eafa324b46791e3a",
     "semantic_hash": ""
   },
   "leaderboard.html": {
@@ -215,8 +215,8 @@
     "semantic_hash": ""
   },
   "tests/theme.test.js": {
-    "mtime": 1785366328.80199,
-    "ast_hash": "c1dfb23956327e0a6bba0944f62f4e3c",
+    "mtime": 1785365281.3461132,
+    "ast_hash": "a76e578bf16800509f7e912202e4cfd1",
     "semantic_hash": ""
   }
 }

@@ -180,7 +180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "input",
-      "community": 7,
+      "community": 13,
       "norm_label": "input.js"
     },
     {
@@ -190,7 +190,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "input_keymanager",
-      "community": 7,
+      "community": 13,
       "norm_label": "keymanager"
     },
     {
@@ -340,7 +340,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_scheduler_init",
-      "community": 15,
+      "community": 3,
       "norm_label": "__init__.py"
     },
     {
@@ -350,7 +350,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_scheduler_scheduler",
-      "community": 15,
+      "community": 3,
       "norm_label": "scheduler.py"
     },
     {
@@ -360,7 +360,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler",
-      "community": 15,
+      "community": 3,
       "norm_label": "taskscheduler"
     },
     {
@@ -370,7 +370,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler_init",
-      "community": 15,
+      "community": 3,
       "norm_label": ".__init__()"
     },
     {
@@ -380,7 +380,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_taskscheduler_schedule_task",
-      "community": 15,
+      "community": 3,
       "norm_label": ".schedule_task()"
     },
     {
@@ -390,7 +390,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_scheduler_scheduler_rationale_11",
-      "community": 15,
+      "community": 3,
       "norm_label": "schedules a task by submitting it to the queue."
     },
     {
@@ -530,7 +530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_architecture_test",
-      "community": 7,
+      "community": 13,
       "norm_label": "architecture.test.js"
     },
     {
@@ -540,7 +540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_architecture_test_test",
-      "community": 7,
+      "community": 13,
       "norm_label": "test"
     },
     {
@@ -550,7 +550,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "tests_architecture_test_assert",
-      "community": 7,
+      "community": 13,
       "norm_label": "assert"
     },
     {
@@ -560,7 +560,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "tests_architecture_test_mockstorage",
-      "community": 7,
+      "community": 13,
       "norm_label": "mockstorage"
     },
     {
@@ -570,7 +570,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_architecture_test_documentelementstyle",
-      "community": 7,
+      "community": 13,
       "norm_label": "documentelementstyle"
     },
     {
@@ -580,7 +580,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_architecture_test_thememanager",
-      "community": 7,
+      "community": 13,
       "norm_label": "{ thememanager }"
     },
     {
@@ -590,7 +590,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_architecture_test_keymanager",
-      "community": 7,
+      "community": 13,
       "norm_label": "{ keymanager }"
     },
     {
@@ -600,7 +600,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_architecture_test_leaderboard",
-      "community": 7,
+      "community": 13,
       "norm_label": "{ leaderboard }"
     },
     {
@@ -1384,20 +1384,10 @@
       "norm_label": "mockstorage"
     },
     {
-      "label": "constructor()",
-      "file_type": "code",
-      "source_file": "tests/theme.test.js",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "tests_theme_test_constructor",
-      "community": 7,
-      "norm_label": "constructor()"
-    },
-    {
       "label": "listeners",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L25",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "tests_theme_test_listeners",
       "community": 7,
@@ -1407,17 +1397,27 @@
       "label": "dispatchedEvents",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L26",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "tests_theme_test_dispatchedevents",
       "community": 7,
       "norm_label": "dispatchedevents"
     },
     {
+      "label": "constructor()",
+      "file_type": "code",
+      "source_file": "tests/theme.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "tests_theme_test_constructor",
+      "community": 7,
+      "norm_label": "constructor()"
+    },
+    {
       "label": "documentElementStyle",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L51",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "tests_theme_test_documentelementstyle",
       "community": 7,
@@ -1427,37 +1427,17 @@
       "label": "bodyClasses",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L52",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "tests_theme_test_bodyclasses",
       "community": 7,
       "norm_label": "bodyclasses"
     },
     {
-      "label": "removedClasses",
-      "file_type": "code",
-      "source_file": "tests/theme.test.js",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "tests_theme_test_removedclasses",
-      "community": 7,
-      "norm_label": "removedclasses"
-    },
-    {
-      "label": "addedClasses",
-      "file_type": "code",
-      "source_file": "tests/theme.test.js",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "tests_theme_test_addedclasses",
-      "community": 7,
-      "norm_label": "addedclasses"
-    },
-    {
       "label": "resetMocks()",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L86",
+      "source_location": "L74",
       "_origin": "ast",
       "id": "tests_theme_test_resetmocks",
       "community": 7,
@@ -1467,7 +1447,7 @@
       "label": "{ ThemeManager }",
       "file_type": "code",
       "source_file": "tests/theme.test.js",
-      "source_location": "L103",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "tests_theme_test_thememanager",
       "community": 7,
@@ -3598,16 +3578,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "tests_theme_test",
-      "target": "tests_theme_test_addedclasses",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/theme.test.js",
       "source_location": "L2",
       "weight": 1.0,
       "source": "tests_theme_test",
@@ -3618,7 +3588,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L52",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_bodyclasses",
@@ -3628,7 +3598,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L15",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_constructor",
@@ -3638,7 +3608,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L26",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_dispatchedevents",
@@ -3648,7 +3618,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L51",
+      "source_location": "L47",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_documentelementstyle",
@@ -3658,7 +3628,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L25",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_listeners",
@@ -3678,17 +3648,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "tests_theme_test",
-      "target": "tests_theme_test_removedclasses",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/theme.test.js",
-      "source_location": "L86",
+      "source_location": "L74",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_resetmocks",
@@ -3708,7 +3668,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L103",
+      "source_location": "L89",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "tests_theme_test_thememanager",
@@ -3719,7 +3679,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L103",
+      "source_location": "L89",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "theme",
@@ -3730,7 +3690,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/theme.test.js",
-      "source_location": "L103",
+      "source_location": "L89",
       "weight": 1.0,
       "source": "tests_theme_test",
       "target": "theme_thememanager",
@@ -3934,5 +3894,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "39e132a89ea8a098c5a88a512faf8a356b5c2fd0"
+  "built_at_commit": "9788abbd1c7b2b361784e77c0ae4430d5f5920a5"
 }

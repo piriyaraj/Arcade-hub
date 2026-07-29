@@ -9,10 +9,7 @@ global.localStorage = {
   removeItem: (key) => { delete mockStorage[key]; }
 };
 
-// Mock window event listeners and dispatching
-const listeners = {};
-const dispatchedEvents = [];
-
+// Mock CustomEvent
 if (typeof global.CustomEvent === 'undefined') {
   global.CustomEvent = class CustomEvent {
     constructor(type, options = {}) {
@@ -20,7 +17,13 @@ if (typeof global.CustomEvent === 'undefined') {
       this.detail = options.detail || null;
     }
   };
+} else {
+  global.windowCustomEvent = global.CustomEvent;
 }
+
+// Mock window event listeners and dispatching
+const listeners = {};
+const dispatchedEvents = [];
 
 global.window = {
   addEventListener: (event, cb) => {
@@ -41,11 +44,14 @@ global.window = {
     }
     dispatchedEvents.push(event);
     return true;
-  }
+  },
+  CustomEvent: global.CustomEvent
 };
 
 const documentElementStyle = {};
 const bodyClasses = new Set();
+let removedClasses = [];
+let addedClasses = [];
 
 global.document = {
   readyState: 'complete',
@@ -59,10 +65,16 @@ global.document = {
   body: {
     classList: {
       remove: (...classes) => {
-        classes.forEach(c => bodyClasses.delete(c));
+        classes.forEach(c => {
+          bodyClasses.delete(c);
+          removedClasses.push(c);
+        });
       },
       add: (...classes) => {
-        classes.forEach(c => bodyClasses.add(c));
+        classes.forEach(c => {
+          bodyClasses.add(c);
+          addedClasses.push(c);
+        });
       }
     }
   },
@@ -83,40 +95,42 @@ function resetMocks() {
     delete listeners[key];
   }
   bodyClasses.clear();
+  removedClasses.length = 0;
+  addedClasses.length = 0;
 }
 
 // Require ThemeManager after mocks are set up
 const { ThemeManager } = require('../theme.js');
 
-test('getTheme returns default theme when localStorage empty', () => {
+test("(a) initial currentTheme is 'dark' when localStorage is empty", () => {
   resetMocks();
   ThemeManager.init();
-  assert.strictEqual(ThemeManager.getTheme(), 'dark');
+  assert.strictEqual(ThemeManager.currentTheme, 'dark');
 });
 
-test('getTheme returns persisted theme from localStorage', () => {
+test("(b) init() reads persisted theme from 'arcade-theme'", () => {
   resetMocks();
   mockStorage['arcade-theme'] = 'light';
   ThemeManager.init();
-  assert.strictEqual(ThemeManager.getTheme(), 'light');
+  assert.strictEqual(ThemeManager.currentTheme, 'light');
 });
 
-test('getTheme falls back to default on invalid stored value', () => {
+test("(c) init() falls back to 'dark' on invalid stored value", () => {
   resetMocks();
-  mockStorage['arcade-theme'] = 'invalid-theme';
+  mockStorage['arcade-theme'] = 'unknown-color-theme';
   ThemeManager.init();
-  assert.strictEqual(ThemeManager.getTheme(), 'dark');
+  assert.strictEqual(ThemeManager.currentTheme, 'dark');
 });
 
-test('setTheme persists to localStorage', () => {
+test("(d) setTheme persists the value to localStorage under 'arcade-theme'", () => {
   resetMocks();
-  ThemeManager.init();
+  ThemeManager.init(); // defaults to dark
   ThemeManager.setTheme('retro-neon');
-  assert.strictEqual(ThemeManager.getTheme(), 'retro-neon');
+  assert.strictEqual(ThemeManager.currentTheme, 'retro-neon');
   assert.strictEqual(mockStorage['arcade-theme'], 'retro-neon');
 });
 
-test("setTheme dispatches 'themechange' CustomEvent with detail containing old/new theme", () => {
+test("(e) setTheme dispatches 'themechange' CustomEvent with detail.theme", () => {
   resetMocks();
   ThemeManager.init(); // defaults to dark
 
@@ -129,44 +143,55 @@ test("setTheme dispatches 'themechange' CustomEvent with detail containing old/n
 
   assert.ok(receivedEvent);
   assert.strictEqual(receivedEvent.type, 'themechange');
+  assert.ok(receivedEvent.detail);
   assert.strictEqual(receivedEvent.detail.theme, 'light');
-  assert.strictEqual(receivedEvent.detail.oldTheme, 'dark');
-  assert.strictEqual(receivedEvent.detail.newTheme, 'light');
 });
 
-test('cycleTheme child advances through theme list and dispatches event', () => {
+test('(f) setTheme does NOT persist or dispatch on invalid theme', () => {
   resetMocks();
-  ThemeManager.init(); // default dark
+  ThemeManager.init(); // defaults to dark
 
-  let cycleEvents = [];
-  window.addEventListener('themechange', (e) => {
-    cycleEvents.push(e);
+  let eventFired = false;
+  window.addEventListener('themechange', () => {
+    eventFired = true;
   });
 
-  // Cycle 1: dark -> light
-  const next1 = ThemeManager.cycleTheme();
-  assert.strictEqual(next1, 'light');
-  assert.strictEqual(ThemeManager.getTheme(), 'light');
-  assert.strictEqual(mockStorage['arcade-theme'], 'light');
-  assert.strictEqual(cycleEvents.length, 1);
-  assert.strictEqual(cycleEvents[0].detail.theme, 'light');
-  assert.strictEqual(cycleEvents[0].detail.oldTheme, 'dark');
+  ThemeManager.setTheme('invalid-theme-name');
+
+  assert.strictEqual(ThemeManager.currentTheme, 'dark');
+  assert.strictEqual(mockStorage['arcade-theme'], undefined);
+  assert.strictEqual(eventFired, false);
 });
 
-test('cycleTheme wraps around at end', () => {
+test('(g) getColor returns the CSS variable value for the current theme', () => {
   resetMocks();
-  ThemeManager.init(); // default dark
-  ThemeManager.setTheme('retro-neon'); // end of themes array
+  ThemeManager.init(); // defaults to dark
 
-  const next = ThemeManager.cycleTheme();
-  assert.strictEqual(next, 'dark');
-  assert.strictEqual(ThemeManager.getTheme(), 'dark');
-  assert.strictEqual(mockStorage['arcade-theme'], 'dark');
+  assert.strictEqual(ThemeManager.getColor('--bg'), '#0b0f1a');
+  assert.strictEqual(ThemeManager.getColor('--text'), '#e8eaed');
+
+  ThemeManager.setTheme('light');
+  assert.strictEqual(ThemeManager.getColor('--bg'), '#f3f4f6');
+  assert.strictEqual(ThemeManager.getColor('--text'), '#000000');
 });
 
-test('constructor reads initial theme from localStorage', () => {
+test('(h) getColor strips var() wrapper if present', () => {
   resetMocks();
-  mockStorage['arcade-theme'] = 'retro-neon';
-  ThemeManager.init();
-  assert.strictEqual(ThemeManager.getTheme(), 'retro-neon');
+  ThemeManager.init(); // defaults to dark
+
+  assert.strictEqual(ThemeManager.getColor('var(--bg)'), '#0b0f1a');
+  assert.strictEqual(ThemeManager.getColor('var(--text)'), '#e8eaed');
+});
+
+test('(i) applyTheme sets CSS custom properties on documentElement and toggles body class', () => {
+  resetMocks();
+
+  ThemeManager.applyTheme('retro-neon');
+
+  assert.strictEqual(documentElementStyle['--bg'], '#05000a');
+  assert.strictEqual(documentElementStyle['--text'], '#39ff14');
+  assert.strictEqual(documentElementStyle['--border'], '#ff00ff');
+
+  assert.deepStrictEqual(removedClasses, ['theme-dark', 'theme-light', 'theme-retro-neon']);
+  assert.ok(addedClasses.includes('theme-retro-neon'));
 });
