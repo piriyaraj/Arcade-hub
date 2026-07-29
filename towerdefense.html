@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Defend your base in Retro Tower Defense. Place energy/laser towers to stop incoming cyber viruses across the neon tracks." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Retro Tower Defense" />
+  <meta property="og:description" content="Defend your base in Retro Tower Defense. Place energy/laser towers to stop incoming cyber viruses across the neon tracks." />
+  <meta property="og:url" content="https://piriyaraj.github.io/Test_Repo/towerdefense.html" />
+  <meta property="og:image" content="https://piriyaraj.github.io/Test_Repo/og-image.png" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Retro Tower Defense" />
+  <meta name="twitter:description" content="Defend your base in Retro Tower Defense." />
+  <meta name="twitter:image" content="https://piriyaraj.github.io/Test_Repo/og-image.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>Retro Tower Defense</title>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #070a13;
+      --theme-neon: #00f0ff; /* Tower Cyan */
+      --theme-pink: #ff007f; /* Virus Pink */
+      --theme-purple: #a855f7; /* Laser purple / Level */
+      --theme-green: #4ade80; /* Cash verde */
+      --theme-yellow: #facc15; /* Warning/Score */
+      --border: rgba(0, 240, 255, 0.2);
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      max-width: 800px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--theme-yellow), var(--theme-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--theme-yellow);
+    }
+
+    .stat-value.neon-val {
+      color: var(--theme-neon);
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+      max-width: 800px;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(0, 240, 255, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(0, 240, 255, 0.05);
+      display: block;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      cursor: crosshair;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--theme-neon);
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+    }
+
+    button:active { transform: translateY(0); }
+
+    button.play-btn {
+      background: linear-gradient(135deg, var(--theme-yellow), #d97706);
+      color: #000;
+      border: none;
+      box-shadow: 0 2px 12px rgba(250, 204, 21, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    button.play-btn:hover {
+      box-shadow: 0 4px 18px rgba(250, 204, 21, 0.6);
+      border-color: transparent;
+    }
+
+    button.panel-btn {
+      border: 2px solid rgba(0, 240, 255, 0.3);
+    }
+    button.panel-btn.selected {
+      background: rgba(0, 240, 255, 0.25);
+      border-color: var(--theme-neon);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--theme-yellow), var(--theme-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    #overlay .final-score {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--theme-yellow);
+      margin-bottom: 24px;
+    }
+
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">Retro Tower Defense</h2>
+  <p id="overlay-desc">Defend your core from ascending computer viruses! Buy and place towers on the grid to destroy the bugs. Click on the canvas grid to place the selected tower type.</p>
+  <div class="final-score hidden" id="final-score-container">Wave Reached: <span id="final-score">0</span></div>
+  <button class="play-btn" id="start-btn" aria-label="Start Game">START GAME</button>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>RETRO TOWER DEFENSE</h1>
+  <p>Protect your database from cyber viruses!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat">
+    <span class="stat-label">Credits</span>
+    <span class="stat-value" aria-live="polite" aria-atomic="true" style="color: var(--theme-green)">
+      $<span id="credits">250</span>
+    </span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Core Integrity</span>
+    <span class="stat-value" style="color: var(--theme-pink);" id="health">20</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Wave</span>
+    <span class="stat-value" style="color: var(--theme-purple);" id="wave">1</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best Wave</span>
+    <span class="stat-value neon-val" id="best">0</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="800" height="600" tabindex="0" aria-label="Retro Tower Defense Canvas. Click to place selected towers to destroy bugs."></canvas>
+</div>
+
+<div id="controls">
+  <button class="panel-btn selected" id="btn-laser" aria-label="Select Laser Tower - Cost 100">Laser Tower ($100)</button>
+  <button class="panel-btn" id="btn-slow" aria-label="Select Quantum Tower - Cost 150">Quantum Tower ($150)</button>
+  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
+  <button id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="utils.js"></script>
+<script src="audio.js"></script>
+<script>
+  (function() {
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    const creditsEl = document.getElementById('credits');
+    const healthEl = document.getElementById('health');
+    const waveEl = document.getElementById('wave');
+    const bestEl = document.getElementById('best');
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayDesc = document.getElementById('overlay-desc');
+    const finalScoreContainer = document.getElementById('final-score-container');
+    const finalScore = document.getElementById('final-score');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const muteBtn = document.getElementById('mute-btn');
+
+    const btnLaser = document.getElementById('btn-laser');
+    const btnSlow = document.getElementById('btn-slow');
+
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    // Grid details
+    const GRID_SIZE = 50;
+    const COLS = WIDTH / GRID_SIZE; // 16
+    const ROWS = HEIGHT / GRID_SIZE; // 12
+
+    // Game variables
+    let state = 'start'; // 'start', 'playing', 'paused', 'gameover'
+    let credits = 250;
+    let health = 20;
+    let wave = 1;
+    let waveMessageTimer = 0;
+    let highScore = 0;
+    let selectedTowerType = 'laser'; // 'laser' or 'slow'
+    let waveInProgress = false;
+
+    // Game objects
+    let towers = [];
+    let enemies = [];
+    let projectiles = [];
+    let particles = [];
+
+    // Path for enemies: Simple curved line or segmented path
+    // Coordinates representing grid intersections or path points
+    const path = [
+      { x: 0, y: 3.5 * GRID_SIZE },
+      { x: 4.5 * GRID_SIZE, y: 3.5 * GRID_SIZE },
+      { x: 4.5 * GRID_SIZE, y: 8.5 * GRID_SIZE },
+      { x: 10.5 * GRID_SIZE, y: 8.5 * GRID_SIZE },
+      { x: 10.5 * GRID_SIZE, y: 2.5 * GRID_SIZE },
+      { x: 16 * GRID_SIZE, y: 2.5 * GRID_SIZE }
+    ];
+
+    // Load High Score & Mute States using Utils
+    highScore = window.getBestScore('towerdefense');
+    bestEl.textContent = highScore;
+
+    let soundMuted = window.getMuteState('towerdefense');
+    if (window.sfx) {
+      window.sfx.muted = soundMuted;
+    }
+
+    function updateMuteButtonUI() {
+      if (window.sfx) {
+        muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+      }
+    }
+
+    function toggleMute() {
+      if (window.sfx) {
+        window.sfx.muted = !window.sfx.muted;
+        window.saveMuteState('towerdefense', window.sfx.muted);
+        updateMuteButtonUI();
+        if (typeof window.sfx.init === 'function') {
+          window.sfx.init();
+        }
+      }
+    }
+
+    updateMuteButtonUI();
+    muteBtn.addEventListener('click', toggleMute);
+
+    // Tower stats
+    const towerCosts = {
+      laser: 100,
+      slow: 150
+    };
+
+    // Selecting tower types
+    btnLaser.addEventListener('click', () => {
+      selectedTowerType = 'laser';
+      btnLaser.classList.add('selected');
+      btnSlow.classList.remove('selected');
+      if (window.sfx) window.sfx.init();
+    });
+
+    btnSlow.addEventListener('click', () => {
+      selectedTowerType = 'slow';
+      btnSlow.classList.add('selected');
+      btnLaser.classList.remove('selected');
+      if (window.sfx) window.sfx.init();
+    });
+
+    // Handle canvas click to place a tower
+    canvas.addEventListener('click', (e) => {
+      if (state !== 'playing') return;
+      if (window.sfx) window.sfx.init();
+
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left) * (WIDTH / rect.width);
+      const mouseY = (e.clientY - rect.top) * (HEIGHT / rect.height);
+
+      // Grid index
+      const col = Math.floor(mouseX / GRID_SIZE);
+      const row = Math.floor(mouseY / GRID_SIZE);
+
+      // Verify if spot is not on the path
+      if (isOnPath(col, row)) {
+        spawnWarningText(col * GRID_SIZE + GRID_SIZE/2, row * GRID_SIZE + GRID_SIZE/2, "Cannot Place on Path");
+        return;
+      }
+
+      // Verify if space is already occupied
+      const occupied = towers.some(t => t.col === col && t.row === row);
+      if (occupied) {
+        spawnWarningText(col * GRID_SIZE + GRID_SIZE/2, row * GRID_SIZE + GRID_SIZE/2, "Occupied");
+        return;
+      }
+
+      const cost = towerCosts[selectedTowerType];
+      if (credits >= cost) {
+        credits -= cost;
+        towers.push({
+          col,
+          row,
+          x: col * GRID_SIZE + GRID_SIZE / 2,
+          y: row * GRID_SIZE + GRID_SIZE / 2,
+          type: selectedTowerType,
+          range: selectedTowerType === 'laser' ? 120 : 90,
+          cooldown: 0,
+          maxCooldown: selectedTowerType === 'laser' ? 30 : 60,
+          color: selectedTowerType === 'laser' ? '#00f0ff' : '#a855f7'
+        });
+
+        if (window.sfx) {
+          window.sfx.playBounce();
+        }
+        updateUI();
+      } else {
+        spawnWarningText(col * GRID_SIZE + GRID_SIZE/2, row * GRID_SIZE + GRID_SIZE/2, "Insufficient Funds");
+      }
+    });
+
+    function spawnWarningText(x, y, text) {
+      if (window.sfx) window.sfx.playGameOver();
+      particles.push({
+        x,
+        y,
+        vx: 0,
+        vy: -0.8,
+        color: '#ff007f',
+        text: text,
+        life: 45,
+        maxLife: 45,
+        isText: true
+      });
+    }
+
+    // Rough check to see if a cell coordinates are on the path segment lanes
+    function isOnPath(col, row) {
+      // We will define specific columns/rows corresponding to path
+      // Segments:
+      // Pt 0: (0, 3.5) to Pt 1: (4.5, 3.5)
+      // Pt 1: (4.5, 3.5) to Pt 2: (4.5, 8.5)
+      // Pt 2: (4.5, 8.5) to Pt 3: (10.5, 8.5)
+      // Pt 3: (10.5, 8.5) to Pt 4: (10.5, 2.5)
+      // Pt 4: (10.5, 2.5) to Pt 5: (16, 2.5)
+      // Let's check pixel bounding boxes for path lanes of width GRID_SIZE
+      const pad = 0.5; // allowance
+      const checkX = col + 0.5;
+      const checkY = row + 0.5;
+
+      // Segment 1
+      if (checkY >= 3 && checkY <= 4 && checkX >= 0 && checkX <= 5) return true;
+      // Segment 2
+      if (checkX >= 4 && checkX <= 5 && checkY >= 3 && checkY <= 9) return true;
+      // Segment 3
+      if (checkY >= 8 && checkY <= 9 && checkX >= 4 && checkX <= 11) return true;
+      // Segment 4
+      if (checkX >= 10 && checkX <= 11 && checkY >= 2 && checkY <= 9) return true;
+      // Segment 5
+      if (checkY >= 2 && checkY <= 3 && checkX >= 10 && checkX <= 16) return true;
+
+      return false;
+    }
+
+    function togglePause() {
+      if (state === 'playing') {
+        state = 'paused';
+        pauseBtn.textContent = 'RESUME';
+      } else if (state === 'paused') {
+        state = 'playing';
+        pauseBtn.textContent = 'PAUSE';
+        if (window.sfx) window.sfx.init();
+      }
+    }
+
+    function resetGame() {
+      credits = 250;
+      health = 20;
+      wave = 1;
+      towers = [];
+      enemies = [];
+      projectiles = [];
+      particles = [];
+      waveInProgress = false;
+      spawnWave();
+      updateUI();
+    }
+
+    function startGame() {
+      if (window.sfx) window.sfx.init();
+      resetGame();
+      state = 'playing';
+      overlay.classList.add('hidden');
+      pauseBtn.textContent = 'PAUSE';
+    }
+
+    function triggerGameOver() {
+      state = 'gameover';
+      if (window.sfx) {
+        window.sfx.playGameOver();
+      }
+
+      if (wave > highScore) {
+        highScore = wave;
+        window.saveBestScore('towerdefense', highScore);
+        bestEl.textContent = highScore;
+      }
+
+      overlayTitle.textContent = 'GAME OVER';
+      overlayTitle.style.background = 'linear-gradient(135deg, var(--theme-pink), var(--theme-yellow))';
+      overlayTitle.style.webkitBackgroundClip = 'text';
+      overlayTitle.style.backgroundClip = 'text';
+      overlayDesc.textContent = wave > highScore ? 'AWESOME! You reached the highest cyber wave!' : 'The security database was thoroughly corrupted by viruses!';
+      finalScore.textContent = wave;
+      finalScoreContainer.classList.remove('hidden');
+      startBtn.textContent = 'DEFEND AGAIN';
+      overlay.classList.remove('hidden');
+    }
+
+    function spawnParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 0.5 + Math.random() * 2.5;
+        const life = 20 + Math.random() * 20;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color,
+          life,
+          maxLife: life,
+          size: 1 + Math.random() * 2
+        });
+      }
+    }
+
+    function spawnWave() {
+      waveMessageTimer = 120;
+      waveInProgress = true;
+      let count = 5 + wave * 2;
+      let spacing = 40; // frames between spawn
+
+      for (let i = 0; i < count; i++) {
+        const speed = 0.8 + wave * 0.15;
+        const maxHp = 40 + wave * 25;
+        // virus shapes details
+        enemies.push({
+          spawnDelay: i * spacing,
+          x: path[0].x,
+          y: path[0].y,
+          pathIndex: 0,
+          speed,
+          hp: maxHp,
+          maxHp,
+          reward: 15 + Math.floor(wave * 2),
+          slowTimer: 0,
+          radius: 12
+        });
+      }
+
+      if (window.sfx && wave > 1) {
+        window.sfx.playScoreSlot();
+      }
+    }
+
+    function updateUI() {
+      creditsEl.textContent = credits;
+      healthEl.textContent = health;
+      waveEl.textContent = wave;
+      bestEl.textContent = highScore;
+    }
+
+    function update() {
+      if (state !== 'playing') return;
+
+      // Handle Wave complete to trigger next wave
+      if (waveInProgress && enemies.length === 0) {
+        wave++;
+        credits += 50 + wave * 10; // bonus
+        updateUI();
+        spawnWave();
+      }
+
+      // Update Enemies
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        if (enemy.spawnDelay > 0) {
+          enemy.spawnDelay--;
+          continue;
+        }
+
+        // Adjust speed for slows
+        let currentSpeed = enemy.speed;
+        if (enemy.slowTimer > 0) {
+          enemy.slowTimer--;
+          currentSpeed *= 0.5; // 50% slow
+        }
+
+        // Move along the path segments
+        const target = path[enemy.pathIndex + 1];
+        if (!target) {
+          // Reached core Database!
+          health -= 1;
+          spawnParticles(enemy.x, enemy.y, '#ff007f', 15);
+          if (window.sfx) {
+            window.sfx.playGameOver();
+          }
+          enemies.splice(i, 1);
+          updateUI();
+          if (health <= 0) {
+            triggerGameOver();
+          }
+          continue;
+        }
+
+        // Vector to target
+        const dx = target.x - enemy.x;
+        const dy = target.y - enemy.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist <= currentSpeed) {
+          // Snap and advance target
+          enemy.x = target.x;
+          enemy.y = target.y;
+          enemy.pathIndex++;
+        } else {
+          // Interpolate
+          enemy.x += (dx / dist) * currentSpeed;
+          enemy.y += (dy / dist) * currentSpeed;
+        }
+      }
+
+      // Update Towers: Attack enemies in range
+      towers.forEach(tower => {
+        if (tower.cooldown > 0) {
+          tower.cooldown--;
+        }
+
+        if (tower.cooldown === 0) {
+          // Find first enemy in range that has spawned
+          const target = enemies.find(e => {
+            if (e.spawnDelay > 0) return false;
+            return Math.hypot(e.x - tower.x, e.y - tower.y) <= tower.range;
+          });
+
+          if (target) {
+            // Shoot
+            projectiles.push({
+              x: tower.x,
+              y: tower.y,
+              target: target,
+              type: tower.type,
+              speed: 6,
+              color: tower.color
+            });
+            tower.cooldown = tower.maxCooldown;
+
+            if (window.sfx) {
+              window.sfx.playEat();
+            }
+          }
+        }
+      });
+
+      // Update Projectiles
+      for (let i = projectiles.length - 1; i >= 0; i--) {
+        const proj = projectiles[i];
+
+        // If target is dead/gone, remove projectile or steer
+        if (!enemies.includes(proj.target)) {
+          projectiles.splice(i, 1);
+          continue;
+        }
+
+        const dx = proj.target.x - proj.x;
+        const dy = proj.target.y - proj.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist <= proj.speed) {
+          // Hit! Apply damage / slow
+          const enemy = proj.target;
+          if (proj.type === 'laser') {
+            enemy.hp -= 25;
+            spawnParticles(enemy.x, enemy.y, '#00f0ff', 4);
+          } else if (proj.type === 'slow') {
+            enemy.hp -= 15;
+            enemy.slowTimer = 90; // 1.5 seconds slow
+            spawnParticles(enemy.x, enemy.y, '#a855f7', 4);
+          }
+
+          if (window.sfx) {
+            window.sfx.playBounce();
+          }
+
+          // Check if enemy dead
+          if (enemy.hp <= 0) {
+            credits += enemy.reward;
+            spawnParticles(enemy.x, enemy.y, '#4ade80', 8);
+            const index = enemies.indexOf(enemy);
+            if (index > -1) {
+              enemies.splice(index, 1);
+            }
+            updateUI();
+          }
+
+          projectiles.splice(i, 1);
+        } else {
+          proj.x += (dx / dist) * proj.speed;
+          proj.y += (dy / dist) * proj.speed;
+        }
+      }
+
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      if (waveMessageTimer > 0) {
+        waveMessageTimer--;
+      }
+    }
+
+    function draw() {
+      // Clear
+      ctx.fillStyle = '#070a13';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // Draw grid lines faintly
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < WIDTH; x += GRID_SIZE) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, HEIGHT);
+        ctx.stroke();
+      }
+      for (let y = 0; y < HEIGHT; y += GRID_SIZE) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(WIDTH, y);
+        ctx.stroke();
+      }
+
+      // Draw Path lane
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = GRID_SIZE;
+      ctx.lineWidth = 32;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(path[0].x, path[0].y);
+      for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
+      }
+      ctx.stroke();
+
+      // Neon highlights along path
+      ctx.strokeStyle = 'rgba(255, 0, 127, 0.15)';
+      ctx.lineWidth = 10;
+      ctx.stroke();
+
+      // Core / Database destination banner
+      ctx.save();
+      const lastPoint = path[path.length - 1];
+      ctx.fillStyle = '#ff007f';
+      ctx.shadowColor = '#ff007f';
+      ctx.shadowBlur = 12;
+      ctx.fillRect(lastPoint.x - 10, lastPoint.y - 20, 10, 40);
+      ctx.restore();
+
+      // Draw Towers
+      towers.forEach(tower => {
+        ctx.save();
+        ctx.translate(tower.x, tower.y);
+
+        // Core base range preview circles faintly when selected or general glow
+        ctx.fillStyle = tower.type === 'laser' ? 'rgba(0, 240, 255, 0.05)' : 'rgba(168, 85, 247, 0.05)';
+        ctx.beginPath();
+        ctx.arc(0, 0, tower.range, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = tower.color;
+        ctx.shadowColor = tower.color;
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 3;
+
+        if (tower.type === 'laser') {
+          // Draw triangle
+          ctx.beginPath();
+          ctx.moveTo(0, -12);
+          ctx.lineTo(-10, 8);
+          ctx.lineTo(10, 8);
+          ctx.closePath();
+          ctx.stroke();
+        } else {
+          // Draw diamond
+          ctx.beginPath();
+          ctx.moveTo(0, -12);
+          ctx.lineTo(10, 0);
+          ctx.lineTo(0, 12);
+          ctx.lineTo(-10, 0);
+          ctx.closePath();
+          ctx.stroke();
+        }
+        ctx.restore();
+      });
+
+      // Draw Enemies
+      enemies.forEach(enemy => {
+        if (enemy.spawnDelay > 0) return;
+
+        ctx.save();
+        ctx.translate(enemy.x, enemy.y);
+
+        let color = '#ff007f';
+        if (enemy.slowTimer > 0) {
+          color = '#a855f7'; // slow purple virus shade
+        }
+
+        ctx.strokeStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 2;
+
+        // Draw hexagon virus
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const angle = (i / 6) * Math.PI * 2;
+          ctx.lineTo(Math.cos(angle) * enemy.radius, Math.sin(angle) * enemy.radius);
+        }
+        ctx.closePath();
+        ctx.stroke();
+
+        // HP bar micro-sized
+        const barW = 20;
+        const barH = 3;
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(-barW / 2, -18, barW, barH);
+        ctx.fillStyle = '#00ff00';
+        ctx.fillRect(-barW / 2, -18, barW * (enemy.hp / enemy.maxHp), barH);
+
+        ctx.restore();
+      });
+
+      // Draw Projectiles
+      projectiles.forEach(proj => {
+        ctx.save();
+        ctx.fillStyle = proj.color;
+        ctx.shadowColor = proj.color;
+        ctx.shadowBlur = 5;
+        ctx.beginPath();
+        ctx.arc(proj.x, proj.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha = p.life / p.maxLife;
+        if (p.isText) {
+          ctx.fillStyle = p.color;
+          ctx.font = 'bold 12px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(p.text, p.x, p.y);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 6;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
+        ctx.restore();
+      });
+
+      // Draw Wave announcement
+      if (waveMessageTimer > 0) {
+        ctx.save();
+        ctx.fillStyle = '#a855f7';
+        ctx.font = 'bold 44px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#a855f7';
+        ctx.shadowBlur = 18;
+        ctx.fillText('WAVE ' + wave, WIDTH / 2, HEIGHT / 2);
+        ctx.restore();
+      }
+
+      // Paused details
+      if (state === 'paused') {
+        ctx.fillStyle = 'rgba(7, 10, 19, 0.7)';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 36px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = 15;
+        ctx.fillText('PAUSED', WIDTH / 2, HEIGHT / 2);
+        ctx.restore();
+      }
+    }
+
+    startBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startGame();
+    });
+
+    pauseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (state === 'playing' || state === 'paused') {
+        togglePause();
+      }
+    });
+
+    resetBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetGame();
+      state = 'playing';
+      overlay.classList.add('hidden');
+      pauseBtn.textContent = 'PAUSE';
+    });
+
+    window.addEventListener('blur', () => {
+      if (state === 'playing') {
+        state = 'paused';
+        pauseBtn.textContent = 'RESUME';
+      }
+    });
+
+    // Main animation loop
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  })();
+</script>
+</body>
+</html>
