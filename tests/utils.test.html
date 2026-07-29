@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Utils.js Unit Tests</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #1e1e2e;
+      color: #cdd6f4;
+      margin: 2rem;
+    }
+    h1 {
+      color: #89b4fa;
+      border-bottom: 2px solid #45475a;
+      padding-bottom: 0.5rem;
+    }
+    .summary {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .summary.pass {
+      background-color: rgba(166, 227, 161, 0.15);
+      border: 1px solid #a6e3a1;
+      color: #a6e3a1;
+    }
+    .summary.fail {
+      background-color: rgba(243, 139, 168, 0.15);
+      border: 1px solid #f38ba8;
+      color: #f38ba8;
+    }
+    .test-case {
+      background-color: #313244;
+      border: 1px solid #45475a;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .test-case.pass {
+      border-left: 5px solid #a6e3a1;
+    }
+    .test-case.fail {
+      border-left: 5px solid #f38ba8;
+    }
+    .test-name {
+      font-weight: 600;
+    }
+    .test-status {
+      font-family: monospace;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .test-case.pass .test-status {
+      background-color: #a6e3a1;
+      color: #11111b;
+    }
+    .test-case.fail .test-status {
+      background-color: #f38ba8;
+      color: #11111b;
+    }
+    .error-msg {
+      font-family: monospace;
+      background-color: #181825;
+      color: #f38ba8;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .test-details {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>utils.js Unit Tests</h1>
+  <div id="summary" class="summary">Running tests...</div>
+  <div id="test-results"></div>
+
+  <!-- Include the subject script -->
+  <script src="../utils.js"></script>
+
+  <script>
+    // Test helper framework
+    const testCases = [];
+    let passedCount = 0;
+    let failedCount = 0;
+
+    function test(name, fn) {
+      testCases.push({ name, fn });
+    }
+
+    function assert(condition, message) {
+      if (!condition) {
+        throw new Error(message || 'Assertion failed');
+      }
+    }
+
+    assert.strictEqual = function(val1, val2, message) {
+      if (val1 !== val2) {
+        throw new Error((message ? message + ': ' : '') + `Expected ${val1} to strictly equal ${val2}`);
+      }
+    };
+
+    assert.ok = function(val, message) {
+      if (!val) {
+        throw new Error(message || `Expected truthy value, got ${val}`);
+      }
+    };
+
+    // Helper to run before each test (equivalent of beforeEach)
+    function setup() {
+      // Clear localStorage
+      try {
+        localStorage.clear();
+      } catch (e) {
+        console.warn('localStorage clear failed in setup:', e);
+      }
+    }
+
+    // Define Unit Tests
+    test('getBestScore returns parsed number if valid', () => {
+      localStorage.setItem('game_best', '150');
+      assert.strictEqual(window.getBestScore('game'), 150);
+    });
+
+    test('loadHighScore returns parsed number if valid', () => {
+      localStorage.setItem('game_best', '150');
+      assert.strictEqual(window.loadHighScore('game'), 150);
+    });
+
+    test('getBestScore / loadHighScore returns 0 if localStorage contains invalid number', () => {
+      localStorage.setItem('game_best', 'not-a-number');
+      assert.strictEqual(window.getBestScore('game'), 0);
+      assert.strictEqual(window.loadHighScore('game'), 0);
+
+      localStorage.setItem('game_best', 'NaN');
+      assert.strictEqual(window.getBestScore('game'), 0);
+      assert.strictEqual(window.loadHighScore('game'), 0);
+    });
+
+    test('getBestScore / loadHighScore returns 0 if localStorage fails/throws', () => {
+      const originalGetItem = localStorage.getItem;
+      localStorage.getItem = () => { throw new Error('fail'); };
+      try {
+        assert.strictEqual(window.getBestScore('game'), 0);
+        assert.strictEqual(window.loadHighScore('game'), 0);
+      } finally {
+        localStorage.getItem = originalGetItem;
+      }
+    });
+
+    test('saveBestScore / saveHighScore persists score and returns true on success', () => {
+      const result1 = window.saveBestScore('game', 300);
+      assert.strictEqual(result1, true);
+      assert.strictEqual(localStorage.getItem('game_best'), '300');
+
+      const result2 = window.saveHighScore('game', 400);
+      assert.strictEqual(result2, true);
+      assert.strictEqual(localStorage.getItem('game_best'), '400');
+    });
+
+    test('saveBestScore / saveHighScore returns false if localStorage fails/throws', () => {
+      const originalSetItem = localStorage.setItem;
+      localStorage.setItem = () => { throw new Error('QuotaExceededError'); };
+      try {
+        const result1 = window.saveBestScore('game', 300);
+        assert.strictEqual(result1, false);
+
+        const result2 = window.saveHighScore('game', 300);
+        assert.strictEqual(result2, false);
+      } finally {
+        localStorage.setItem = originalSetItem;
+      }
+    });
+
+    test('getMuteState gets boolean representation of muted status', () => {
+      localStorage.setItem('game_muted', 'true');
+      assert.strictEqual(window.getMuteState('game'), true);
+
+      localStorage.setItem('game_muted', 'false');
+      assert.strictEqual(window.getMuteState('game'), false);
+
+      localStorage.setItem('game_muted', 'invalid');
+      assert.strictEqual(window.getMuteState('game'), false);
+    });
+
+    test('saveMuteState persists muted status and returns true', () => {
+      const result = window.saveMuteState('game', true);
+      assert.strictEqual(result, true);
+      assert.strictEqual(localStorage.getItem('game_muted'), 'true');
+    });
+
+    test('resetScore removes best score from localStorage and returns true', () => {
+      localStorage.setItem('game_best', '500');
+      const result = window.resetScore('game');
+      assert.strictEqual(result, true);
+      assert.strictEqual(localStorage.getItem('game_best'), null);
+    });
+
+    test('resetScore returns false if localStorage.removeItem fails/throws', () => {
+      const originalRemoveItem = localStorage.removeItem;
+      localStorage.removeItem = () => { throw new Error('fail'); };
+      try {
+        const result = window.resetScore('game');
+        assert.strictEqual(result, false);
+      } finally {
+        localStorage.removeItem = originalRemoveItem;
+      }
+    });
+
+    // Run tests
+    async function runTests() {
+      const resultsContainer = document.getElementById('test-results');
+      resultsContainer.innerHTML = '';
+
+      for (const t of testCases) {
+        setup();
+        const testCaseEl = document.createElement('div');
+        testCaseEl.className = 'test-case';
+
+        const testDetails = document.createElement('div');
+        testDetails.className = 'test-details';
+
+        const testHeader = document.createElement('div');
+        testHeader.className = 'test-header';
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'test-name';
+        nameEl.textContent = t.name;
+
+        const statusEl = document.createElement('span');
+        statusEl.className = 'test-status';
+        statusEl.textContent = 'RUNNING';
+
+        testHeader.appendChild(nameEl);
+        testHeader.appendChild(statusEl);
+        testDetails.appendChild(testHeader);
+        testCaseEl.appendChild(testDetails);
+        resultsContainer.appendChild(testCaseEl);
+
+        try {
+          await t.fn();
+          statusEl.textContent = 'PASS';
+          testCaseEl.classList.add('pass');
+          passedCount++;
+        } catch (err) {
+          statusEl.textContent = 'FAIL';
+          testCaseEl.classList.add('fail');
+          failedCount++;
+
+          const errorEl = document.createElement('div');
+          errorEl.className = 'error-msg';
+          errorEl.textContent = err.stack || err.toString();
+          testDetails.appendChild(errorEl);
+        }
+      }
+
+      // Update summary
+      const summaryEl = document.getElementById('summary');
+      if (failedCount === 0) {
+        summaryEl.className = 'summary pass';
+        summaryEl.textContent = `All ${passedCount} tests passed successfully!`;
+      } else {
+        summaryEl.className = 'summary fail';
+        summaryEl.textContent = `${failedCount} of ${testCases.length} tests failed.`;
+      }
+
+      // Expose results for automation (like Selenium/Playwright)
+      window.testResults = {
+        passed: passedCount,
+        failed: failedCount,
+        total: testCases.length,
+        completed: true
+      };
+    }
+
+    // Execute
+    runTests();
+  </script>
+</body>
+</html>

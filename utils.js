@@ -50,9 +50,14 @@ function resetScore(gameKey) {
   }
 }
 
+const loadHighScore = getBestScore;
+const saveHighScore = saveBestScore;
+
 if (typeof window !== 'undefined') {
   window.getBestScore = getBestScore;
   window.saveBestScore = saveBestScore;
+  window.loadHighScore = loadHighScore;
+  window.saveHighScore = saveHighScore;
   window.getMuteState = getMuteState;
   window.saveMuteState = saveMuteState;
   window.resetScore = resetScore;
@@ -62,6 +67,8 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = {
     getBestScore,
     saveBestScore,
+    loadHighScore,
+    saveHighScore,
     getMuteState,
     saveMuteState,
     resetScore

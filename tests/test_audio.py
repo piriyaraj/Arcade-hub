@@ -39,7 +39,8 @@ console.log('Success');
         ["node", "-e", js_code],
         cwd=repo_root,
         capture_output=True,
-        text=True
+        text=True,
+        timeout=10
     )
     assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"
 
@@ -87,7 +88,8 @@ console.log('Success');
         ["node", "-e", js_code],
         cwd=repo_root,
         capture_output=True,
-        text=True
+        text=True,
+        timeout=10
     )
     assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"
 
@@ -143,7 +145,8 @@ console.log('Success');
         ["node", "-e", js_code],
         cwd=repo_root,
         capture_output=True,
-        text=True
+        text=True,
+        timeout=10
     )
     assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"
 
@@ -194,6 +197,7 @@ console.log('Success');
         ["node", "-e", js_code],
         cwd=repo_root,
         capture_output=True,
-        text=True
+        text=True,
+        timeout=10
     )
     assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"
