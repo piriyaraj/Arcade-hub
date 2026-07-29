@@ -1,16 +1,16 @@
 # Graph Report - test-repo  (2026-07-29)
 
 ## Corpus Check
-- 22 files · ~50,340 words
+- 23 files · ~50,370 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 144 nodes · 189 edges · 13 communities (11 shown, 2 thin omitted)
+- 145 nodes · 189 edges · 14 communities (12 shown, 2 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2423dfd1`
+- Built from commit: `ea45b117`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -55,7 +55,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (13 total, 2 thin omitted)
+## Communities (14 total, 2 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.22
@@ -106,9 +106,9 @@ Nodes (12): get_repo_root(), Verify that all architecture files exist., Verify t
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `TaskQueue` connect `SoundFX` to `utils.js`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
-- **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
   _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**

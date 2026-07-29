@@ -1,17 +1,7 @@
 {
-  "test_dummy.py": {
-    "mtime": 1784900702.031879,
-    "ast_hash": "1624bfbb80377ce204c39493aeb003a7",
-    "semantic_hash": ""
-  },
   "README.md": {
     "mtime": 1785357964.0811603,
     "ast_hash": "a46acbedca8c0328ba68264f7ec735e9",
-    "semantic_hash": ""
-  },
-  "mail.md": {
-    "mtime": 1784900702.031879,
-    "ast_hash": "14b8c305f0acdc00e50da6fe83217dbe",
     "semantic_hash": ""
   },
   "audio.js": {
@@ -40,7 +30,7 @@
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
-    "mtime": 1785361213.08901,
+    "mtime": 1785361984.4425466,
     "ast_hash": "716d22bee9f0c5ff7ced8eec7a0c2c4e",
     "semantic_hash": ""
   },
@@ -90,7 +80,7 @@
     "semantic_hash": ""
   },
   "pong.html": {
-    "mtime": 1785361106.766639,
+    "mtime": 1785361502.4648733,
     "ast_hash": "bf76f2b0fef645be59553166ca65539e",
     "semantic_hash": ""
   },
@@ -105,7 +95,7 @@
     "semantic_hash": ""
   },
   "towerdefense.html": {
-    "mtime": 1785359327.1820798,
+    "mtime": 1785361657.010789,
     "ast_hash": "dd5f0148fb6ea0f5c098849125ee7c96",
     "semantic_hash": ""
   },

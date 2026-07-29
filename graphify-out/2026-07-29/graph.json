@@ -504,26 +504,6 @@
       "norm_label": "returns a sanitized copy of the payload with potential secrets/credentials redac"
     },
     {
-      "label": "test_dummy.py",
-      "file_type": "code",
-      "source_file": "test_dummy.py",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "test_dummy",
-      "community": 1,
-      "norm_label": "test_dummy.py"
-    },
-    {
-      "label": "test_version()",
-      "file_type": "code",
-      "source_file": "test_dummy.py",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "test_dummy_test_version",
-      "community": 1,
-      "norm_label": "test_version()"
-    },
-    {
       "label": "architecture.test.js",
       "file_type": "code",
       "source_file": "tests/architecture.test.js",
@@ -1462,16 +1442,6 @@
       "id": "readme_3_leaderboard_leaderboard_js_leaderboard_html",
       "community": 0,
       "norm_label": "3. `leaderboard` (`leaderboard.js` & `leaderboard.html`)"
-    },
-    {
-      "label": "mail.md",
-      "file_type": "document",
-      "source_file": "mail.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "mail",
-      "community": 2,
-      "norm_label": "mail.md"
     }
   ],
   "links": [
@@ -2473,16 +2443,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "test_dummy.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "test_dummy",
-      "target": "test_dummy_test_version",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "tests/architecture.test.js",
       "source_location": "L2",
       "weight": 1.0,
@@ -3450,5 +3410,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c4c596f2088b0d6c55449e15811a1e36c4b6c965"
+  "built_at_commit": "2423dfd101ffe08c07a7fc6434818ed079c29d7c"
 }

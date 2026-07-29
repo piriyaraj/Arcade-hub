@@ -193,5 +193,10 @@
     "mtime": 1785354198.4260151,
     "ast_hash": "843ba05f75b7785363211240ec3185fd",
     "semantic_hash": ""
+  },
+  "tests/conftest.py": {
+    "mtime": 1785362186.6760025,
+    "ast_hash": "78de807ebcd8a487b0b6f2e6c15ad2eb",
+    "semantic_hash": ""
   }
 }
