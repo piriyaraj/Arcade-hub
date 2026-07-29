@@ -9,5 +9,6 @@
   "7": "utils.js",
   "8": "DLQHandler",
   "9": "__init__.py",
-  "10": "test_utils_reset.py"
+  "10": "test_utils_reset.py",
+  "11": "test_audio.py"
 }
