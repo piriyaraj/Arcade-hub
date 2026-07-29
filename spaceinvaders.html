@@ -459,6 +459,15 @@
   bestEl.textContent = bestScore;
   const originalBestScore = bestScore; // immutable pre-game record for triggerGameOver
 
+  function saveHighScore(score) {
+    try {
+      localStorage.setItem('spaceinvaders_best', score.toString());
+      if (bestEl) bestEl.textContent = score;
+    } catch (e) {
+      console.warn('Could not persist high score:', e);
+    }
+  }
+
   // Mute/Unmute state loading & initialization
   let soundMuted = false;
   try {
@@ -1049,13 +1058,7 @@
     const isNewBest = score > bestScore;
     if (isNewBest) {
       bestScore = score;
-      try {
-        localStorage.setItem('spaceinvaders_best', bestScore.toString());
-      } catch (e) {
-        console.error('localStorage save failed:', e);
-        // Silently catch exceptions
-      }
-      bestEl.textContent = bestScore;
+      saveHighScore(bestScore);
     }
   }
 
@@ -1071,13 +1074,7 @@
     setTimeout(() => {
       if (score > bestScore) {
         bestScore = score;
-        try {
-          localStorage.setItem('spaceinvaders_best', bestScore.toString());
-        } catch (e) {
-          console.error('localStorage save failed:', e);
-          // Silently catch exceptions
-        }
-        bestEl.textContent = bestScore;
+        saveHighScore(bestScore);
       }
       initInvaders();
       // rebuild half/some HP for Bunkers as reward, up to max HP
@@ -1104,13 +1101,7 @@
     // Save best score (compare against immutable originalBestScore, not mid-game bestScore)
     if (score > originalBestScore) {
       bestScore = score;
-      try {
-        localStorage.setItem('spaceinvaders_best', bestScore.toString());
-      } catch (e) {
-        console.error('localStorage save failed:', e);
-        // Silently catch exceptions
-      }
-      bestEl.textContent = bestScore;
+      saveHighScore(bestScore);
     }
   }
 
