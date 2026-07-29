@@ -6,18 +6,19 @@ A lightweight, framework-free browser arcade built using pure HTML, CSS, and van
 This repository is configured for **GitHub Pages**. `index.html` serves as the primary entry point to access all individual game pages.
 
 ### Available Games:
-- 🐍 **[Snake Game](snakegame.html)** — Classic snake arcade action.
+- 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
+- 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
 - 🎰 **[Bing Ball](bingball.html)** — Pachinko/Plinko style pin-drop game.
 - 🧱 **[Breakout](breakout.html)** — Classic breakout brick-destroying arcade game.
+- 🏃‍♂️ **[Cyber Runner](cyberrunner.html)** — Dodge laser fences and cyber hacker drones in a fast-paced neon runner.
+- 🏎️ **[CyberRacer](cyberracer.html)** — Race down the retro digital superhighway, steer left/right to dodge barriers and retrieve energy nodes.
+- 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
+- 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
+- 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
+- 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
+- 🐍 **[Snake Game](snakegame.html)** — Classic snake arcade action.
 - 👾 **[Space Invaders](spaceinvaders.html)** — Classic space invaders arcade shooter.
 - 🧩 **[Tetris](tetris.html)** — Classic falling block puzzle game.
-- 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
-- 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
-- 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
-- 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
-- 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
-- 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
-- 🏃‍♂️ **[Cyber Runner](cyberrunner.html)** — Dodge laser fences and cyber hacker drones in a fast-paced neon runner.
 
 ---
 

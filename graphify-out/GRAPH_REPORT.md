@@ -1,16 +1,16 @@
 # Graph Report - test-repo  (2026-07-29)
 
 ## Corpus Check
-- 18 files · ~42,902 words
+- 19 files · ~47,003 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 101 nodes · 134 edges · 12 communities (11 shown, 1 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
+- 114 nodes · 151 edges · 13 communities (12 shown, 1 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d34fe433`
+- Built from commit: `e3fdf6bf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,6 +24,7 @@
 - DLQHandler
 - test_utils_reset.py
 - test_audio.py
+- get_repo_root
 
 ## God Nodes (most connected - your core abstractions)
 1. `AudioManager` - 15 edges
@@ -31,11 +32,11 @@
 3. `TaskValidationError` - 8 edges
 4. `validate_task_payload()` - 8 edges
 5. `DLQHandler` - 7 edges
-6. `TaskScheduler` - 5 edges
-7. `TaskType` - 5 edges
-8. `test_dlq_entry_contains_full_error_context()` - 5 edges
-9. `test_empty_title_rejected()` - 4 edges
-10. `test_missing_type_rejected()` - 4 edges
+6. `get_repo_root()` - 7 edges
+7. `TaskScheduler` - 5 edges
+8. `TaskType` - 5 edges
+9. `test_dlq_entry_contains_full_error_context()` - 5 edges
+10. `test_empty_title_rejected()` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `test_dlq_entry_contains_full_error_context()` --indirect_call--> `TaskValidationError`  [INFERRED]
@@ -52,7 +53,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (12 total, 1 thin omitted)
+## Communities (13 total, 1 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.40
@@ -86,6 +87,10 @@ Nodes (4): Runs a Node.js snippet to verify that resetScore recovers from localS
 Cohesion: 0.22
 Nodes (8): Verify that toggleMute works as expected and updates state and localStorage., Verify that loading invalid settings from localStorage clamps them safely., Verify default volume and mute states when localStorage is empty., Verify that setters clamp values to [0.0, 1.0] and update localStorage., test_audio_manager_mute_toggle_logic(), test_audio_manager_persistence_clamping_load(), test_audio_manager_persistence_clamping_set(), test_audio_manager_state_initialization()
 
+### Community 12 - "get_repo_root"
+Cohesion: 0.22
+Nodes (12): get_repo_root(), Verify that cyberracer.html exists in the repository root., Verify that cyberracer.html imports both utils.js and audio.js scripts., Verify that cyberracer.html references getBestScore/saveBestScore for 'cyberrace, Verify index.html exists and links to cyberracer.html., Returns the path to the repository root directory., Verify README.md exists and contains links to cyberracer.html., test_cyberracer_dependencies() (+4 more)
+
 ## Knowledge Gaps
 - **9 isolated node(s):** `test`, `assert`, `{ SoundFX }`, `test`, `assert` (+4 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -95,14 +100,14 @@ Nodes (8): Verify that toggleMute works as expected and updates state and localS
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `TaskQueue` connect `utils.js` to `SoundFX`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **Why does `DLQHandler` connect `utils.js` to `SoundFX`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _27 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _33 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `utils.js` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

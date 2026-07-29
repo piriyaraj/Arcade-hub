@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "audio.js": {
-    "mtime": 1785188915.9374928,
-    "ast_hash": "af1cb97fbf0c08f92b74a60e7c9f1236",
+    "mtime": 1785349967.365253,
+    "ast_hash": "4127abd7af79abeef7e691a4f2dbcc2b",
     "semantic_hash": ""
   },
   "bingball.html": {
@@ -30,13 +30,13 @@
     "semantic_hash": ""
   },
   "snakegame.html": {
-    "mtime": 1785348444.915339,
-    "ast_hash": "9b17a6c4934614066057fd8e78d71af4",
+    "mtime": 1785350154.1105492,
+    "ast_hash": "8c34afdd33dd68cbaf275810cc528176",
     "semantic_hash": ""
   },
   "breakout.html": {
-    "mtime": 1785348444.9033391,
-    "ast_hash": "f554622a6351675e09bc82c835425d88",
+    "mtime": 1785350386.5313406,
+    "ast_hash": "7ff523692ee6f5a596a27e211fcf6a19",
     "semantic_hash": ""
   },
   "spaceinvaders.html": {
@@ -75,12 +75,12 @@
     "semantic_hash": ""
   },
   "tests/utils.test.js": {
-    "mtime": 1785348986.2886207,
+    "mtime": 1785349899.1982777,
     "ast_hash": "4ae861f5532cdb54afd6afa3a3e7788c",
     "semantic_hash": ""
   },
   "utils.js": {
-    "mtime": 1785348982.3247352,
+    "mtime": 1785349899.1982777,
     "ast_hash": "13be0ae5dc790d2b34bfdc294b073353",
     "semantic_hash": ""
   },
@@ -155,8 +155,13 @@
     "semantic_hash": ""
   },
   "tests/test_utils_reset.py": {
-    "mtime": 1785348992.2684488,
+    "mtime": 1785349899.1982777,
     "ast_hash": "5157ae19a78e156e165787d7feda77b5",
+    "semantic_hash": ""
+  },
+  "tests/test_audio.py": {
+    "mtime": 1785350025.8723907,
+    "ast_hash": "bf4e0ea5010440777d91019b9abb4f13",
     "semantic_hash": ""
   }
 }
