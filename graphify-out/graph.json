@@ -1104,6 +1104,96 @@
       "norm_label": "runs the javascript node.js unit tests for theme.js, input.js, and leaderboard.j"
     },
     {
+      "label": "test_pong.py",
+      "file_type": "code",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_pong",
+      "community": 15,
+      "norm_label": "test_pong.py"
+    },
+    {
+      "label": "get_repo_root()",
+      "file_type": "code",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "tests_test_pong_get_repo_root",
+      "community": 15,
+      "norm_label": "get_repo_root()"
+    },
+    {
+      "label": "test_pong_html_exists()",
+      "file_type": "code",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "tests_test_pong_test_pong_html_exists",
+      "community": 15,
+      "norm_label": "test_pong_html_exists()"
+    },
+    {
+      "label": "test_pong_mobile_controls_elements()",
+      "file_type": "code",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "tests_test_pong_test_pong_mobile_controls_elements",
+      "community": 15,
+      "norm_label": "test_pong_mobile_controls_elements()"
+    },
+    {
+      "label": "test_pong_mobile_touch_event_listeners()",
+      "file_type": "code",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "tests_test_pong_test_pong_mobile_touch_event_listeners",
+      "community": 15,
+      "norm_label": "test_pong_mobile_touch_event_listeners()"
+    },
+    {
+      "label": "Returns the path to the repository root directory.",
+      "file_type": "rationale",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_test_pong_rationale_5",
+      "community": 15,
+      "norm_label": "returns the path to the repository root directory."
+    },
+    {
+      "label": "Verify that pong.html exists in the repository root.",
+      "file_type": "rationale",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "tests_test_pong_rationale_10",
+      "community": 15,
+      "norm_label": "verify that pong.html exists in the repository root."
+    },
+    {
+      "label": "Verify that pong.html contains the mobile-controls container and the two touch b",
+      "file_type": "rationale",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "tests_test_pong_rationale_16",
+      "community": 15,
+      "norm_label": "verify that pong.html contains the mobile-controls container and the two touch b"
+    },
+    {
+      "label": "Verify that event listeners for touch/pointer events are wired up to toggle mobi",
+      "file_type": "rationale",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "tests_test_pong_rationale_54",
+      "community": 15,
+      "norm_label": "verify that event listeners for touch/pointer events are wired up to toggle mobi"
+    },
+    {
       "label": "test_task_queue.py",
       "file_type": "code",
       "source_file": "tests/test_task_queue.py",
@@ -3135,6 +3225,119 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_pong",
+      "target": "tests_test_pong_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_test_pong",
+      "target": "tests_test_pong_test_pong_html_exists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_test_pong",
+      "target": "tests_test_pong_test_pong_mobile_controls_elements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "tests_test_pong",
+      "target": "tests_test_pong_test_pong_mobile_touch_event_listeners",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_pong_rationale_5",
+      "target": "tests_test_pong_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_test_pong_test_pong_html_exists",
+      "target": "tests_test_pong_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "tests_test_pong_test_pong_mobile_controls_elements",
+      "target": "tests_test_pong_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "tests_test_pong_test_pong_mobile_touch_event_listeners",
+      "target": "tests_test_pong_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_pong_rationale_10",
+      "target": "tests_test_pong_test_pong_html_exists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "tests_test_pong_rationale_16",
+      "target": "tests_test_pong_test_pong_mobile_controls_elements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_pong.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "tests_test_pong_rationale_54",
+      "target": "tests_test_pong_test_pong_mobile_touch_event_listeners",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_task_queue.py",
       "source_location": "L82",
       "weight": 1.0,
@@ -3450,5 +3653,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c4c596f2088b0d6c55449e15811a1e36c4b6c965"
+  "built_at_commit": "24e2f49f94b6eb30d9ca81a10cfc88dde729fb78"
 }

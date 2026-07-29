@@ -174,6 +174,46 @@
       "norm_label": "soundfx"
     },
     {
+      "label": "input.js",
+      "file_type": "code",
+      "source_file": "input.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "input",
+      "community": 13,
+      "norm_label": "input.js"
+    },
+    {
+      "label": "KeyManager",
+      "file_type": "code",
+      "source_file": "input.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "input_keymanager",
+      "community": 13,
+      "norm_label": "keymanager"
+    },
+    {
+      "label": "leaderboard.js",
+      "file_type": "code",
+      "source_file": "leaderboard.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "leaderboard",
+      "community": 13,
+      "norm_label": "leaderboard.js"
+    },
+    {
+      "label": "Leaderboard",
+      "file_type": "code",
+      "source_file": "leaderboard.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "leaderboard_leaderboard",
+      "community": 13,
+      "norm_label": "leaderboard"
+    },
+    {
       "label": "__init__.py",
       "file_type": "code",
       "source_file": "src/__init__.py",
@@ -190,7 +230,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_queue_init",
-      "community": 7,
+      "community": 3,
       "norm_label": "__init__.py"
     },
     {
@@ -200,7 +240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_queue_handler",
-      "community": 7,
+      "community": 3,
       "norm_label": "handler.py"
     },
     {
@@ -210,7 +250,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler",
-      "community": 7,
+      "community": 3,
       "norm_label": "dlqhandler"
     },
     {
@@ -220,7 +260,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler_init",
-      "community": 7,
+      "community": 3,
       "norm_label": ".__init__()"
     },
     {
@@ -230,7 +270,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_queue_handler_dlqhandler_handle_failure",
-      "community": 7,
+      "community": 3,
       "norm_label": ".handle_failure()"
     },
     {
@@ -240,7 +280,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "src_queue_handler_taskqueue",
-      "community": 7,
+      "community": 3,
       "norm_label": "taskqueue"
     },
     {
@@ -250,7 +290,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "src_queue_handler_taskqueue_init",
-      "community": 7,
+      "community": 3,
       "norm_label": ".__init__()"
     },
     {
@@ -260,7 +300,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_queue_handler_taskqueue_submit",
-      "community": 7,
+      "community": 3,
       "norm_label": ".submit()"
     },
     {
@@ -270,7 +310,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_10",
-      "community": 7,
+      "community": 3,
       "norm_label": "dlq (dead-letter queue) handler.     stores and formats failed tasks."
     },
     {
@@ -280,7 +320,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_18",
-      "community": 7,
+      "community": 3,
       "norm_label": "processes a task failure and saves it to the dlq."
     },
     {
@@ -290,7 +330,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_queue_handler_rationale_63",
-      "community": 7,
+      "community": 3,
       "norm_label": "submits a task to the queue after validation."
     },
     {
@@ -482,6 +522,86 @@
       "id": "test_dummy_test_version",
       "community": 1,
       "norm_label": "test_version()"
+    },
+    {
+      "label": "architecture.test.js",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_architecture_test",
+      "community": 13,
+      "norm_label": "architecture.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_architecture_test_test",
+      "community": 13,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "tests_architecture_test_assert",
+      "community": 13,
+      "norm_label": "assert"
+    },
+    {
+      "label": "mockStorage",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_architecture_test_mockstorage",
+      "community": 13,
+      "norm_label": "mockstorage"
+    },
+    {
+      "label": "documentElementStyle",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "tests_architecture_test_documentelementstyle",
+      "community": 13,
+      "norm_label": "documentelementstyle"
+    },
+    {
+      "label": "{ ThemeManager }",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "tests_architecture_test_thememanager",
+      "community": 13,
+      "norm_label": "{ thememanager }"
+    },
+    {
+      "label": "{ KeyManager }",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "tests_architecture_test_keymanager",
+      "community": 13,
+      "norm_label": "{ keymanager }"
+    },
+    {
+      "label": "{ Leaderboard }",
+      "file_type": "code",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "tests_architecture_test_leaderboard",
+      "community": 13,
+      "norm_label": "{ leaderboard }"
     },
     {
       "label": "audio.test.js",
@@ -784,6 +904,136 @@
       "norm_label": "verify readme.md exists and contains links to cyberracer.html."
     },
     {
+      "label": "test_full_architecture.py",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture",
+      "community": 14,
+      "norm_label": "test_full_architecture.py"
+    },
+    {
+      "label": "get_repo_root()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_get_repo_root",
+      "community": 14,
+      "norm_label": "get_repo_root()"
+    },
+    {
+      "label": "test_files_exist()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_test_files_exist",
+      "community": 14,
+      "norm_label": "test_files_exist()"
+    },
+    {
+      "label": "test_html_script_and_css_links()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_test_html_script_and_css_links",
+      "community": 14,
+      "norm_label": "test_html_script_and_css_links()"
+    },
+    {
+      "label": "test_local_storage_keys()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_test_local_storage_keys",
+      "community": 14,
+      "norm_label": "test_local_storage_keys()"
+    },
+    {
+      "label": "test_css_variables_defined()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_test_css_variables_defined",
+      "community": 14,
+      "norm_label": "test_css_variables_defined()"
+    },
+    {
+      "label": "test_index_links_and_readme()",
+      "file_type": "code",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_test_index_links_and_readme",
+      "community": 14,
+      "norm_label": "test_index_links_and_readme()"
+    },
+    {
+      "label": "Returns the path to the repository root directory.",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_5",
+      "community": 14,
+      "norm_label": "returns the path to the repository root directory."
+    },
+    {
+      "label": "Verify that all architecture files exist.",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_10",
+      "community": 14,
+      "norm_label": "verify that all architecture files exist."
+    },
+    {
+      "label": "Verify that index, games, and leaderboard html files import the expected scripts",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_24",
+      "community": 14,
+      "norm_label": "verify that index, games, and leaderboard html files import the expected scripts"
+    },
+    {
+      "label": "Verify that correct localStorage keys are referenced in theme.js and input.js.",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_51",
+      "community": 14,
+      "norm_label": "verify that correct localstorage keys are referenced in theme.js and input.js."
+    },
+    {
+      "label": "Verify theme variables are defined in styles/theme.css.",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_67",
+      "community": 14,
+      "norm_label": "verify theme variables are defined in styles/theme.css."
+    },
+    {
+      "label": "Verify index.html links to leaderboard.html, and README.md documents the modules",
+      "file_type": "rationale",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "tests_test_full_architecture_rationale_97",
+      "community": 14,
+      "norm_label": "verify index.html links to leaderboard.html, and readme.md documents the modules"
+    },
+    {
       "label": "test_js_utilities.py",
       "file_type": "code",
       "source_file": "tests/test_js_utilities.py",
@@ -814,6 +1064,16 @@
       "norm_label": "test_js_general_utilities()"
     },
     {
+      "label": "test_js_architecture_utilities()",
+      "file_type": "code",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_test_js_architecture_utilities",
+      "community": 5,
+      "norm_label": "test_js_architecture_utilities()"
+    },
+    {
       "label": "Runs the JavaScript Node.js unit tests for audio.js and asserts success.",
       "file_type": "rationale",
       "source_file": "tests/test_js_utilities.py",
@@ -832,6 +1092,16 @@
       "id": "tests_test_js_utilities_rationale_25",
       "community": 5,
       "norm_label": "runs the javascript node.js unit tests for utils.js and asserts success."
+    },
+    {
+      "label": "Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j",
+      "file_type": "rationale",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "tests_test_js_utilities_rationale_44",
+      "community": 5,
+      "norm_label": "runs the javascript node.js unit tests for theme.js, input.js, and leaderboard.j"
     },
     {
       "label": "test_task_queue.py",
@@ -870,7 +1140,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_test_task_queue_test_valid_submission_passes_through",
-      "community": 7,
+      "community": 3,
       "norm_label": "test_valid_submission_passes_through()"
     },
     {
@@ -880,7 +1150,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_task_queue_test_dlq_entry_contains_full_error_context",
-      "community": 7,
+      "community": 3,
       "norm_label": "test_dlq_entry_contains_full_error_context()"
     },
     {
@@ -910,7 +1180,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_test_task_queue_rationale_59",
-      "community": 7,
+      "community": 3,
       "norm_label": "(c) valid submission passes through"
     },
     {
@@ -920,7 +1190,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_task_queue_rationale_83",
-      "community": 7,
+      "community": 3,
       "norm_label": "(d) dlq entry contains full error context (original error message, stack trace,"
     },
     {
@@ -1022,6 +1292,26 @@
       "id": "tests_utils_test_utils",
       "community": 6,
       "norm_label": "utils"
+    },
+    {
+      "label": "theme.js",
+      "file_type": "code",
+      "source_file": "theme.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "theme",
+      "community": 13,
+      "norm_label": "theme.js"
+    },
+    {
+      "label": "ThemeManager",
+      "file_type": "code",
+      "source_file": "theme.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "theme_thememanager",
+      "community": 13,
+      "norm_label": "thememanager"
     },
     {
       "label": "utils.js",
@@ -1132,6 +1422,46 @@
       "id": "readme_setting_up_github_pages",
       "community": 0,
       "norm_label": "\ud83d\ude80 setting up github pages"
+    },
+    {
+      "label": "\ud83c\udfd7\ufe0f Architecture",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "readme_architecture",
+      "community": 0,
+      "norm_label": "\ud83c\udfd7\ufe0f architecture"
+    },
+    {
+      "label": "1. `ThemeManager` (`theme.js` & `styles/theme.css`)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "readme_1_thememanager_theme_js_styles_theme_css",
+      "community": 0,
+      "norm_label": "1. `thememanager` (`theme.js` & `styles/theme.css`)"
+    },
+    {
+      "label": "2. `KeyManager` (`input.js`)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "readme_2_keymanager_input_js",
+      "community": 0,
+      "norm_label": "2. `keymanager` (`input.js`)"
+    },
+    {
+      "label": "3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "readme_3_leaderboard_leaderboard_js_leaderboard_html",
+      "community": 0,
+      "norm_label": "3. `leaderboard` (`leaderboard.js` & `leaderboard.html`)"
     },
     {
       "label": "mail.md",
@@ -1470,6 +1800,70 @@
       "weight": 1.0,
       "source": "tests_audio_test",
       "target": "audio_soundfx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "input.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "input",
+      "target": "input_keymanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "input_keymanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "leaderboard.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "leaderboard",
+      "target": "leaderboard_leaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "leaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "leaderboard_leaderboard",
       "confidence_score": 1.0
     },
     {
@@ -2089,6 +2483,98 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_documentelementstyle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_keymanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_leaderboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_mockstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "tests_architecture_test_thememanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "theme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/architecture.test.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_architecture_test",
+      "target": "theme_thememanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/audio.test.js",
       "source_location": "L2",
       "weight": 1.0,
@@ -2414,6 +2900,191 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_test_css_variables_defined",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_test_files_exist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_test_html_script_and_css_links",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_test_index_links_and_readme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture",
+      "target": "tests_test_full_architecture_test_local_storage_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_5",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_test_css_variables_defined",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_test_files_exist",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_test_html_script_and_css_links",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_test_index_links_and_readme",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_test_local_storage_keys",
+      "target": "tests_test_full_architecture_get_repo_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_10",
+      "target": "tests_test_full_architecture_test_files_exist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_24",
+      "target": "tests_test_full_architecture_test_html_script_and_css_links",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_51",
+      "target": "tests_test_full_architecture_test_local_storage_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_67",
+      "target": "tests_test_full_architecture_test_css_variables_defined",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_full_architecture.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "tests_test_full_architecture_rationale_97",
+      "target": "tests_test_full_architecture_test_index_links_and_readme",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities",
+      "target": "tests_test_js_utilities_test_js_architecture_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
       "source_location": "L5",
       "weight": 1.0,
@@ -2449,6 +3120,16 @@
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_25",
       "target": "tests_test_js_utilities_test_js_general_utilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_js_utilities.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "tests_test_js_utilities_rationale_44",
+      "target": "tests_test_js_utilities_test_js_architecture_utilities",
       "confidence_score": 1.0
     },
     {
@@ -2623,6 +3304,16 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theme.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "theme",
+      "target": "theme_thememanager",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
@@ -2691,6 +3382,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "readme_arcade_game_portal",
+      "target": "readme_architecture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
       "source_location": "L5",
       "weight": 1.0,
       "source": "readme_arcade_game_portal",
@@ -2716,8 +3417,38 @@
       "source": "readme_live_arcade_site_github_pages",
       "target": "readme_available_games",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "readme_architecture",
+      "target": "readme_1_thememanager_theme_js_styles_theme_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "readme_architecture",
+      "target": "readme_2_keymanager_input_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "readme_architecture",
+      "target": "readme_3_leaderboard_leaderboard_js_leaderboard_html",
+      "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e3fdf6bfcecf71a59f01a0a897abb580e2e15062"
+  "built_at_commit": "c4c596f2088b0d6c55449e15811a1e36c4b6c965"
 }
