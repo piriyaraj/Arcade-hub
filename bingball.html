@@ -805,20 +805,32 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Canvas touch / click to drop in drop zone
-canvas.addEventListener('click', (e) => {
+function handleDropAt(clientX, clientY) {
   if (!gameRunning || ballsLeft <= 0) return;
   const rect = canvas.getBoundingClientRect();
   const scaleX = W / rect.width;
   const scaleY = H / rect.height;
-  const clickX = (e.clientX - rect.left) * scaleX;
-  const clickY = (e.clientY - rect.top) * scaleY;
+  const clickX = (clientX - rect.left) * scaleX;
+  const clickY = (clientY - rect.top) * scaleY;
 
   if (clickX >= boardX && clickX <= boardX + boardW && clickY >= boardY && clickY <= boardY + ROW_SPACING) {
     const clampedX = Math.max(boardX + BALL_RADIUS, Math.min(boardX + boardW - BALL_RADIUS, clickX));
     dropMarker = { x: clampedX, y: clickY, alpha: 1.0 };
     dropBall(clampedX);
   }
+}
+
+canvas.addEventListener('click', (e) => {
+  handleDropAt(e.clientX, e.clientY);
 });
+
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches && e.touches.length > 0) {
+    // Prevent default touch behaviors (like scrolling or zooming) when tapping the drop zone
+    e.preventDefault();
+    handleDropAt(e.touches[0].clientX, e.touches[0].clientY);
+  }
+}, { passive: false });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 resize();
