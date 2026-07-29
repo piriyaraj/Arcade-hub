@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play Flappy Byte - Flap your data byte through cyber columns in a gorgeous retro-future digital space-arcade." />
+  <title>Flappy Byte</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    :root {
+      --bg: #060913;
+      --board-bg: #02040a;
+      --theme-green: #00ff66; /* Glowing Byte green */
+      --theme-cyan: #00f0ff;  /* Columns and lasers */
+      --theme-pink: #ff007f;  /* Crash alert and flashes */
+      --theme-purple: #9d4edd;
+      --border: rgba(0, 255, 102, 0.2);
+      --text: #f8fafc;
+      --text-dim: #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      max-width: 600px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-green);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-green);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--theme-green), var(--theme-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #stats {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 600px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--theme-green);
+    }
+
+    .stat-value.cyan-val {
+      color: var(--theme-cyan);
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+      max-width: 480px;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(0, 255, 102, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(0, 255, 102, 0.05);
+      display: block;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 4;
+      cursor: pointer;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 600px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--theme-green);
+      box-shadow: 0 4px 12px rgba(0, 255, 102, 0.2);
+    }
+
+    button:active { transform: translateY(0); }
+
+    button.play-btn {
+      background: linear-gradient(135deg, var(--theme-green), #047857);
+      color: #000;
+      border: none;
+      box-shadow: 0 2px 12px rgba(0, 255, 102, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    button.play-btn:hover {
+      box-shadow: 0 4px 18px rgba(0, 255, 102, 0.6);
+      border-color: transparent;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 9, 19, 0.93);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--theme-green), var(--theme-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow: 0 0 30px rgba(0, 255, 102, 0.2);
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    #overlay .final-score {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--theme-cyan);
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      header {
+        padding: 8px 20px 4px;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      #stats {
+        padding: 4px 0 2px;
+        gap: 16px;
+      }
+      .stat-value {
+        font-size: 1.2rem;
+      }
+      #canvas-wrap {
+        padding: 2px 12px 4px;
+      }
+      #controls {
+        padding: 4px 20px 12px;
+      }
+    }
+
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #00ff66;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">Flappy Byte</h2>
+  <p id="overlay-desc">Press Spacebar, Click, or Tap the screen to flap. Navigate your Byte chip through the digital columns without crashing into barriers, ceiling, or ground!</p>
+  <div class="final-score hidden" id="final-score-container">Score: <span id="final-score">0</span></div>
+  <button class="play-btn" id="start-btn" aria-label="Start Game">START GAME</button>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>FLAPPY BYTE</h1>
+  <p>Flap your Byte & fly through digital motherboard pillars!</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat">
+    <span class="stat-label">Score</span>
+    <span class="stat-value" aria-live="polite" aria-atomic="true"><span aria-hidden="true" style="margin-right: 5px;">◆</span><span id="score">0</span></span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best</span>
+    <span class="stat-value cyan-val" id="best">0</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="480" height="640" tabindex="0" aria-label="Flappy Byte Canvas. Tap or press space to guide the data byte through columns."></canvas>
+</div>
+
+<div id="controls">
+  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
+  <button id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="audio.js"></script>
+<script>
+  (function() {
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('best');
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayDesc = document.getElementById('overlay-desc');
+    const finalScoreContainer = document.getElementById('final-score-container');
+    const finalScore = document.getElementById('final-score');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const muteBtn = document.getElementById('mute-btn');
+
+    // Canvas Base Specs
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+    const GROUND_Y = HEIGHT - 60;
+
+    // Game States
+    let state = 'start'; // 'start', 'playing', 'paused', 'gameover'
+    let score = 0;
+    let highScore = 0;
+    try {
+      const raw = localStorage.getItem('flappy_byte_best');
+      const parsed = parseInt(raw, 10);
+      highScore = Number.isFinite(parsed) ? parsed : 0;
+    } catch (e) {
+      console.error('localStorage load failed:', e);
+      highScore = 0;
+    }
+    bestEl.textContent = highScore;
+
+    // Mute/Unmute state loading & initialization
+    let soundMuted = false;
+    try {
+      soundMuted = localStorage.getItem('flappy_byte_muted') === 'true';
+    } catch (e) {
+      console.error('localStorage load failed:', e);
+      soundMuted = false;
+    }
+
+    if (window.sfx) {
+      window.sfx.muted = soundMuted;
+    }
+
+    function updateMuteButtonUI() {
+      if (window.sfx) {
+        muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
+      }
+    }
+
+    function toggleMute() {
+      if (window.sfx) {
+        window.sfx.muted = !window.sfx.muted;
+        try {
+          localStorage.setItem('flappy_byte_muted', window.sfx.muted.toString());
+        } catch (e) {
+          console.error('localStorage save failed:', e);
+        }
+        updateMuteButtonUI();
+        if (typeof window.sfx.init === 'function') {
+          window.sfx.init();
+        }
+      }
+    }
+
+    updateMuteButtonUI();
+    muteBtn.addEventListener('click', toggleMute);
+
+    // M-key shortcut for mute
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+        toggleMute();
+      }
+    });
+
+    // Gameplay parameters
+    const GRAVITY = 0.3;
+    const JUMP_FORCE = -6.4;
+    const PIPE_SPEED_BASE = 2.4;
+    const MAX_PIPE_SPEED = 4.8;
+    const PIPE_SPAWN_INTERVAL = 110; // frames
+    const PIPE_GAP_BASE = 160;
+    const MIN_PIPE_GAP = 115;
+    const PIPE_WIDTH = 72;
+
+    let pipeSpeed = PIPE_SPEED_BASE;
+
+    // Game Objects
+    let byteObj = {
+      x: 120,
+      y: HEIGHT / 2 - 50,
+      size: 26, // width & height of the chip
+      radius: 13, // for simple bounds checking
+      velocity: 0,
+      rotation: 0
+    };
+
+    let pipes = [];
+    let particles = [];
+    let binaryStreams = [];
+    let groundOffset = 0;
+    let frameCount = 0;
+    let flashTimer = 0;
+
+    // Generate falling binary streams for matric background
+    function initBinaryStreams() {
+      binaryStreams = [];
+      const spacing = 48;
+      const cols = Math.ceil(WIDTH / spacing);
+      for (let i = 0; i < cols; i++) {
+        binaryStreams.push({
+          x: i * spacing + Math.random() * 12,
+          y: Math.random() * GROUND_Y,
+          speed: Math.random() * 0.7 + 0.3,
+          chars: Array.from({length: 8}, () => Math.random() > 0.5 ? '1' : '0'),
+          opacity: Math.random() * 0.12 + 0.04
+        });
+      }
+    }
+
+    function createExplosion(x, y, color, count = 12) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1.5;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: Math.random() * 3 + 1,
+          color: color,
+          alpha: 1.0,
+          decay: Math.random() * 0.03 + 0.015
+        });
+      }
+    }
+
+    function flap() {
+      if (state === 'playing') {
+        byteObj.velocity = JUMP_FORCE;
+        // play retro jump/bounce sound using global window.sfx
+        if (window.sfx) window.sfx.playBounce();
+
+        // Spawn cyber thruster particles
+        for(let i = 0; i < 3; i++) {
+          particles.push({
+            x: byteObj.x - 12,
+            y: byteObj.y + (Math.random() * 12 - 6),
+            vx: -Math.random() * 2 - 1,
+            vy: Math.random() * 1.5 - 0.75,
+            radius: Math.random() * 2.5 + 1,
+            color: Math.random() > 0.5 ? '#00ff66' : '#00f0ff',
+            alpha: 0.9,
+            decay: 0.035
+          });
+        }
+      }
+    }
+
+    function addPipe() {
+      // Game progress reduces gap size over score increments
+      const currentGap = Math.max(MIN_PIPE_GAP, PIPE_GAP_BASE - score * 1.5);
+      const minHeight = 60;
+      const maxHeight = GROUND_Y - minHeight - currentGap;
+      const gapY = Math.floor(Math.random() * (maxHeight - minHeight)) + minHeight;
+
+      pipes.push({
+        x: WIDTH,
+        gapY: gapY,
+        width: PIPE_WIDTH,
+        gapSize: currentGap,
+        passed: false
+      });
+    }
+
+    function resetGame() {
+      score = 0;
+      pipeSpeed = PIPE_SPEED_BASE;
+      scoreEl.textContent = score;
+      pipes = [];
+      particles = [];
+      frameCount = 0;
+      flashTimer = 0;
+
+      // Reset Byte
+      byteObj.x = 120;
+      byteObj.y = HEIGHT / 2 - 50;
+      byteObj.velocity = 0;
+      byteObj.rotation = 0;
+
+      initBinaryStreams();
+      // Add first pipe
+      addPipe();
+    }
+
+    function startGame() {
+      if (window.sfx) window.sfx.init();
+      resetGame();
+      state = 'playing';
+      overlay.classList.add('hidden');
+    }
+
+    function triggerGameOver() {
+      state = 'gameover';
+      flashTimer = 10; // trigger screen flash duration
+      if (window.sfx) window.sfx.playGameOver();
+
+      // Check high score
+      if (score > highScore) {
+        highScore = score;
+        try {
+          localStorage.setItem('flappy_byte_best', String(highScore));
+        } catch (e) {
+          console.error('localStorage save failed:', e);
+        }
+        bestEl.textContent = highScore;
+      }
+
+      overlayTitle.textContent = 'Data Corrupted';
+      overlayDesc.textContent = score > highScore ? "SYSTEM OVERRIDE! New high score!" : "Connection lost. Reconnect and try again!";
+      finalScore.textContent = score;
+      finalScoreContainer.classList.remove('hidden');
+      startBtn.textContent = 'REBOOT SYSTEM';
+      overlay.classList.remove('hidden');
+    }
+
+    function togglePause() {
+      if (state === 'playing') {
+        state = 'paused';
+        pauseBtn.textContent = 'RESUME';
+      } else if (state === 'paused') {
+        state = 'playing';
+        pauseBtn.textContent = 'PAUSE';
+        if (window.sfx) window.sfx.init();
+      }
+    }
+
+    // Input handlers
+    function handleAction(e) {
+      if (e) {
+        if (e.type === 'keydown' && e.code !== 'Space' && e.code !== 'ArrowUp' && e.code !== 'KeyW') {
+          return; // Ignore other keys
+        }
+        e.preventDefault();
+      }
+
+      if (state === 'start') {
+        startGame();
+      } else if (state === 'playing') {
+        flap();
+      } else if (state === 'gameover') {
+        startGame();
+      }
+    }
+
+    window.addEventListener('keydown', handleAction);
+    canvas.addEventListener('mousedown', handleAction);
+    canvas.addEventListener('touchstart', function(e) {
+      handleAction(e);
+    }, { passive: false });
+
+    // Buttons
+    startBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      startGame();
+    });
+
+    pauseBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (state === 'playing' || state === 'paused') {
+        togglePause();
+      }
+    });
+
+    resetBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (state === 'playing' || state === 'paused' || state === 'gameover') {
+        resetGame();
+        state = 'playing';
+        overlay.classList.add('hidden');
+        pauseBtn.textContent = 'PAUSE';
+        if (window.sfx) window.sfx.init();
+      }
+    });
+
+    // Main Update Logic
+    function update() {
+      if (state === 'paused') return;
+
+      if (state === 'playing') {
+        frameCount++;
+        groundOffset = (groundOffset - pipeSpeed) % 24;
+
+        // Update background binary rain streams
+        binaryStreams.forEach(stream => {
+          stream.y += stream.speed;
+          stream.x -= pipeSpeed * 0.15; // horizontal drift relative to scroll speed
+          if (stream.y > GROUND_Y) {
+            stream.y = -100;
+            stream.chars = Array.from({length: 8}, () => Math.random() > 0.5 ? '1' : '0');
+          }
+          if (stream.x < -20) {
+            stream.x = WIDTH + 20;
+          }
+        });
+
+        // Byte physics
+        byteObj.velocity += GRAVITY;
+        byteObj.y += byteObj.velocity;
+
+        // Rotation based on velocity
+        byteObj.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 8, byteObj.velocity * 0.08));
+
+        // Ceiling collision (causes Game Over)
+        if (byteObj.y - byteObj.radius <= 0) {
+          createExplosion(byteObj.x, byteObj.y, '#ff007f', 16);
+          triggerGameOver();
+          return;
+        }
+
+        // Ground Collision
+        if (byteObj.y + byteObj.radius >= GROUND_Y) {
+          createExplosion(byteObj.x, byteObj.y, '#ff007f', 16);
+          triggerGameOver();
+          return;
+        }
+
+        // Spawning Pipes
+        if (frameCount % PIPE_SPAWN_INTERVAL === 0) {
+          addPipe();
+        }
+
+        // Update & Check Pipes
+        for (let i = pipes.length - 1; i >= 0; i--) {
+          const pipe = pipes[i];
+          pipe.x -= pipeSpeed;
+
+          // Remove out-of-screen pipes
+          if (pipe.x + pipe.width < 0) {
+            pipes.splice(i, 1);
+            continue;
+          }
+
+          // Check Score passing trigger
+          if (!pipe.passed && byteObj.x > pipe.x + pipe.width / 2) {
+            pipe.passed = true;
+            score++;
+            scoreEl.textContent = score;
+            if (window.sfx) window.sfx.playEat();
+
+            // Increase difficulty speed
+            pipeSpeed = Math.min(MAX_PIPE_SPEED, PIPE_SPEED_BASE + score * 0.08);
+
+            // Spawn green points sparks
+            createExplosion(pipe.x + pipe.width / 2, pipe.gapY + pipe.gapSize / 2, '#00ff66', 6);
+          }
+
+          // Circle-AABB overlap collision check
+          const byteLeft = byteObj.x - byteObj.radius;
+          const byteRight = byteObj.x + byteObj.radius;
+          const byteTop = byteObj.y - byteObj.radius;
+          const byteBottom = byteObj.y + byteObj.radius;
+
+          const topPipeBottom = pipe.gapY;
+          const bottomPipeTop = pipe.gapY + pipe.gapSize;
+
+          if (byteRight > pipe.x + 2 && byteLeft < pipe.x + pipe.width - 2) {
+            // Horizontal overlaps the column
+            if (byteTop < topPipeBottom || byteBottom > bottomPipeTop) {
+              // Crash!
+              createExplosion(byteObj.x, byteObj.y, '#ff007f', 18);
+              createExplosion(pipe.x + pipe.width / 2, byteObj.y, '#00f0ff', 10);
+              triggerGameOver();
+              return;
+            }
+          }
+        }
+      }
+
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      if (flashTimer > 0) flashTimer--;
+    }
+
+    // Main Draw Logic
+    function draw() {
+      // Clear Screen with deep cyber grid color
+      ctx.fillStyle = '#02040a';
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // Draw background vertical gridlines (static matrix vibe)
+      ctx.strokeStyle = 'rgba(0, 255, 102, 0.03)';
+      ctx.lineWidth = 1;
+      const verticalGridSpacing = 30;
+      for (let x = 0; x < WIDTH; x += verticalGridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, GROUND_Y);
+        ctx.stroke();
+      }
+
+      // Draw background binary rain
+      ctx.font = '11px Courier New, monospace';
+      binaryStreams.forEach(stream => {
+        ctx.fillStyle = `rgba(0, 255, 102, ${stream.opacity})`;
+        for (let i = 0; i < stream.chars.length; i++) {
+          const charY = stream.y + i * 14;
+          if (charY >= -20 && charY < GROUND_Y) {
+            ctx.fillText(stream.chars[i], stream.x, charY);
+          }
+        }
+      });
+
+      // Draw Pipes (Cyber Columns)
+      pipes.forEach(pipe => {
+        const topHeight = pipe.gapY;
+        const bottomHeight = GROUND_Y - (pipe.gapY + pipe.gapSize);
+
+        // Styling Gradient top
+        let gradTop = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.width, 0);
+        gradTop.addColorStop(0, '#04172c');
+        gradTop.addColorStop(0.3, '#0b3967');
+        gradTop.addColorStop(1, '#062343');
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(pipe.x, 0, pipe.width, topHeight);
+
+        // Top Pipe neon border
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pipe.x, -10, pipe.width, topHeight + 10);
+
+        // Circuit paths inside top pipe
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+        ctx.lineWidth = 1.5;
+        for (let y = 30; y < topHeight - 20; y += 30) {
+          ctx.beginPath();
+          ctx.moveTo(pipe.x + 4, y);
+          ctx.lineTo(pipe.x + pipe.width - 4, y);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+          ctx.beginPath();
+          ctx.arc(pipe.x + pipe.width / 2, y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Pipe Lip / Cap Top
+        ctx.fillStyle = '#0b3967';
+        ctx.fillRect(pipe.x - 4, topHeight - 18, pipe.width + 8, 18);
+        ctx.strokeRect(pipe.x - 4, topHeight - 18, pipe.width + 8, 18);
+
+        // Bottom Pipe neon
+        let gradBottom = ctx.createLinearGradient(pipe.x, pipe.gapY + pipe.gapSize, pipe.x + pipe.width, GROUND_Y);
+        gradBottom.addColorStop(0, '#04172c');
+        gradBottom.addColorStop(0.3, '#0b3967');
+        gradBottom.addColorStop(1, '#062343');
+
+        ctx.fillStyle = gradBottom;
+        ctx.fillRect(pipe.x, pipe.gapY + pipe.gapSize, pipe.width, bottomHeight);
+
+        // Bottom pipe neon border
+        ctx.strokeRect(pipe.x, pipe.gapY + pipe.gapSize, pipe.width, bottomHeight + 10);
+
+        // Circuit paths inside bottom pipe
+        for (let y = pipe.gapY + pipe.gapSize + 30; y < GROUND_Y - 20; y += 30) {
+          ctx.beginPath();
+          ctx.moveTo(pipe.x + 4, y);
+          ctx.lineTo(pipe.x + pipe.width - 4, y);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+          ctx.beginPath();
+          ctx.arc(pipe.x + pipe.width / 2, y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Pipe Lip / Cap Bottom
+        ctx.fillStyle = '#0b3967';
+        ctx.fillRect(pipe.x - 4, pipe.gapY + pipe.gapSize, pipe.width + 8, 18);
+        ctx.strokeRect(pipe.x - 4, pipe.gapY + pipe.gapSize, pipe.width + 8, 18);
+      });
+
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Draw Cyber Floor
+      ctx.fillStyle = '#060913';
+      ctx.fillRect(0, GROUND_Y, WIDTH, HEIGHT - GROUND_Y);
+
+      // Floor line with magenta/pink neon glow
+      ctx.strokeStyle = '#ff007f';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, GROUND_Y);
+      ctx.lineTo(WIDTH, GROUND_Y);
+      ctx.stroke();
+
+      // Scrolling neon floor grids
+      ctx.strokeStyle = 'rgba(255, 0, 127, 0.2)';
+      ctx.lineWidth = 1;
+      for (let x = groundOffset; x < WIDTH; x += 24) {
+        ctx.beginPath();
+        ctx.moveTo(x, GROUND_Y);
+        ctx.lineTo(x - 20, HEIGHT);
+        ctx.stroke();
+      }
+
+      // Draw Byte (a glorious animated microchip)
+      ctx.save();
+      ctx.translate(byteObj.x, byteObj.y);
+      ctx.rotate(byteObj.rotation);
+
+      // Glowing shadow
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#00ff66';
+
+      const size = byteObj.size;
+      const half = size / 2;
+
+      // Draw chip metal pins on the sides
+      ctx.fillStyle = '#94a3b8'; // silver/slate pins
+      for (let i = 0; i < 4; i++) {
+        const pinY = -half + 3 + i * 6;
+        // Left Pin
+        ctx.fillRect(-half - 4, pinY, 4, 3);
+        // Right Pin
+        ctx.fillRect(half, pinY, 4, 3);
+      }
+
+      // Chip Body
+      ctx.fillStyle = '#0f172a'; // dark body
+      ctx.strokeStyle = '#00ff66'; // neon path border
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+
+      // Rounded microchip block
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(-half, -half, size, size, 4);
+      } else {
+        ctx.rect(-half, -half, size, size);
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      // Disable shadow for internal bits details
+      ctx.shadowBlur = 0;
+
+      // 8 register lights (bits) in a 2x4 grid
+      // Green = 1, Blue/Dim = 0
+      const bitSz = 3;
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 2; c++) {
+          const bitIdx = r * 2 + c;
+          // Animate the light transitions when playing
+          const isOn = ((state === 'playing' ? Math.floor(frameCount / 18) : 0) + bitIdx) % 3 !== 0;
+          ctx.fillStyle = isOn ? '#00ff66' : '#1e293b';
+
+          const bx = -half + 6 + c * 11;
+          const by = -half + 4 + r * 5.5;
+          ctx.fillRect(bx, by, bitSz, bitSz);
+        }
+      }
+
+      ctx.restore();
+
+      // Draw Flash overlay when damage is taken
+      if (flashTimer > 0) {
+        ctx.fillStyle = `rgba(255, 0, 127, ${flashTimer * 0.05})`;
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      }
+    }
+
+    // Main Loop
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    initBinaryStreams();
+    resetGame();
+    loop();
+  })();
+</script>
+</body>
+</html>
