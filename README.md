@@ -15,6 +15,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🔢 **[2048](2048.html)** — Classic sliding tile puzzle game.
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
+- 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
 
 ---
 
@@ -24,7 +25,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html flappybyte.html README.md
+   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html flappybyte.html asteroids.html README.md
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
