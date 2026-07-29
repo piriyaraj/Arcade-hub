@@ -28,7 +28,7 @@ To publish this project to GitHub Pages:
 
 1. **Push changes to GitHub:**
    ```bash
-   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html flappybyte.html asteroids.html README.md
+   git add index.html snakegame.html bingball.html breakout.html spaceinvaders.html tetris.html flappybird.html 2048.html pong.html flappybyte.html asteroids.html towerdefense.html cyberrunner.html cyberracer.html
    git commit -m "Configure index.html as main entry point for GitHub Pages"
    git push origin main
    ```
@@ -41,8 +41,12 @@ To publish this project to GitHub Pages:
      - **Branch**: Select `main` (or `master`) and set folder to `/ (root)`.
    - Click **Save**.
 
+3. **Custom Domain Configuration:**
+   - A `CNAME` file containing `arcadehub.telekit.link` exists at the repo root and configures the GitHub Pages custom domain. Contributors must not delete or modify this file.
+   - Configure the custom domain under **Settings** > **Pages** > **Custom domain** on GitHub.
+
 Your site will automatically deploy and be accessible at:
-`https://<your-github-username>.github.io/<repository-name>/`
+https://arcadehub.telekit.link/ (instead of the default `https://<your-github-username>.github.io/<repository-name>/` domain)
 
 ---
 
