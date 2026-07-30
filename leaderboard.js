@@ -14,7 +14,8 @@ const Leaderboard = {
     { id: 'asteroids', name: 'Asteroids', key: 'asteroids_best', icon: '🚀' },
     { id: 'towerdefense', name: 'Tower Defense', key: 'towerdefense_best', icon: '🛡️' },
     { id: 'cyberrunner', name: 'Cyber Runner', key: 'cyberrunner_best', icon: '🏃‍♂️' },
-    { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' }
+    { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' },
+    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' }
   ],
 
   getScores() {
