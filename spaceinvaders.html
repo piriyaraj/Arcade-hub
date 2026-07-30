@@ -415,6 +415,7 @@
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
+<script src="utils.js"></script>
 <script src="audio.js"></script>
 <script>
   // ─── DOM References ──────────────────────────────────────────────────────────
@@ -447,35 +448,17 @@
   const CANVAS_HEIGHT = 500;
 
   let score = 0;
-  let bestScore = 0;
-  try {
-    const raw = localStorage.getItem('spaceinvaders_best');
-    const parsed = parseInt(raw, 10);
-    bestScore = Number.isFinite(parsed) ? parsed : 0;
-  } catch (e) {
-    console.error('localStorage load failed:', e);
-    bestScore = 0;
-  }
+  let bestScore = getBestScore('spaceinvaders');
   bestEl.textContent = bestScore;
   const originalBestScore = bestScore; // immutable pre-game record for triggerGameOver
 
   function saveHighScore(score) {
-    try {
-      localStorage.setItem('spaceinvaders_best', score.toString());
-      if (bestEl) bestEl.textContent = score;
-    } catch (e) {
-      console.warn('Could not persist high score:', e);
-    }
+    saveBestScore('spaceinvaders', score);
+    if (bestEl) bestEl.textContent = score;
   }
 
   // Mute/Unmute state loading & initialization
-  let soundMuted = false;
-  try {
-    soundMuted = localStorage.getItem('spaceinvaders_muted') === 'true';
-  } catch (e) {
-    console.error('localStorage load failed:', e);
-    soundMuted = false;
-  }
+  let soundMuted = getMuteState('spaceinvaders');
 
   if (window.sfx) {
     window.sfx.muted = soundMuted;
@@ -490,11 +473,7 @@
   function toggleMute() {
     if (window.sfx) {
       window.sfx.muted = !window.sfx.muted;
-      try {
-        localStorage.setItem('spaceinvaders_muted', window.sfx.muted.toString());
-      } catch (e) {
-        console.error('localStorage save failed:', e);
-      }
+      saveMuteState('spaceinvaders', window.sfx.muted);
       updateMuteButtonUI();
       window.sfx.init();
     }
