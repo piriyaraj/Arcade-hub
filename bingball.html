@@ -228,6 +228,33 @@
       line-height: 1.5;
     }
 
+    #overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .instructions-list {
+      list-style-type: none;
+      margin: 0 0 20px;
+      padding: 0;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      text-align: left;
+      max-width: 300px;
+    }
+
+    .instructions-list li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     #overlay .final-score {
       font-size: 3rem;
       font-weight: 800;
@@ -247,9 +274,16 @@
 <body>
 
 <div id="overlay">
-  <h2>BING BALL</h2>
-  <p>Drop balls and watch them bounce through the pegs. Land in the high-value slots to score big!</p>
-  <button class="drop-btn" id="start-btn" data-action="start" aria-label="Start Bing Ball Game">START GAME</button>
+  <h2 id="overlay-title">BING BALL</h2>
+  <div class="how-to-play">
+    <h3>How to Play</h3>
+    <ul class="instructions-list">
+      <li>🎯 Position & Drop: Click/Touch pegboard drop zone</li>
+      <li>⚡ Drop Marker/Ball: Spacebar</li>
+      <li>🔇 Mute Sound: M</li>
+    </ul>
+  </div>
+  <button class="drop-btn play-btn" id="start-btn" data-action="start" aria-label="Start Bing Ball Game">START GAME</button>
 </div>
 
 <header>
@@ -796,8 +830,33 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Keyboard: space to drop
+// Dismiss overlay and start/restart game on overlay click or Space / Enter keydown
+function handleOverlayDismiss() {
+  if (!gameRunning) {
+    if (ballsLeft <= 0) {
+      location.reload();
+    } else {
+      startGame();
+      if (window.sfx) window.sfx.init();
+    }
+  }
+}
+
+overlay.addEventListener('click', (e) => {
+  if (e.target.id === 'overlay' || e.target.id === 'start-btn' || e.target.id === 'play-again-btn') {
+    handleOverlayDismiss();
+  }
+});
+
+// Keyboard: space to drop or start game
 document.addEventListener('keydown', (e) => {
+  if (!gameRunning) {
+    if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault();
+      handleOverlayDismiss();
+    }
+    return;
+  }
   if (e.code === 'Space' && gameRunning && ballsLeft > 0) {
     e.preventDefault();
     dropBall();

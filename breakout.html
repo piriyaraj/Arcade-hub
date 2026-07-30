@@ -217,6 +217,16 @@
       letter-spacing: 0.05em;
     }
 
+    #overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
     #overlay p {
       color: var(--text-dim);
       margin-bottom: 24px;
@@ -269,11 +279,13 @@
 <div id="overlay">
   <h2 id="overlay-title">BREAKOUT</h2>
   <p id="overlay-desc">Destroy all bricks! Use your mouse/trackpad or Arrow keys/A and D to move the paddle.</p>
-  <ul class="instructions-list" id="instructions">
-    <li>🎮 Move: Mouse / Arrow keys / A - D</li>
-    <li>⏸️ Pause: Spacebar or PAUSE button</li>
-    <li>⭐ Break bricks to score, clear screen to level up!</li>
-  </ul>
+  <div class="how-to-play">
+    <h3>How to Play</h3>
+    <ul class="instructions-list" id="instructions">
+      <li>🎮 Move: Mouse / Arrow keys / A - D</li>
+      <li>⏸️ Pause: Spacebar or P key</li>
+    </ul>
+  </div>
   <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW HIGH SCORE! 🏆</div>
   <div class="final-score hidden" id="final-score">Score: 0</div>
   <button class="game-btn play-btn" id="start-btn" aria-label="Start game">START GAME</button>
@@ -530,6 +542,29 @@
   startBtn.addEventListener('click', () => {
     if (window.audioManager) window.audioManager.init();
     startNewGame();
+  });
+
+  // Dismiss overlay and start/restart game on overlay click or Space / Enter keydown
+  function handleOverlayDismiss() {
+    if (!gameStarted) {
+      if (window.audioManager) window.audioManager.init();
+      startNewGame();
+    }
+  }
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target.id === 'overlay' || e.target.id === 'start-btn') {
+      handleOverlayDismiss();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (!gameStarted) {
+      if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+        e.preventDefault();
+        handleOverlayDismiss();
+      }
+    }
   });
 
   resetBtn.addEventListener('click', () => {

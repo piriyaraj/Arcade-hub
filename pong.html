@@ -229,6 +229,16 @@
       letter-spacing: 0.05em;
     }
 
+    #overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
     #overlay p {
       color: var(--text-dim);
       margin-bottom: 24px;
@@ -281,11 +291,13 @@
 <div id="overlay">
   <h2 id="overlay-title">PONG</h2>
   <p id="overlay-desc">Defeat the CPU in standard retro arcade style. First to 7 points wins!</p>
-  <ul class="instructions-list" id="instructions">
-    <li>🎮 Move: Up/Down arrow keys or W/S</li>
-    <li>⏸️ Pause: Spacebar or PAUSE button</li>
-    <li>⚡ Speed increases on paddle hits and every 3 matches!</li>
-  </ul>
+  <div class="how-to-play">
+    <h3>How to Play</h3>
+    <ul class="instructions-list" id="instructions">
+      <li>🎮 Move: Up/Down arrow keys or W/S</li>
+      <li>⏸️ Pause: Spacebar or P key</li>
+    </ul>
+  </div>
   <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW BEST STREAK! 🏆</div>
   <div class="final-score hidden" id="final-score">Score: 0 - 0</div>
   <button class="game-btn play-btn" id="start-btn" aria-label="Start game">START GAME</button>
@@ -509,6 +521,29 @@
   startBtn.addEventListener('click', () => {
     if (window.sfx) window.sfx.init();
     startNewGame();
+  });
+
+  // Dismiss overlay and start/restart game on overlay click or Space / Enter keydown
+  function handleOverlayDismiss() {
+    if (!gameStarted) {
+      if (window.sfx) window.sfx.init();
+      startNewGame();
+    }
+  }
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target.id === 'overlay' || e.target.id === 'start-btn') {
+      handleOverlayDismiss();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (!gameStarted) {
+      if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+        e.preventDefault();
+        handleOverlayDismiss();
+      }
+    }
   });
 
   resetBtn.addEventListener('click', () => {

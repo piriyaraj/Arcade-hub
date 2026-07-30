@@ -219,6 +219,33 @@
       line-height: 1.5;
     }
 
+    #overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .instructions-list {
+      list-style-type: none;
+      margin: 0 0 20px;
+      padding: 0;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      text-align: left;
+      max-width: 300px;
+    }
+
+    .instructions-list li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     #overlay .final-score {
       font-size: 3rem;
       font-weight: 800;
@@ -327,8 +354,15 @@
 <body>
 
 <div id="overlay">
-  <h2>SNAKE GAME</h2>
-  <p>Use arrow keys or WASD to control the snake. Swipe or tap the D-pad to control on mobile devices. Eat the red food to grow and score points!</p>
+  <h2 id="overlay-title">SNAKE GAME</h2>
+  <div class="how-to-play">
+    <h3>How to Play</h3>
+    <ul class="instructions-list">
+      <li>🎮 Move Snake: Arrow keys / WASD</li>
+      <li>⏸️ Pause Game: Space / Escape</li>
+      <li>🔇 Mute Sound: M</li>
+    </ul>
+  </div>
   <button class="play-btn" id="start-btn" aria-label="Start Snake Game">START GAME</button>
 </div>
 
@@ -906,6 +940,32 @@ document.addEventListener('click', (e) => {
 });
 
 startBtn?.addEventListener('click', startGame);
+
+// Dismiss overlay and start/restart game on overlay click or Space / Enter keydown
+function handleOverlayDismiss() {
+  if (!gameStarted) {
+    if (gameOver) {
+      restartGame();
+    } else {
+      startGame();
+    }
+  }
+}
+
+overlay.addEventListener('click', (e) => {
+  if (e.target.id === 'overlay' || e.target.id === 'start-btn' || e.target.closest('[data-action="restart"]')) {
+    handleOverlayDismiss();
+  }
+});
+
+window.addEventListener('keydown', (e) => {
+  if (!gameStarted) {
+    if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+      e.preventDefault();
+      handleOverlayDismiss();
+    }
+  }
+});
 pauseBtn?.addEventListener('click', togglePause);
 resetBtn?.addEventListener('click', restartGame);
 

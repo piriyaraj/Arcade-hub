@@ -228,6 +228,33 @@
       font-size: 0.95rem;
     }
 
+    #overlay h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .instructions-list {
+      list-style-type: none;
+      margin: 0 0 20px;
+      padding: 0;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      text-align: left;
+      max-width: 320px;
+    }
+
+    .instructions-list li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     #overlay .final-score {
       font-size: 3rem;
       font-weight: 800;
@@ -308,7 +335,16 @@
 
 <div id="overlay">
   <h2 id="overlay-title">NEON TETRIS</h2>
-  <p id="overlay-desc">Arrange falling blocks to fill rows. Clear multiple rows to boost score! Use WASD / Arrows to move/rotate, and Space for Hard Drop.</p>
+  <div class="how-to-play">
+    <h3>How to Play</h3>
+    <ul class="instructions-list">
+      <li>🎮 Rotate: Up Arrow / W</li>
+      <li>◀▶ Move Left/Right: Left/Right Arrows / A/D</li>
+      <li>▼ Soft Drop: Down Arrow / S</li>
+      <li>⚡ Hard Drop: Spacebar</li>
+      <li>🔇 Mute Sound: M</li>
+    </ul>
+  </div>
   <div class="final-score" id="overlay-score" style="display: none;">0</div>
   <button class="play-btn" id="start-btn" aria-label="Start Tetris Game">START GAME</button>
 </div>
@@ -966,6 +1002,26 @@
 
   // Game UI Controls
   startBtn.addEventListener('click', startGame);
+
+  // Dismiss overlay and start game on overlay click or Space / Enter keydown
+  function handleOverlayDismiss(e) {
+    if (!gameStarted) {
+      e.preventDefault();
+      startGame();
+    }
+  }
+
+  overlay.addEventListener('click', (e) => {
+    handleOverlayDismiss(e);
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (!gameStarted) {
+      if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+        handleOverlayDismiss(e);
+      }
+    }
+  });
   pauseBtn.addEventListener('click', pauseGame);
   resetBtn.addEventListener('click', () => {
     if (confirm("Restart game? Any current progress will be lost.")) {
