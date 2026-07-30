@@ -217,6 +217,23 @@
 
     #overlay.hidden { display: none; }
 
+    .hidden { display: none !important; }
+
+    .instructions-list {
+      text-align: left;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      list-style-type: none;
+    }
+
+    .instructions-list li {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     #overlay h2 {
       font-size: 2.5rem;
       font-weight: 800;
@@ -367,7 +384,13 @@
 
 <div id="overlay">
   <h2 id="overlay-title">Space Invaders</h2>
-  <p id="overlay-desc">Use Left & Right Arrow keys or A / D to move. Press Spacebar to shoot. Defend Earth and destroy the alien armada!</p>
+  <p id="overlay-desc">Defend Earth and destroy the descending alien armada!</p>
+  <ul class="instructions-list" id="instructions">
+    <li>🚀 Move: Left & Right Arrows or A / D</li>
+    <li>💥 Shoot: Spacebar, Up Arrow, or W</li>
+    <li>⏸️ Pause: P key, Escape, or PAUSE button</li>
+    <li>🔇 Mute: M key or Sound button</li>
+  </ul>
   <div class="final-score hidden" id="final-score-container">Score: <span id="final-score">0</span></div>
   <button class="play-btn" id="start-btn" aria-label="Start Game">START GAME</button>
 </div>
@@ -429,6 +452,7 @@
   const overlayDesc = document.getElementById('overlay-desc');
   const finalScoreContainer = document.getElementById('final-score-container');
   const finalScoreEl = document.getElementById('final-score');
+  const instructionsList = document.getElementById('instructions');
   const startBtn = document.getElementById('start-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const resetBtn = document.getElementById('reset-btn');
@@ -1095,6 +1119,7 @@
     overlayDesc.textContent = "The invaders have triumphed. Play again to redeem the galaxy!";
     finalScoreEl.textContent = score;
     finalScoreContainer.classList.remove('hidden');
+    instructionsList.classList.add('hidden');
     startBtn.textContent = "REPLAY GAME";
     overlay.classList.remove('hidden');
 
@@ -1112,6 +1137,7 @@
       overlayTitle.textContent = "PAUSED";
       overlayDesc.textContent = "Game paused. Press resume to continue the fight!";
       finalScoreContainer.classList.add('hidden');
+      instructionsList.classList.add('hidden');
       startBtn.textContent = "RESUME GAME";
       overlay.classList.remove('hidden');
     } else {
