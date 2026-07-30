@@ -15,6 +15,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
+- 🧠 **[Neon Simon](neonsimon.html)** — Watch the neon sequence, then repeat it back as it grows each round.
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
 - 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
 - 🐍 **[Snake Game](snakegame.html)** — Classic snake arcade action.
