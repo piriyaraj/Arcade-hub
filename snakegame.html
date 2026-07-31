@@ -319,15 +319,15 @@
     canvas:focus-visible,
     button:focus-visible,
     [tabindex]:focus-visible {
-      outline: 3px solid #4f46e5;
+      outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h2>SNAKE GAME</h2>
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" aria-live="polite" aria-atomic="true">
+  <h2 id="overlay-title">SNAKE GAME</h2>
   <p>Use arrow keys or WASD to control the snake. Swipe or tap the D-pad to control on mobile devices. Eat the red food to grow and score points!</p>
   <button class="play-btn" id="start-btn" aria-label="Start Snake Game">START GAME</button>
 </div>
@@ -549,7 +549,7 @@ function showGameOver() {
   }
 
   overlay.innerHTML = `
-    <h2>GAME OVER</h2>
+    <h2 id="overlay-title">GAME OVER</h2>
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>You reached a length of ${escapeHtml(snake.length)}!</p>
@@ -578,7 +578,7 @@ function triggerGameVictory() {
   }
 
   overlay.innerHTML = `
-    <h2>VICTORY!</h2>
+    <h2 id="overlay-title">VICTORY!</h2>
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>Incredible! You filled the entire board and won the game!</p>
@@ -1035,6 +1035,37 @@ if (dpadUp && dpadDown && dpadLeft && dpadRight) {
 resize();
 initGame();
 requestAnimationFrame(gameLoop);
+</script>
+<script>
+  // Accessibility focus management
+  (function() {
+    const overlay = document.getElementById('overlay');
+    const canvas = document.getElementById('game');
+    if (!overlay || !canvas) return;
+
+    // Focus start button immediately at load if overlay is visible
+    if (!overlay.classList.contains('hidden')) {
+      const btn = overlay.querySelector('button');
+      if (btn) btn.focus();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isHidden = overlay.classList.contains('hidden');
+          if (isHidden) {
+            canvas.focus();
+          } else {
+            setTimeout(() => {
+              const btn = overlay.querySelector('button');
+              if (btn) btn.focus();
+            }, 50);
+          }
+        }
+      });
+    });
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+  })();
 </script>
 </body>
 </html>

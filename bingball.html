@@ -239,15 +239,15 @@
     canvas:focus-visible,
     button:focus-visible,
     [tabindex]:focus-visible {
-      outline: 3px solid #4f46e5;
+      outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h2>BING BALL</h2>
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" aria-live="polite" aria-atomic="true">
+  <h2 id="overlay-title">BING BALL</h2>
   <p>Drop balls and watch them bounce through the pegs. Land in the high-value slots to score big!</p>
   <button class="drop-btn" id="start-btn" data-action="start" aria-label="Start Bing Ball Game">START GAME</button>
 </div>
@@ -763,7 +763,7 @@ function showGameOver() {
 
   const overlayEl = document.getElementById('overlay');
   overlayEl.innerHTML = `
-    <h2>GAME OVER</h2>
+    <h2 id="overlay-title">GAME OVER</h2>
     <div class="final-score">${score.toLocaleString()}</div>
     <p>${score === bestScore ? '🏆 New High Score!' : `Best: ${bestScore.toLocaleString()}`}</p>
     <button id="play-again-btn" class="drop-btn" data-action="play-again">PLAY AGAIN</button>
@@ -824,6 +824,37 @@ canvas.addEventListener('click', (e) => {
 resize();
 initPegs();
 gameLoop();
+</script>
+<script>
+  // Accessibility focus management
+  (function() {
+    const overlay = document.getElementById('overlay');
+    const canvas = document.getElementById('game');
+    if (!overlay || !canvas) return;
+
+    // Focus start button immediately at load if overlay is visible
+    if (!overlay.classList.contains('hidden')) {
+      const btn = overlay.querySelector('button');
+      if (btn) btn.focus();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isHidden = overlay.classList.contains('hidden');
+          if (isHidden) {
+            canvas.focus();
+          } else {
+            setTimeout(() => {
+              const btn = overlay.querySelector('button');
+              if (btn) btn.focus();
+            }, 50);
+          }
+        }
+      });
+    });
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+  })();
 </script>
 </body>
 </html>

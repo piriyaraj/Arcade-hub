@@ -283,11 +283,19 @@
         padding: 2px 12px 4px;
       }
     }
+  
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" aria-live="polite" aria-atomic="true">
   <h2 id="overlay-title">Neon Simon</h2>
   <div class="final-score hidden" id="final-score-container">Best Round Reached: <span id="final-score">0</span></div>
   <p id="overlay-desc">Observe the sequence of glowing neon pads and audio tones, then repeat it back. The sequence gets longer by one step each round!</p>
@@ -325,7 +333,7 @@
 </div>
 
 <div id="canvas-wrap">
-  <canvas id="game" width="400" height="400" tabindex="0" aria-label="Neon Simon Game Area"></canvas>
+  <canvas id="game" width="400" height="400" tabindex="0" aria-label="Neon Simon game canvas. Memorize the pattern sequence and repeat it back using keyboard directions or arrow keys."></canvas>
 </div>
 
 <div id="controls">
@@ -979,6 +987,37 @@
     canvas.addEventListener('pointerdown', handleCanvasPointer);
     window.addEventListener('keydown', handleKeyDown);
 
+  })();
+</script>
+<script>
+  // Accessibility focus management
+  (function() {
+    const overlay = document.getElementById('overlay');
+    const canvas = document.getElementById('game');
+    if (!overlay || !canvas) return;
+
+    // Focus start button immediately at load if overlay is visible
+    if (!overlay.classList.contains('hidden')) {
+      const btn = overlay.querySelector('button');
+      if (btn) btn.focus();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isHidden = overlay.classList.contains('hidden');
+          if (isHidden) {
+            canvas.focus();
+          } else {
+            setTimeout(() => {
+              const btn = overlay.querySelector('button');
+              if (btn) btn.focus();
+            }, 50);
+          }
+        }
+      });
+    });
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
   })();
 </script>
 </body>

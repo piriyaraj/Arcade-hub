@@ -320,14 +320,14 @@
     canvas:focus-visible,
     button:focus-visible,
     [tabindex]:focus-visible {
-      outline: 3px solid #4f46e5;
+      outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" aria-live="polite" aria-atomic="true">
   <h2 id="overlay-title">CYBER RUNNER</h2>
   <p id="overlay-desc">Dash through a neon-lit cyberpunk grid. Avoid high drones and low laser walls!</p>
   <ul class="instructions-list" id="instructions">
@@ -1171,6 +1171,37 @@
   // Run the initializer and bootstrap animation loop
   initGameDetails();
   loop();
+</script>
+<script>
+  // Accessibility focus management
+  (function() {
+    const overlay = document.getElementById('overlay');
+    const canvas = document.getElementById('game');
+    if (!overlay || !canvas) return;
+
+    // Focus start button immediately at load if overlay is visible
+    if (!overlay.classList.contains('hidden')) {
+      const btn = overlay.querySelector('button');
+      if (btn) btn.focus();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isHidden = overlay.classList.contains('hidden');
+          if (isHidden) {
+            canvas.focus();
+          } else {
+            setTimeout(() => {
+              const btn = overlay.querySelector('button');
+              if (btn) btn.focus();
+            }, 50);
+          }
+        }
+      });
+    });
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+  })();
 </script>
 </body>
 </html>

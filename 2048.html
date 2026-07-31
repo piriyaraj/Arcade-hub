@@ -330,15 +330,15 @@
     canvas:focus-visible,
     button:focus-visible,
     [tabindex]:focus-visible {
-      outline: 3px solid #4f46e5;
+      outline: 2px solid #6366f1;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h2>2048</h2>
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" aria-live="polite" aria-atomic="true">
+  <h2 id="overlay-title">2048</h2>
   <p>Use arrow keys or WASD to slide tiles. Swipe or tap the D-pad to control on mobile devices. Combine matching tiles to reach 2048!</p>
   <button class="play-btn" id="start-btn" aria-label="Start 2048 Game">START GAME</button>
 </div>
@@ -756,7 +756,7 @@ function handleGameOver() {
   }
 
   overlay.innerHTML = `
-    <h2>GAME OVER</h2>
+    <h2 id="overlay-title">GAME OVER</h2>
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>No moves left. Combine tiles to reach higher values!</p>
@@ -779,7 +779,7 @@ function triggerVictory() {
   }
 
   overlay.innerHTML = `
-    <h2>VICTORY!</h2>
+    <h2 id="overlay-title">VICTORY!</h2>
     <div class="final-score">${escapeHtml(score)}</div>
     ${isNewBest ? '<div class="high-score-badge">🏆 New High Score!</div>' : ''}
     <p>Incredible! You formed the 2048 tile!</p>
@@ -1089,6 +1089,37 @@ resize();
 initGame();
 requestAnimationFrame(runAnimationFrameLoop);
 
+</script>
+<script>
+  // Accessibility focus management
+  (function() {
+    const overlay = document.getElementById('overlay');
+    const canvas = document.getElementById('game');
+    if (!overlay || !canvas) return;
+
+    // Focus start button immediately at load if overlay is visible
+    if (!overlay.classList.contains('hidden')) {
+      const btn = overlay.querySelector('button');
+      if (btn) btn.focus();
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isHidden = overlay.classList.contains('hidden');
+          if (isHidden) {
+            canvas.focus();
+          } else {
+            setTimeout(() => {
+              const btn = overlay.querySelector('button');
+              if (btn) btn.focus();
+            }, 50);
+          }
+        }
+      });
+    });
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+  })();
 </script>
 </body>
 </html>
