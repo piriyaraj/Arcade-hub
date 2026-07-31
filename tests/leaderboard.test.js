@@ -143,6 +143,22 @@ test('Leaderboard - resetAllScores() does not propagate errors when localStorage
   }
 });
 
+test('Leaderboard - getScores() for neonsimon looks up key neonsimon_best', () => {
+  // Clear mockStorage
+  for (const k of Object.keys(mockStorage)) {
+    delete mockStorage[k];
+  }
+
+  // Set mock score for neonsimon using key neonsimon_best
+  mockStorage['neonsimon_best'] = '25';
+
+  const scores = Leaderboard.getScores();
+  const neonsimon = scores.find(s => s.id === 'neonsimon');
+
+  assert.ok(neonsimon, 'neonsimon row should exist');
+  assert.strictEqual(neonsimon.score, 25, 'neonsimon score should match neonsimon_best storage');
+});
+
 // Restore console.error at the very end
 test('cleanup', () => {
   console.error = originalConsoleError;
