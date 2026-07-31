@@ -7,6 +7,7 @@
   <title>Neon Simon - Arcade Hub</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles/theme.css">
+  <script src="storage.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="input.js" defer></script>
   <style>
@@ -438,34 +439,47 @@
     }
 
     function initLocalStorage() {
-      try {
-        const storedScore = localStorage.getItem('neonsimon.highscore');
-        const parsedScore = parseInt(storedScore, 10);
-        highScore = Number.isFinite(parsedScore) ? parsedScore : 0;
+      if (typeof window.storage !== 'undefined') {
+        highScore = window.storage.getJSON('neonsimon.highscore', 0);
+        soundMuted = window.storage.getJSON('neonsimon.muted', false);
+      } else {
+        try {
+          const storedScore = localStorage.getItem('neonsimon.highscore');
+          const parsedScore = parseInt(storedScore, 10);
+          highScore = Number.isFinite(parsedScore) ? parsedScore : 0;
 
-        soundMuted = localStorage.getItem('neonsimon.muted') === 'true';
-      } catch (e) {
-        console.error('Storage reading failed', e);
-        highScore = 0;
-        soundMuted = false;
+          soundMuted = localStorage.getItem('neonsimon.muted') === 'true';
+        } catch (e) {
+          console.error('Storage reading failed', e);
+          highScore = 0;
+          soundMuted = false;
+        }
       }
       bestEl.textContent = highScore;
       updateMuteButtonUI();
     }
 
     function saveHighScore() {
-      try {
-        localStorage.setItem('neonsimon.highscore', highScore.toString());
-      } catch (e) {
-        console.error('Storage saving highscore failed', e);
+      if (typeof window.storage !== 'undefined') {
+        window.storage.setJSON('neonsimon.highscore', highScore);
+      } else {
+        try {
+          localStorage.setItem('neonsimon.highscore', highScore.toString());
+        } catch (e) {
+          console.error('Storage saving highscore failed', e);
+        }
       }
     }
 
     function saveMuteState() {
-      try {
-        localStorage.setItem('neonsimon.muted', soundMuted.toString());
-      } catch (e) {
-        console.error('Storage saving mute state failed', e);
+      if (typeof window.storage !== 'undefined') {
+        window.storage.setJSON('neonsimon.muted', soundMuted);
+      } else {
+        try {
+          localStorage.setItem('neonsimon.muted', soundMuted.toString());
+        } catch (e) {
+          console.error('Storage saving mute state failed', e);
+        }
       }
     }
 

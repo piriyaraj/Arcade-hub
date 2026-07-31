@@ -1,6 +1,13 @@
 // Shared Game Utilities and Score Storage Helper
 
+const storage = (typeof require !== 'undefined')
+  ? require('./storage.js')
+  : (typeof window !== 'undefined' ? window.storage : null);
+
 function getBestScore(gameKey) {
+  if (storage) {
+    return storage.getJSON(gameKey + '_best', 0);
+  }
   try {
     const raw = localStorage.getItem(gameKey + '_best');
     const parsed = parseInt(raw, 10);
@@ -12,6 +19,9 @@ function getBestScore(gameKey) {
 }
 
 function saveBestScore(gameKey, score) {
+  if (storage) {
+    return storage.setJSON(gameKey + '_best', score);
+  }
   try {
     localStorage.setItem(gameKey + '_best', score.toString());
     return true;
@@ -22,6 +32,9 @@ function saveBestScore(gameKey, score) {
 }
 
 function getMuteState(gameKey) {
+  if (storage) {
+    return storage.getJSON(gameKey + '_muted', false);
+  }
   try {
     return localStorage.getItem(gameKey + '_muted') === 'true';
   } catch (e) {
@@ -31,6 +44,9 @@ function getMuteState(gameKey) {
 }
 
 function saveMuteState(gameKey, muted) {
+  if (storage) {
+    return storage.setJSON(gameKey + '_muted', muted);
+  }
   try {
     localStorage.setItem(gameKey + '_muted', muted.toString());
     return true;

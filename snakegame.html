@@ -376,6 +376,7 @@
   <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
+<script src="storage.js"></script>
 <script src="audio.js"></script>
 <script>
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -439,13 +440,17 @@ let direction = { x: 1, y: 0 };
 let nextDirection = { x: 1, y: 0 };
 let score = 0;
 let bestScore = 0;
-try {
-  const raw = localStorage.getItem('snake_best');
-  const parsed = parseInt(raw, 10);
-  bestScore = Number.isFinite(parsed) ? parsed : 0;
-} catch (e) {
-  console.error('localStorage load failed:', e);
-  bestScore = 0;
+if (typeof window.storage !== 'undefined') {
+  bestScore = window.storage.getJSON('snake_best', 0);
+} else {
+  try {
+    const raw = localStorage.getItem('snake_best');
+    const parsed = parseInt(raw, 10);
+    bestScore = Number.isFinite(parsed) ? parsed : 0;
+  } catch (e) {
+    console.error('localStorage load failed:', e);
+    bestScore = 0;
+  }
 }
 let gameStarted = false;
 let gameOver = false;
@@ -539,11 +544,14 @@ function showGameOver() {
   const isNewBest = score > bestScore;
   if (isNewBest) {
     bestScore = score;
-    try {
-      localStorage.setItem('snake_best', bestScore.toString());
-    } catch (e) {
-      console.error('localStorage save failed:', e);
-      // Silently fail - best score won't persist but game continues
+    if (typeof window.storage !== 'undefined') {
+      window.storage.setJSON('snake_best', bestScore);
+    } else {
+      try {
+        localStorage.setItem('snake_best', bestScore.toString());
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
     }
     bestEl.textContent = bestScore;
   }
@@ -568,11 +576,14 @@ function triggerGameVictory() {
   const isNewBest = score > bestScore;
   if (isNewBest) {
     bestScore = score;
-    try {
-      localStorage.setItem('snake_best', bestScore.toString());
-    } catch (e) {
-      console.error('localStorage save failed:', e);
-      // Silently fail - best score won't persist but game continues
+    if (typeof window.storage !== 'undefined') {
+      window.storage.setJSON('snake_best', bestScore);
+    } else {
+      try {
+        localStorage.setItem('snake_best', bestScore.toString());
+      } catch (e) {
+        console.error('localStorage save failed:', e);
+      }
     }
     bestEl.textContent = bestScore;
   }

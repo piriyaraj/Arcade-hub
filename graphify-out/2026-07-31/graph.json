@@ -180,7 +180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "input",
-      "community": 15,
+      "community": 13,
       "norm_label": "input.js"
     },
     {
@@ -190,7 +190,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "input_keymanager",
-      "community": 15,
+      "community": 13,
       "norm_label": "keymanager"
     },
     {
@@ -504,26 +504,6 @@
       "norm_label": "returns a sanitized copy of the payload with potential secrets/credentials redac"
     },
     {
-      "label": "storage.js",
-      "file_type": "code",
-      "source_file": "storage.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "storage",
-      "community": 16,
-      "norm_label": "storage.js"
-    },
-    {
-      "label": "storage",
-      "file_type": "code",
-      "source_file": "storage.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "storage_storage",
-      "community": 16,
-      "norm_label": "storage"
-    },
-    {
       "label": "test_dummy.py",
       "file_type": "code",
       "source_file": "test_dummy.py",
@@ -704,176 +684,6 @@
       "norm_label": "{ soundfx }"
     },
     {
-      "label": "input.test.js",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tests_input_test",
-      "community": 15,
-      "norm_label": "input.test.js"
-    },
-    {
-      "label": "test",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tests_input_test_test",
-      "community": 15,
-      "norm_label": "test"
-    },
-    {
-      "label": "assert",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "tests_input_test_assert",
-      "community": 15,
-      "norm_label": "assert"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "tests_input_test_fs",
-      "community": 15,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "tests_input_test_path",
-      "community": 15,
-      "norm_label": "path"
-    },
-    {
-      "label": "localStorageStore",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "tests_input_test_localstoragestore",
-      "community": 15,
-      "norm_label": "localstoragestore"
-    },
-    {
-      "label": "getItem()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "tests_input_test_getitem",
-      "community": 15,
-      "norm_label": "getitem()"
-    },
-    {
-      "label": "setItem()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "tests_input_test_setitem",
-      "community": 15,
-      "norm_label": "setitem()"
-    },
-    {
-      "label": "removeItem()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "tests_input_test_removeitem",
-      "community": 15,
-      "norm_label": "removeitem()"
-    },
-    {
-      "label": "clear()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "tests_input_test_clear",
-      "community": 15,
-      "norm_label": "clear()"
-    },
-    {
-      "label": "getElementById()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "tests_input_test_getelementbyid",
-      "community": 15,
-      "norm_label": "getelementbyid()"
-    },
-    {
-      "label": "querySelector()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "tests_input_test_queryselector",
-      "community": 15,
-      "norm_label": "queryselector()"
-    },
-    {
-      "label": "createElement()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "tests_input_test_createelement",
-      "community": 15,
-      "norm_label": "createelement()"
-    },
-    {
-      "label": "appendChild()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L41",
-      "_origin": "ast",
-      "id": "tests_input_test_appendchild",
-      "community": 15,
-      "norm_label": "appendchild()"
-    },
-    {
-      "label": "addEventListener()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "tests_input_test_addeventlistener",
-      "community": 15,
-      "norm_label": "addeventlistener()"
-    },
-    {
-      "label": "removeEventListener()",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L51",
-      "_origin": "ast",
-      "id": "tests_input_test_removeeventlistener",
-      "community": 15,
-      "norm_label": "removeeventlistener()"
-    },
-    {
-      "label": "{ KeyManager }",
-      "file_type": "code",
-      "source_file": "tests/input.test.js",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "tests_input_test_keymanager",
-      "community": 15,
-      "norm_label": "{ keymanager }"
-    },
-    {
       "label": "leaderboard.test.js",
       "file_type": "code",
       "source_file": "tests/leaderboard.test.js",
@@ -932,56 +742,6 @@
       "id": "tests_leaderboard_test_leaderboard",
       "community": 13,
       "norm_label": "{ leaderboard }"
-    },
-    {
-      "label": "storage.test.js",
-      "file_type": "code",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tests_storage_test",
-      "community": 16,
-      "norm_label": "storage.test.js"
-    },
-    {
-      "label": "test",
-      "file_type": "code",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "tests_storage_test_test",
-      "community": 16,
-      "norm_label": "test"
-    },
-    {
-      "label": "assert",
-      "file_type": "code",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L2",
-      "_origin": "ast",
-      "id": "tests_storage_test_assert",
-      "community": 16,
-      "norm_label": "assert"
-    },
-    {
-      "label": "mockStorage",
-      "file_type": "code",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "tests_storage_test_mockstorage",
-      "community": 16,
-      "norm_label": "mockstorage"
-    },
-    {
-      "label": "storage",
-      "file_type": "code",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "tests_storage_test_storage",
-      "community": 16,
-      "norm_label": "storage"
     },
     {
       "label": "test_audio.py",
@@ -1364,20 +1124,10 @@
       "norm_label": "test_js_general_utilities()"
     },
     {
-      "label": "test_js_storage_utilities()",
-      "file_type": "code",
-      "source_file": "tests/test_js_utilities.py",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "tests_test_js_utilities_test_js_storage_utilities",
-      "community": 5,
-      "norm_label": "test_js_storage_utilities()"
-    },
-    {
       "label": "test_js_architecture_utilities()",
       "file_type": "code",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L65",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "tests_test_js_utilities_test_js_architecture_utilities",
       "community": 5,
@@ -1387,7 +1137,7 @@
       "label": "test_js_leaderboard_utilities()",
       "file_type": "code",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L85",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_js_utilities_test_js_leaderboard_utilities",
       "community": 5,
@@ -1397,7 +1147,7 @@
       "label": "test_js_utils_html_exists()",
       "file_type": "code",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L105",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "tests_test_js_utilities_test_js_utils_html_exists",
       "community": 5,
@@ -1424,22 +1174,12 @@
       "norm_label": "runs the javascript node.js unit tests for utils.js and asserts success."
     },
     {
-      "label": "Runs the JavaScript Node.js unit tests for storage.js and asserts success.",
+      "label": "Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j",
       "file_type": "rationale",
       "source_file": "tests/test_js_utilities.py",
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_test_js_utilities_rationale_46",
-      "community": 5,
-      "norm_label": "runs the javascript node.js unit tests for storage.js and asserts success."
-    },
-    {
-      "label": "Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j",
-      "file_type": "rationale",
-      "source_file": "tests/test_js_utilities.py",
-      "source_location": "L66",
-      "_origin": "ast",
-      "id": "tests_test_js_utilities_rationale_66",
       "community": 5,
       "norm_label": "runs the javascript node.js unit tests for theme.js, input.js, and leaderboard.j"
     },
@@ -1447,9 +1187,9 @@
       "label": "Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success.",
       "file_type": "rationale",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L86",
+      "source_location": "L66",
       "_origin": "ast",
-      "id": "tests_test_js_utilities_rationale_86",
+      "id": "tests_test_js_utilities_rationale_66",
       "community": 5,
       "norm_label": "runs the javascript node.js unit tests for leaderboard.js and asserts success."
     },
@@ -1457,9 +1197,9 @@
       "label": "Verify that utils.test.html exists and references progress assertions and utils.",
       "file_type": "rationale",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L106",
+      "source_location": "L86",
       "_origin": "ast",
-      "id": "tests_test_js_utilities_rationale_106",
+      "id": "tests_test_js_utilities_rationale_86",
       "community": 5,
       "norm_label": "verify that utils.test.html exists and references progress assertions and utils."
     },
@@ -1797,7 +1537,7 @@
       "label": "getBestScore()",
       "file_type": "code",
       "source_file": "utils.js",
-      "source_location": "L7",
+      "source_location": "L3",
       "_origin": "ast",
       "id": "utils_getbestscore",
       "community": 6,
@@ -1807,7 +1547,7 @@
       "label": "saveBestScore()",
       "file_type": "code",
       "source_file": "utils.js",
-      "source_location": "L21",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "utils_savebestscore",
       "community": 6,
@@ -1817,7 +1557,7 @@
       "label": "getMuteState()",
       "file_type": "code",
       "source_file": "utils.js",
-      "source_location": "L34",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "utils_getmutestate",
       "community": 6,
@@ -1827,7 +1567,7 @@
       "label": "saveMuteState()",
       "file_type": "code",
       "source_file": "utils.js",
-      "source_location": "L46",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "utils_savemutestate",
       "community": 6,
@@ -1837,7 +1577,7 @@
       "label": "resetScore()",
       "file_type": "code",
       "source_file": "utils.js",
-      "source_location": "L59",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "utils_resetscore",
       "community": 6,
@@ -1887,7 +1627,7 @@
       "label": "\ud83d\ude80 Setting Up GitHub Pages",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L27",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "readme_setting_up_github_pages",
       "community": 0,
@@ -1897,7 +1637,7 @@
       "label": "\ud83c\udfd7\ufe0f Architecture",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L51",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "readme_architecture",
       "community": 0,
@@ -1907,7 +1647,7 @@
       "label": "1. `ThemeManager` (`theme.js` & `styles/theme.css`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L55",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "readme_1_thememanager_theme_js_styles_theme_css",
       "community": 0,
@@ -1917,7 +1657,7 @@
       "label": "2. `KeyManager` (`input.js`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L61",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "readme_2_keymanager_input_js",
       "community": 0,
@@ -1927,7 +1667,7 @@
       "label": "3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L67",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "readme_3_leaderboard_leaderboard_js_leaderboard_html",
       "community": 0,
@@ -2294,17 +2034,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "input",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -2312,17 +2041,6 @@
       "source_location": "L38",
       "weight": 1.0,
       "source": "tests_architecture_test",
-      "target": "input_keymanager",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "tests_input_test",
       "target": "input_keymanager",
       "confidence_score": 1.0
     },
@@ -2987,27 +2705,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "storage.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "storage",
-      "target": "storage_storage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "tests_storage_test",
-      "target": "storage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "test_dummy.py",
       "source_location": "L1",
       "weight": 1.0,
@@ -3180,166 +2877,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L50",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_addeventlistener",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_appendchild",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_assert",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_clear",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_createelement",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_getelementbyid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_getitem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_keymanager",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_localstoragestore",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_queryselector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L51",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_removeeventlistener",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_removeitem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_setitem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/input.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "tests_input_test",
-      "target": "tests_input_test_test",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "tests/leaderboard.test.js",
       "source_location": "L2",
       "weight": 1.0,
@@ -3385,46 +2922,6 @@
       "weight": 1.0,
       "source": "tests_leaderboard_test",
       "target": "tests_leaderboard_test_test",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "tests_storage_test",
-      "target": "tests_storage_test_assert",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "tests_storage_test",
-      "target": "tests_storage_test_mockstorage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "tests_storage_test",
-      "target": "tests_storage_test_storage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/storage.test.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "tests_storage_test",
-      "target": "tests_storage_test_test",
       "confidence_score": 1.0
     },
     {
@@ -3861,7 +3358,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L65",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "tests_test_js_utilities",
       "target": "tests_test_js_utilities_test_js_architecture_utilities",
@@ -3891,7 +3388,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L85",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "tests_test_js_utilities",
       "target": "tests_test_js_utilities_test_js_leaderboard_utilities",
@@ -3901,17 +3398,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_js_utilities.py",
-      "source_location": "L45",
-      "weight": 1.0,
-      "source": "tests_test_js_utilities",
-      "target": "tests_test_js_utilities_test_js_storage_utilities",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_js_utilities.py",
-      "source_location": "L105",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "tests_test_js_utilities",
       "target": "tests_test_js_utilities_test_js_utils_html_exists",
@@ -3944,7 +3431,7 @@
       "source_location": "L46",
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_46",
-      "target": "tests_test_js_utilities_test_js_storage_utilities",
+      "target": "tests_test_js_utilities_test_js_architecture_utilities",
       "confidence_score": 1.0
     },
     {
@@ -3954,7 +3441,7 @@
       "source_location": "L66",
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_66",
-      "target": "tests_test_js_utilities_test_js_architecture_utilities",
+      "target": "tests_test_js_utilities_test_js_leaderboard_utilities",
       "confidence_score": 1.0
     },
     {
@@ -3964,16 +3451,6 @@
       "source_location": "L86",
       "weight": 1.0,
       "source": "tests_test_js_utilities_rationale_86",
-      "target": "tests_test_js_utilities_test_js_leaderboard_utilities",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_js_utilities.py",
-      "source_location": "L106",
-      "weight": 1.0,
-      "source": "tests_test_js_utilities_rationale_106",
       "target": "tests_test_js_utilities_test_js_utils_html_exists",
       "confidence_score": 1.0
     },
@@ -4284,7 +3761,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L84",
+      "source_location": "L68",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -4295,7 +3772,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L88",
+      "source_location": "L72",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -4306,7 +3783,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L90",
+      "source_location": "L74",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -4317,7 +3794,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L85",
+      "source_location": "L69",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -4328,7 +3805,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "utils.js",
-      "source_location": "L89",
+      "source_location": "L73",
       "weight": 1.0,
       "context": "collection",
       "source": "utils",
@@ -4349,7 +3826,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L51",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "readme_arcade_game_portal",
       "target": "readme_architecture",
@@ -4369,7 +3846,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L27",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "readme_arcade_game_portal",
       "target": "readme_setting_up_github_pages",
@@ -4389,7 +3866,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L55",
+      "source_location": "L54",
       "weight": 1.0,
       "source": "readme_architecture",
       "target": "readme_1_thememanager_theme_js_styles_theme_css",
@@ -4399,7 +3876,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L61",
+      "source_location": "L60",
       "weight": 1.0,
       "source": "readme_architecture",
       "target": "readme_2_keymanager_input_js",
@@ -4409,7 +3886,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "readme_architecture",
       "target": "readme_3_leaderboard_leaderboard_js_leaderboard_html",
@@ -4417,5 +3894,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2244d75208aa8ca7492bb6137a9b5cdecccbd439"
+  "built_at_commit": "8ccab5c46fea9db712b815cfe7c3f8f50da50797"
 }

@@ -1,16 +1,16 @@
-# Graph Report - test-repo  (2026-07-31)
+# Graph Report - test-repo  (2026-07-30)
 
 ## Corpus Check
-- 29 files · ~59,866 words
+- 26 files · ~56,386 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 194 nodes · 239 edges · 17 communities (16 shown, 1 thin omitted)
+- 168 nodes · 213 edges · 15 communities (14 shown, 1 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2244d752`
+- Built from commit: `8ccab5c4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,8 +27,6 @@
 - get_repo_root
 - architecture.test.js
 - get_repo_root
-- input.test.js
-- storage.test.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `AudioManager` - 15 edges
@@ -57,7 +55,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (17 total, 1 thin omitted)
+## Communities (15 total, 1 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.22
@@ -72,8 +70,8 @@ Cohesion: 0.22
 Nodes (4): SoundFX, assert, { SoundFX }, test
 
 ### Community 5 - "test_js_utilities.py"
-Cohesion: 0.15
-Nodes (12): Verify that utils.test.html exists and references progress assertions and utils., Runs the JavaScript Node.js unit tests for utils.js and asserts success., Runs the JavaScript Node.js unit tests for storage.js and asserts success., Runs the JavaScript Node.js unit tests for audio.js and asserts success., Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j, Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success., test_js_architecture_utilities(), test_js_audio_utilities() (+4 more)
+Cohesion: 0.18
+Nodes (10): Runs the JavaScript Node.js unit tests for utils.js and asserts success., Runs the JavaScript Node.js unit tests for theme.js, input.js, and leaderboard.j, Runs the JavaScript Node.js unit tests for audio.js and asserts success., Runs the JavaScript Node.js unit tests for leaderboard.js and asserts success., Verify that utils.test.html exists and references progress assertions and utils., test_js_architecture_utilities(), test_js_audio_utilities(), test_js_general_utilities() (+2 more)
 
 ### Community 6 - "utils.test.js"
 Cohesion: 0.18
@@ -96,40 +94,28 @@ Cohesion: 0.22
 Nodes (12): get_repo_root(), Verify that cyberracer.html exists in the repository root., Verify that cyberracer.html imports both utils.js and audio.js scripts., Verify that cyberracer.html references getBestScore/saveBestScore for 'cyberrace, Verify index.html exists and links to cyberracer.html., Returns the path to the repository root directory., Verify README.md exists and contains links to cyberracer.html., test_cyberracer_dependencies() (+4 more)
 
 ### Community 13 - "architecture.test.js"
-Cohesion: 0.14
-Nodes (13): Leaderboard, assert, documentElementStyle, { KeyManager }, { Leaderboard }, mockStorage, test, { ThemeManager } (+5 more)
+Cohesion: 0.13
+Nodes (14): KeyManager, Leaderboard, assert, documentElementStyle, { KeyManager }, { Leaderboard }, mockStorage, test (+6 more)
 
 ### Community 14 - "get_repo_root"
 Cohesion: 0.22
 Nodes (12): get_repo_root(), Verify that all architecture files exist., Verify that index, games, and leaderboard html files import the expected scripts, Returns the path to the repository root directory., Verify that correct localStorage keys are referenced in theme.js and input.js., Verify theme variables are defined in styles/theme.css., Verify index.html links to leaderboard.html, and README.md documents the modules, test_css_variables_defined() (+4 more)
 
-### Community 15 - "input.test.js"
-Cohesion: 0.11
-Nodes (7): KeyManager, assert, fs, { KeyManager }, localStorageStore, path, test
-
-### Community 16 - "storage.test.js"
-Cohesion: 0.29
-Nodes (5): storage, assert, mockStorage, storage, test
-
 ## Knowledge Gaps
-- **43 isolated node(s):** `storage`, `test`, `assert`, `mockStorage`, `documentElementStyle` (+38 more)
+- **32 isolated node(s):** `test`, `assert`, `mockStorage`, `documentElementStyle`, `{ ThemeManager }` (+27 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `KeyManager` connect `input.test.js` to `architecture.test.js`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _77 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _65 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SoundFX` be split into smaller, more focused modules?**
   _Cohesion score 0.09759759759759759 - nodes in this community are weakly interconnected._
 - **Should `architecture.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.14166666666666666 - nodes in this community are weakly interconnected._
-- **Should `input.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.13071895424836602 - nodes in this community are weakly interconnected._
