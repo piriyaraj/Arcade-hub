@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play Neon Sokoban, a classic block-pushing puzzle game in retro neon style. Push the boxes onto target destinations to clear levels." />
+  <title>Sokoban - Arcade Hub</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="canonical" href="https://arcadehub.telekit.link/sokoban.html" />
+  <meta property="og:url" content="https://arcadehub.telekit.link/sokoban.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sokoban - Arcade Hub" />
+  <meta property="og:description" content="Class block-pushing puzzle in retro neon styling. Put the neural cells back in their sockets!" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/assets/sokoban-banner.png" />
+  <script src="theme.js" defer></script>
+  <script src="input.js" defer></script>
+  <script src="audio.js" defer></script>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #070a13;
+      --theme-neon: #00f0ff;
+      --theme-indigo: #6366f1;
+      --theme-pink: #ff007f;
+      --theme-green: #4ade80;
+      --theme-yellow: #facc15;
+      --border: rgba(99, 102, 241, 0.2);
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      max-width: 600px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--theme-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--theme-indigo), var(--theme-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      padding: 8px 10px 4px;
+      width: 100%;
+      max-width: 600px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 6px 16px;
+      border-radius: 8px;
+      min-width: 100px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--theme-indigo);
+    }
+
+    .stat-value.neon-val {
+      color: var(--theme-neon);
+    }
+
+    .stat-value.green-val {
+      color: var(--theme-green);
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 10px;
+      max-width: 440px;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(99, 102, 241, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(99, 102, 241, 0.05);
+      display: block;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      touch-action: none;
+      outline: none;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--theme-indigo);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    button:active { transform: translateY(0); }
+
+    button.accent-btn {
+      background: linear-gradient(135deg, var(--theme-indigo), #4338ca);
+      color: #fff;
+      border: none;
+      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    button.accent-btn:hover {
+      box-shadow: 0 4px 18px rgba(99, 102, 241, 0.5);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--theme-indigo), var(--theme-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 440px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    #overlay .stats-summary {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #overlay .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    #overlay .stat-row span:last-child {
+      font-weight: 600;
+      color: var(--theme-neon);
+    }
+
+    .instructions-hint {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      width: 100%;
+      max-width: 340px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 8px 20px 4px;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      #stats {
+        padding: 4px 10px 2px;
+        gap: 10px;
+      }
+      .stat {
+        min-width: 80px;
+        padding: 4px 10px;
+      }
+      .stat-value {
+        font-size: 1.1rem;
+      }
+      #canvas-wrap {
+        padding: 4px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">Neon Sokoban</h2>
+  <p id="overlay-desc">Push neural sockets into glowing connection nodes. Plan your steps carefully—you can only push blocks, never pull them!</p>
+
+  <div class="stats-summary hidden" id="overlay-stats">
+    <div class="stat-row">
+      <span>Completed Level:</span>
+      <span id="completed-lvl-val">1</span>
+    </div>
+    <div class="stat-row">
+      <span>Moves:</span>
+      <span id="moves-lvl-val">0</span>
+    </div>
+    <div class="stat-row">
+      <span>Time taken:</span>
+      <span id="time-lvl-val">0:00</span>
+    </div>
+    <div class="stat-row">
+      <span>New Best Record:</span>
+      <span id="best-notification" style="color: var(--theme-green) !important;">Checking...</span>
+    </div>
+  </div>
+
+  <button class="accent-btn" id="start-btn" style="font-size: 1rem; padding: 10px 28px;">START SYSTEM</button>
+
+  <div class="instructions-hint">
+    <strong>Controls:</strong><br>
+    🕹️ Move Neurons: <strong>WASD / Arrow Keys</strong><br>
+    ◀️ Undo Move: <strong>U</strong><br>
+    🔄 Reset Level: <strong>R</strong><br>
+    ⏸️ Pause Space: <strong>P</strong><br>
+    🎹 Toggle Sounds: <strong>M</strong>
+  </div>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>NEON SOKOBAN</h1>
+  <p>Neural routing & grid optimization system</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat">
+    <span class="stat-label">Level</span>
+    <span class="stat-value" id="level-val">1 / 5</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Moves</span>
+    <span class="stat-value neon-val" id="moves-val">0</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Time</span>
+    <span class="stat-value neon-val" id="time-val">0:00</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best Moves</span>
+    <span class="stat-value green-val" id="best-moves-val">-</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best Time</span>
+    <span class="stat-value green-val" id="best-time-val">-</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="400" height="400" tabindex="0" aria-label="Neon Sokoban Game Area"></canvas>
+</div>
+
+<div id="controls">
+  <button id="undo-btn" aria-label="Undo last move">UNDO (U)</button>
+  <button id="reset-btn" aria-label="Reset current level">RESET (R)</button>
+  <button class="accent-btn" id="pause-btn" aria-label="Pause game">PAUSE (P)</button>
+</div>
+
+<script>
+  (function() {
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    // UI elements
+    const levelEl = document.getElementById('level-val');
+    const movesEl = document.getElementById('moves-val');
+    const timeEl = document.getElementById('time-val');
+    const bestMovesEl = document.getElementById('best-moves-val');
+    const bestTimeEl = document.getElementById('best-time-val');
+
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayDesc = document.getElementById('overlay-desc');
+    const overlayStats = document.getElementById('overlay-stats');
+    const completedLvlVal = document.getElementById('completed-lvl-val');
+    const movesLvlVal = document.getElementById('moves-lvl-val');
+    const timeLvlVal = document.getElementById('time-lvl-val');
+    const bestNotification = document.getElementById('best-notification');
+
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const undoBtn = document.getElementById('undo-btn');
+    const muteBtn = document.getElementById('mute-btn');
+
+    // 5 Hand-crafted levels
+    const LEVELS = [
+      {
+        name: "Neural Entryway",
+        grid: [
+          "######",
+          "#@   #",
+          "# $$.#",
+          "#  . #",
+          "######"
+        ]
+      },
+      {
+        name: "Symmetric Link",
+        grid: [
+          "#######",
+          "#@ $ .#",
+          "#  $ .#",
+          "#######"
+        ]
+      },
+      {
+        name: "Channel Crossover",
+        grid: [
+          "#######",
+          "#     #",
+          "# @$  #",
+          "##$ $ #",
+          " #. .##",
+          " # . #",
+          " #####"
+        ]
+      },
+      {
+        name: "Dual Lane routing",
+        grid: [
+          "  ######  ",
+          "###    ###",
+          "#@ $ $   #",
+          "#  . .   #",
+          "#  $ $   #",
+          "#  . .   #",
+          "##########"
+        ]
+      },
+      {
+        name: "Split Matrix Matrix",
+        grid: [
+          "##########",
+          "#@       #",
+          "#  $ # $ #",
+          "#  . # . #",
+          "#$$  #  $#",
+          "#..  #  .#",
+          "##########"
+        ]
+      }
+    ];
+
+    // Game state variables
+    let currentLevelIdx = 0;
+    let mapWidth = 0;
+    let mapHeight = 0;
+    let walls = []; // 2D array [y][x] = boolean
+    let goals = []; // Array of {x, y}
+    let boxes = []; // Array of {x, y}
+    let player = { x: 0, y: 0 };
+
+    let movesCount = 0;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+    let playState = 'idle'; // 'idle', 'playing', 'paused', 'levelclear', 'victory'
+    let history = []; // Stack for undo
+    let bestScores = {}; // Key: level index. Values: { moves, time }
+    let isMuted = false;
+
+    // Helper functions
+    function formatTime(totalSeconds) {
+      if (typeof totalSeconds !== 'number' || isNaN(totalSeconds)) return "-";
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function initLocalStorage() {
+      try {
+        const stored = localStorage.getItem('sokoban_best');
+        if (stored) {
+          bestScores = JSON.parse(stored);
+        }
+
+        // Mute state
+        isMuted = localStorage.getItem('sokoban_muted') === 'true';
+      } catch (err) {
+        console.error("Storage loading failed", err);
+        bestScores = {};
+        isMuted = false;
+      }
+      syncMuteState();
+    }
+
+    function syncMuteState() {
+      if (window.sfx) {
+        window.sfx.muted = isMuted;
+      }
+      muteBtn.textContent = isMuted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      try {
+        localStorage.setItem('sokoban_muted', isMuted.toString());
+      } catch(e) {}
+      syncMuteState();
+
+      // Auto initialize AudioContext safely
+      triggerAudioInit();
+      canvas.focus();
+    }
+
+    function triggerAudioInit() {
+      if (window.sfx && typeof window.sfx.init === 'function') {
+        window.sfx.init();
+      }
+    }
+
+    function getBestScoreForLevel(lvlIdx) {
+      return bestScores[lvlIdx] || { moves: Infinity, time: Infinity };
+    }
+
+    function updateBestScoreUI() {
+      const best = getBestScoreForLevel(currentLevelIdx);
+      bestMovesEl.textContent = best.moves === Infinity ? '-' : best.moves;
+      bestTimeEl.textContent = best.time === Infinity ? '-' : formatTime(best.time);
+    }
+
+    function saveBestScore(lvlIdx, moves, time) {
+      const currentBest = getBestScoreForLevel(lvlIdx);
+      let changed = false;
+
+      const newScore = { ...currentBest };
+      if (moves < currentBest.moves) {
+        newScore.moves = moves;
+        changed = true;
+      }
+      if (time < currentBest.time) {
+        newScore.time = time;
+        changed = true;
+      }
+
+      if (changed) {
+        bestScores[lvlIdx] = newScore;
+        try {
+          localStorage.setItem('sokoban_best', JSON.stringify(bestScores));
+        } catch (e) {
+          console.error("Storage saving scores failed", e);
+        }
+        updateBestScoreUI();
+      }
+      return changed;
+    }
+
+    // Load active Level
+    function loadMap(lvlIdx) {
+      const lvl = LEVELS[lvlIdx];
+      if (!lvl) return;
+
+      const gridStrings = lvl.grid;
+      mapHeight = gridStrings.length;
+      mapWidth = 0;
+      gridStrings.forEach(row => {
+        if (row.length > mapWidth) mapWidth = row.length;
+      });
+
+      // Reset layer arrays
+      walls = [];
+      goals = [];
+      boxes = [];
+      history = [];
+      movesCount = 0;
+      secondsElapsed = 0;
+
+      for (let y = 0; y < mapHeight; y++) {
+        walls[y] = [];
+        const rowString = gridStrings[y] || "";
+        for (let x = 0; x < mapWidth; x++) {
+          const char = rowString[x] || ' ';
+          walls[y][x] = (char === '#');
+
+          if (char === '.' || char === '+' || char === '*') {
+            goals.push({ x, y });
+          }
+          if (char === '$' || char === '*') {
+            boxes.push({ x, y });
+          }
+          if (char === '@' || char === '+') {
+            player = { x, y };
+          }
+        }
+      }
+
+      levelEl.textContent = `${lvlIdx + 1} / ${LEVELS.length}`;
+      movesEl.textContent = movesCount;
+      timeEl.textContent = formatTime(secondsElapsed);
+      updateBestScoreUI();
+    }
+
+    function checkVictory() {
+      // Check if all goals are filled with a box
+      return goals.every(goal => {
+        return boxes.some(box => box.x === goal.x && box.y === goal.y);
+      });
+    }
+
+    // Save active state to undo list
+    function saveHistory() {
+      history.push({
+        player: { x: player.x, y: player.y },
+        boxes: boxes.map(b => ({ x: b.x, y: b.y }))
+      });
+    }
+
+    function undo() {
+      if (playState !== 'playing' || history.length === 0) return;
+
+      const prevState = history.pop();
+      player = prevState.player;
+      boxes = prevState.boxes;
+      movesCount++;
+      movesEl.textContent = movesCount;
+
+      if (window.sfx && typeof window.sfx.playBounce === 'function') {
+        window.sfx.playBounce();
+      }
+      canvas.focus();
+    }
+
+    function resetLevel() {
+      if (playState !== 'playing' && playState !== 'paused') return;
+      loadMap(currentLevelIdx);
+      if (window.sfx && typeof window.sfx.playBounce === 'function') {
+        window.sfx.playBounce();
+      }
+      canvas.focus();
+    }
+
+    // Handlers for Player movement
+    function tryMove(dx, dy) {
+      if (playState !== 'playing') return;
+
+      const targetX = player.x + dx;
+      const targetY = player.y + dy;
+
+      // Bound check
+      if (targetX < 0 || targetX >= mapWidth || targetY < 0 || targetY >= mapHeight) return;
+
+      // Wall collision
+      if (walls[targetY][targetX]) return;
+
+      // Find box at landing spot
+      const boxIdx = boxes.findIndex(b => b.x === targetX && b.y === targetY);
+
+      if (boxIdx !== -1) {
+        // Pushing a box
+        const boxTargetX = targetX + dx;
+        const boxTargetY = targetY + dy;
+
+        // Check if box target is valid
+        if (boxTargetX < 0 || boxTargetX >= mapWidth || boxTargetY < 0 || boxTargetY >= mapHeight) return;
+        if (walls[boxTargetY][boxTargetX]) return;
+
+        const otherBox = boxes.some(b => b.x === boxTargetX && b.y === boxTargetY);
+        if (otherBox) return;
+
+        // Push allowed: Save undo status first
+        saveHistory();
+
+        // Move box
+        boxes[boxIdx].x = boxTargetX;
+        boxes[boxIdx].y = boxTargetY;
+
+        // Move player
+        player.x = targetX;
+        player.y = targetY;
+
+        movesCount++;
+        movesEl.textContent = movesCount;
+
+        // Sound trigger
+        if (window.sfx && typeof window.sfx.playEat === 'function') {
+          window.sfx.playEat();
+        }
+
+        // Check level objective met
+        if (checkVictory()) {
+          handleLevelComplete();
+        }
+      } else {
+        // Simple empty move: Save undo status first
+        saveHistory();
+
+        // Move player
+        player.x = targetX;
+        player.y = targetY;
+
+        movesCount++;
+        movesEl.textContent = movesCount;
+
+        // Sound trigger
+        if (window.sfx && typeof window.sfx.playBounce === 'function') {
+          window.sfx.playBounce();
+        }
+      }
+    }
+
+    function handleLevelComplete() {
+      playState = 'levelclear';
+      stopTimer();
+
+      // Sound play
+      if (window.sfx && typeof window.sfx.playScoreSlot === 'function') {
+        window.sfx.playScoreSlot();
+      }
+
+      // Check for best records update
+      const prevBest = getBestScoreForLevel(currentLevelIdx);
+      const isNewBest = saveBestScore(currentLevelIdx, movesCount, secondsElapsed);
+
+      // Setup Level clear overlay stats
+      completedLvlVal.textContent = currentLevelIdx + 1;
+      movesLvlVal.textContent = movesCount;
+      timeLvlVal.textContent = formatTime(secondsElapsed);
+
+      if (isNewBest) {
+        let note = "NEW RECORD REDISTRIBUTED!";
+        if (movesCount < prevBest.moves && secondsElapsed < prevBest.time) {
+          note = "NEW BEST MOVES & TIME!";
+        } else if (movesCount < prevBest.moves) {
+          note = "NEW BEST MOVES!";
+        } else if (secondsElapsed < prevBest.time) {
+          note = "NEW BEST TIME!";
+        }
+        bestNotification.textContent = note;
+        bestNotification.style.color = "var(--theme-green)";
+      } else {
+        bestNotification.textContent = "Best remains: " + (prevBest.moves === Infinity ? '-' : `${prevBest.moves} moves in ${formatTime(prevBest.time)}`);
+        bestNotification.style.color = "var(--text-dim)";
+      }
+
+      // Show stats container
+      overlayStats.classList.remove('hidden');
+
+      // Adjust controls
+      if (currentLevelIdx < LEVELS.length - 1) {
+        overlayTitle.textContent = "Socket Confirmed";
+        overlayDesc.textContent = `Neural node connection optimization achieved! Level ${currentLevelIdx + 1} completed. Loading next system sector...`;
+        startBtn.textContent = "LOAD SECTOR " + (currentLevelIdx + 2);
+      } else {
+        playState = 'victory';
+        overlayTitle.textContent = "Core Synchronization Complete";
+        overlayDesc.textContent = "All grid nodes fully routed and neural cores optimized. Infinite feedback engine is run-stable!";
+        startBtn.textContent = "SYNCHRONIZE AGAIN";
+      }
+
+      overlay.classList.remove('hidden');
+    }
+
+    // Timer Loop
+    function startTimer() {
+      stopTimer();
+      timerInterval = setInterval(() => {
+        if (playState === 'playing') {
+          secondsElapsed++;
+          timeEl.textContent = formatTime(secondsElapsed);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function startGame() {
+      triggerAudioInit();
+      overlay.classList.add('hidden');
+      canvas.focus();
+
+      if (playState === 'victory') {
+        currentLevelIdx = 0;
+      } else if (playState === 'levelclear') {
+        currentLevelIdx++;
+      }
+
+      loadMap(currentLevelIdx);
+      playState = 'playing';
+      startTimer();
+    }
+
+    function togglePause() {
+      if (playState === 'paused') {
+        playState = 'playing';
+        pauseBtn.textContent = "PAUSE (P)";
+        pauseBtn.classList.remove('paused-glow');
+        pauseBtn.style.boxShadow = '';
+        canvas.focus();
+      } else if (playState === 'playing') {
+        playState = 'paused';
+        pauseBtn.textContent = "RESUME (P)";
+        pauseBtn.style.boxShadow = '0 0 15px var(--theme-pink)';
+      }
+    }
+
+    // Draw grid entities
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--board-bg').trim() || '#070a13';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (mapWidth === 0 || mapHeight === 0) return;
+
+      const cellSize = Math.min(canvas.width / mapWidth, canvas.height / mapHeight);
+      const offsetX = (canvas.width - cellSize * mapWidth) / 2;
+      const offsetY = (canvas.height - cellSize * mapHeight) / 2;
+
+      // Inner subtle matrix grid
+      ctx.strokeStyle = "rgba(99, 102, 241, 0.05)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= mapWidth; x++) {
+        ctx.beginPath();
+        ctx.moveTo(offsetX + x * cellSize, offsetY);
+        ctx.lineTo(offsetX + x * cellSize, offsetY + mapHeight * cellSize);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= mapHeight; y++) {
+        ctx.beginPath();
+        ctx.moveTo(offsetX, offsetY + y * cellSize);
+        ctx.lineTo(offsetX + mapWidth * cellSize, offsetY + y * cellSize);
+        ctx.stroke();
+      }
+
+      const pulse = Math.sin(Date.now() / 200) * 0.07 + 0.93;
+
+      // Draw Walls & Goals
+      for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+          const rx = offsetX + x * cellSize;
+          const ry = offsetY + y * cellSize;
+
+          if (walls[y][x]) {
+            // Draw Wall block
+            ctx.shadowColor = 'rgba(99, 102, 241, 0.4)';
+            ctx.shadowBlur = 4;
+
+            ctx.fillStyle = 'rgba(21, 23, 42, 0.9)'; // Dark indigo wall fill
+            ctx.fillRect(rx + 2, ry + 2, cellSize - 4, cellSize - 4);
+
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--theme-indigo').trim() || '#6366f1';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(rx + 2, ry + 2, cellSize - 4, cellSize - 4);
+
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      // Draw Goals
+      goals.forEach(goal => {
+        const rx = offsetX + goal.x * cellSize + cellSize / 2;
+        const ry = offsetY + goal.y * cellSize + cellSize / 2;
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(255, 0, 127, 0.6)';
+        ctx.shadowBlur = 10 * pulse;
+
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--theme-pink').trim() || '#ff007f';
+        ctx.lineWidth = 1.5;
+
+        // Draw crosshair pattern
+        ctx.beginPath();
+        ctx.arc(rx, ry, cellSize * 0.22, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(rx - cellSize * 0.3, ry);
+        ctx.lineTo(rx + cellSize * 0.3, ry);
+        ctx.moveTo(rx, ry - cellSize * 0.3);
+        ctx.lineTo(rx, ry + cellSize * 0.3);
+        ctx.stroke();
+
+        ctx.restore();
+      });
+
+      // Draw Boxes
+      boxes.forEach(box => {
+        const rx = offsetX + box.x * cellSize;
+        const ry = offsetY + box.y * cellSize;
+        const isOnGoal = goals.some(g => g.x === box.x && g.y === box.y);
+
+        ctx.save();
+
+        if (isOnGoal) {
+          // Green glowing box (satisfied state)
+          const gColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-green').trim() || '#4ade80';
+          ctx.shadowColor = gColor;
+          ctx.shadowBlur = 16 * pulse;
+
+          ctx.fillStyle = 'rgba(10, 36, 21, 0.85)';
+          ctx.fillRect(rx + 4, ry + 4, cellSize - 8, cellSize - 8);
+
+          ctx.strokeStyle = gColor;
+          ctx.lineWidth = 2.5;
+          ctx.strokeRect(rx + 4, ry + 4, cellSize - 8, cellSize - 8);
+
+          // Inner diagonal crossed wiring (Neural Core)
+          ctx.strokeStyle = 'rgba(74, 222, 128, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(rx + 8, ry + 8);
+          ctx.lineTo(rx + cellSize - 8, ry + cellSize - 8);
+          ctx.moveTo(rx + cellSize - 8, ry + 8);
+          ctx.lineTo(rx + 8, ry + cellSize - 8);
+          ctx.stroke();
+
+          // Core circle
+          ctx.fillStyle = gColor;
+          ctx.beginPath();
+          ctx.arc(rx + cellSize / 2, ry + cellSize / 2, cellSize * 0.12, 0, 2 * Math.PI);
+          ctx.fill();
+        } else {
+          // Yellowish/Cyan glow box (normal)
+          const cColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-neon').trim() || '#00f0ff';
+          ctx.shadowColor = cColor;
+          ctx.shadowBlur = 6;
+
+          ctx.fillStyle = 'rgba(17, 36, 50, 0.85)';
+          ctx.fillRect(rx + 5, ry + 5, cellSize - 10, cellSize - 10);
+
+          ctx.strokeStyle = cColor;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(rx + 5, ry + 5, cellSize - 10, cellSize - 10);
+
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.3)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(rx + 9, ry + 9);
+          ctx.lineTo(rx + cellSize - 9, ry + cellSize - 9);
+          ctx.moveTo(rx + cellSize - 9, ry + 9);
+          ctx.lineTo(rx + 9, ry + cellSize - 9);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      });
+
+      // Draw Player
+      const px = offsetX + player.x * cellSize + cellSize / 2;
+      const py = offsetY + player.y * cellSize + cellSize / 2;
+      const pColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-yellow').trim() || '#facc15';
+
+      ctx.save();
+      ctx.shadowColor = pColor;
+      ctx.shadowBlur = 12 * pulse;
+      ctx.fillStyle = pColor;
+
+      // Draw cool robot circle head
+      ctx.beginPath();
+      ctx.arc(px, py, cellSize * 0.28, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Draw active face details (visor)
+      ctx.fillStyle = '#070a13';
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(px - cellSize * 0.18, py - cellSize * 0.08, cellSize * 0.36, cellSize * 0.16, 4)
+                    : ctx.fillRect(px - cellSize * 0.18, py - cellSize * 0.08, cellSize * 0.36, cellSize * 0.16);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(px - cellSize * 0.09, py, cellSize * 0.04, 0, 2 * Math.PI);
+      ctx.arc(px + cellSize * 0.09, py, cellSize * 0.04, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function initGameLoop() {
+      function tick() {
+        draw();
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    // Keyboard handlers
+    function handleKeyDown(e) {
+      if (e.repeat) return;
+
+      // Handle pause binding
+      if (window.KeyManager && window.KeyManager.isKey(e, 'pause')) {
+        togglePause();
+        e.preventDefault();
+        return;
+      }
+      if (e.key === 'p' || e.key === 'P') {
+        togglePause();
+        e.preventDefault();
+        return;
+      }
+
+      // Handle sound mute binding
+      if (e.key === 'm' || e.key === 'M') {
+        toggleMute();
+        e.preventDefault();
+        return;
+      }
+
+      if (playState !== 'playing') return;
+
+      switch (e.key) {
+        case 'w':
+        case 'W':
+        case 'ArrowUp':
+          tryMove(0, -1);
+          e.preventDefault();
+          break;
+        case 's':
+        case 'S':
+        case 'ArrowDown':
+          tryMove(0, 1);
+          e.preventDefault();
+          break;
+        case 'a':
+        case 'A':
+        case 'ArrowLeft':
+          tryMove(-1, 0);
+          e.preventDefault();
+          break;
+        case 'd':
+        case 'D':
+        case 'ArrowRight':
+          tryMove(1, 0);
+          e.preventDefault();
+          break;
+        case 'u':
+        case 'U':
+          undo();
+          e.preventDefault();
+          break;
+        case 'r':
+        case 'R':
+          resetLevel();
+          e.preventDefault();
+          break;
+      }
+    }
+
+    // Hook listeners
+    window.addEventListener('themechange', () => {
+      // Background / theme variables update trigger redrawing
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initLocalStorage();
+      loadMap(0);
+      initGameLoop();
+    });
+
+    startBtn.addEventListener('click', startGame);
+    pauseBtn.addEventListener('click', togglePause);
+    resetBtn.addEventListener('click', resetLevel);
+    undoBtn.addEventListener('click', undo);
+    muteBtn.addEventListener('click', toggleMute);
+    window.addEventListener('keydown', handleKeyDown);
+
+  })();
+</script>
+</body>
+</html>
