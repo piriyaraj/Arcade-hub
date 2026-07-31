@@ -438,17 +438,7 @@
     let level = 1;
     let highScore = 0;
 
-    if (typeof window.getBestScore === 'function') {
-      highScore = window.getBestScore('frogger');
-    } else {
-      try {
-        const raw = localStorage.getItem('frogger_best');
-        const parsed = parseInt(raw, 10);
-        highScore = Number.isFinite(parsed) ? parsed : 0;
-      } catch (e) {
-        highScore = 0;
-      }
-    }
+    highScore = getBestScore('frogger');
     bestEl.textContent = highScore;
 
     // Mute/Unmute state loading & initialization
@@ -858,13 +848,7 @@
       if (score > highScore) {
         highScore = score;
         bestEl.textContent = highScore;
-        if (typeof window.saveBestScore === 'function') {
-          window.saveBestScore('frogger', highScore);
-        } else {
-          try {
-            localStorage.setItem('frogger_best', highScore.toString());
-          } catch (e) {}
-        }
+        saveBestScore('frogger', highScore);
         isNewHighScore = true;
       }
 
