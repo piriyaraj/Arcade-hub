@@ -14,6 +14,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🏎️ **[CyberRacer](cyberracer.html)** — Race down the retro digital superhighway, steer left/right to dodge barriers and retrieve energy nodes.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
+- 🏆 **[Leaderboard](leaderboard.html)** — Global dashboard aggregating high scores from all games.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
 - 🧠 **[Neon Simon](neonsimon.html)** — Watch the neon sequence, then repeat it back as it grows each round.
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
@@ -67,7 +68,7 @@ Centralizes controls and custom mappings for essential gameplay actions:
 
 ### 3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`)
 Combines score entries across all games into a global scoreboard:
-- Aggregates the local high score records for all 14 arcade games.
+- Aggregates the local high score records for all 16 arcade games.
 - Provides search, sort, and reset capabilities via a responsive dashboard.
 
 <!-- Test PR engine flow -->

@@ -1,16 +1,16 @@
-# Graph Report - test-repo  (2026-07-30)
+# Graph Report - test-repo  (2026-07-31)
 
 ## Corpus Check
-- 26 files · ~56,386 words
+- 27 files · ~62,660 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 168 nodes · 213 edges · 15 communities (14 shown, 1 thin omitted)
+- 185 nodes · 231 edges · 17 communities (15 shown, 2 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8ccab5c4`
+- Built from commit: `d4c0b087`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,6 +27,8 @@
 - get_repo_root
 - architecture.test.js
 - get_repo_root
+- input.test.js
+- TaskScheduler
 
 ## God Nodes (most connected - your core abstractions)
 1. `AudioManager` - 15 edges
@@ -49,21 +51,21 @@
   tests/test_task_queue.py → src/tasks/validation.py
 - `test_dlq_entry_contains_full_error_context()` --calls--> `DLQHandler`  [EXTRACTED]
   tests/test_task_queue.py → src/queue/handler.py
-- `test_dlq_entry_contains_full_error_context()` --calls--> `TaskQueue`  [EXTRACTED]
-  tests/test_task_queue.py → src/queue/handler.py
+- `TaskScheduler` --uses--> `TaskQueue`  [INFERRED]
+  src/scheduler/scheduler.py → src/queue/handler.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (15 total, 1 thin omitted)
+## Communities (17 total, 2 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.22
 Nodes (8): 1. `ThemeManager` (`theme.js` & `styles/theme.css`), 2. `KeyManager` (`input.js`), 3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`), Arcade Game Portal, 🏗️ Architecture, Available Games:, 🎮 Live Arcade Site (GitHub Pages), 🚀 Setting Up GitHub Pages
 
 ### Community 3 - "SoundFX"
-Cohesion: 0.10
-Nodes (24): Enum, Exception, DLQHandler, DLQ (dead-letter queue) handler.     Stores and formats failed tasks., Processes a task failure and saves it to the DLQ., Submits a task to the queue after validation., TaskQueue, Schedules a task by submitting it to the queue. (+16 more)
+Cohesion: 0.12
+Nodes (22): Enum, Exception, DLQHandler, DLQ (dead-letter queue) handler.     Stores and formats failed tasks., Processes a task failure and saves it to the DLQ., Submits a task to the queue after validation., TaskQueue, Validates the task payload.     Must contain a non-empty string 'title' and a va (+14 more)
 
 ### Community 4 - "audio.test.js"
 Cohesion: 0.22
@@ -101,21 +103,29 @@ Nodes (14): KeyManager, Leaderboard, assert, documentElementStyle, { KeyManager 
 Cohesion: 0.22
 Nodes (12): get_repo_root(), Verify that all architecture files exist., Verify that index, games, and leaderboard html files import the expected scripts, Returns the path to the repository root directory., Verify that correct localStorage keys are referenced in theme.js and input.js., Verify theme variables are defined in styles/theme.css., Verify index.html links to leaderboard.html, and README.md documents the modules, test_css_variables_defined() (+4 more)
 
+### Community 15 - "input.test.js"
+Cohesion: 0.12
+Nodes (6): assert, fs, { KeyManager }, localStorageStore, path, test
+
 ## Knowledge Gaps
-- **32 isolated node(s):** `test`, `assert`, `mockStorage`, `documentElementStyle`, `{ ThemeManager }` (+27 more)
+- **38 isolated node(s):** `test`, `assert`, `mockStorage`, `documentElementStyle`, `{ ThemeManager }` (+33 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
+- **Why does `KeyManager` connect `architecture.test.js` to `input.test.js`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
+- **Why does `TaskQueue` connect `SoundFX` to `TaskScheduler`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _65 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _71 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SoundFX` be split into smaller, more focused modules?**
-  _Cohesion score 0.09759759759759759 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11827956989247312 - nodes in this community are weakly interconnected._
 - **Should `architecture.test.js` be split into smaller, more focused modules?**
   _Cohesion score 0.13071895424836602 - nodes in this community are weakly interconnected._
