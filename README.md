@@ -19,6 +19,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🏓 **[Pong](pong.html)** — Classic retro arcade paddle-and-ball game.
 - 🛡️ **[Retro Tower Defense](towerdefense.html)** — Defend key database cores against ascending cyber viruses.
 - 🐍 **[Snake Game](snakegame.html)** — Classic snake arcade action.
+- 🧱 **[Sokoban](sokoban.html)** — Classic block-pushing puzzle in retro neon styling.
 - 👾 **[Space Invaders](spaceinvaders.html)** — Classic space invaders arcade shooter.
 - 🧩 **[Tetris](tetris.html)** — Classic falling block puzzle game.
 
