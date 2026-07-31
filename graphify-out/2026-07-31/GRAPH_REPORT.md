@@ -1,16 +1,16 @@
-# Graph Report - test-repo  (2026-07-31)
+# Graph Report - test-repo  (2026-07-30)
 
 ## Corpus Check
-- 28 files · ~64,067 words
+- 26 files · ~56,386 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 198 nodes · 248 edges · 17 communities (16 shown, 1 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
+- 168 nodes · 213 edges · 15 communities (14 shown, 1 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d4c0b087`
+- Built from commit: `8ccab5c4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,8 +27,6 @@
 - get_repo_root
 - architecture.test.js
 - get_repo_root
-- input.test.js
-- get_repo_root
 
 ## God Nodes (most connected - your core abstractions)
 1. `AudioManager` - 15 edges
@@ -38,9 +36,9 @@
 5. `DLQHandler` - 7 edges
 6. `get_repo_root()` - 7 edges
 7. `get_repo_root()` - 7 edges
-8. `get_repo_root()` - 7 edges
-9. `TaskScheduler` - 5 edges
-10. `TaskType` - 5 edges
+8. `TaskScheduler` - 5 edges
+9. `TaskType` - 5 edges
+10. `test_dlq_entry_contains_full_error_context()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `test_dlq_entry_contains_full_error_context()` --indirect_call--> `TaskValidationError`  [INFERRED]
@@ -57,7 +55,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (17 total, 1 thin omitted)
+## Communities (15 total, 1 thin omitted)
 
 ### Community 0 - "README.md"
 Cohesion: 0.22
@@ -96,40 +94,28 @@ Cohesion: 0.22
 Nodes (12): get_repo_root(), Verify that cyberracer.html exists in the repository root., Verify that cyberracer.html imports both utils.js and audio.js scripts., Verify that cyberracer.html references getBestScore/saveBestScore for 'cyberrace, Verify index.html exists and links to cyberracer.html., Returns the path to the repository root directory., Verify README.md exists and contains links to cyberracer.html., test_cyberracer_dependencies() (+4 more)
 
 ### Community 13 - "architecture.test.js"
-Cohesion: 0.14
-Nodes (13): Leaderboard, assert, documentElementStyle, { KeyManager }, { Leaderboard }, mockStorage, test, { ThemeManager } (+5 more)
+Cohesion: 0.13
+Nodes (14): KeyManager, Leaderboard, assert, documentElementStyle, { KeyManager }, { Leaderboard }, mockStorage, test (+6 more)
 
 ### Community 14 - "get_repo_root"
 Cohesion: 0.22
 Nodes (12): get_repo_root(), Verify that all architecture files exist., Verify that index, games, and leaderboard html files import the expected scripts, Returns the path to the repository root directory., Verify that correct localStorage keys are referenced in theme.js and input.js., Verify theme variables are defined in styles/theme.css., Verify index.html links to leaderboard.html, and README.md documents the modules, test_css_variables_defined() (+4 more)
 
-### Community 15 - "input.test.js"
-Cohesion: 0.11
-Nodes (7): KeyManager, assert, fs, { KeyManager }, localStorageStore, path, test
-
-### Community 16 - "get_repo_root"
-Cohesion: 0.22
-Nodes (12): get_repo_root(), Verify that gemmatch.html exists in the repository root., Verify that gemmatch.html imports both utils.js and audio.js scripts., Verify that gemmatch.html references getBestScore/saveBestScore for 'gemmatch'., Verify index.html exists and links to gemmatch.html., Returns the path to the repository root directory., Verify README.md exists and contains links to gemmatch.html., test_gemmatch_dependencies() (+4 more)
-
 ## Knowledge Gaps
-- **38 isolated node(s):** `test`, `assert`, `mockStorage`, `documentElementStyle`, `{ ThemeManager }` (+33 more)
+- **32 isolated node(s):** `test`, `assert`, `mockStorage`, `documentElementStyle`, `{ ThemeManager }` (+27 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `KeyManager` connect `input.test.js` to `architecture.test.js`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `AudioManager` connect `DLQHandler` to `audio.test.js`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `TaskValidationError` (e.g. with `test_dlq_entry_contains_full_error_context()` and `test_empty_title_rejected()`) actually correct?**
   _`TaskValidationError` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DLQ (dead-letter queue) handler.     Stores and formats failed tasks.`, `Processes a task failure and saves it to the DLQ.`, `Submits a task to the queue after validation.` to the rest of the system?**
-  _77 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _65 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SoundFX` be split into smaller, more focused modules?**
   _Cohesion score 0.09759759759759759 - nodes in this community are weakly interconnected._
 - **Should `architecture.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.14166666666666666 - nodes in this community are weakly interconnected._
-- **Should `input.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.13071895424836602 - nodes in this community are weakly interconnected._

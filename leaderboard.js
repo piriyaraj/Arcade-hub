@@ -15,7 +15,8 @@ const Leaderboard = {
     { id: 'towerdefense', name: 'Tower Defense', key: 'towerdefense_best', icon: '🛡️' },
     { id: 'cyberrunner', name: 'Cyber Runner', key: 'cyberrunner_best', icon: '🏃‍♂️' },
     { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' },
-    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' }
+    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' },
+    { id: 'gemmatch', name: 'Gem Match', key: 'gemmatch_best', icon: '💎' }
   ],
 
   getScores() {

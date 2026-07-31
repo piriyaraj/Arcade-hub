@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play Gem Match, a retro neon match-3 puzzle game. Swap tiles to line up 3 or more glowing gems and beat the timer!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gem Match - Arcade Hub" />
+  <meta property="og:description" content="Play Gem Match, a retro neon match-3 puzzle game. Swap tiles to line up 3 or more glowing gems and beat the timer!" />
+  <meta property="og:url" content="https://arcadehub.telekit.link/gemmatch.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>Gem Match - Arcade Hub</title>
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js" defer></script>
+  <script src="input.js" defer></script>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #0c0014;
+      --border: rgba(0, 240, 255, 0.2);
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #39ff14;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.05) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      max-width: 600px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .stat-value.neon-val {
+      color: var(--accent-neon);
+    }
+
+    #time-container {
+      width: 100%;
+      max-width: 400px;
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 4px auto 12px;
+    }
+
+    #time-bar {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-neon), var(--accent-pink));
+      transition: width 0.1s linear;
+    }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+      max-width: 420px;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(0, 240, 255, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(0, 240, 255, 0.05);
+      display: block;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    button {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent-neon);
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+    }
+
+    button:active { transform: translateY(0); }
+
+    button.play-btn {
+      background: linear-gradient(135deg, var(--accent-green), #16a34a);
+      color: #000;
+      border: none;
+      box-shadow: 0 2px 12px rgba(74, 222, 128, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    button.play-btn:hover {
+      box-shadow: 0 4px 18px rgba(74, 222, 128, 0.6);
+      border-color: transparent;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      text-align: center;
+      text-shadow: 0 0 30px rgba(74, 222, 128, 0.2);
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    #overlay .final-score {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-bottom: 24px;
+    }
+
+    #overlay .final-score.hidden { display: none; }
+
+    .instructions-hint {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 16px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 8px 20px 4px; }
+      header h1 { font-size: 1.6rem; }
+      #stats { padding: 4px 0 2px; gap: 16px; }
+      .stat-value { font-size: 1.2rem; }
+      #canvas-wrap { padding: 2px 12px 4px; }
+      .back-btn, .mute-btn { position: static; transform: none; display: inline-flex; margin: 4px; }
+      .header-controls { display: flex; justify-content: center; width: 100%; gap: 12px; margin-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">Gem Match</h2>
+  <div class="final-score hidden" id="final-score-container">Score: <span id="final-score">0</span></div>
+  <p id="overlay-desc">Align 3 or more matching neon gems horizontally or vertically to clear them. Combos multiply your score, and each match adds time to the bar!</p>
+  <button class="play-btn" id="start-btn" aria-label="Start Game">START GAME</button>
+  <div class="instructions-hint">
+    <strong>Controls:</strong><br>
+    🖱️ <strong>Mouse/Touch:</strong> Click a gem and click an adjacent one to swap, or drag between gems.<br>
+    ⌨️ <strong>Keyboard Cursor:</strong> Use <strong>Arrow Keys / WASD</strong> to move.<br>
+    Selected Gem: Press <strong>Space / Enter</strong> to select, then press directions to swap.<br>
+    🎹 Mute Sound: <strong>M</strong> | ⏸️ Pause: <strong>P</strong> | ❌ Clear selection: <strong>Esc</strong>
+  </div>
+</div>
+
+<header>
+  <div class="header-controls">
+    <a href="index.html" class="back-btn">&larr; Home</a>
+  </div>
+  <h1>GEM MATCH</h1>
+  <p>Match-3 retro neon puzzle</p>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+</header>
+
+<div id="stats">
+  <div class="stat">
+    <span class="stat-label">Score</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Level</span>
+    <span class="stat-value neon-val" id="level-val">1</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Best Record</span>
+    <span class="stat-value neon-val" id="best-val">0</span>
+  </div>
+</div>
+
+<div id="time-container">
+  <div id="time-bar"></div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="400" height="400" tabindex="0" aria-label="Gem Match Game Area"></canvas>
+</div>
+
+<div id="controls">
+  <button class="play-btn" id="pause-btn" aria-label="Pause game">PAUSE</button>
+  <button id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="utils.js"></script>
+<script src="audio.js"></script>
+<script>
+  (function() {
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    const scoreEl = document.getElementById('score-val');
+    const levelEl = document.getElementById('level-val');
+    const bestEl = document.getElementById('best-val');
+    const timeBar = document.getElementById('time-bar');
+
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayDesc = document.getElementById('overlay-desc');
+    const finalScoreContainer = document.getElementById('final-score-container');
+    const finalScore = document.getElementById('final-score');
+
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const muteBtn = document.getElementById('mute-btn');
+
+    // Constants
+    const GRID_COLS = 8;
+    const GRID_ROWS = 8;
+    const TILE_SIZE = 50;
+
+    // Gem definitions representation
+    const GEMS = [
+      { colorVar: '--accent-pink', fallback: '#ff007f', shape: 'diamond' }, // Red/Pink Ruby
+      { colorVar: '--accent-neon', fallback: '#00f0ff', shape: 'square' },  // Cyan Sapphire
+      { colorVar: '--accent-green', fallback: '#4ade80', shape: 'triangle' }, // Green Emerald
+      { colorVar: '--theme-yellow', fallback: '#facc15', shape: 'hexagon' }, // Yellow Citrine
+      { colorVar: '#ff8c00', fallback: '#ff8c00', shape: 'star' },          // Orange Topaz
+      { colorVar: '#b026ff', fallback: '#b026ff', shape: 'heart' }          // Purple Amethyst
+    ];
+
+    // Game variables
+    let state = 'idle'; // 'idle', 'swapping', 'swapping_back', 'clearing', 'falling', 'shuffling', 'paused', 'gameover'
+    let grid = Array(GRID_ROWS).fill(null).map(() => Array(GRID_COLS).fill(null));
+    let score = 0;
+    let highScore = 0;
+    let level = 1;
+    let timeLeft = 60.0; // max 60s
+    let comboMultiplier = 1;
+    let lastTime = 0;
+    let tileIdCounter = 0;
+
+    let soundMuted = false;
+    let prePauseState = 'idle';
+
+    // Animation / Interaction variables
+    let selectedTile = null; // {r, c}
+    let keyboardCursor = { r: 3, c: 3 };
+    let dragStart = null; // {x, y, r, c}
+    let particles = [];
+    let scoreFloatingTexts = [];
+    let clearingProgress = 0.0;
+    let matchedTilesList = []; // cells marked for clearing
+    let activeSwapA = null;
+    let activeSwapB = null;
+
+    let shuffleMessageTimer = 0; // show reshuffle splash
+
+    function getColor(gem) {
+      if (gem.colorVar.startsWith('--')) {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue(gem.colorVar).trim();
+        return raw || gem.fallback;
+      }
+      return gem.colorVar;
+    }
+
+    function hexToRgba(hex, alpha) {
+      let color = hex;
+      if (color.startsWith('#')) {
+        let h = color.substring(1);
+        if (h.length === 3) {
+          h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        }
+        const r = parseInt(h.substring(0, 2), 16);
+        const g = parseInt(h.substring(2, 4), 16);
+        const b = parseInt(h.substring(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+      if (color.startsWith('rgb')) {
+        return color.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+      }
+      return color;
+    }
+
+    function initLocalStorage() {
+      if (typeof window.getBestScore === 'function') {
+        highScore = window.getBestScore('gemmatch');
+      }
+      if (typeof window.getMuteState === 'function') {
+        soundMuted = window.getMuteState('gemmatch');
+      }
+      bestEl.textContent = highScore;
+      if (window.sfx) {
+        window.sfx.muted = soundMuted;
+      }
+      updateMuteButtonUI();
+    }
+
+    function updateMuteButtonUI() {
+      muteBtn.textContent = soundMuted ? '🔇 Sound Off' : '🔊 Sound On';
+    }
+
+    function toggleMute() {
+      soundMuted = !soundMuted;
+      if (typeof window.saveMuteState === 'function') {
+        window.saveMuteState('gemmatch', soundMuted);
+      }
+      if (window.sfx) {
+        window.sfx.muted = soundMuted;
+      }
+      updateMuteButtonUI();
+    }
+
+    // Board configuration generators
+    function shuffleBoard() {
+      let attempts = 0;
+      do {
+        // Collect current types or regenerate
+        for (let r = 0; r < GRID_ROWS; r++) {
+          for (let c = 0; c < GRID_COLS; c++) {
+            const type = Math.floor(Math.random() * GEMS.length);
+            const tx = c * TILE_SIZE;
+            const ty = r * TILE_SIZE;
+            // Shuffling visual position explode out from center
+            grid[r][c] = {
+              type,
+              vx: 200,
+              vy: 200,
+              tx,
+              ty,
+              id: ++tileIdCounter
+            };
+          }
+        }
+        eliminateMatches();
+        attempts++;
+      } while (!checkPossibleMoves() && attempts < 100);
+
+      shuffleMessageTimer = 90; // show "Reshuffled Board!" message for ~1.5s
+      state = 'shuffling';
+    }
+
+    function eliminateMatches() {
+      let matchFound = true;
+      while (matchFound) {
+        matchFound = false;
+        // Horizontal matches
+        for (let r = 0; r < GRID_ROWS; r++) {
+          for (let c = 0; c < GRID_COLS - 2; c++) {
+            if (grid[r][c].type === grid[r][c+1].type && grid[r][c].type === grid[r][c+2].type) {
+              grid[r][c+1].type = (grid[r][c+1].type + 1) % GEMS.length;
+              matchFound = true;
+            }
+          }
+        }
+        // Vertical matches
+        for (let c = 0; c < GRID_COLS; c++) {
+          for (let r = 0; r < GRID_ROWS - 2; r++) {
+            if (grid[r][c].type === grid[r+1][c].type && grid[r][c].type === grid[r+2][c].type) {
+              grid[r+1][c].type = (grid[r+1][c].type + 1) % GEMS.length;
+              matchFound = true;
+            }
+          }
+        }
+      }
+    }
+
+    function checkMatches() {
+      const matched = Array(GRID_ROWS).fill(null).map(() => Array(GRID_COLS).fill(false));
+      let matchFound = false;
+
+      // Horizontal
+      for (let r = 0; r < GRID_ROWS; r++) {
+        for (let c = 0; c < GRID_COLS - 2; c++) {
+          const t = grid[r][c].type;
+          if (grid[r][c+1].type === t && grid[r][c+2].type === t) {
+            matched[r][c] = true;
+            matched[r][c+1] = true;
+            matched[r][c+2] = true;
+            matchFound = true;
+          }
+        }
+      }
+
+      // Vertical
+      for (let c = 0; c < GRID_COLS; c++) {
+        for (let r = 0; r < GRID_ROWS - 2; r++) {
+          const t = grid[r][c].type;
+          if (grid[r+1][c].type === t && grid[r+2][c].type === t) {
+            matched[r][c] = true;
+            matched[r+1][c] = true;
+            matched[r+2][c] = true;
+            matchFound = true;
+          }
+        }
+      }
+
+      const list = [];
+      if (matchFound) {
+        for (let r = 0; r < GRID_ROWS; r++) {
+          for (let c = 0; c < GRID_COLS; c++) {
+            if (matched[r][c]) {
+              list.push({ r, c });
+            }
+          }
+        }
+      }
+      return list;
+    }
+
+    function checkPossibleMoves() {
+      // Temporary swap verify
+      for (let r = 0; r < GRID_ROWS; r++) {
+        for (let c = 0; c < GRID_COLS; c++) {
+          // Check right
+          if (c < GRID_COLS - 1) {
+            swapIndices(r, c, r, c + 1);
+            const matches = checkMatches();
+            swapIndices(r, c, r, c + 1); // swap back
+            if (matches.length > 0) return true;
+          }
+          // Check down
+          if (r < GRID_ROWS - 1) {
+            swapIndices(r, c, r + 1, c);
+            const matches = checkMatches();
+            swapIndices(r, c, r + 1, c); // swap back
+            if (matches.length > 0) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function swapIndices(r1, c1, r2, c2) {
+      const temp = grid[r1][c1].type;
+      grid[r1][c1].type = grid[r2][c2].type;
+      grid[r2][c2].type = temp;
+    }
+
+    // Grid rendering sub-methods
+    function drawGem(ctx, type, vx, vy, size, alpha = 1) {
+      const gem = GEMS[type];
+      const color = getColor(gem);
+      const cx = vx + TILE_SIZE / 2;
+      const cy = vy + TILE_SIZE / 2;
+      const r = (size / 2) * 0.8;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = hexToRgba(color, 0.25);
+
+      ctx.beginPath();
+      switch (gem.shape) {
+        case 'diamond':
+          ctx.moveTo(cx, cy - r);
+          ctx.lineTo(cx + r, cy);
+          ctx.lineTo(cx, cy + r);
+          ctx.lineTo(cx - r, cy);
+          ctx.closePath();
+          break;
+        case 'triangle':
+          ctx.moveTo(cx, cy - r);
+          ctx.lineTo(cx + r * Math.cos(Math.PI / 6), cy + r * Math.sin(Math.PI / 6));
+          ctx.lineTo(cx - r * Math.cos(Math.PI / 6), cy + r * Math.sin(Math.PI / 6));
+          ctx.closePath();
+          break;
+        case 'square':
+          ctx.rect(cx - r*0.9, cy - r*0.9, r * 1.8, r * 1.8);
+          break;
+        case 'hexagon':
+          for (let i = 0; i < 6; i++) {
+            const angle = (i * Math.PI) / 3 - Math.PI / 2;
+            const x = cx + r * Math.cos(angle);
+            const y = cy + r * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          break;
+        case 'star':
+          const points = 5;
+          const inset = 0.4;
+          for (let i = 0; i < points * 2; i++) {
+            const angle = (i * Math.PI) / points - Math.PI / 2;
+            const currR = (i % 2 === 0) ? r : r * inset;
+            const x = cx + currR * Math.cos(angle);
+            const y = cy + currR * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          break;
+        case 'heart':
+          const topCurveHeight = r * 0.4;
+          ctx.moveTo(cx, cy + r * 0.5);
+          ctx.bezierCurveTo(
+            cx - r, cy - r * 0.5,
+            cx - r * 0.8, cy - r,
+            cx, cy - topCurveHeight
+          );
+          ctx.bezierCurveTo(
+            cx + r * 0.8, cy - r,
+            cx + r, cy - r * 0.5,
+            cx, cy + r * 0.5
+          );
+          ctx.closePath();
+          break;
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function createParticles(r, c, type) {
+      const color = getColor(GEMS[type]);
+      const cx = c * TILE_SIZE + TILE_SIZE / 2;
+      const cy = r * TILE_SIZE + TILE_SIZE / 2;
+      const count = 12;
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 2;
+        particles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: color,
+          size: Math.random() * 3 + 2,
+          life: 1.0,
+          decay: Math.random() * 0.04 + 0.02
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Grid background lines
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || 'rgba(0, 240, 255, 0.1)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < GRID_COLS; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * TILE_SIZE, 0);
+        ctx.lineTo(i * TILE_SIZE, canvas.height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, i * TILE_SIZE);
+        ctx.lineTo(canvas.width, i * TILE_SIZE);
+        ctx.stroke();
+      }
+
+      // Draw gems
+      for (let r = 0; r < GRID_ROWS; r++) {
+        for (let c = 0; c < GRID_COLS; c++) {
+          const tile = grid[r][c];
+          if (!tile) continue;
+
+          let scale = 1.0;
+          let alpha = 1.0;
+          const isMatched = matchedTilesList.some(item => item.r === r && item.c === c);
+
+          if (isMatched && state === 'clearing') {
+            scale = Math.max(0, 1.0 - clearingProgress);
+            alpha = Math.max(0, 1.0 - clearingProgress);
+          }
+
+          drawGem(ctx, tile.type, tile.vx, tile.vy, TILE_SIZE * scale, alpha);
+        }
+      }
+
+      // Draw Selected Tile Indicator
+      if (selectedTile && state === 'idle') {
+        const tile = grid[selectedTile.r][selectedTile.c];
+        if (tile) {
+          const pulse = Math.sin(Date.now() / 150) * 0.08 + 0.92;
+          ctx.save();
+          ctx.strokeStyle = getColor(GEMS[tile.type]);
+          ctx.lineWidth = 3;
+          ctx.shadowColor = getColor(GEMS[tile.type]);
+          ctx.shadowBlur = 12 * pulse;
+          ctx.strokeRect(tile.vx + 2, tile.vy + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+          ctx.restore();
+        }
+      }
+
+      // Draw Keyboard Cursor Indicator
+      if (state === 'idle') {
+        ctx.save();
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim() || '#39ff14';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(keyboardCursor.c * TILE_SIZE + 2, keyboardCursor.r * TILE_SIZE + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+        ctx.restore();
+      }
+
+      // Draw Match-3 Particles
+      particles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.globalAlpha = p.life;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Draw Floating score texts
+      scoreFloatingTexts.forEach(t => {
+        ctx.save();
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-neon').trim() || '#00f0ff';
+        ctx.shadowBlur = 8;
+        ctx.globalAlpha = t.life;
+        ctx.font = 'bold 16px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(t.text, t.x, t.y);
+        ctx.restore();
+      });
+
+      // Draw Reshuffle Overlay
+      if (shuffleMessageTimer > 0) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.fillRect(0, 160, canvas.width, 80);
+        ctx.font = 'bold 20px monospace';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-pink').trim() || '#ff007f';
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 12;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('NO MORE MOVES!', 200, 185);
+        ctx.font = 'bold 15px monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('Reshuffling Board...', 200, 215);
+        ctx.restore();
+      }
+    }
+
+    function update(dt) {
+      if (state === 'paused' || state === 'gameover') return;
+
+      // Handle Timer Tick
+      if (state !== 'gameover') {
+        const speedup = 1.0 + (level - 1) * 0.08;
+        timeLeft -= (dt / 1000) * speedup;
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          endGame();
+        }
+        timeBar.style.width = `${(timeLeft / 60.0) * 100}%`;
+      }
+
+      if (shuffleMessageTimer > 0) {
+        shuffleMessageTimer--;
+      }
+
+      // Interpolate visual positions
+      let allSettled = true;
+      for (let r = 0; r < GRID_ROWS; r++) {
+        for (let c = 0; c < GRID_COLS; c++) {
+          const tile = grid[r][c];
+          if (!tile) continue;
+
+          // X direction lerp
+          if (Math.abs(tile.tx - tile.vx) > 0.3) {
+            tile.vx += (tile.tx - tile.vx) * 0.22;
+            allSettled = false;
+          } else {
+            tile.vx = tile.tx;
+          }
+
+          // Y direction lerp
+          if (Math.abs(tile.ty - tile.vy) > 0.3) {
+            tile.vy += (tile.ty - tile.vy) * 0.22;
+            allSettled = false;
+          } else {
+            tile.vy = tile.ty;
+          }
+        }
+      }
+
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.life -= p.decay;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      // Update Float texts
+      for (let i = scoreFloatingTexts.length - 1; i >= 0; i--) {
+        const t = scoreFloatingTexts[i];
+        t.y -= 0.8;
+        t.life -= 0.02;
+        if (t.life <= 0) {
+          scoreFloatingTexts.splice(i, 1);
+        }
+      }
+
+      // Handle swapping transitions
+      if (state === 'swapping' && allSettled) {
+        const matches = checkMatches();
+        if (matches.length > 0) {
+          matchedTilesList = matches;
+          clearingProgress = 0.0;
+          state = 'clearing';
+          processMatchClearing();
+        } else {
+          // Swap back
+          state = 'swapping_back';
+          const r1 = activeSwapA.r, c1 = activeSwapA.c;
+          const r2 = activeSwapB.r, c2 = activeSwapB.c;
+
+          // Swap logical references back
+          const temp = grid[r1][c1];
+          grid[r1][c1] = grid[r2][c2];
+          grid[r2][c2] = temp;
+
+          grid[r1][c1].tx = c1 * TILE_SIZE;
+          grid[r1][c1].ty = r1 * TILE_SIZE;
+          grid[r2][c2].tx = c2 * TILE_SIZE;
+          grid[r2][c2].ty = r2 * TILE_SIZE;
+
+          if (window.sfx && typeof window.sfx.playBounce === 'function') {
+            window.sfx.playBounce();
+          }
+        }
+      } else if (state === 'swapping_back' && allSettled) {
+        state = 'idle';
+        activeSwapA = null;
+        activeSwapB = null;
+      }
+
+      // Match clearing progress
+      if (state === 'clearing') {
+        clearingProgress += 0.06;
+        if (clearingProgress >= 1.0) {
+          applyGravityDrop();
+          state = 'falling';
+        }
+      }
+
+      // Falling cascades
+      if (state === 'falling' && allSettled) {
+        const matches = checkMatches();
+        if (matches.length > 0) {
+          comboMultiplier++;
+          matchedTilesList = matches;
+          clearingProgress = 0.0;
+          state = 'clearing';
+          processMatchClearing();
+        } else {
+          comboMultiplier = 1;
+          if (!checkPossibleMoves()) {
+            shuffleBoard();
+          } else {
+            state = 'idle';
+          }
+        }
+      }
+
+      if (state === 'shuffling' && allSettled) {
+        state = 'idle';
+      }
+    }
+
+    function processMatchClearing() {
+      const matchCount = matchedTilesList.length;
+      if (matchCount === 0) return;
+
+      matchedTilesList.forEach(cell => {
+        const tile = grid[cell.r][cell.c];
+        if (tile) {
+          createParticles(cell.r, cell.c, tile.type);
+        }
+      });
+
+      if (window.sfx) {
+        if (comboMultiplier > 1 || matchCount >= 4) {
+          if (typeof window.sfx.playScoreSlot === 'function') {
+            window.sfx.playScoreSlot();
+          }
+        } else if (typeof window.sfx.playEat === 'function') {
+          window.sfx.playEat();
+        }
+      }
+
+      const points = matchCount * 10 * comboMultiplier * level;
+      score += points;
+      scoreEl.textContent = score;
+
+      timeLeft = Math.min(60.0, timeLeft + matchCount * 1.5);
+
+      const nextLevel = Math.floor(score / 1000) + 1;
+      if (nextLevel > level) {
+        level = nextLevel;
+        levelEl.textContent = level;
+      }
+
+      if (score > highScore) {
+        highScore = score;
+        bestEl.textContent = highScore;
+        if (typeof window.saveBestScore === 'function') {
+          window.saveBestScore('gemmatch', score);
+        }
+      }
+
+      const firstCell = matchedTilesList[0];
+      const fx = firstCell.c * TILE_SIZE + TILE_SIZE / 2;
+      const fy = firstCell.r * TILE_SIZE + TILE_SIZE / 2;
+      let text = `+${points}`;
+      if (comboMultiplier > 1) {
+        text += ` Combo x${comboMultiplier}!`;
+      } else if (matchCount === 4) {
+        text = `GREAT! ${text}`;
+      } else if (matchCount >= 5) {
+        text = `MEGA! ${text}`;
+      }
+      scoreFloatingTexts.push({
+        x: fx,
+        y: fy,
+        text: text,
+        life: 1.0
+      });
+    }
+
+    function applyGravityDrop() {
+      matchedTilesList.forEach(cell => {
+        grid[cell.r][cell.c] = null;
+      });
+      matchedTilesList = [];
+
+      for (let c = 0; c < GRID_COLS; c++) {
+        let emptyCount = 0;
+        for (let r = GRID_ROWS - 1; r >= 0; r--) {
+          if (grid[r][c] === null) {
+            emptyCount++;
+          } else if (emptyCount > 0) {
+            const tile = grid[r][c];
+            grid[r + emptyCount][c] = tile;
+            grid[r][c] = null;
+
+            tile.tx = c * TILE_SIZE;
+            tile.ty = (r + emptyCount) * TILE_SIZE;
+          }
+        }
+
+        // Fill empty from top
+        for (let i = 0; i < emptyCount; i++) {
+          const r = emptyCount - 1 - i;
+          const type = Math.floor(Math.random() * GEMS.length);
+          const tx = c * TILE_SIZE;
+          const ty = r * TILE_SIZE;
+          const vx = tx;
+          const vy = -TILE_SIZE * (i + 1);
+          grid[r][c] = {
+            type,
+            vx,
+            vy,
+            tx,
+            ty,
+            id: ++tileIdCounter
+          };
+        }
+      }
+    }
+
+    function initiateSwap(r1, c1, r2, c2) {
+      if (r1 < 0 || r1 >= GRID_ROWS || c1 < 0 || c1 >= GRID_COLS ||
+          r2 < 0 || r2 >= GRID_ROWS || c2 < 0 || c2 >= GRID_COLS) return;
+
+      const dRow = Math.abs(r1 - r2);
+      const dCol = Math.abs(c1 - c2);
+      if ((dRow === 1 && dCol === 0) || (dRow === 0 && dCol === 1)) {
+        state = 'swapping';
+        activeSwapA = { r: r1, c: c1 };
+        activeSwapB = { r: r2, c: c2 };
+
+        const temp = grid[r1][c1];
+        grid[r1][c1] = grid[r2][c2];
+        grid[r2][c2] = temp;
+
+        grid[r1][c1].tx = c1 * TILE_SIZE;
+        grid[r1][c1].ty = r1 * TILE_SIZE;
+        grid[r2][c2].tx = c2 * TILE_SIZE;
+        grid[r2][c2].ty = r2 * TILE_SIZE;
+
+        if (window.sfx && typeof window.sfx.playBounce === 'function') {
+          window.sfx.playBounce();
+        }
+      }
+    }
+
+    // Interactions
+    function handlePointerDown(e) {
+      if (state !== 'idle') return;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+
+      const c = Math.floor(mx / TILE_SIZE);
+      const r = Math.floor(my / TILE_SIZE);
+
+      if (r >= 0 && r < GRID_ROWS && c >= 0 && c < GRID_COLS) {
+        dragStart = { x: e.clientX, y: e.clientY, r, c };
+        keyboardCursor = { r, c };
+      }
+    }
+
+    function handlePointerUp(e) {
+      if (state !== 'idle' || !dragStart) {
+        dragStart = null;
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+
+      const dX = e.clientX - dragStart.x;
+      const dY = e.clientY - dragStart.y;
+      const dist = Math.sqrt(dX * dX + dY * dY);
+
+      if (dist > 15) {
+        let r2 = dragStart.r;
+        let c2 = dragStart.c;
+        if (Math.abs(dX) > Math.abs(dY)) {
+          c2 += (dX > 0) ? 1 : -1;
+        } else {
+          r2 += (dY > 0) ? 1 : -1;
+        }
+        initiateSwap(dragStart.r, dragStart.c, r2, c2);
+        selectedTile = null;
+      } else {
+        const c = Math.floor(mx / TILE_SIZE);
+        const r = Math.floor(my / TILE_SIZE);
+
+        if (selectedTile) {
+          if (selectedTile.r === r && selectedTile.c === c) {
+            selectedTile = null;
+          } else {
+            const dr = Math.abs(selectedTile.r - r);
+            const dc = Math.abs(selectedTile.c - c);
+            if ((dr === 1 && dc === 0) || (dr === 0 && dc === 1)) {
+              initiateSwap(selectedTile.r, selectedTile.c, r, c);
+              selectedTile = null;
+            } else {
+              selectedTile = { r, c };
+            }
+          }
+        } else {
+          selectedTile = { r, c };
+        }
+      }
+      dragStart = null;
+    }
+
+    function handleKeyDown(e) {
+      if (e.repeat) return;
+
+      if (window.KeyManager && window.KeyManager.isKey(e, 'pause')) {
+        togglePause();
+        e.preventDefault();
+        return;
+      }
+      if (e.key === 'p' || e.key === 'P') {
+        togglePause();
+        e.preventDefault();
+        return;
+      }
+
+      if (e.key === 'm' || e.key === 'M') {
+        toggleMute();
+        e.preventDefault();
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        selectedTile = null;
+        e.preventDefault();
+        return;
+      }
+
+      if (state !== 'idle') return;
+
+      let dr = 0, dc = 0;
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          dr = -1;
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          dr = 1;
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          dc = -1;
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          dc = 1;
+          break;
+        case ' ':
+        case 'Enter':
+          if (selectedTile) {
+            if (selectedTile.r === keyboardCursor.r && selectedTile.c === keyboardCursor.c) {
+              selectedTile = null;
+            } else {
+              initiateSwap(selectedTile.r, selectedTile.c, keyboardCursor.r, keyboardCursor.c);
+              selectedTile = null;
+            }
+          } else {
+            selectedTile = { r: keyboardCursor.r, c: keyboardCursor.c };
+          }
+          e.preventDefault();
+          return;
+      }
+
+      if (dr !== 0 || dc !== 0) {
+        e.preventDefault();
+        const nr = keyboardCursor.r + dr;
+        const nc = keyboardCursor.c + dc;
+        if (nr >= 0 && nr < GRID_ROWS && nc >= 0 && nc < GRID_COLS) {
+          if (selectedTile && (selectedTile.r !== nr || selectedTile.c !== nc)) {
+            initiateSwap(selectedTile.r, selectedTile.c, nr, nc);
+            selectedTile = null;
+          }
+          keyboardCursor = { r: nr, c: nc };
+        }
+      }
+    }
+
+    function startGame() {
+      overlay.classList.add('hidden');
+      canvas.focus();
+
+      score = 0;
+      level = 1;
+      timeLeft = 60.0;
+      comboMultiplier = 1;
+      particles = [];
+      scoreFloatingTexts = [];
+      selectedTile = null;
+      keyboardCursor = { r: 3, c: 3 };
+
+      scoreEl.textContent = '0';
+      levelEl.textContent = '1';
+
+      shuffleBoard();
+      state = 'falling';
+      lastTime = performance.now();
+    }
+
+    function togglePause() {
+      if (state === 'paused') {
+        state = prePauseState;
+        pauseBtn.textContent = 'PAUSE';
+        pauseBtn.style.boxShadow = '';
+        lastTime = performance.now();
+      } else if (state !== 'gameover' && state !== 'shuffling') {
+        prePauseState = state;
+        state = 'paused';
+        pauseBtn.textContent = 'RESUME';
+        pauseBtn.style.boxShadow = '0 0 15px var(--accent-pink)';
+        selectedTile = null;
+      }
+    }
+
+    function endGame() {
+      state = 'gameover';
+      if (score > highScore) {
+        highScore = score;
+        bestEl.textContent = highScore;
+        if (typeof window.saveBestScore === 'function') {
+          window.saveBestScore('gemmatch', score);
+        }
+      }
+
+      if (window.sfx && typeof window.sfx.playGameOver === 'function') {
+        window.sfx.playGameOver();
+      }
+
+      overlayTitle.textContent = "GAME OVER";
+      overlayDesc.textContent = `Time's up! You reached Level ${level} with a score of ${score}. Try again to beat your high score!`;
+      finalScoreContainer.classList.remove('hidden');
+      finalScore.textContent = score;
+      startBtn.textContent = "PLAY AGAIN";
+      overlay.classList.remove('hidden');
+    }
+
+    function initGameLoop() {
+      let animFrameId = null;
+      function tick(now) {
+        const dt = now - lastTime;
+        lastTime = now;
+
+        update(dt);
+        draw();
+
+        animFrameId = requestAnimationFrame(tick);
+      }
+
+      lastTime = performance.now();
+      animFrameId = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('themechange', () => {
+      draw();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initLocalStorage();
+      initGameLoop();
+    });
+
+    startBtn.addEventListener('click', startGame);
+    pauseBtn.addEventListener('click', togglePause);
+    resetBtn.addEventListener('click', startGame);
+    muteBtn.addEventListener('click', toggleMute);
+
+    canvas.addEventListener('mousedown', handlePointerDown);
+    canvas.addEventListener('mouseup', handlePointerUp);
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        handlePointerDown(e.touches[0]);
+      }
+    });
+    canvas.addEventListener('touchend', (e) => {
+      if (e.changedTouches && e.changedTouches[0]) {
+        handlePointerUp(e.changedTouches[0]);
+      }
+    });
+
+    window.addEventListener('keydown', handleKeyDown);
+  })();
+</script>
+</body>
+</html>
