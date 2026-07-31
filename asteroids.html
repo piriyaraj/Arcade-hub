@@ -330,16 +330,19 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">Asteroids</h2>
   <p id="overlay-desc">Use Left/Right arrows (or A/D) to rotate, Up arrow (or W) to thrust, and Spacebar to shoot. Drift through the screen, destroy asteroids, and survive!</p>
   <div class="final-score hidden" id="final-score-container">Score: <span id="final-score">0</span></div>
@@ -1195,5 +1198,29 @@
     loop();
   })();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

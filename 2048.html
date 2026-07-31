@@ -328,17 +328,20 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h2>2048</h2>
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+  <h2 id="overlay-title">2048</h2>
   <p>Use arrow keys or WASD to slide tiles. Swipe or tap the D-pad to control on mobile devices. Combine matching tiles to reach 2048!</p>
   <button class="play-btn" id="start-btn" aria-label="Start 2048 Game">START GAME</button>
 </div>
@@ -1090,5 +1093,29 @@ initGame();
 requestAnimationFrame(runAnimationFrameLoop);
 
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

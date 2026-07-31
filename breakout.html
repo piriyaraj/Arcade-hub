@@ -257,16 +257,19 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">BREAKOUT</h2>
   <p id="overlay-desc">Destroy all bricks! Use your mouse/trackpad or Arrow keys/A and D to move the paddle.</p>
   <ul class="instructions-list" id="instructions">
@@ -478,7 +481,7 @@
       rightPressed = true;
     } else if (e.key === 'Left' || e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
       leftPressed = true;
-    } else if (e.key === ' ' || e.key.toLowerCase() === 'p') {
+    } else if (e.key === ' ' || e.key.toLowerCase() === 'p' || e.key === 'Escape') {
       // Toggle pause on Space or P keys
       if (gameStarted && !gameOver && !isLevelTransition) {
         togglePause();
@@ -922,5 +925,29 @@
   updateMuteButtonUI();
   loop();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

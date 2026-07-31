@@ -320,16 +320,19 @@
     }
 
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">CYBER RACER</h2>
   <p id="overlay-desc">Race down the retro digital superhighway! Steer left/right, avoid obstacle barriers, and extract glowing energy nodes.</p>
   <ul class="instructions-list" id="instructions">
@@ -1245,5 +1248,29 @@
   // Run Loop
   requestAnimationFrame(gameLoop);
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

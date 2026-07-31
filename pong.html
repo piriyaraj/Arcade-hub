@@ -269,16 +269,19 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">PONG</h2>
   <p id="overlay-desc">Defeat the CPU in standard retro arcade style. First to 7 points wins!</p>
   <ul class="instructions-list" id="instructions">
@@ -478,7 +481,7 @@
       keys.w = true;
     } else if (e.key.toLowerCase() === 's') {
       keys.s = true;
-    } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.key === ' ' || e.key.toLowerCase() === 'p')) {
+    } else if (window.KeyManager ? (window.KeyManager.isKey(e, 'pause') || e.key === 'Escape') : (e.key === ' ' || e.key.toLowerCase() === 'p' || e.key === 'Escape')) {
       if (gameStarted && !gameOver) {
         togglePause();
         e.preventDefault();
@@ -907,5 +910,29 @@
   updateMuteButtonUI();
   loop();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

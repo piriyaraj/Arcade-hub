@@ -237,17 +237,20 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h2>BING BALL</h2>
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+  <h2 id="overlay-title">BING BALL</h2>
   <p>Drop balls and watch them bounce through the pegs. Land in the high-value slots to score big!</p>
   <button class="drop-btn" id="start-btn" data-action="start" aria-label="Start Bing Ball Game">START GAME</button>
 </div>
@@ -825,5 +828,29 @@ resize();
 initPegs();
 gameLoop();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

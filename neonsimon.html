@@ -283,11 +283,22 @@
         padding: 2px 12px 4px;
       }
     }
+  
+    canvas:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
+      outline-offset: 2px;
+    }
+    
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">Neon Simon</h2>
   <div class="final-score hidden" id="final-score-container">Best Round Reached: <span id="final-score">0</span></div>
   <p id="overlay-desc">Observe the sequence of glowing neon pads and audio tones, then repeat it back. The sequence gets longer by one step each round!</p>
@@ -910,7 +921,7 @@
         e.preventDefault();
         return;
       }
-      if (e.key === 'p' || e.key === 'P') {
+      if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
         togglePause();
         e.preventDefault();
         return;
@@ -981,5 +992,29 @@
 
   })();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

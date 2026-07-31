@@ -297,16 +297,19 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">NEON TETRIS</h2>
   <p id="overlay-desc">Arrange falling blocks to fill rows. Clear multiple rows to boost score! Use WASD / Arrows to move/rotate, and Space for Hard Drop.</p>
   <div class="final-score" id="overlay-score" style="display: none;">0</div>
@@ -935,6 +938,9 @@
     if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
       toggleMute();
     }
+    if (e.key === 'Escape' && !e.repeat) {
+      pauseGame();
+    }
   });
 
   // Mobile Soft Controls
@@ -987,5 +993,29 @@
   // Init Window Dimensions
   resize();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>

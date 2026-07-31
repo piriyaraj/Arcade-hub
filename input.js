@@ -134,9 +134,13 @@ const KeyManager = {
 
     const modal = document.createElement('div');
     modal.className = 'kb-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'kb-modal-title');
 
     const header = document.createElement('div');
     header.className = 'kb-header';
+    header.id = 'kb-modal-title';
     header.textContent = 'KEYSETTINGS';
     modal.appendChild(header);
 
@@ -180,6 +184,14 @@ const KeyManager = {
     const footer = document.createElement('div');
     footer.className = 'kb-footer';
 
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && !overlay.querySelector('.kb-key-btn.waiting')) {
+        overlay.remove();
+        window.removeEventListener('keydown', handleEsc);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+
     const resetBtn = document.createElement('button');
     resetBtn.className = 'kb-btn kb-btn-reset';
     resetBtn.textContent = 'RESET';
@@ -187,6 +199,7 @@ const KeyManager = {
       this.bindings = { pause: 'KeyP', action: 'Space' };
       this.save();
       overlay.remove();
+      window.removeEventListener('keydown', handleEsc);
       this.showModal(); // Reopen
     });
 
@@ -195,6 +208,7 @@ const KeyManager = {
     closeBtn.textContent = 'CLOSE';
     closeBtn.addEventListener('click', () => {
       overlay.remove();
+      window.removeEventListener('keydown', handleEsc);
     });
 
     footer.appendChild(resetBtn);
@@ -203,6 +217,8 @@ const KeyManager = {
 
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
+
+    closeBtn.focus();
   },
   setupUI() {
     const header = document.querySelector('header');

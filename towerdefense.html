@@ -268,16 +268,19 @@
 
     /* Accessible focus rings */
     canvas:focus-visible,
-    button:focus-visible,
     [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
+      outline-offset: 2px;
+    }
+    button:focus-visible {
+      outline: 2px solid indigo;
       outline-offset: 2px;
     }
   </style>
 </head>
 <body>
 
-<div id="overlay">
+<div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
   <h2 id="overlay-title">Retro Tower Defense</h2>
   <p id="overlay-desc">Defend your core from ascending computer viruses! Buy and place towers on the grid to destroy the bugs. Click on the canvas grid to place the selected tower type.</p>
   <div class="final-score hidden" id="final-score-container">Wave Reached: <span id="final-score">0</span></div>
@@ -993,6 +996,14 @@
       pauseBtn.textContent = 'PAUSE';
     });
 
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !e.repeat) {
+        if (state === 'playing' || state === 'paused') {
+          togglePause();
+        }
+      }
+    });
+
     window.addEventListener('blur', () => {
       if (state === 'playing') {
         state = 'paused';
@@ -1010,5 +1021,29 @@
     loop();
   })();
 </script>
+
+  <!-- Accessible Focus management -->
+  <script>
+    (function() {
+      const overlay = document.getElementById('overlay');
+      const startBtn = document.getElementById('start-btn');
+      if (overlay && startBtn) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              if (!overlay.classList.contains('hidden')) {
+                setTimeout(() => startBtn.focus(), 50);
+              }
+            }
+          });
+        });
+        observer.observe(overlay, { attributes: true });
+        if (!overlay.classList.contains('hidden')) {
+          setTimeout(() => startBtn.focus(), 100);
+        }
+      }
+    })();
+  </script>
+
 </body>
 </html>
