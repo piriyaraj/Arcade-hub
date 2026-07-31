@@ -1,0 +1,5 @@
+# Robots.txt for Arcade Hub
+User-agent: *
+Allow: /
+
+Sitemap: https://arcadehub.telekit.link/sitemap.xml
