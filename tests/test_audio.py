@@ -201,3 +201,54 @@ console.log('Success');
         timeout=10
     )
     assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"
+
+
+def test_audio_manager_localStorage_exceptions():
+    """Verify that if localStorage operations throw, no exceptions bubble up and defaults/actions behave gracefully."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.abspath(os.path.join(tests_dir, ".."))
+
+    js_code = """
+global.window = {};
+global.localStorage = {
+  getItem: (key) => { throw new Error('SecurityError: DOM Exception 18'); },
+  setItem: (key, val) => { throw new Error('QuotaExceededError: DOM Exception 22'); }
+};
+
+const { AudioManager } = require('./audio.js');
+
+let manager;
+try {
+  manager = new AudioManager();
+} catch (e) {
+  console.error('Constructor threw when localStorage.getItem threw:', e);
+  process.exit(1);
+}
+
+if (manager.masterVolume !== 1.0 || manager.muted !== false) {
+  console.error('Expected default volumes on getItem throw, got masterVolume:', manager.masterVolume);
+  process.exit(1);
+}
+
+try {
+  manager.masterVolume = 0.5;
+} catch (e) {
+  console.error('Setter threw when localStorage.setItem threw:', e);
+  process.exit(1);
+}
+
+if (manager.masterVolume !== 0.5) {
+  console.error('Expected masterVolume to update in memory even if setItem threw, got:', manager.masterVolume);
+  process.exit(1);
+}
+
+console.log('Success');
+"""
+    result = subprocess.run(
+        ["node", "-e", js_code],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        timeout=10
+    )
+    assert result.returncode == 0, f"Node process failed: {result.stderr}\nSTDOUT: {result.stdout}"

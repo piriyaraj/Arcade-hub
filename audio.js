@@ -1,4 +1,37 @@
 // Web Audio API Synthesizer Helper for Retro Game Sound Effects
+
+// Safe localStorage wrappers to handle cases where localStorage is disabled or throws (e.g., Safari private mode)
+function safeGet(key) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(key);
+    }
+  } catch (e) {
+    // Ignore read errors
+  }
+  return null;
+}
+
+function safeSet(key, val) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, val);
+    }
+  } catch (e) {
+    // Ignore write errors
+  }
+}
+
+function safeRemove(key) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  } catch (e) {
+    // Ignore remove errors
+  }
+}
+
 class AudioManager {
   constructor() {
     this.ctx = null;
@@ -17,38 +50,34 @@ class AudioManager {
   }
 
   loadSettings() {
-    if (typeof localStorage !== 'undefined') {
-      try {
-        const master = localStorage.getItem('audio_master_volume');
-        this._masterVolume = master !== null ? this.clampVolume(master) : 1.0;
+    try {
+      const master = safeGet('audio_master_volume');
+      this._masterVolume = master !== null ? this.clampVolume(master) : 1.0;
 
-        const sfx = localStorage.getItem('audio_sfx_volume');
-        this._sfxVolume = sfx !== null ? this.clampVolume(sfx) : 1.0;
+      const sfx = safeGet('audio_sfx_volume');
+      this._sfxVolume = sfx !== null ? this.clampVolume(sfx) : 1.0;
 
-        const music = localStorage.getItem('audio_music_volume');
-        this._musicVolume = music !== null ? this.clampVolume(music) : 1.0;
+      const music = safeGet('audio_music_volume');
+      this._musicVolume = music !== null ? this.clampVolume(music) : 1.0;
 
-        const muted = localStorage.getItem('audio_muted');
-        this._muted = muted !== null ? muted === 'true' : false;
-      } catch (e) {
-        this._masterVolume = 1.0;
-        this._sfxVolume = 1.0;
-        this._musicVolume = 1.0;
-        this._muted = false;
-      }
+      const muted = safeGet('audio_muted');
+      this._muted = muted !== null ? muted === 'true' : false;
+    } catch (e) {
+      this._masterVolume = 1.0;
+      this._sfxVolume = 1.0;
+      this._musicVolume = 1.0;
+      this._muted = false;
     }
   }
 
   saveSettings() {
-    if (typeof localStorage !== 'undefined') {
-      try {
-        localStorage.setItem('audio_master_volume', this._masterVolume.toString());
-        localStorage.setItem('audio_sfx_volume', this._sfxVolume.toString());
-        localStorage.setItem('audio_music_volume', this._musicVolume.toString());
-        localStorage.setItem('audio_muted', this._muted.toString());
-      } catch (e) {
-        // Ignore storage write errors
-      }
+    try {
+      safeSet('audio_master_volume', this._masterVolume.toString());
+      safeSet('audio_sfx_volume', this._sfxVolume.toString());
+      safeSet('audio_music_volume', this._musicVolume.toString());
+      safeSet('audio_muted', this._muted.toString());
+    } catch (e) {
+      // Ignore storage write errors
     }
   }
 
