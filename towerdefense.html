@@ -269,7 +269,7 @@
     /* Accessible focus rings */
     canvas:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    a:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
       outline-offset: 2px;
     }
@@ -285,10 +285,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>RETRO TOWER DEFENSE</h1>
   <p>Protect your database from cyber viruses!</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -319,7 +319,7 @@
 <div id="controls">
   <button class="panel-btn selected" id="btn-laser" aria-label="Select Laser Tower - Cost 100">Laser Tower ($100)</button>
   <button class="panel-btn" id="btn-slow" aria-label="Select Quantum Tower - Cost 150">Quantum Tower ($150)</button>
-  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
+  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game" aria-pressed="false">PAUSE</button>
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
@@ -1008,6 +1008,20 @@
     }
 
     loop();
+  })();
+
+  // Dynamic ARIA pressed state synchronization for pause button
+  (function() {
+    const pauseBtn = document.getElementById('pause-btn');
+    if (pauseBtn) {
+      const updateAriaPressed = () => {
+        const isPaused = pauseBtn.textContent.includes('RESUME');
+        pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      };
+      const observer = new MutationObserver(updateAriaPressed);
+      observer.observe(pauseBtn, { childList: true, characterData: true, subtree: true });
+      updateAriaPressed();
+    }
   })();
 </script>
 </body>

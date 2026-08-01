@@ -238,7 +238,7 @@
     /* Accessible focus rings */
     canvas:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    a:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
       outline-offset: 2px;
     }
@@ -253,10 +253,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>BING BALL</h1>
   <p>Drop the ball — bounce through the pegs</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">

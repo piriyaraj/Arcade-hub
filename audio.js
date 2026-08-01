@@ -86,6 +86,12 @@ class AudioManager {
   set muted(val) {
     this._muted = !!val;
     this.saveSettings();
+    if (typeof document !== 'undefined') {
+      const muteBtn = document.getElementById('mute-btn');
+      if (muteBtn) {
+        muteBtn.setAttribute('aria-pressed', this._muted ? 'true' : 'false');
+      }
+    }
   }
 
   toggleMute() {
@@ -207,6 +213,22 @@ if (typeof window !== 'undefined') {
   }
   if (typeof window.sfx === 'undefined') {
     window.sfx = window.audioManager;
+  }
+
+  // Dynamic ARIA pressed state synchronization
+  const syncMuteBtn = () => {
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn && window.sfx) {
+      muteBtn.setAttribute('aria-pressed', window.sfx.muted ? 'true' : 'false');
+    }
+  };
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMuteBtn);
+    } else {
+      syncMuteBtn();
+    }
   }
 }
 

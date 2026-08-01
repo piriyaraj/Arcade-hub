@@ -258,7 +258,7 @@
     /* Accessible focus rings */
     canvas:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    a:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
       outline-offset: 2px;
     }
@@ -280,10 +280,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>BREAKOUT</h1>
   <p>Move the paddle and clear the bricks!</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -310,7 +310,7 @@
 </div>
 
 <div id="controls">
-  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled aria-pressed="false">PAUSE</button>
   <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
@@ -921,6 +921,20 @@
   initGameDetails();
   updateMuteButtonUI();
   loop();
+
+  // Dynamic ARIA pressed state synchronization for pause button
+  (function() {
+    const pauseBtn = document.getElementById('pause-btn');
+    if (pauseBtn) {
+      const updateAriaPressed = () => {
+        const isPaused = pauseBtn.textContent.includes('RESUME');
+        pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      };
+      const observer = new MutationObserver(updateAriaPressed);
+      observer.observe(pauseBtn, { childList: true, characterData: true, subtree: true });
+      updateAriaPressed();
+    }
+  })();
 </script>
 </body>
 </html>

@@ -199,11 +199,20 @@
       font-size: 0.875rem;
       border-top: 1px solid var(--border);
     }
-  </style>
+  
+    /* Accessible focus rings */
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid var(--accent-neon, #00f0ff) !important;
+      outline-offset: 2px !important;
+    }
+</style>
 </head>
 <body>
   <header>
-    <a href="index.html" class="back-btn">&larr; Home</a>
+    <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
     <h1 class="logo">Leaderboard</h1>
   </header>
 
@@ -219,7 +228,7 @@
           <option value="name-desc">Name: Z to A</option>
         </select>
 
-        <button id="reset-all" class="btn-danger">Clear Scores</button>
+        <button id="reset-all" class="btn-danger" aria-label="Clear all leaderboard scores">Clear Scores</button>
       </div>
 
       <div class="table-responsive">

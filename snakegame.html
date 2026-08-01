@@ -318,7 +318,7 @@
     /* Accessible focus rings */
     canvas:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    a:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
       outline-offset: 2px;
     }
@@ -333,10 +333,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>SNAKE GAME</h1>
   <p>Eat food — grow longer — don't hit the walls!</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -360,20 +360,20 @@
 
 <div id="dpad" class="mobile-only">
   <div class="dpad-row">
-    <button id="dpad-up" class="dpad-btn">▲</button>
+    <button id="dpad-up" class="dpad-btn" aria-label="Move Up">▲</button>
   </div>
   <div class="dpad-row">
-    <button id="dpad-left" class="dpad-btn">◀</button>
+    <button id="dpad-left" class="dpad-btn" aria-label="Move Left">◀</button>
     <div class="dpad-space"></div>
-    <button id="dpad-right" class="dpad-btn">▶</button>
+    <button id="dpad-right" class="dpad-btn" aria-label="Move Right">▶</button>
   </div>
   <div class="dpad-row">
-    <button id="dpad-down" class="dpad-btn">▼</button>
+    <button id="dpad-down" class="dpad-btn" aria-label="Move Down">▼</button>
   </div>
 </div>
 
 <div id="controls">
-  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game">PAUSE</button>
+  <button class="play-btn" id="pause-btn" aria-label="Pause or resume the game" aria-pressed="false">PAUSE</button>
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 <script src="audio.js"></script>
@@ -1035,6 +1035,20 @@ if (dpadUp && dpadDown && dpadLeft && dpadRight) {
 resize();
 initGame();
 requestAnimationFrame(gameLoop);
+
+  // Dynamic ARIA pressed state synchronization for pause button
+  (function() {
+    const pauseBtn = document.getElementById('pause-btn');
+    if (pauseBtn) {
+      const updateAriaPressed = () => {
+        const isPaused = pauseBtn.textContent.includes('RESUME');
+        pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      };
+      const observer = new MutationObserver(updateAriaPressed);
+      observer.observe(pauseBtn, { childList: true, characterData: true, subtree: true });
+      updateAriaPressed();
+    }
+  })();
 </script>
 </body>
 </html>

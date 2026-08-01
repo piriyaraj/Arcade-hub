@@ -283,7 +283,16 @@
         padding: 2px 12px 4px;
       }
     }
-  </style>
+  
+    /* Accessible focus rings */
+    canvas:focus-visible,
+    button:focus-visible,
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--theme-neon, #00f0ff) !important;
+      outline-offset: 2px !important;
+    }
+</style>
 </head>
 <body>
 
@@ -303,10 +312,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>NEON SIMON</h1>
   <p>Sequence memory challenge game</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -329,7 +338,7 @@
 </div>
 
 <div id="controls">
-  <button class="play-btn" id="pause-btn" aria-label="Pause game">PAUSE</button>
+  <button class="play-btn" id="pause-btn" aria-label="Pause game" aria-pressed="false">PAUSE</button>
   <button id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
@@ -979,6 +988,20 @@
     canvas.addEventListener('pointerdown', handleCanvasPointer);
     window.addEventListener('keydown', handleKeyDown);
 
+  })();
+
+  // Dynamic ARIA pressed state synchronization for pause button
+  (function() {
+    const pauseBtn = document.getElementById('pause-btn');
+    if (pauseBtn) {
+      const updateAriaPressed = () => {
+        const isPaused = pauseBtn.textContent.includes('RESUME');
+        pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      };
+      const observer = new MutationObserver(updateAriaPressed);
+      observer.observe(pauseBtn, { childList: true, characterData: true, subtree: true });
+      updateAriaPressed();
+    }
   })();
 </script>
 </body>

@@ -319,7 +319,7 @@
     /* Accessible focus rings */
     canvas:focus-visible,
     button:focus-visible,
-    [tabindex]:focus-visible {
+    a:focus-visible, [tabindex]:focus-visible {
       outline: 3px solid #4f46e5;
       outline-offset: 2px;
     }
@@ -342,10 +342,10 @@
 </div>
 
 <header>
-  <a href="index.html" class="back-btn">&larr; Home</a>
+  <a href="index.html" class="back-btn" aria-label="Back to home page">&larr; Home</a>
   <h1>CYBER RUNNER</h1>
   <p>Dodge obstacles and extract data nodes!</p>
-  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  <button class="mute-btn" id="mute-btn" aria-label="Toggle sound" aria-pressed="false">🔊 Sound On</button>
 </header>
 
 <div id="stats">
@@ -368,12 +368,12 @@
 </div>
 
 <div id="mobile-controls">
-  <button id="btn-jump" class="mobile-action-btn">▲ JUMP</button>
-  <button id="btn-duck" class="mobile-action-btn">▼ DUCK</button>
+  <button id="btn-jump" class="mobile-action-btn" aria-label="Jump">▲ JUMP</button>
+  <button id="btn-duck" class="mobile-action-btn" aria-label="Duck">▼ DUCK</button>
 </div>
 
 <div id="controls">
-  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled aria-pressed="false">PAUSE</button>
   <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
@@ -1171,6 +1171,20 @@
   // Run the initializer and bootstrap animation loop
   initGameDetails();
   loop();
+
+  // Dynamic ARIA pressed state synchronization for pause button
+  (function() {
+    const pauseBtn = document.getElementById('pause-btn');
+    if (pauseBtn) {
+      const updateAriaPressed = () => {
+        const isPaused = pauseBtn.textContent.includes('RESUME');
+        pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      };
+      const observer = new MutationObserver(updateAriaPressed);
+      observer.observe(pauseBtn, { childList: true, characterData: true, subtree: true });
+      updateAriaPressed();
+    }
+  })();
 </script>
 </body>
 </html>
