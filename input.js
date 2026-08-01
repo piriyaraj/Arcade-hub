@@ -6,7 +6,12 @@ const KeyManager = {
     action: 'Space'
   },
   init() {
-    const saved = localStorage.getItem('arcade-keybindings');
+    let saved = null;
+    try {
+      saved = localStorage.getItem('arcade-keybindings');
+    } catch (e) {
+      console.warn('Failed to retrieve keybindings from localStorage:', e);
+    }
     if (saved) {
       try {
         this.bindings = JSON.parse(saved);
@@ -17,7 +22,11 @@ const KeyManager = {
     this.setupUI();
   },
   save() {
-    localStorage.setItem('arcade-keybindings', JSON.stringify(this.bindings));
+    try {
+      localStorage.setItem('arcade-keybindings', JSON.stringify(this.bindings));
+    } catch (e) {
+      console.warn('Failed to save keybindings to localStorage:', e);
+    }
   },
   isKey(e, action) {
     const bound = this.bindings[action];
