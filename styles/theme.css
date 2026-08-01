@@ -118,3 +118,31 @@ body.theme-retro-neon {
   background: var(--bg);
   color: var(--text);
 }
+
+/* Keyboard focus accessibility styles */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.theme-selector-container:focus-visible,
+.theme-select:focus-visible {
+  outline: 3px solid var(--accent-neon);
+  outline-offset: 2px;
+}
+
+body.theme-retro-neon a:focus-visible,
+body.theme-retro-neon button:focus-visible,
+body.theme-retro-neon [role="button"]:focus-visible,
+body.theme-retro-neon input:focus-visible,
+body.theme-retro-neon select:focus-visible,
+body.theme-retro-neon textarea:focus-visible,
+body.theme-retro-neon .theme-selector-container:focus-visible,
+body.theme-retro-neon .theme-select:focus-visible {
+  box-shadow: 0 0 10px var(--accent-neon);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
