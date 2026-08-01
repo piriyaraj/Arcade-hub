@@ -15,7 +15,9 @@ const Leaderboard = {
     { id: 'towerdefense', name: 'Tower Defense', key: 'towerdefense_best', icon: '🛡️' },
     { id: 'cyberrunner', name: 'Cyber Runner', key: 'cyberrunner_best', icon: '🏃‍♂️' },
     { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' },
-    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' }
+    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' },
+    { id: 'neonsimon', name: 'Neon Simon', key: 'neonsimon_best', icon: '🧠' },
+    { id: 'sokoban', name: 'Sokoban', key: 'sokoban_best', icon: '🧱' }
   ],
 
   getScores() {
@@ -24,9 +26,18 @@ const Leaderboard = {
       try {
         const raw = localStorage.getItem(game.key);
         if (raw !== null) {
-          const parsed = parseInt(raw, 10);
-          if (Number.isFinite(parsed)) {
-            score = parsed;
+          if (game.key === 'sokoban_best') {
+            try {
+              const parsed = JSON.parse(raw);
+              score = Object.keys(parsed).length;
+            } catch (e) {
+              score = 0;
+            }
+          } else {
+            const parsed = parseInt(raw, 10);
+            if (Number.isFinite(parsed)) {
+              score = parsed;
+            }
           }
         }
       } catch (e) {

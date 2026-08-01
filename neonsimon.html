@@ -439,7 +439,7 @@
 
     function initLocalStorage() {
       try {
-        const storedScore = localStorage.getItem('neonsimon.highscore');
+        const storedScore = localStorage.getItem('neonsimon_best');
         const parsedScore = parseInt(storedScore, 10);
         highScore = Number.isFinite(parsedScore) ? parsedScore : 0;
 
@@ -455,7 +455,7 @@
 
     function saveHighScore() {
       try {
-        localStorage.setItem('neonsimon.highscore', highScore.toString());
+        localStorage.setItem('neonsimon_best', highScore.toString());
       } catch (e) {
         console.error('Storage saving highscore failed', e);
       }

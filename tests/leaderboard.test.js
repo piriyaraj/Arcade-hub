@@ -36,6 +36,8 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   mockStorage['snake_best'] = '100';
   mockStorage['bingball_best'] = '45';
   mockStorage['cyberracer_best'] = '1234';
+  mockStorage['neonsimon_best'] = '15';
+  mockStorage['sokoban_best'] = '{"0":{"moves":145,"time":210},"1":{"moves":54,"time":80}}';
 
   const scores = Leaderboard.getScores();
 
@@ -43,11 +45,15 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   const bingball = scores.find(s => s.id === 'bingball');
   const cyberracer = scores.find(s => s.id === 'cyberracer');
   const tetris = scores.find(s => s.id === 'tetris');
+  const neonsimon = scores.find(s => s.id === 'neonsimon');
+  const sokoban = scores.find(s => s.id === 'sokoban');
 
   assert.strictEqual(snake.score, 100);
   assert.strictEqual(bingball.score, 45);
   assert.strictEqual(cyberracer.score, 1234);
   assert.strictEqual(tetris.score, 0); // fallback
+  assert.strictEqual(neonsimon.score, 15);
+  assert.strictEqual(sokoban.score, 2);
 });
 
 test('Leaderboard - getScores() falls back to 0 for missing or NaN/invalid entries', () => {
