@@ -199,6 +199,18 @@
       font-size: 0.875rem;
       border-top: 1px solid var(--border);
     }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
 <body>
@@ -210,7 +222,7 @@
   <main>
     <div class="dashboard-container">
       <div class="controls-row">
-        <input type="text" id="search" class="search-input" placeholder="Search games...">
+        <input type="text" id="search" class="search-input" placeholder="Search games..." aria-label="Search games">
 
         <select id="sort" class="select-control" aria-label="Sort Order">
           <option value="score-desc">Score: High to Low</option>
@@ -223,11 +235,12 @@
       </div>
 
       <div class="table-responsive">
-        <table>
+        <table aria-label="High scores leaderboard">
+          <caption class="sr-only">High scores by game</caption>
           <thead>
             <tr>
-              <th>Game</th>
-              <th style="text-align: right;">High Score</th>
+              <th scope="col">Game</th>
+              <th scope="col" style="text-align: right;">High Score</th>
             </tr>
           </thead>
           <tbody id="leaderboard-body">
