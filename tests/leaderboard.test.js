@@ -36,6 +36,8 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   mockStorage['snake_best'] = '100';
   mockStorage['bingball_best'] = '45';
   mockStorage['cyberracer_best'] = '1234';
+  mockStorage['neonsimon.highscore'] = '8';
+  mockStorage['sokoban_best'] = '{"0":{"moves":12,"time":10},"1":{"moves":15,"time":20}}';
 
   const scores = Leaderboard.getScores();
 
@@ -43,11 +45,15 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   const bingball = scores.find(s => s.id === 'bingball');
   const cyberracer = scores.find(s => s.id === 'cyberracer');
   const tetris = scores.find(s => s.id === 'tetris');
+  const neonsimon = scores.find(s => s.id === 'neonsimon');
+  const sokoban = scores.find(s => s.id === 'sokoban');
 
   assert.strictEqual(snake.score, 100);
   assert.strictEqual(bingball.score, 45);
   assert.strictEqual(cyberracer.score, 1234);
   assert.strictEqual(tetris.score, 0); // fallback
+  assert.strictEqual(neonsimon.score, 8);
+  assert.strictEqual(sokoban.score, 2);
 });
 
 test('Leaderboard - getScores() falls back to 0 for missing or NaN/invalid entries', () => {
@@ -59,16 +65,22 @@ test('Leaderboard - getScores() falls back to 0 for missing or NaN/invalid entri
   mockStorage['snake_best'] = 'not-a-number';
   mockStorage['bingball_best'] = 'NaN';
   mockStorage['breakout_best'] = '100.5'; // gets parsed as 100 via parseInt
+  mockStorage['neonsimon.highscore'] = 'not-a-number';
+  mockStorage['sokoban_best'] = 'invalid-json';
 
   const scores = Leaderboard.getScores();
 
   const snake = scores.find(s => s.id === 'snake');
   const bingball = scores.find(s => s.id === 'bingball');
   const breakout = scores.find(s => s.id === 'breakout');
+  const neonsimon = scores.find(s => s.id === 'neonsimon');
+  const sokoban = scores.find(s => s.id === 'sokoban');
 
   assert.strictEqual(snake.score, 0);
   assert.strictEqual(bingball.score, 0);
   assert.strictEqual(breakout.score, 100);
+  assert.strictEqual(neonsimon.score, 0);
+  assert.strictEqual(sokoban.score, 0);
 });
 
 test('Leaderboard - getScores() does not propagate errors when localStorage throws', () => {
