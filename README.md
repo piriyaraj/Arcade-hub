@@ -67,7 +67,7 @@ Centralizes controls and custom mappings for essential gameplay actions:
 
 ### 3. `Leaderboard` (`leaderboard.js` & `leaderboard.html`)
 Combines score entries across all games into a global scoreboard:
-- Aggregates the local high score records for all 14 arcade games.
+- Aggregates the local high score records for all 16 arcade games.
 - Provides search, sort, and reset capabilities via a responsive dashboard.
 
 <!-- Test PR engine flow -->
