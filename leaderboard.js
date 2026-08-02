@@ -15,7 +15,9 @@ const Leaderboard = {
     { id: 'towerdefense', name: 'Tower Defense', key: 'towerdefense_best', icon: '🛡️' },
     { id: 'cyberrunner', name: 'Cyber Runner', key: 'cyberrunner_best', icon: '🏃‍♂️' },
     { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' },
-    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' }
+    { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' },
+    { id: 'neonsimon', name: 'Neon Simon', key: 'neonsimon.highscore', icon: '🎮' },
+    { id: 'sokoban', name: 'Sokoban', key: 'sokoban_best', icon: '📦' }
   ],
 
   getScores() {
@@ -27,6 +29,15 @@ const Leaderboard = {
           const parsed = parseInt(raw, 10);
           if (Number.isFinite(parsed)) {
             score = parsed;
+          } else {
+            try {
+              const obj = JSON.parse(raw);
+              if (obj && typeof obj === 'object') {
+                score = Object.keys(obj).length;
+              }
+            } catch (jsonErr) {
+              // Ignore and default to 0
+            }
           }
         }
       } catch (e) {
