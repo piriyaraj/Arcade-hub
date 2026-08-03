@@ -101,9 +101,8 @@ test('Leaderboard - getScores() does not propagate errors when localStorage thro
     scores.forEach(s => {
       assert.strictEqual(s.score, 0);
     });
-    // Check that console.error was called for each game
-    assert.strictEqual(consoleErrors.length, Leaderboard.games.length);
-    assert.ok(consoleErrors[0].includes('Failed to load score for'));
+    // Check that console.error was not called (swallowed by safe wrapper)
+    assert.strictEqual(consoleErrors.length, 0);
   } finally {
     global.localStorage.getItem = originalGetItem;
   }
@@ -148,8 +147,8 @@ test('Leaderboard - resetAllScores() does not propagate errors when localStorage
   try {
     // Should not throw
     Leaderboard.resetAllScores();
-    assert.strictEqual(consoleErrors.length, Leaderboard.games.length);
-    assert.ok(consoleErrors[0].includes('Failed to reset score for'));
+    // Check that console.error was not called (swallowed by safe wrapper)
+    assert.strictEqual(consoleErrors.length, 0);
   } finally {
     global.localStorage.removeItem = originalRemoveItem;
   }

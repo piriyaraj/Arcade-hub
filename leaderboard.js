@@ -1,5 +1,27 @@
 // Leaderboard Score Manager
 
+// Safe localStorage wrappers to handle cases where localStorage is disabled or throws (e.g., Safari private mode)
+function safeGet(key) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(key);
+    }
+  } catch (e) {
+    // Ignore read errors
+  }
+  return null;
+}
+
+function safeRemove(key) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  } catch (e) {
+    // Ignore remove errors
+  }
+}
+
 const Leaderboard = {
   games: [
     { id: 'snake', name: 'Snake Game', key: 'snake_best', icon: '🐍' },
@@ -23,25 +45,21 @@ const Leaderboard = {
   getScores() {
     return this.games.map(game => {
       let score = 0;
-      try {
-        const raw = localStorage.getItem(game.key);
-        if (raw !== null) {
-          const parsed = parseInt(raw, 10);
-          if (Number.isFinite(parsed)) {
-            score = parsed;
-          } else {
-            try {
-              const obj = JSON.parse(raw);
-              if (obj && typeof obj === 'object') {
-                score = Object.keys(obj).length;
-              }
-            } catch (jsonErr) {
-              // Ignore and default to 0
+      const raw = safeGet(game.key);
+      if (raw !== null) {
+        const parsed = parseInt(raw, 10);
+        if (Number.isFinite(parsed)) {
+          score = parsed;
+        } else {
+          try {
+            const obj = JSON.parse(raw);
+            if (obj && typeof obj === 'object') {
+              score = Object.keys(obj).length;
             }
+          } catch (jsonErr) {
+            // Ignore and default to 0
           }
         }
-      } catch (e) {
-        console.error('Failed to load score for ' + game.id, e);
       }
       return {
         id: game.id,
@@ -54,11 +72,7 @@ const Leaderboard = {
 
   resetAllScores() {
     this.games.forEach(game => {
-      try {
-        localStorage.removeItem(game.key);
-      } catch (e) {
-        console.error('Failed to reset score for ' + game.id, e);
-      }
+      safeRemove(game.key);
     });
   }
 };
