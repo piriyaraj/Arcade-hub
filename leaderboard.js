@@ -16,8 +16,9 @@ const Leaderboard = {
     { id: 'cyberrunner', name: 'Cyber Runner', key: 'cyberrunner_best', icon: '🏃‍♂️' },
     { id: 'cyberracer', name: 'CyberRacer', key: 'cyberracer_best', icon: '🏎️' },
     { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' },
-    { id: 'neonsimon', name: 'Neon Simon', key: 'neonsimon.highscore', icon: '🎮' },
-    { id: 'sokoban', name: 'Sokoban', key: 'sokoban_best', icon: '📦' }
+    { id: 'neonsimon', name: 'Neon Simon', key: 'neonsimon.highscore', icon: '🧠' },
+    { id: 'sokoban', name: 'Sokoban', key: 'sokoban_best', icon: '📦' },
+    { id: 'pacman', name: 'Neon Pac-Man', key: 'pacman_best', icon: '🟡' }
   ],
 
   getScores() {
