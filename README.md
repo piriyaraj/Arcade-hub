@@ -71,3 +71,27 @@ Combines score entries across all games into a global scoreboard:
 - Provides search, sort, and reset capabilities via a responsive dashboard.
 
 <!-- Test PR engine flow -->
+
+## Games
+
+All game HTML files available in this repository:
+
+| File | Game |
+|------|------|
+| [2048.html](2048.html) | 2048 — Classic sliding tile puzzle game |
+| [asteroids.html](asteroids.html) | Asteroids — Classic vector space-drift shooter |
+| [bingball.html](bingball.html) | Bing Ball — Pachinko/Plinko style pin-drop game |
+| [breakout.html](breakout.html) | Breakout — Classic brick-destroying arcade game |
+| [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |
+| [cyberrunner.html](cyberrunner.html) | Cyber Runner — Fast-paced neon runner/dodger |
+| [flappybird.html](flappybird.html) | Flappy Neon — Classic flap-and-dodge in neon style |
+| [flappybyte.html](flappybyte.html) | Flappy Byte — Fly a data microchip through cyber columns |
+| [frogger.html](frogger.html) | Neon Crossing — Classic Frogger-style crossing game |
+| [neonsimon.html](neonsimon.html) | Neon Simon — Memory sequence game |
+| [pacman.html](pacman.html) | Pac-Man — Classic maze chase game |
+| [pong.html](pong.html) | Pong — Classic retro paddle-and-ball game |
+| [snakegame.html](snakegame.html) | Snake Game — Classic snake arcade action |
+| [sokoban.html](sokoban.html) | Sokoban — Classic block-pushing puzzle |
+| [spaceinvaders.html](spaceinvaders.html) | Space Invaders — Classic arcade shooter |
+| [tetris.html](tetris.html) | Tetris — Classic falling block puzzle game |
+| [towerdefense.html](towerdefense.html) | Retro Tower Defense — Defend database cores against cyber viruses |
