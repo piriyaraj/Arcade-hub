@@ -905,6 +905,9 @@
     } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
       keys[e.code] = true;
       e.preventDefault();
+    } else if (e.code === 'Space' || e.code === 'KeyE') {
+      keys[e.code] = true;
+      e.preventDefault();
     } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.code === 'Escape' || e.key.toLowerCase() === 'p')) {
       if (gameStarted && !gameOver) {
         togglePause();
@@ -917,6 +920,8 @@
     if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
       keys[e.code] = false;
     } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      keys[e.code] = false;
+    } else if (e.code === 'Space' || e.code === 'KeyE') {
       keys[e.code] = false;
     }
   });

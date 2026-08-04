@@ -107,5 +107,17 @@ def test_cyberracer_emp_pulse_mechanics():
     assert "empCharges" in content, "racer object must track empCharges property"
     assert "triggerEmpPulse" in content, "cyberracer.html must contain triggerEmpPulse function"
 
+def test_cyberracer_emp_key_events():
+    """Verify keydown and keyup listeners handle Space and KeyE for EMP pulse activation."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cyberracer.html")
+    assert os.path.isfile(path)
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "e.code === 'Space' || e.code === 'KeyE'" in content, "keydown and keyup listeners must check for Space and KeyE codes"
+
+
 
 
