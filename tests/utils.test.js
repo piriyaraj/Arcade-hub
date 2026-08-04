@@ -96,3 +96,28 @@ test('resetScore returns false if localStorage.removeItem fails/throws', () => {
 
   global.localStorage.removeItem = originalRemoveItem;
 });
+
+test('formatScore formats numbers with commas and handles invalid inputs', () => {
+  assert.strictEqual(utils.formatScore(1234567), '1,234,567');
+  assert.strictEqual(utils.formatScore('5000'), '5,000');
+  assert.strictEqual(utils.formatScore(-10), '0');
+  assert.strictEqual(utils.formatScore('invalid'), '0');
+});
+
+test('clamp restricts numbers within min and max bounds', () => {
+  assert.strictEqual(utils.clamp(5, 0, 10), 5);
+  assert.strictEqual(utils.clamp(-5, 0, 10), 0);
+  assert.strictEqual(utils.clamp(15, 0, 10), 10);
+  assert.strictEqual(utils.clamp(NaN, 0, 10), 0);
+});
+
+test('checkCollision correctly detects bounding box overlap', () => {
+  const boxA = { x: 10, y: 10, width: 20, height: 20 };
+  const boxB = { x: 20, y: 20, width: 20, height: 20 };
+  const boxC = { x: 50, y: 50, width: 20, height: 20 };
+
+  assert.strictEqual(utils.checkCollision(boxA, boxB), true);
+  assert.strictEqual(utils.checkCollision(boxA, boxC), false);
+  assert.strictEqual(utils.checkCollision(null, boxA), false);
+});
+

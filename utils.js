@@ -50,6 +50,27 @@ function resetScore(gameKey) {
   }
 }
 
+function formatScore(score) {
+  const parsed = parseInt(score, 10);
+  if (!Number.isFinite(parsed) || parsed < 0) return '0';
+  return parsed.toLocaleString();
+}
+
+function clamp(value, min, max) {
+  if (typeof value !== 'number' || Number.isNaN(value)) return min;
+  return Math.min(Math.max(value, min), max);
+}
+
+function checkCollision(r1, r2) {
+  if (!r1 || !r2) return false;
+  return (
+    r1.x < r2.x + r2.width &&
+    r1.x + r1.width > r2.x &&
+    r1.y < r2.y + r2.height &&
+    r1.y + r1.height > r2.y
+  );
+}
+
 const loadHighScore = getBestScore;
 const saveHighScore = saveBestScore;
 
@@ -61,6 +82,9 @@ if (typeof window !== 'undefined') {
   window.getMuteState = getMuteState;
   window.saveMuteState = saveMuteState;
   window.resetScore = resetScore;
+  window.formatScore = formatScore;
+  window.clamp = clamp;
+  window.checkCollision = checkCollision;
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
@@ -71,6 +95,10 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     saveHighScore,
     getMuteState,
     saveMuteState,
-    resetScore
+    resetScore,
+    formatScore,
+    clamp,
+    checkCollision
   };
 }
+
