@@ -82,3 +82,30 @@ def test_cyberracer_shield_mechanics():
     assert "type === 'shield'" in content or "collectibles[i].type === 'shield'" in content, "Collectible items must support shield type"
     assert "racer.shield = true" in content or "racer.shield = false" in content, "racer shield status must be updated on pickup/collision"
 
+def test_cyberracer_nitro_mechanics():
+    """Verify that cyberracer.html contains nitro boost power-up features and audio triggers."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cyberracer.html")
+    assert os.path.isfile(path)
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "nitroTimer" in content, "racer object must track nitroTimer property"
+    assert "type = 'nitro'" in content or "type === 'nitro'" in content, "Collectible items must support nitro type"
+    assert "playNitro" in content, "cyberracer.html must trigger playNitro synthesizer audio"
+
+def test_cyberracer_emp_pulse_mechanics():
+    """Verify that cyberracer.html contains EMP pulse features and charge state."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cyberracer.html")
+    assert os.path.isfile(path)
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "empCharges" in content, "racer object must track empCharges property"
+    assert "triggerEmpPulse" in content, "cyberracer.html must contain triggerEmpPulse function"
+
+
+

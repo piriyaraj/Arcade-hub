@@ -140,3 +140,11 @@ test('lerp correctly interpolates values and handles bounds', () => {
   assert.strictEqual(utils.lerp('a', 20, 0.5), 0);
 });
 
+test('distance calculates 2D Euclidean distance and handles edge cases', () => {
+  assert.strictEqual(utils.distance({ x: 0, y: 0 }, { x: 3, y: 4 }), 5);
+  assert.strictEqual(utils.distance({ x: 1, y: 1 }, { x: 1, y: 1 }), 0);
+  assert.strictEqual(utils.distance(null, { x: 3, y: 4 }), 0);
+  assert.strictEqual(utils.distance({ x: 'a', y: 0 }, { x: 3, y: 4 }), 0);
+});
+
+

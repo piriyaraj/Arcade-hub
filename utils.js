@@ -85,6 +85,14 @@ function lerp(start, end, amt) {
   return start + (end - start) * clampedAmt;
 }
 
+function distance(p1, p2) {
+  if (!p1 || !p2 || typeof p1.x !== 'number' || typeof p1.y !== 'number' || typeof p2.x !== 'number' || typeof p2.y !== 'number') {
+    return 0;
+  }
+  return Math.hypot(p2.x - p1.x, p2.y - p1.y);
+}
+
+
 const loadHighScore = getBestScore;
 const saveHighScore = saveBestScore;
 
@@ -101,6 +109,7 @@ if (typeof window !== 'undefined') {
   window.checkCollision = checkCollision;
   window.checkCircleCollision = checkCircleCollision;
   window.lerp = lerp;
+  window.distance = distance;
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
@@ -116,7 +125,9 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     clamp,
     checkCollision,
     checkCircleCollision,
-    lerp
+    lerp,
+    distance
   };
 }
+
 

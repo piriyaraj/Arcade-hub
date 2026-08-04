@@ -226,6 +226,29 @@ class AudioManager {
       osc.stop(now + i * 0.06 + 0.1);
     });
   }
+
+  playNitro() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.25);
+
+    const volume = 0.25 * this._masterVolume * this._sfxVolume;
+    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume * 0.05), this.ctx.currentTime + 0.25);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.25);
+  }
 }
 
 class SoundFX extends AudioManager {}

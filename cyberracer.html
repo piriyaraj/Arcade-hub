@@ -468,11 +468,15 @@
     height: 70,
     speed: 6.5,
     shield: false,
+    nitroTimer: 0,
+    empCharges: 1,
     exhaustParticles: [],
 
     reset() {
       this.x = (CANVAS_WIDTH / 2) - (this.width / 2);
       this.shield = false;
+      this.nitroTimer = 0;
+      this.empCharges = 1;
       this.exhaustParticles = [];
     },
 
@@ -485,15 +489,20 @@
         this.x = ROAD_RIGHT - 5 - this.width;
       }
 
+      if (this.nitroTimer > 0) {
+        this.nitroTimer--;
+      }
+
       // Add exhaust trail particles
       if (gameStarted && !gameOver && !gamePaused) {
-        if (Math.random() < 0.3) {
+        if (Math.random() < (this.nitroTimer > 0 ? 0.8 : 0.3)) {
           // Spawn particle near back bumper (left and right exhausts)
           const leftExhaustX = this.x + 8;
           const rightExhaustX = this.x + this.width - 8;
           const exhaustY = this.y + this.height - 4;
-          this.exhaustParticles.push(new TrailParticle(leftExhaustX, exhaustY, 'var(--racer-glow)'));
-          this.exhaustParticles.push(new TrailParticle(rightExhaustX, exhaustY, 'var(--racer-glow)'));
+          const particleColor = this.nitroTimer > 0 ? '#ffaa00' : 'var(--racer-glow)';
+          this.exhaustParticles.push(new TrailParticle(leftExhaustX, exhaustY, particleColor));
+          this.exhaustParticles.push(new TrailParticle(rightExhaustX, exhaustY, particleColor));
         }
       }
 
@@ -512,8 +521,8 @@
 
       ctx.save();
       // Apply neon color glow effect
-      const glowColor = gameOver ? getThemeColor('--accent-pink', '#ff007f') : getThemeColor('--racer-glow', '#00f0ff');
-      ctx.shadowBlur = 15;
+      const glowColor = gameOver ? getThemeColor('--accent-pink', '#ff007f') : (this.nitroTimer > 0 ? '#ffaa00' : getThemeColor('--racer-glow', '#00f0ff'));
+      ctx.shadowBlur = this.nitroTimer > 0 ? 25 : 15;
       ctx.shadowColor = glowColor;
 
       // Draw Main Car Shadow / Glow Body
@@ -792,8 +801,17 @@
       this.height = 16;
       this.y = -this.height - 20;
       this.markedForDeletion = false;
-      this.type = Math.random() < 0.25 ? 'shield' : 'energy';
-      this.color = this.type === 'shield' ? '#38bdf8' : 'var(--node-glow)';
+      const rand = Math.random();
+      if (rand < 0.2) {
+        this.type = 'shield';
+        this.color = '#38bdf8';
+      } else if (rand < 0.4) {
+        this.type = 'nitro';
+        this.color = '#ffaa00';
+      } else {
+        this.type = 'energy';
+        this.color = 'var(--node-glow)';
+      }
       this.pulsePhase = Math.random() * Math.PI;
 
       // Align roughly to one of three lane centers
@@ -819,7 +837,7 @@
     draw() {
       const radius = 7 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2.5;
       ctx.save();
-      const col = this.type === 'shield' ? '#38bdf8' : getThemeColor(this.color, '#4ade80');
+      const col = (this.type === 'shield' ? '#38bdf8' : (this.type === 'nitro' ? '#ffaa00' : getThemeColor(this.color, '#4ade80')));
       ctx.fillStyle = col;
       ctx.shadowBlur = 12;
       ctx.shadowColor = col;
@@ -838,6 +856,17 @@
         ctx.moveTo(0, -radius / 2);
         ctx.lineTo(0, radius / 2);
         ctx.stroke();
+      } else if (this.type === 'nitro') {
+        // Draw flame / triangle nitro canister
+        ctx.moveTo(0, -radius);
+        ctx.lineTo(radius, radius);
+        ctx.lineTo(-radius, radius);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, radius / 3, 2.5, 0, Math.PI * 2);
+        ctx.fill();
       } else {
         // Spin and tilt Diamond Energy Core
         ctx.rotate(Date.now() * 0.005 + this.pulsePhase);
@@ -1189,6 +1218,23 @@
     safeGet('highscore-val').textContent = String(highscore);
   }
 
+  function triggerEmpPulse() {
+    if (!gameStarted || gameOver || gamePaused) return;
+    if (racer.empCharges <= 0) return;
+
+    racer.empCharges--;
+    // Clear visible obstacles with neon pulse animation
+    for (let i = 0; i < obstacles.length; i++) {
+      obstacles[i].markedForDeletion = true;
+      spawnBurstParticles(obstacles[i].x + obstacles[i].width / 2, obstacles[i].y + obstacles[i].height / 2, '#00f0ff', 25);
+    }
+    score += obstacles.length * 15;
+    if (window.sfx && window.sfx.playEat) {
+      window.sfx.playEat();
+    }
+    updateUIControls();
+  }
+
   // ─── Loop Function ─────────────────────────────────────────────────────────
   function gameLoop() {
     // 1. Logic Update
@@ -1204,12 +1250,20 @@
         racer.x += racer.speed;
       }
 
+      // Check EMP key trigger (Space bar or KeyE)
+      if (keys.Space || keys.KeyE) {
+        triggerEmpPulse();
+        keys.Space = false;
+        keys.KeyE = false;
+      }
+
       racer.update();
 
       // Dynamic Speed/Difficulty scaling
       // Increase speedMultiplier slowly based on score milestones
       speedMultiplier = Math.min(maxMultiplier, 1.0 + (score / 1200));
-      gameSpeed = baseSpeed * speedMultiplier;
+      const nitroBoost = (racer.nitroTimer > 0) ? 1.6 : 1.0;
+      gameSpeed = baseSpeed * speedMultiplier * nitroBoost;
 
       // Spawn items
       obstacleTimer++;
@@ -1262,18 +1316,27 @@
 
         // Player Collection check
         if (checkCollision(racer, collectibles[i])) {
-          // Play sfx score/eat sound
-          if (window.sfx) {
+          // Play sfx sound
+          if (collectibles[i].type === 'nitro') {
+            if (window.sfx && window.sfx.playNitro) {
+              window.sfx.playNitro();
+            } else if (window.sfx) {
+              window.sfx.playEat();
+            }
+          } else if (window.sfx) {
             window.sfx.playEat();
           }
 
-          // Spawn burst particles around gem/shield
-          const particleColor = collectibles[i].type === 'shield' ? '#38bdf8' : 'var(--node-glow)';
-          spawnBurstParticles(collectibles[i].x + 8, collectibles[i].y + 8, particleColor, 10);
+          // Spawn burst particles around gem/shield/nitro
+          const particleColor = collectibles[i].type === 'shield' ? '#38bdf8' : (collectibles[i].type === 'nitro' ? '#ffaa00' : 'var(--node-glow)');
+          spawnBurstParticles(collectibles[i].x + 8, collectibles[i].y + 8, particleColor, 12);
 
           if (collectibles[i].type === 'shield') {
             racer.shield = true;
             score += 25;
+          } else if (collectibles[i].type === 'nitro') {
+            racer.nitroTimer = 180; // 3 seconds boost
+            score += 75;
           } else {
             score += 50;
           }
