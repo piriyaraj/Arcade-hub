@@ -121,3 +121,22 @@ test('checkCollision correctly detects bounding box overlap', () => {
   assert.strictEqual(utils.checkCollision(null, boxA), false);
 });
 
+test('checkCircleCollision correctly detects circular overlap', () => {
+  const c1 = { x: 0, y: 0, radius: 10 };
+  const c2 = { x: 12, y: 0, radius: 5 };
+  const c3 = { x: 50, y: 50, radius: 5 };
+
+  assert.strictEqual(utils.checkCircleCollision(c1, c2), true);
+  assert.strictEqual(utils.checkCircleCollision(c1, c3), false);
+  assert.strictEqual(utils.checkCircleCollision(null, c1), false);
+});
+
+test('lerp correctly interpolates values and handles bounds', () => {
+  assert.strictEqual(utils.lerp(0, 100, 0.5), 50);
+  assert.strictEqual(utils.lerp(10, 20, 0), 10);
+  assert.strictEqual(utils.lerp(10, 20, 1), 20);
+  assert.strictEqual(utils.lerp(10, 20, 1.5), 20);
+  assert.strictEqual(utils.lerp(10, 20, -0.5), 10);
+  assert.strictEqual(utils.lerp('a', 20, 0.5), 0);
+});
+

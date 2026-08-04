@@ -71,6 +71,20 @@ function checkCollision(r1, r2) {
   );
 }
 
+function checkCircleCollision(c1, c2) {
+  if (!c1 || !c2) return false;
+  const dx = c1.x - c2.x;
+  const dy = c1.y - c2.y;
+  const distance = Math.hypot(dx, dy);
+  return distance < (c1.radius + c2.radius);
+}
+
+function lerp(start, end, amt) {
+  if (typeof start !== 'number' || typeof end !== 'number') return 0;
+  const clampedAmt = clamp(amt, 0, 1);
+  return start + (end - start) * clampedAmt;
+}
+
 const loadHighScore = getBestScore;
 const saveHighScore = saveBestScore;
 
@@ -85,6 +99,8 @@ if (typeof window !== 'undefined') {
   window.formatScore = formatScore;
   window.clamp = clamp;
   window.checkCollision = checkCollision;
+  window.checkCircleCollision = checkCircleCollision;
+  window.lerp = lerp;
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
@@ -98,7 +114,9 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     resetScore,
     formatScore,
     clamp,
-    checkCollision
+    checkCollision,
+    checkCircleCollision,
+    lerp
   };
 }
 
