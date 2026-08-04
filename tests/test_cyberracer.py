@@ -118,6 +118,17 @@ def test_cyberracer_emp_key_events():
 
     assert "e.code === 'Space' || e.code === 'KeyE'" in content, "keydown and keyup listeners must check for Space and KeyE codes"
 
+def test_js_cyberracer_unit_tests():
+    """Runs the JavaScript Node.js unit tests for cyberracer.test.js and asserts success."""
+    import subprocess
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "cyberracer.test.js")
 
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True,
+        timeout=30
+    )
 
-
+    assert result.returncode == 0, f"JS test cyberracer.test.js failed with code {result.returncode}\n{result.stderr}\n{result.stdout}"

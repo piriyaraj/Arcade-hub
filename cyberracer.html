@@ -433,542 +433,392 @@
     }
   });
 
-  // ─── Canvas & Context Setup ────────────────────────────────────────────────
-  const canvas = safeGet('game');
-  const ctx = canvas.getContext('2d');
+  // ─── CyberRacer Game Engine Class ──────────────────────────────────────────
 
-  const CANVAS_WIDTH = 600;
-  const CANVAS_HEIGHT = 450;
-  const ROAD_LEFT = 130;
-  const ROAD_RIGHT = 470;
-  const ROAD_WIDTH = ROAD_RIGHT - ROAD_LEFT;
+  /**
+   * @typedef {Object} Racer
+   * @property {number} x - X position
+   * @property {number} y - Y position
+   * @property {number} width - Racer width
+   * @property {number} height - Racer height
+   * @property {number} speed - Steering speed
+   * @property {boolean} shield - Active shield status
+   * @property {number} nitroTimer - Active nitro frames
+   * @property {number} empCharges - Available EMP charges
+   * @property {Array} exhaustParticles - Trail particle effects
+   */
 
-  // ─── Game Variables ────────────────────────────────────────────────────────
-  let gameStarted = false;
-  let gameOver = false;
-  let gamePaused = false;
+  class CyberRacerEngine {
+    /**
+     * @param {HTMLCanvasElement|null} canvasElement
+     * @param {Object} uiElements
+     */
+    constructor(canvasElement = null, uiElements = {}) {
+      this.canvas = canvasElement;
+      this.ctx = canvasElement ? canvasElement.getContext('2d') : null;
+      this.ui = uiElements;
 
-  let score = 0;
-  let baseSpeed = 4.5;
-  let speedMultiplier = 1.0;
-  let maxMultiplier = 3.5;
-  let gameSpeed = baseSpeed;
-  let trackOffset = 0;
+      this.CANVAS_WIDTH = 600;
+      this.CANVAS_HEIGHT = 450;
+      this.ROAD_LEFT = 130;
+      this.ROAD_RIGHT = 470;
+      this.ROAD_WIDTH = this.ROAD_RIGHT - this.ROAD_LEFT;
 
-  let highscore = 0;
-  if (typeof window.getBestScore === 'function') {
-    highscore = window.getBestScore('cyberracer');
-  }
+      this.started = false;
+      this.paused = false;
+      this.over = false;
 
-  // ─── Player Object ───
-  const racer = {
-    x: (CANVAS_WIDTH / 2) - 20, // Centered horizontally
-    y: 350,
-    width: 40,
-    height: 70,
-    speed: 6.5,
-    shield: false,
-    nitroTimer: 0,
-    empCharges: 1,
-    exhaustParticles: [],
+      this.score = 0;
+      this.baseSpeed = 4.5;
+      this.speedMultiplier = 1.0;
+      this.maxMultiplier = 3.5;
+      this.gameSpeed = this.baseSpeed;
+      this.trackOffset = 0;
+
+      this.highscore = typeof getBestScore === 'function' ? getBestScore('cyberracer') : 0;
+
+      this.racer = {
+        x: (this.CANVAS_WIDTH / 2) - 20,
+        y: 350,
+        width: 40,
+        height: 70,
+        speed: 6.5,
+        shield: false,
+        nitroTimer: 0,
+        empCharges: 1,
+        exhaustParticles: []
+      };
+
+      this.obstacles = [];
+      this.collectibles = [];
+      this.burstParticles = [];
+      this.obstacleTimer = 0;
+      this.nextSpawnTime = 80;
+    }
+
+    start() {
+      this.score = 0;
+      this.speedMultiplier = 1.0;
+      this.gameSpeed = this.baseSpeed;
+      this.trackOffset = 0;
+      this.started = true;
+      this.paused = false;
+      this.over = false;
+
+      this.obstacles = [];
+      this.collectibles = [];
+      this.burstParticles = [];
+      this.obstacleTimer = 0;
+      this.nextSpawnTime = 80;
+
+      this.racer.x = (this.CANVAS_WIDTH / 2) - (this.racer.width / 2);
+      this.racer.shield = false;
+      this.racer.nitroTimer = 0;
+      this.racer.empCharges = 1;
+      this.racer.exhaustParticles = [];
+    }
 
     reset() {
-      this.x = (CANVAS_WIDTH / 2) - (this.width / 2);
-      this.shield = false;
-      this.nitroTimer = 0;
-      this.empCharges = 1;
-      this.exhaustParticles = [];
-    },
+      this.start();
+      this.started = false;
+    }
+
+    togglePause() {
+      if (!this.started || this.over) return false;
+      this.paused = !this.paused;
+      return this.paused;
+    }
+
+    steer(dx) {
+      if (!this.started || this.paused || this.over) return;
+      this.racer.x += dx;
+      this.clampRacer();
+    }
+
+    clampRacer() {
+      const minX = this.ROAD_LEFT + 5;
+      const maxX = this.ROAD_RIGHT - 5 - this.racer.width;
+      this.racer.x = Math.max(minX, Math.min(maxX, this.racer.x));
+    }
+
+    triggerEmpPulse() {
+      if (!this.started || this.over || this.paused || this.racer.empCharges <= 0) return false;
+      this.racer.empCharges--;
+
+      const count = this.obstacles.length;
+      for (let i = 0; i < this.obstacles.length; i++) {
+        this.spawnBurstParticles(
+          this.obstacles[i].x + this.obstacles[i].width / 2,
+          this.obstacles[i].y + this.obstacles[i].height / 2,
+          '#00f0ff',
+          25
+        );
+      }
+      this.obstacles = [];
+      this.score += count * 15;
+
+      if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+        window.sfx.playEat();
+      }
+
+      if (this.score > this.highscore) {
+        this.highscore = this.score;
+        if (typeof saveBestScore === 'function') saveBestScore('cyberracer', this.highscore);
+      }
+      return true;
+    }
+
+    spawnBurstParticles(x, y, color, count = 15) {
+      for (let i = 0; i < count; i++) {
+        this.burstParticles.push({
+          x, y,
+          radius: 2.5 + Math.random() * 4,
+          vx: (Math.random() - 0.5) * 10,
+          vy: (Math.random() - 0.5) * 10,
+          alpha: 1.0,
+          decay: 0.02 + Math.random() * 0.02,
+          color,
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vx *= 0.97;
+            this.vy *= 0.97;
+            this.alpha -= this.decay;
+          }
+        });
+      }
+    }
+
+    spawnObjects() {
+      this.obstacleTimer++;
+      if (this.obstacleTimer >= this.nextSpawnTime) {
+        this.obstacleTimer = 0;
+        this.nextSpawnTime = Math.max(38, 75 - Math.floor(this.speedMultiplier * 8));
+
+        const lane = Math.floor(Math.random() * 3);
+        let spawnX = (this.CANVAS_WIDTH / 2) - 19;
+        if (lane === 0) spawnX = this.ROAD_LEFT + 25;
+        else if (lane === 2) spawnX = this.ROAD_RIGHT - 25 - 38;
+
+        if (Math.random() < 0.8) {
+          const randType = Math.random();
+          let type = 'traffic';
+          let width = 38, height = 64, color = 'var(--accent-pink)';
+          if (randType >= 0.85) {
+            type = 'barrier';
+            width = 75; height = 24; color = '#ff6600';
+          } else if (randType >= 0.6) {
+            type = 'drone';
+            width = 32; height = 32; color = '#e0a3ff';
+          }
+
+          this.obstacles.push({
+            x: spawnX,
+            y: -height - 20,
+            width,
+            height,
+            type,
+            color,
+            speedOffset: (Math.random() - 0.4) * 1.5,
+            markedForDeletion: false
+          });
+        } else {
+          const rand = Math.random();
+          let type = 'energy', color = 'var(--node-glow)';
+          if (rand < 0.2) { type = 'shield'; color = '#38bdf8'; }
+          else if (rand < 0.4) { type = 'nitro'; color = '#ffaa00'; }
+
+          this.collectibles.push({
+            x: spawnX,
+            y: -36,
+            width: 16,
+            height: 16,
+            type,
+            color,
+            markedForDeletion: false
+          });
+        }
+      }
+    }
 
     update() {
-      // Keep player inside road boundaries (slightly inset)
-      if (this.x < ROAD_LEFT + 5) {
-        this.x = ROAD_LEFT + 5;
-      }
-      if (this.x + this.width > ROAD_RIGHT - 5) {
-        this.x = ROAD_RIGHT - 5 - this.width;
+      if (!this.started || this.over || this.paused) return;
+
+      this.clampRacer();
+      this.trackOffset += this.gameSpeed;
+
+      if (this.racer.nitroTimer > 0) {
+        this.racer.nitroTimer--;
       }
 
-      if (this.nitroTimer > 0) {
-        this.nitroTimer--;
-      }
+      this.speedMultiplier = Math.min(this.maxMultiplier, 1.0 + (this.score / 1200));
+      const nitroBoost = (this.racer.nitroTimer > 0) ? 1.6 : 1.0;
+      this.gameSpeed = this.baseSpeed * this.speedMultiplier * nitroBoost;
 
-      // Add exhaust trail particles
-      if (gameStarted && !gameOver && !gamePaused) {
-        if (Math.random() < (this.nitroTimer > 0 ? 0.8 : 0.3)) {
-          // Spawn particle near back bumper (left and right exhausts)
-          const leftExhaustX = this.x + 8;
-          const rightExhaustX = this.x + this.width - 8;
-          const exhaustY = this.y + this.height - 4;
-          const particleColor = this.nitroTimer > 0 ? '#ffaa00' : 'var(--racer-glow)';
-          this.exhaustParticles.push(new TrailParticle(leftExhaustX, exhaustY, particleColor));
-          this.exhaustParticles.push(new TrailParticle(rightExhaustX, exhaustY, particleColor));
+      this.spawnObjects();
+
+      // Update Obstacles
+      for (let i = this.obstacles.length - 1; i >= 0; i--) {
+        const o = this.obstacles[i];
+        let dy = this.gameSpeed;
+        if (o.type === 'traffic') dy = this.gameSpeed - 1.2 + (o.speedOffset || 0);
+        else if (o.type === 'drone') {
+          dy = this.gameSpeed + 1.0;
+          o.x += Math.sin(Date.now() * 0.007) * 1.2;
+        }
+        o.y += dy;
+
+        const isColliding = typeof checkCollision === 'function'
+          ? checkCollision(this.racer, o)
+          : (this.racer.x < o.x + o.width && this.racer.x + this.racer.width > o.x && this.racer.y < o.y + o.height && this.racer.y + this.racer.height > o.y);
+
+        if (isColliding) {
+          if (this.racer.shield) {
+            this.racer.shield = false;
+            this.spawnBurstParticles(o.x + o.width / 2, o.y + o.height / 2, '#00f0ff', 20);
+            this.obstacles.splice(i, 1);
+            if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+              window.sfx.playEat();
+            }
+            continue;
+          } else {
+            this.over = true;
+            this.started = false;
+            if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playGameOver === 'function') {
+              window.sfx.playGameOver();
+            }
+            return;
+          }
+        }
+
+        if (o.y > this.CANVAS_HEIGHT + 100) {
+          this.obstacles.splice(i, 1);
+          this.score += 10;
         }
       }
 
-      // Update trail particles
-      for (let i = this.exhaustParticles.length - 1; i >= 0; i--) {
-        this.exhaustParticles[i].update();
-        if (this.exhaustParticles[i].alpha <= 0) {
-          this.exhaustParticles.splice(i, 1);
+      // Update Collectibles
+      for (let i = this.collectibles.length - 1; i >= 0; i--) {
+        const c = this.collectibles[i];
+        c.y += this.gameSpeed;
+
+        const isColliding = typeof checkCollision === 'function'
+          ? checkCollision(this.racer, c)
+          : (this.racer.x < c.x + c.width && this.racer.x + this.racer.width > c.x && this.racer.y < c.y + c.height && this.racer.y + this.racer.height > c.y);
+
+        if (isColliding) {
+          if (c.type === 'shield') {
+            this.racer.shield = true;
+            this.score += 25;
+          } else if (c.type === 'nitro') {
+            this.racer.nitroTimer = 180;
+            this.score += 75;
+            if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playNitro === 'function') {
+              window.sfx.playNitro();
+            }
+          } else {
+            this.score += 50;
+            if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+              window.sfx.playEat();
+            }
+          }
+
+          this.collectibles.splice(i, 1);
+          continue;
+        }
+
+        if (c.y > this.CANVAS_HEIGHT + 100) {
+          this.collectibles.splice(i, 1);
         }
       }
-    },
 
-    draw() {
-      // Draw exhaust particles
-      this.exhaustParticles.forEach(p => p.draw());
+      if (this.score > this.highscore) {
+        this.highscore = this.score;
+        if (typeof saveBestScore === 'function') saveBestScore('cyberracer', this.highscore);
+      }
+    }
+
+    render() {
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const canvas = this.canvas;
+
+      // Draw track
+      ctx.fillStyle = getThemeColor('--bg', '#080d19');
+      ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+      ctx.strokeStyle = getThemeColor('--border', 'rgba(79, 131, 204, 0.1)');
+      ctx.lineWidth = 1;
+
+      const offset = Math.floor(this.trackOffset) % 40;
+      for (let y = offset; y < this.CANVAS_HEIGHT; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(this.ROAD_LEFT, y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(this.ROAD_RIGHT, y); ctx.lineTo(this.CANVAS_WIDTH, y); ctx.stroke();
+      }
+
+      ctx.fillStyle = getThemeColor('--board-bg', '#111827');
+      ctx.fillRect(this.ROAD_LEFT, 0, this.ROAD_WIDTH, this.CANVAS_HEIGHT);
 
       ctx.save();
-      // Apply neon color glow effect
-      const glowColor = gameOver ? getThemeColor('--accent-pink', '#ff007f') : (this.nitroTimer > 0 ? '#ffaa00' : getThemeColor('--racer-glow', '#00f0ff'));
-      ctx.shadowBlur = this.nitroTimer > 0 ? 25 : 15;
-      ctx.shadowColor = glowColor;
+      let boundaryColor = getThemeColor('--racer-glow', '#00f0ff');
+      ctx.strokeStyle = boundaryColor;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = boundaryColor;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(this.ROAD_LEFT, 0); ctx.lineTo(this.ROAD_LEFT, this.CANVAS_HEIGHT);
+      ctx.moveTo(this.ROAD_RIGHT, 0); ctx.lineTo(this.ROAD_RIGHT, this.CANVAS_HEIGHT);
+      ctx.stroke();
+      ctx.restore();
 
-      // Draw Main Car Shadow / Glow Body
+      // Render obstacles
+      this.obstacles.forEach(o => {
+        ctx.save();
+        ctx.fillStyle = getThemeColor(o.color, '#ff0055');
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = getThemeColor(o.color, '#ff0055');
+        ctx.fillRect(o.x, o.y, o.width, o.height);
+        ctx.restore();
+      });
+
+      // Render collectibles
+      this.collectibles.forEach(c => {
+        ctx.save();
+        ctx.fillStyle = c.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = c.color;
+        ctx.beginPath();
+        ctx.arc(c.x + 8, c.y + 8, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Render Racer
+      ctx.save();
+      const glowColor = this.over ? getThemeColor('--accent-pink', '#ff007f') : (this.racer.nitroTimer > 0 ? '#ffaa00' : getThemeColor('--racer-glow', '#00f0ff'));
+      ctx.shadowBlur = this.racer.nitroTimer > 0 ? 25 : 15;
+      ctx.shadowColor = glowColor;
       ctx.fillStyle = glowColor;
 
-      // Custom Car path (futuristic Cyber Roadster)
-      ctx.beginPath();
-      // Back bumpers to wheel arches
-      ctx.moveTo(this.x + 5, this.y + this.height);
-      ctx.lineTo(this.x + 5, this.y + this.height - 12);
-      // Left side mirror
-      ctx.lineTo(this.x - 2, this.y + this.height - 25);
-      ctx.lineTo(this.x + 6, this.y + this.height - 35);
-      // Front hood/bumper slope
-      ctx.lineTo(this.x + 10, this.y + 4);
-      ctx.lineTo(this.x + this.width - 10, this.y + 4);
-      // Right side mirror
-      ctx.lineTo(this.x + this.width - 6, this.y + this.height - 35);
-      ctx.lineTo(this.x + this.width + 2, this.y + this.height - 25);
-      // Down right edge
-      ctx.lineTo(this.x + this.width - 5, this.y + this.height - 12);
-      ctx.lineTo(this.x + this.width - 5, this.y + this.height);
-      ctx.closePath();
-      ctx.fill();
+      ctx.fillRect(this.racer.x, this.racer.y, this.racer.width, this.racer.height);
 
-      // Rear wing/spoiler
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(this.x - 2, this.y + this.height - 5, this.width + 4, 4);
-
-      // Cyber tires
-      ctx.fillStyle = '#0b0f1a';
-      // Front wheels
-      ctx.fillRect(this.x + 4, this.y + 12, 5, 14);
-      ctx.fillRect(this.x + this.width - 9, this.y + 12, 5, 14);
-      // Rear wheels
-      ctx.fillRect(this.x + 2, this.y + this.height - 20, 6, 16);
-      ctx.fillRect(this.x + this.width - 8, this.y + this.height - 20, 6, 16);
-
-      // Glass Cabin Windshield
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.moveTo(this.x + 12, this.y + this.height - 36);
-      ctx.lineTo(this.x + 14, this.y + this.height - 50);
-      ctx.lineTo(this.x + this.width - 14, this.y + this.height - 50);
-      ctx.lineTo(this.x + this.width - 12, this.y + this.height - 36);
-      ctx.closePath();
-      ctx.fill();
-
-      // Glowing Visor / Headlights
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(this.x + 12, this.y + 6, 5, 3);
-      ctx.fillRect(this.x + this.width - 17, this.y + 6, 5, 3);
-
-      // Draw Energy Shield if active
-      if (this.shield) {
+      if (this.racer.shield) {
         ctx.strokeStyle = '#38bdf8';
-        ctx.shadowBlur = 18;
-        ctx.shadowColor = '#00f0ff';
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.ellipse(
-          this.x + this.width / 2,
-          this.y + this.height / 2,
-          this.width / 2 + 12,
-          this.height / 2 + 10,
-          0, 0, Math.PI * 2
-        );
+        ctx.ellipse(this.racer.x + this.racer.width / 2, this.racer.y + this.racer.height / 2, this.racer.width / 2 + 12, this.racer.height / 2 + 10, 0, 0, Math.PI * 2);
         ctx.stroke();
       }
-
-      ctx.restore();
-    }
-  };
-
-  // ─── Particle Classes ──────────────────────────────────────────────────────
-  class TrailParticle {
-    constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.radius = 1.5 + Math.random() * 2;
-      this.vx = (Math.random() - 0.5) * 1.5;
-      this.vy = gameSpeed * 0.4 + Math.random() * 1.2;
-      this.alpha = 0.8;
-      this.decay = 0.04 + Math.random() * 0.03;
-      this.color = color;
-    }
-
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-    }
-
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = getThemeColor(this.color, '#00f0ff');
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
       ctx.restore();
     }
   }
 
-  class BurstParticle {
-    constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.radius = 2.5 + Math.random() * 4;
-      this.vx = (Math.random() - 0.5) * 10;
-      this.vy = (Math.random() - 0.5) * 10;
-      this.alpha = 1.0;
-      this.decay = 0.02 + Math.random() * 0.02;
-      this.color = color;
-    }
+  // ─── DOM Initialization & Glue ─────────────────────────────────────────────
+  const canvas = safeGet('game');
+  const scoreVal = safeGet('score-val');
+  const speedVal = safeGet('speed-val');
+  const highscoreVal = safeGet('highscore-val');
 
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.vx *= 0.97;
-      this.vy *= 0.97;
-      this.alpha -= this.decay;
-    }
-
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = getThemeColor(this.color, '#00f0ff');
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = getThemeColor(this.color, '#00f0ff');
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  let burstParticles = [];
-
-  function spawnBurstParticles(x, y, color, count = 15) {
-    for (let i = 0; i < count; i++) {
-      burstParticles.push(new BurstParticle(x, y, color));
-    }
-  }
-
-  // ─── Obstacles & Collectibles Systems ──────────────────────────────────────
-  let obstacles = [];
-  let collectibles = [];
-  let obstacleTimer = 0;
-  let nextSpawnTime = 80; // In frames
-
-  class Obstacle {
-    constructor() {
-      this.width = 38;
-      this.height = 64;
-      this.y = -this.height - 20;
-      this.markedForDeletion = false;
-
-      // Select random lane
-      const lane = Math.floor(Math.random() * 3);
-      if (lane === 0) {
-        // Left Lane
-        this.x = ROAD_LEFT + 25;
-      } else if (lane === 1) {
-        // Middle Lane
-        this.x = (CANVAS_WIDTH / 2) - (this.width / 2);
-      } else {
-        // Right Lane
-        this.x = ROAD_RIGHT - 25 - this.width;
-      }
-
-      // Small horizontal jitter/offset to make it feel natural
-      this.x += (Math.random() - 0.5) * 12;
-
-      // Random speed offset so traffic behaves dynamically
-      this.speedOffset = (Math.random() - 0.4) * 1.5;
-
-      const randomType = Math.random();
-      if (randomType < 0.6) {
-        this.type = 'traffic';
-        this.color = 'var(--accent-pink)';
-      } else if (randomType < 0.85) {
-        this.type = 'drone';
-        this.width = 32;
-        this.height = 32;
-        this.color = '#e0a3ff';
-      } else {
-        this.type = 'barrier';
-        this.width = 75; // wider barricade
-        this.height = 24;
-        this.color = '#ff6600';
-        // Re-align barrier to block two lanes or center
-        if (lane === 1) {
-          this.x = (CANVAS_WIDTH / 2) - (this.width / 2);
-        } else if (lane === 0) {
-          this.x = ROAD_LEFT + 15;
-        } else {
-          this.x = ROAD_RIGHT - 15 - this.width;
-        }
-      }
-    }
-
-    update() {
-      // Traffic moves down; drones fly slightly faster; barriers are static on asphalt
-      let dy = gameSpeed;
-      if (this.type === 'traffic') {
-        dy = gameSpeed - 1.2 + this.speedOffset;
-      } else if (this.type === 'drone') {
-        dy = gameSpeed + 1.0;
-        this.x += Math.sin(Date.now() * 0.007) * 1.2; // side-way weaving
-      } else if (this.type === 'barrier') {
-        dy = gameSpeed;
-      }
-
-      this.y += dy;
-      if (this.y > CANVAS_HEIGHT + 100) {
-        this.markedForDeletion = true;
-      }
-    }
-
-    draw() {
-      ctx.save();
-      ctx.fillStyle = getThemeColor(this.color, '#ff0055');
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = getThemeColor(this.color, '#ff0055');
-
-      if (this.type === 'traffic') {
-        // Draw cyber traffic car
-        ctx.beginPath();
-        ctx.roundRect(this.x, this.y, this.width, this.height, 5);
-        ctx.fill();
-
-        // Rear glowing neon lights
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(this.x + 6, this.y + this.height - 6, 8, 3);
-        ctx.fillRect(this.x + this.width - 14, this.y + this.height - 6, 8, 3);
-
-        // Windshield mirror
-        ctx.fillStyle = '#0b0f1a';
-        ctx.fillRect(this.x + 8, this.y + 12, this.width - 16, 12);
-      } else if (this.type === 'drone') {
-        // Pulsing search drone
-        const pulse = Math.abs(Math.sin(Date.now() * 0.015)) * 6;
-        ctx.shadowBlur = 12 + pulse;
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // White core lens
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 4 + pulse / 3, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (this.type === 'barrier') {
-        // Warning neon laser barrier
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        // Stripped pattern
-        ctx.fillStyle = '#0b0f1a';
-        for (let offset = 8; offset < this.width; offset += 20) {
-          ctx.beginPath();
-          ctx.moveTo(this.x + offset, this.y);
-          ctx.lineTo(this.x + offset - 8, this.y + this.height);
-          ctx.lineTo(this.x + offset, this.y + this.height);
-          ctx.lineTo(this.x + offset + 8, this.y);
-          ctx.closePath();
-          ctx.fill();
-        }
-      }
-      ctx.restore();
-    }
-  }
-
-  class Collectible {
-    constructor() {
-      this.width = 16;
-      this.height = 16;
-      this.y = -this.height - 20;
-      this.markedForDeletion = false;
-      const rand = Math.random();
-      if (rand < 0.2) {
-        this.type = 'shield';
-        this.color = '#38bdf8';
-      } else if (rand < 0.4) {
-        this.type = 'nitro';
-        this.color = '#ffaa00';
-      } else {
-        this.type = 'energy';
-        this.color = 'var(--node-glow)';
-      }
-      this.pulsePhase = Math.random() * Math.PI;
-
-      // Align roughly to one of three lane centers
-      const lane = Math.floor(Math.random() * 3);
-      if (lane === 0) {
-        this.x = ROAD_LEFT + 32;
-      } else if (lane === 1) {
-        this.x = (CANVAS_WIDTH / 2) - 8;
-      } else {
-        this.x = ROAD_RIGHT - 48;
-      }
-      // Add random small offset
-      this.x += (Math.random() - 0.5) * 20;
-    }
-
-    update() {
-      this.y += gameSpeed;
-      if (this.y > CANVAS_HEIGHT + 100) {
-        this.markedForDeletion = true;
-      }
-    }
-
-    draw() {
-      const radius = 7 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2.5;
-      ctx.save();
-      const col = (this.type === 'shield' ? '#38bdf8' : (this.type === 'nitro' ? '#ffaa00' : getThemeColor(this.color, '#4ade80')));
-      ctx.fillStyle = col;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = col;
-
-      ctx.beginPath();
-      ctx.translate(this.x + 8, this.y + 8);
-      if (this.type === 'shield') {
-        // Draw shield orb / circle with inner cross line
-        ctx.arc(0, 0, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(-radius / 2, 0);
-        ctx.lineTo(radius / 2, 0);
-        ctx.moveTo(0, -radius / 2);
-        ctx.lineTo(0, radius / 2);
-        ctx.stroke();
-      } else if (this.type === 'nitro') {
-        // Draw flame / triangle nitro canister
-        ctx.moveTo(0, -radius);
-        ctx.lineTo(radius, radius);
-        ctx.lineTo(-radius, radius);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(0, radius / 3, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        // Spin and tilt Diamond Energy Core
-        ctx.rotate(Date.now() * 0.005 + this.pulsePhase);
-        ctx.moveTo(0, -radius);
-        ctx.lineTo(radius * 0.8, 0);
-        ctx.lineTo(0, radius);
-        ctx.lineTo(-radius * 0.8, 0);
-        ctx.closePath();
-        ctx.fill();
-        // Gleaming white center
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(0, 0, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
-  }
-
-  // ─── Input Management ──────────────────────────────────────────────────────
-  const keys = {
-    ArrowLeft: false,
-    ArrowRight: false,
-    KeyA: false,
-    KeyD: false
-  };
-
-  let mobileSteerLeft = false;
-  let mobileSteerRight = false;
-
-  window.addEventListener('keydown', (e) => {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-      keys[e.code] = true;
-      e.preventDefault();
-    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-      keys[e.code] = true;
-      e.preventDefault();
-    } else if (e.code === 'Space' || e.code === 'KeyE') {
-      keys[e.code] = true;
-      e.preventDefault();
-    } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.code === 'Escape' || e.key.toLowerCase() === 'p')) {
-      if (gameStarted && !gameOver) {
-        togglePause();
-      }
-      e.preventDefault();
-    }
-  });
-
-  window.addEventListener('keyup', (e) => {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-      keys[e.code] = false;
-    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-      keys[e.code] = false;
-    } else if (e.code === 'Space' || e.code === 'KeyE') {
-      keys[e.code] = false;
-    }
-  });
-
-  // Mobile Buttons Control (Touch & Mouse fallback)
-  const btnLeft = safeGet('btn-left');
-  const btnRight = safeGet('btn-right');
-
-  const setupSteerButton = (btn, dirStr) => {
-    const startSteer = (e) => {
-      e.preventDefault();
-      if (dirStr === 'left') {
-        mobileSteerLeft = true;
-        if (window.sfx) window.sfx.init();
-      } else {
-        mobileSteerRight = true;
-        if (window.sfx) window.sfx.init();
-      }
-
-      if (!gameStarted || gameOver) {
-        startNewGame();
-      }
-    };
-
-    const stopSteer = (e) => {
-      e.preventDefault();
-      if (dirStr === 'left') {
-        mobileSteerLeft = false;
-      } else {
-        mobileSteerRight = false;
-      }
-    };
-
-    btn.addEventListener('touchstart', startSteer, { passive: false });
-    btn.addEventListener('touchend', stopSteer, { passive: false });
-    btn.addEventListener('touchcancel', stopSteer, { passive: false });
-
-    // Mouse events for dev tools testing
-    btn.addEventListener('mousedown', startSteer);
-    btn.addEventListener('mouseup', stopSteer);
-    btn.addEventListener('mouseleave', stopSteer);
-  };
-
-  setupSteerButton(btnLeft, 'left');
-  setupSteerButton(btnRight, 'right');
-
-  // DOM Action Button Listeners
   const startBtn = safeGet('start-btn');
   const resetBtn = safeGet('reset-btn');
   const pauseBtn = safeGet('pause-btn');
@@ -980,6 +830,106 @@
   const finalScore = safeGet('final-score');
   const highScoreBadge = safeGet('high-score-badge');
 
+  const engine = new CyberRacerEngine(canvas);
+
+  let mobileSteerLeft = false;
+  let mobileSteerRight = false;
+  const keys = { ArrowLeft: false, ArrowRight: false, KeyA: false, KeyD: false };
+
+  function updateUIControls() {
+    scoreVal.textContent = String(engine.score);
+    speedVal.textContent = engine.speedMultiplier.toFixed(1) + 'x';
+    highscoreVal.textContent = String(engine.highscore);
+  }
+
+  function startNewGame() {
+    engine.start();
+    overlay.classList.add('hidden');
+    pauseBtn.disabled = false;
+    canvas.focus();
+    updateUIControls();
+  }
+
+  function togglePause() {
+    const isPaused = engine.togglePause();
+    if (isPaused) {
+      pauseBtn.textContent = "RESUME";
+      overlayTitle.textContent = "GAME PAUSED";
+      overlayDesc.textContent = "Steer out of hazards whenever you're ready!";
+      finalScore.textContent = `Current Score: ${engine.score}`;
+      finalScore.classList.remove('hidden');
+      startBtn.textContent = "RESUME DRIVE";
+      overlay.classList.remove('hidden');
+    } else {
+      pauseBtn.textContent = "PAUSE";
+      overlay.classList.add('hidden');
+      canvas.focus();
+    }
+  }
+
+  function triggerEmpPulse() {
+    const success = engine.triggerEmpPulse();
+    if (success) updateUIControls();
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      keys[e.code] = true;
+      e.preventDefault();
+    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      keys[e.code] = true;
+      e.preventDefault();
+    } else if (e.code === 'Space' || e.code === 'KeyE') {
+      triggerEmpPulse();
+      e.preventDefault();
+    } else if (window.KeyManager ? window.KeyManager.isKey(e, 'pause') : (e.code === 'Escape' || e.key.toLowerCase() === 'p')) {
+      if (engine.started && !engine.over) {
+        togglePause();
+      }
+      e.preventDefault();
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      keys[e.code] = false;
+    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      keys[e.code] = false;
+    }
+  });
+
+  const btnLeft = safeGet('btn-left');
+  const btnRight = safeGet('btn-right');
+
+  const setupSteerButton = (btn, dirStr) => {
+    const startSteer = (e) => {
+      e.preventDefault();
+      if (dirStr === 'left') mobileSteerLeft = true;
+      else mobileSteerRight = true;
+      if (window.sfx) window.sfx.init();
+
+      if (!engine.started || engine.over) {
+        startNewGame();
+      }
+    };
+
+    const stopSteer = (e) => {
+      e.preventDefault();
+      if (dirStr === 'left') mobileSteerLeft = false;
+      else mobileSteerRight = false;
+    };
+
+    btn.addEventListener('touchstart', startSteer, { passive: false });
+    btn.addEventListener('touchend', stopSteer, { passive: false });
+    btn.addEventListener('touchcancel', stopSteer, { passive: false });
+    btn.addEventListener('mousedown', startSteer);
+    btn.addEventListener('mouseup', stopSteer);
+    btn.addEventListener('mouseleave', stopSteer);
+  };
+
+  setupSteerButton(btnLeft, 'left');
+  setupSteerButton(btnRight, 'right');
+
   startBtn.addEventListener('click', () => {
     if (window.sfx) window.sfx.init();
     startNewGame();
@@ -987,8 +937,15 @@
 
   resetBtn.addEventListener('click', () => {
     if (window.sfx) window.sfx.init();
-    initGameDetails();
-    if (gamePaused) togglePause();
+    engine.reset();
+    updateUIControls();
+    overlayTitle.textContent = "CYBER RACER";
+    overlayDesc.textContent = "Race down the retro digital superhighway! Avoid traffic and laser walls, gather data cores.";
+    finalScore.classList.add('hidden');
+    highScoreBadge.classList.add('hidden');
+    startBtn.textContent = "ENGAGE ENGINE";
+    overlay.classList.remove('hidden');
+    if (engine.paused) togglePause();
     startBtn.focus();
   });
 
@@ -996,7 +953,6 @@
     togglePause();
   });
 
-  // Mute Audio Toggle and Persistence
   let soundMuted = false;
   if (typeof window.getMuteState === 'function') {
     soundMuted = window.getMuteState('cyberracer');
@@ -1028,366 +984,40 @@
   updateMuteButtonUI();
   muteBtn.addEventListener('click', toggleMute);
 
-  // M-Key shortcut to toggle audio
   window.addEventListener('keydown', (e) => {
     if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
       toggleMute();
     }
   });
 
-  // ─── Game Loop & Details Logic ─────────────────────────────────────────────
-  function initGameDetails() {
-    score = 0;
-    speedMultiplier = 1.0;
-    gameSpeed = baseSpeed;
-    trackOffset = 0;
-    gameOver = false;
-
-    obstacles = [];
-    collectibles = [];
-    burstParticles = [];
-    obstacleTimer = 0;
-    nextSpawnTime = 80;
-
-    racer.reset();
-    updateUIControls();
-
-    pauseBtn.disabled = true;
-    overlayTitle.textContent = "CYBER RACER";
-    overlayDesc.textContent = "Race down the retro digital superhighway! Avoid traffic and laser walls, gather data cores.";
-    finalScore.classList.add('hidden');
-    highScoreBadge.classList.add('hidden');
-    startBtn.textContent = "ENGAGE ENGINE";
-    overlay.classList.remove('hidden');
-  }
-
-  function startNewGame() {
-    initGameDetails();
-    gameStarted = true;
-    overlay.classList.add('hidden');
-    pauseBtn.disabled = false;
-    canvas.focus();
-  }
-
-  function togglePause() {
-    if (!gameStarted || gameOver) return;
-    gamePaused = !gamePaused;
-    if (gamePaused) {
-      pauseBtn.textContent = "RESUME";
-      overlayTitle.textContent = "GAME PAUSED";
-      overlayDesc.textContent = "Steer out of hazards whenever you're ready!";
-      finalScore.textContent = `Current Score: ${score}`;
-      finalScore.classList.remove('hidden');
-      startBtn.textContent = "RESUME DRIVE";
-      overlay.classList.remove('hidden');
-    } else {
-      pauseBtn.textContent = "PAUSE";
-      overlay.classList.add('hidden');
-      canvas.focus();
-    }
-  }
-
-  function handleCollision() {
-    gameOver = true;
-    pauseBtn.disabled = true;
-
-    // Crash sound effect
-    if (window.sfx) {
-      window.sfx.playGameOver();
-    }
-
-    // Explosion effects representation
-    spawnBurstParticles(racer.x + racer.width / 2, racer.y + racer.height / 2, 'var(--accent-pink)', 18);
-    spawnBurstParticles(racer.x + racer.width / 2, racer.y + racer.height / 2, '#ffffff', 8);
-
-    // Save Score
-    let isNewHigh = false;
-    if (score > highscore) {
-      highscore = score;
-      isNewHigh = true;
-      if (typeof window.saveBestScore === 'function') {
-        window.saveBestScore('cyberracer', highscore);
-      }
-      // Play celebratory sound
-      if (window.sfx) {
-        setTimeout(() => {
-          if (window.sfx.playScoreSlot) window.sfx.playScoreSlot();
-        }, 300);
-      }
-    }
-
-    // Show Overlay
-    setTimeout(() => {
-      overlayTitle.textContent = "SYSTEM CRASH";
-      overlayDesc.textContent = "Your digital racer collided. Re-stabilize connection and run again!";
-      finalScore.textContent = `Final Score: ${score}`;
-      finalScore.classList.remove('hidden');
-
-      if (isNewHigh) {
-        highScoreBadge.classList.remove('hidden');
-      } else {
-        highScoreBadge.classList.add('hidden');
-      }
-
-      startBtn.textContent = "RE-ENGAGE SYSTEM";
-      overlay.classList.remove('hidden');
-      updateUIControls();
-    }, 1000);
-  }
-
-  function checkCollision(r, obj) {
-    // Standard bounding box collision
-    return (
-      r.x < obj.x + obj.width &&
-      r.x + r.width > obj.x &&
-      r.y < obj.y + obj.height &&
-      r.y + r.height > obj.y
-    );
-  }
-
-  // ─── Rendering Methods ───
-  function drawTrack() {
-    // Clear whole canvas with cyber mesh gradient color
-    ctx.fillStyle = getThemeColor('--bg', '#080d19');
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    // Grid details on shoulders
-    ctx.strokeStyle = getThemeColor('--border', 'rgba(79, 131, 204, 0.1)');
-    ctx.lineWidth = 1;
-
-    // Horizontal grid lines scrolling down
-    const offset = Math.floor(trackOffset) % 40;
-    for (let y = offset; y < CANVAS_HEIGHT; y += 40) {
-      // Left side grid line
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(ROAD_LEFT, y);
-      // Right side grid line
-      ctx.beginPath();
-      ctx.moveTo(ROAD_RIGHT, y);
-      ctx.lineTo(CANVAS_WIDTH, y);
-      ctx.stroke();
-    }
-
-    // Vertical line patterns matching perspective/shoulder lines
-    for (let x = 0; x < ROAD_LEFT; x += 30) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, CANVAS_HEIGHT);
-      ctx.stroke();
-    }
-    for (let x = ROAD_RIGHT + 30; x <= CANVAS_WIDTH; x += 30) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, CANVAS_HEIGHT);
-      ctx.stroke();
-    }
-
-    // Paint Road background
-    ctx.fillStyle = getThemeColor('--board-bg', '#111827'); // Dark dashboard gray
-    ctx.fillRect(ROAD_LEFT, 0, ROAD_WIDTH, CANVAS_HEIGHT);
-
-    // Left and Right neon fence boundaries
-    ctx.save();
-    let boundaryColor = getThemeColor('--racer-glow', '#00f0ff');
-    ctx.strokeStyle = boundaryColor;
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = boundaryColor;
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(ROAD_LEFT, 0);
-    ctx.lineTo(ROAD_LEFT, CANVAS_HEIGHT);
-    ctx.moveTo(ROAD_RIGHT, 0);
-    ctx.lineTo(ROAD_RIGHT, CANVAS_HEIGHT);
-    ctx.stroke();
-    ctx.restore();
-
-    // Center divider dash lines
-    ctx.save();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([25, 30]);
-    ctx.lineDashOffset = -trackOffset;
-    ctx.beginPath();
-    ctx.moveTo(ROAD_LEFT + ROAD_WIDTH / 3, 0);
-    ctx.lineTo(ROAD_LEFT + ROAD_WIDTH / 3, CANVAS_HEIGHT);
-    ctx.moveTo(ROAD_LEFT + 2 * ROAD_WIDTH / 3, 0);
-    ctx.lineTo(ROAD_LEFT + 2 * ROAD_WIDTH / 3, CANVAS_HEIGHT);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function updateUIControls() {
-    safeGet('score-val').textContent = String(score);
-    safeGet('speed-val').textContent = speedMultiplier.toFixed(1) + 'x';
-    safeGet('highscore-val').textContent = String(highscore);
-  }
-
-  function triggerEmpPulse() {
-    if (!gameStarted || gameOver || gamePaused) return;
-    if (racer.empCharges <= 0) return;
-
-    racer.empCharges--;
-    // Clear visible obstacles with neon pulse animation
-    for (let i = 0; i < obstacles.length; i++) {
-      obstacles[i].markedForDeletion = true;
-      spawnBurstParticles(obstacles[i].x + obstacles[i].width / 2, obstacles[i].y + obstacles[i].height / 2, '#00f0ff', 25);
-    }
-    score += obstacles.length * 15;
-    if (window.sfx && window.sfx.playEat) {
-      window.sfx.playEat();
-    }
-    updateUIControls();
-  }
-
-  // ─── Loop Function ─────────────────────────────────────────────────────────
   function gameLoop() {
-    // 1. Logic Update
-    if (gameStarted && !gameOver && !gamePaused) {
-      // Background road speed animates
-      trackOffset += gameSpeed;
-
-      // Handle Key input controls
+    if (engine.started && !engine.over && !engine.paused) {
       if (keys.ArrowLeft || keys.KeyA || mobileSteerLeft) {
-        racer.x -= racer.speed;
+        engine.steer(-engine.racer.speed);
       }
       if (keys.ArrowRight || keys.KeyD || mobileSteerRight) {
-        racer.x += racer.speed;
+        engine.steer(engine.racer.speed);
       }
 
-      // Check EMP key trigger (Space bar or KeyE)
-      if (keys.Space || keys.KeyE) {
-        triggerEmpPulse();
-        keys.Space = false;
-        keys.KeyE = false;
-      }
+      engine.update();
+      engine.render();
+      updateUIControls();
 
-      racer.update();
-
-      // Dynamic Speed/Difficulty scaling
-      // Increase speedMultiplier slowly based on score milestones
-      speedMultiplier = Math.min(maxMultiplier, 1.0 + (score / 1200));
-      const nitroBoost = (racer.nitroTimer > 0) ? 1.6 : 1.0;
-      gameSpeed = baseSpeed * speedMultiplier * nitroBoost;
-
-      // Spawn items
-      obstacleTimer++;
-      if (obstacleTimer >= nextSpawnTime) {
-        obstacleTimer = 0;
-        // Adjust spawn delay based on speed so they don't pile up excessively
-        nextSpawnTime = Math.max(38, 75 - Math.floor(speedMultiplier * 8));
-
-        if (Math.random() < 0.8) {
-          obstacles.push(new Obstacle());
-        } else {
-          collectibles.push(new Collectible());
-        }
-
-        // Add small chance of both or double collectibles
-        if (Math.random() < 0.2) {
-          collectibles.push(new Collectible());
-        }
-      }
-
-      // Update Obstacles
-      for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].update();
-
-        // Player Collision check
-        if (checkCollision(racer, obstacles[i])) {
-          if (racer.shield) {
-            racer.shield = false;
-            obstacles[i].markedForDeletion = true;
-            spawnBurstParticles(obstacles[i].x + obstacles[i].width / 2, obstacles[i].y + obstacles[i].height / 2, '#00f0ff', 20);
-            if (window.sfx && window.sfx.playEat) {
-              window.sfx.playEat();
-            }
-          } else {
-            handleCollision();
-          }
-        }
-
-        if (obstacles[i].markedForDeletion) {
-          obstacles.splice(i, 1);
-          // Survival score bonus for dodging
-          score += 10;
-          updateUIControls();
-        }
-      }
-
-      // Update Collectibles
-      for (let i = collectibles.length - 1; i >= 0; i--) {
-        collectibles[i].update();
-
-        // Player Collection check
-        if (checkCollision(racer, collectibles[i])) {
-          // Play sfx sound
-          if (collectibles[i].type === 'nitro') {
-            if (window.sfx && window.sfx.playNitro) {
-              window.sfx.playNitro();
-            } else if (window.sfx) {
-              window.sfx.playEat();
-            }
-          } else if (window.sfx) {
-            window.sfx.playEat();
-          }
-
-          // Spawn burst particles around gem/shield/nitro
-          const particleColor = collectibles[i].type === 'shield' ? '#38bdf8' : (collectibles[i].type === 'nitro' ? '#ffaa00' : 'var(--node-glow)');
-          spawnBurstParticles(collectibles[i].x + 8, collectibles[i].y + 8, particleColor, 12);
-
-          if (collectibles[i].type === 'shield') {
-            racer.shield = true;
-            score += 25;
-          } else if (collectibles[i].type === 'nitro') {
-            racer.nitroTimer = 180; // 3 seconds boost
-            score += 75;
-          } else {
-            score += 50;
-          }
-          updateUIControls();
-          collectibles[i].markedForDeletion = true;
-        }
-
-        if (collectibles[i].markedForDeletion) {
-          collectibles.splice(i, 1);
-        }
-      }
-
-      // Periodically give passive ticks of score for driving
-      if (Math.random() < 0.05) {
-        score += 1;
-        updateUIControls();
+      if (engine.over) {
+        pauseBtn.disabled = true;
+        overlayTitle.textContent = "SYSTEM CRASH";
+        overlayDesc.textContent = "Your digital racer collided. Re-stabilize connection and run again!";
+        finalScore.textContent = `Final Score: ${engine.score}`;
+        finalScore.classList.remove('hidden');
+        startBtn.textContent = "RE-ENGAGE SYSTEM";
+        overlay.classList.remove('hidden');
       }
     }
 
-    // Update particles even when game over or paused
-    for (let i = burstParticles.length - 1; i >= 0; i--) {
-      burstParticles[i].update();
-      if (burstParticles[i].alpha <= 0) {
-        burstParticles.splice(i, 1);
-      }
-    }
-
-    // 2. Draw Render Frame
-    drawTrack();
-
-    // Draw active elements
-    obstacles.forEach(o => o.draw());
-    collectibles.forEach(g => g.draw());
-    racer.draw();
-
-    // Draw burst/explosion particles
-    burstParticles.forEach(p => p.draw());
-
-    // Loop
     requestAnimationFrame(gameLoop);
   }
 
-  // Initial initialization
-  initGameDetails();
-
-  // Run Loop
+  updateUIControls();
   requestAnimationFrame(gameLoop);
 </script>
 </body>

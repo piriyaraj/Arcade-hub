@@ -91,3 +91,19 @@ def test_cyberhacker_key_events():
 
     assert "KeyManager.isKey(e, 'action')" in content, "cyberhacker.html must use KeyManager.isKey for action"
     assert "KeyManager.isKey(e, 'pause')" in content, "cyberhacker.html must use KeyManager.isKey for pause"
+
+def test_js_cyberhacker_unit_tests():
+    """Runs the JavaScript Node.js unit tests for cyberhacker.test.js and asserts success."""
+    import subprocess
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "cyberhacker.test.js")
+
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True,
+        timeout=30
+    )
+
+    assert result.returncode == 0, f"JS test cyberhacker.test.js failed with code {result.returncode}\n{result.stderr}\n{result.stdout}"
+
