@@ -68,3 +68,17 @@ def test_readme_links_to_cyberracer():
     # Check that it links to cyberracer.html
     assert "cyberracer.html" in content, "README.md must link to cyberracer.html"
     assert "CyberRacer" in content, "README.md must list CyberRacer game name"
+
+def test_cyberracer_shield_mechanics():
+    """Verify that cyberracer.html contains shield power-up features and logic."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cyberracer.html")
+    assert os.path.isfile(path)
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "shield: false" in content or "shield:" in content, "racer object must track shield property"
+    assert "type === 'shield'" in content or "collectibles[i].type === 'shield'" in content, "Collectible items must support shield type"
+    assert "racer.shield = true" in content or "racer.shield = false" in content, "racer shield status must be updated on pickup/collision"
+
