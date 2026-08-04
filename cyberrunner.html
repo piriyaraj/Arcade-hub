@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyber Runner - Arcade Hub</title>
-  <meta name="description" content="Play Cyber Runner - Fast-paced neon infinite runner. Dodge laser fences and cyber hacker drones." />
+  <meta name="description" content="Play Cyber Runner - Fast-paced neon infinite runner. Dodge laser fences, cyber hacker drones, collect green data nodes, activate shields, and deploy EMP shockwaves." />
   <link rel="canonical" href="https://arcadehub.telekit.link/cyberrunner.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Arcade Hub" />
   <meta property="og:title" content="Cyber Runner - Arcade Hub" />
-  <meta property="og:description" content="Play Cyber Runner - Fast-paced neon infinite runner. Dodge laser fences and cyber hacker drones." />
+  <meta property="og:description" content="Play Cyber Runner - Fast-paced neon infinite runner. Dodge laser fences, cyber hacker drones, collect green data nodes, activate shields, and deploy EMP shockwaves." />
   <meta property="og:url" content="https://arcadehub.telekit.link/cyberrunner.html" />
   <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Cyber Runner - Arcade Hub" />
-  <meta name="twitter:description" content="Play Cyber Runner - Fast-paced neon infinite runner. Dodge laser fences and cyber hacker drones." />
+  <meta name="twitter:description" content="Play Cyber Runner - Fast-paced neon infinite runner." />
   <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
   <script type="application/ld+json">
 {
@@ -34,6 +34,7 @@
 }
   </script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
   <style>
     :root {
       --bg: #0b0f1a;
@@ -46,6 +47,7 @@
       --node-glow: #4ade80;
       --accent-pink: #ff007f;
       --accent-neon: #00f0ff;
+      --accent-yellow: #facc15;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -145,7 +147,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 80px;
+      min-width: 70px;
     }
 
     .stat-label {
@@ -163,6 +165,10 @@
 
     #multiplier-stat .stat-value {
       color: var(--node-glow);
+    }
+
+    #emp-stat .stat-value {
+      color: var(--accent-pink);
     }
 
     #canvas-wrap {
@@ -225,6 +231,22 @@
 
     button.play-btn:hover {
       box-shadow: 0 4px 18px rgba(0, 240, 255, 0.6);
+    }
+
+    button.emp-btn {
+      background: linear-gradient(135deg, var(--accent-pink), #e11d48);
+      box-shadow: 0 2px 12px rgba(255, 0, 127, 0.4);
+    }
+
+    button.emp-btn:hover:not(:disabled) {
+      box-shadow: 0 4px 18px rgba(255, 0, 127, 0.6);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
     }
 
     #overlay {
@@ -296,18 +318,18 @@
       width: 100%;
       max-width: 600px;
       padding: 0 16px 8px;
-      gap: 16px;
+      gap: 12px;
       justify-content: space-between;
     }
 
     .mobile-action-btn {
       flex: 1;
-      height: 60px;
+      height: 54px;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(79, 131, 204, 0.4);
       color: var(--text);
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -335,6 +357,11 @@
       box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
     }
 
+    #btn-emp-mobile:active {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+    }
+
     @media (max-width: 768px) {
       body {
         overflow-y: auto;
@@ -359,9 +386,10 @@
   <h2 id="overlay-title">CYBER RUNNER</h2>
   <p id="overlay-desc">Dash through a neon-lit cyberpunk grid. Avoid high drones and low laser walls!</p>
   <ul class="instructions-list" id="instructions">
-    <li>🚀 Jump: Up Arrow, W, or Spacebar (Avoid floor laser walls & spikes)</li>
-    <li>🛡️ Duck: Down Arrow or S (Slide under floating hacker drones)</li>
-    <li>⚡ Gain speed & collect Green Data Nodes for bonus score!</li>
+    <li>🚀 Jump / Double Jump: Up Arrow, W, or Spacebar</li>
+    <li>🛡️ Duck / Slide: Down Arrow or S (Slide under floating hacker drones)</li>
+    <li>💥 EMP Shockwave: E key or EMP Pulse button (Destroys all screen threats)</li>
+    <li>⚡ Collect Green Nodes for score, Shields for protection, & EMP Charges!</li>
     <li>⏸️ Pause: Escape, P, or click PAUSE button</li>
   </ul>
   <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW HIGH SCORE! 🏆</div>
@@ -385,6 +413,10 @@
     <span class="stat-label">Speed</span>
     <span class="stat-value" id="speed-val">1.0x</span>
   </div>
+  <div class="stat" id="emp-stat">
+    <span class="stat-label">EMP Pulse</span>
+    <span class="stat-value" id="emp-val">1</span>
+  </div>
   <div class="stat" id="highscore-stat">
     <span class="stat-label">High Score</span>
     <span class="stat-value" id="highscore-val">0</span>
@@ -398,536 +430,797 @@
 <div id="mobile-controls">
   <button id="btn-jump" class="mobile-action-btn">▲ JUMP</button>
   <button id="btn-duck" class="mobile-action-btn">▼ DUCK</button>
+  <button id="btn-emp-mobile" class="mobile-action-btn">💥 EMP</button>
 </div>
 
 <div id="controls">
+  <button class="game-btn emp-btn" id="emp-btn" aria-label="Trigger EMP pulse" disabled>💥 EMP PULSE</button>
   <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
   <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
 </div>
 
+<script src="theme.js"></script>
+<script src="input.js"></script>
+<script src="utils.js"></script>
 <script src="audio.js"></script>
+
 <script>
-  // ─── Safe DOM Access Helper ─────────────────────────────────────────────────
-  const safeGet = (id) => document.getElementById(id) ?? document.body;
+// ─── Obstacle Class ─────────────────────────────────────────────────────────
+class Obstacle {
+  constructor(type, canvasWidth = 600, groundY = 240) {
+    this.type = type; // 'fence', 'spike', 'drone', 'double_spike'
+    this.x = canvasWidth + 50;
+    this.groundY = groundY;
+    this.color = 'var(--accent-pink)';
+    this.hoverOffset = Math.random() * Math.PI * 2;
 
-  // ─── Canvas & Context Setup ────────────────────────────────────────────────
-  const canvas = safeGet('game');
-  const ctx = canvas.getContext('2d');
-
-  const CANVAS_WIDTH = 600;
-  const CANVAS_HEIGHT = 300;
-  const GROUND_Y = 240;
-
-  // ─── Game Variables ────────────────────────────────────────────────────────
-  let gameStarted = false;
-  let gameOver = false;
-  let gamePaused = false;
-
-  let score = 0;
-  let distance = 0;
-  let gameSpeed = 5.5;
-  const MAX_SPEED = 12.0;
-
-  let highscore = 0;
-  try {
-    const raw = localStorage.getItem('cyberrunner_best');
-    const parsed = parseInt(raw, 10);
-    highscore = Number.isFinite(parsed) ? parsed : 0;
-  } catch (e) {
-    highscore = 0;
-  }
-
-  // ─── Runner Object ─────────────────────────────────────────────────────────
-  const runner = {
-    x: 80,
-    y: GROUND_Y - 45,
-    width: 25,
-    height: 45,
-    normalHeight: 45,
-    duckHeight: 22,
-    normalWidth: 25,
-    duckWidth: 35,
-    vy: 0,
-    gravity: 0.6,
-    jumpForce: -11,
-    isJumping: false,
-    isDucking: false,
-    particlesTrail: [],
-
-    reset() {
-      this.y = GROUND_Y - this.normalHeight;
-      this.width = this.normalWidth;
-      this.height = this.normalHeight;
-      this.vy = 0;
-      this.isJumping = false;
-      this.isDucking = false;
-      this.particlesTrail = [];
-    },
-
-    jump() {
-      if (!this.isJumping && !this.isDucking) {
-        this.vy = this.jumpForce;
-        this.isJumping = true;
-        if (window.sfx) window.sfx.playBounce();
-      }
-    },
-
-    duck(isDucking) {
-      if (this.isJumping) return;
-      this.isDucking = isDucking;
-      if (isDucking) {
-        this.height = this.duckHeight;
-        this.width = this.duckWidth;
-        this.y = GROUND_Y - this.duckHeight;
-      } else {
-        this.height = this.normalHeight;
-        this.width = this.normalWidth;
-        this.y = GROUND_Y - this.normalHeight;
-      }
-    },
-
-    update() {
-      // Apply gravity
-      if (this.isJumping) {
-        this.vy += this.gravity;
-        this.y += this.vy;
-
-        // Ground check
-        if (this.y >= GROUND_Y - this.height) {
-          this.y = GROUND_Y - this.height;
-          this.vy = 0;
-          this.isJumping = false;
-        }
-      }
-
-      // Add running particle effect if moving on ground
-      if (!this.isJumping && gameStarted && !gameOver && !gamePaused) {
-        if (Math.random() < 0.25) {
-          this.particlesTrail.push(new TrailParticle(this.x, GROUND_Y - 3, 'var(--runner-glow)'));
-        }
-      }
-
-      // Update trail particles
-      for (let i = this.particlesTrail.length - 1; i >= 0; i--) {
-        this.particlesTrail[i].update();
-        if (this.particlesTrail[i].alpha <= 0) {
-          this.particlesTrail.splice(i, 1);
-        }
-      }
-    },
-
-    draw() {
-      // Draw trails
-      this.particlesTrail.forEach(p => p.draw());
-
-      // Draw cyber runner body
-      ctx.save();
-      ctx.fillStyle = gameOver ? 'var(--accent-pink)' : 'var(--runner-glow)';
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = gameOver ? 'var(--accent-pink)' : 'var(--runner-glow)';
-
-      if (this.isDucking) {
-        // Ducking slide shape: parallelogram / streamlined capsule
-        ctx.beginPath();
-        ctx.roundRect(this.x, this.y, this.width, this.height, 6);
-        ctx.fill();
-        // Inner core
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.roundRect(this.x + 8, this.y + 4, this.width - 16, this.height - 8, 4);
-        ctx.fill();
-      } else {
-        // Standing model: cool cyber-polygon / robotic silhouette
-        ctx.beginPath();
-        ctx.roundRect(this.x, this.y, this.width, this.height, 4);
-        ctx.fill();
-
-        // Face visor line
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(this.x + 12, this.y + 8, 11, 4);
-
-        // Animated neon running limbs (glow lines)
-        if (!this.isJumping && !gameOver && !gamePaused) {
-          const legPhase = Date.now() * 0.015;
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          // Leg 1
-          ctx.moveTo(this.x + 6, this.y + this.height);
-          ctx.lineTo(this.x + 6 + Math.sin(legPhase) * 6, this.y + this.height + 4);
-          // Leg 2
-          ctx.moveTo(this.x + this.width - 6, this.y + this.height);
-          ctx.lineTo(this.x + this.width - 6 - Math.sin(legPhase) * 6, this.y + this.height + 4);
-          ctx.stroke();
-        }
-      }
-      ctx.restore();
-    }
-  };
-
-  // ─── Particle Classes ──────────────────────────────────────────────────────
-  class TrailParticle {
-    constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.radius = 1 + Math.random() * 2;
-      this.vx = -gameSpeed * 0.7 - Math.random() * 2;
-      this.vy = (Math.random() - 0.5) * 1.5;
-      this.alpha = 0.8;
-      this.decay = 0.03 + Math.random() * 0.02;
-      this.color = color;
-    }
-
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-    }
-
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  class BurstParticle {
-    constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.radius = 2 + Math.random() * 3;
-      this.vx = (Math.random() - 0.5) * 8;
-      this.vy = (Math.random() - 0.5) * 8;
-      this.alpha = 1.0;
-      this.decay = 0.02 + Math.random() * 0.02;
-      this.color = color;
-    }
-
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.vx *= 0.98;
-      this.vy *= 0.98;
-      this.alpha -= this.decay;
-    }
-
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  let burstParticles = [];
-
-  function spawnBurstParticles(x, y, color, count = 12) {
-    for (let i = 0; i < count; i++) {
-      burstParticles.push(new BurstParticle(x, y, color));
-    }
-  }
-
-  // ─── Obstacles & Collectibles Systems ──────────────────────────────────────
-  let obstacles = [];
-  let collectibles = [];
-  let obstacleTimer = 0;
-  let nextSpawnDistance = 120; // Frames or distance markers
-
-  class Obstacle {
-    constructor(type) {
-      this.type = type; // 'fence', 'spike', 'drone', 'double_spike'
-      this.x = CANVAS_WIDTH + 50;
-      this.markedForDeletion = false;
-
-      if (type === 'fence') {
-        this.width = 16;
-        this.height = 36;
-        this.y = GROUND_Y - this.height;
-        this.color = 'var(--accent-pink)';
-      } else if (type === 'spike') {
-        this.width = 24;
-        this.height = 28;
-        this.y = GROUND_Y - this.height;
-        this.color = '#ffaa00';
-      } else if (type === 'double_spike') {
-        this.width = 44;
-        this.height = 28;
-        this.y = GROUND_Y - this.height;
-        this.color = '#ff6600';
-      } else if (type === 'drone') {
-        this.width = 24;
-        this.height = 22;
-        this.y = GROUND_Y - 58; // Heights: runner Normal=45, vis=GROUND_Y-45=195. Target drone: covers ~GROUND_Y - 58 to GROUND_Y - 36 (182 - 204). Standing player (top 195) hits it. Ducking (top 218) clears under 204.
-        this.color = '#e0a3ff';
-        this.hoverOffset = Math.random() * Math.PI * 2;
-      }
-    }
-
-    update() {
-      this.x -= gameSpeed;
-      if (this.x < -this.width - 50) {
-        this.markedForDeletion = true;
-      }
-
-      // Special movement
-      if (this.type === 'drone') {
-        // Floating sinusoidal sweep
-        this.y = (GROUND_Y - 60) + Math.sin(Date.now() * 0.008 + this.hoverOffset) * 6;
-      }
-    }
-
-    draw() {
-      ctx.save();
-      ctx.fillStyle = this.color;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = this.color;
-
-      if (this.type === 'fence') {
-        // Cyber Neon laser barrier
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        // Draw warning lights
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(this.x + 2, this.y + 2, this.width - 4, 3);
-        ctx.fillRect(this.x + 2, this.y + this.height - 5, this.width - 4, 3);
-      } else if (this.type === 'spike' || this.type === 'double_spike') {
-        // Triangular sci-fi spike traps
-        ctx.beginPath();
-        if (this.type === 'spike') {
-          ctx.moveTo(this.x, GROUND_Y);
-          ctx.lineTo(this.x + this.width / 2, this.y);
-          ctx.lineTo(this.x + this.width, GROUND_Y);
-        } else {
-          // Double spike
-          ctx.moveTo(this.x, GROUND_Y);
-          ctx.lineTo(this.x + this.width * 0.25, this.y);
-          ctx.lineTo(this.x + this.width * 0.5, GROUND_Y);
-          ctx.lineTo(this.x + this.width * 0.75, this.y);
-          ctx.lineTo(this.x + this.width, GROUND_Y);
-        }
-        ctx.closePath();
-        ctx.fill();
-
-        // Inner glowing border
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      } else if (this.type === 'drone') {
-        // Cyber hacker drone details
-        ctx.beginPath();
-        ctx.roundRect(this.x, this.y, this.width, this.height, 4);
-        ctx.fill();
-
-        // Rotor wing blades
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(this.x - 4, this.y + 4);
-        ctx.lineTo(this.x + this.width + 4, this.y + 4);
-        ctx.stroke();
-
-        // Single red glowing search eye
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-  }
-
-  class Collectible {
-    constructor() {
+    if (type === 'fence') {
       this.width = 16;
-      this.height = 16;
-      this.x = CANVAS_WIDTH + 60;
-      // High or low spawn points
-      this.y = Math.random() > 0.5 ? GROUND_Y - 30 : GROUND_Y - 75;
-      this.markedForDeletion = false;
-      this.color = 'var(--node-glow)';
-      this.pulsePhase = Math.random() * Math.PI;
+      this.height = 36;
+      this.y = groundY - this.height;
+      this.color = 'var(--accent-pink)';
+    } else if (type === 'spike') {
+      this.width = 24;
+      this.height = 28;
+      this.y = groundY - this.height;
+      this.color = '#ffaa00';
+    } else if (type === 'double_spike') {
+      this.width = 44;
+      this.height = 28;
+      this.y = groundY - this.height;
+      this.color = '#ff6600';
+    } else if (type === 'drone') {
+      this.width = 24;
+      this.height = 22;
+      this.y = groundY - 58;
+      this.color = '#e0a3ff';
     }
+  }
 
-    update() {
-      this.x -= gameSpeed;
-      if (this.x < -this.width - 50) {
-        this.markedForDeletion = true;
-      }
+  update(speed) {
+    this.x -= speed;
+    if (this.type === 'drone') {
+      this.y = (this.groundY - 60) + Math.sin(Date.now() * 0.008 + this.hoverOffset) * 6;
     }
+  }
 
-    draw() {
-      const radius = 6 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2;
-      ctx.save();
-      ctx.fillStyle = this.color;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = this.color;
+  draw(ctx) {
+    if (!ctx) return;
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = this.color;
 
-      // Floating data token diamond/sphere
+    if (this.type === 'fence') {
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(this.x + 2, this.y + 2, this.width - 4, 3);
+      ctx.fillRect(this.x + 2, this.y + this.height - 5, this.width - 4, 3);
+    } else if (this.type === 'spike' || this.type === 'double_spike') {
       ctx.beginPath();
-      ctx.translate(this.x + 8, this.y + 8);
-      ctx.rotate(Date.now() * 0.003 + this.pulsePhase);
-      ctx.rect(-radius / 2, -radius / 2, radius, radius);
+      if (this.type === 'spike') {
+        ctx.moveTo(this.x, this.groundY);
+        ctx.lineTo(this.x + this.width / 2, this.y);
+        ctx.lineTo(this.x + this.width, this.groundY);
+      } else {
+        ctx.moveTo(this.x, this.groundY);
+        ctx.lineTo(this.x + this.width * 0.25, this.y);
+        ctx.lineTo(this.x + this.width * 0.5, this.groundY);
+        ctx.lineTo(this.x + this.width * 0.75, this.y);
+        ctx.lineTo(this.x + this.width, this.groundY);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    } else if (this.type === 'drone') {
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(this.x, this.y, this.width, this.height, 4);
+      } else {
+        ctx.rect(this.x, this.y, this.width, this.height);
+      }
       ctx.fill();
 
-      // Outer rings
-      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(0, 0, radius + 2, 0, Math.PI * 2);
+      ctx.moveTo(this.x - 4, this.y + 4);
+      ctx.lineTo(this.x + this.width + 4, this.y + 4);
       ctx.stroke();
 
-      ctx.restore();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+// ─── Collectible Class ──────────────────────────────────────────────────────
+class Collectible {
+  constructor(type = 'node', canvasWidth = 600, groundY = 240) {
+    this.type = type; // 'node', 'shield', 'emp'
+    this.width = 16;
+    this.height = 16;
+    this.x = canvasWidth + 60;
+    this.y = Math.random() > 0.5 ? groundY - 30 : groundY - 75;
+    this.color = type === 'node' ? 'var(--node-glow)' : (type === 'shield' ? '#3b82f6' : 'var(--accent-pink)');
+    this.pulsePhase = Math.random() * Math.PI;
+  }
+
+  update(speed) {
+    this.x -= speed;
+  }
+
+  draw(ctx) {
+    if (!ctx) return;
+    const radius = 6 + Math.sin(Date.now() * 0.01 + this.pulsePhase) * 2;
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = this.color;
+
+    ctx.beginPath();
+    ctx.translate(this.x + 8, this.y + 8);
+    ctx.rotate(Date.now() * 0.003 + this.pulsePhase);
+    ctx.rect(-radius / 2, -radius / 2, radius, radius);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius + 2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+}
+
+// ─── Cyber Runner Game Engine Logic ─────────────────────────────────────────
+class CyberRunnerEngine {
+  constructor(canvasElement = null, uiElements = {}) {
+    this.canvas = canvasElement;
+    this.ctx = canvasElement ? canvasElement.getContext('2d') : null;
+    this.ui = uiElements;
+
+    this.CANVAS_WIDTH = 600;
+    this.CANVAS_HEIGHT = 300;
+    this.GROUND_Y = 240;
+
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+
+    this.score = 0;
+    this.distance = 0;
+    this.gameSpeed = 5.5;
+    this.maxSpeed = 12.0;
+    this.multiplier = 1;
+    this.shield = false;
+    this.empCharges = 1;
+
+    this.runner = {
+      x: 80,
+      y: this.GROUND_Y - 45,
+      width: 25,
+      height: 45,
+      normalHeight: 45,
+      duckHeight: 22,
+      normalWidth: 25,
+      duckWidth: 35,
+      vy: 0,
+      gravity: 0.6,
+      jumpForce: -11,
+      isJumping: false,
+      isDucking: false,
+      jumpsRemaining: 2,
+      particlesTrail: []
+    };
+
+    this.obstacles = [];
+    this.collectibles = [];
+    this.burstParticles = [];
+    this.empPulse = null;
+    this.obstacleTimer = 0;
+    this.nextSpawnDistance = 120;
+    this.backgroundScroll = 0;
+
+    this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberrunner') : 0;
+  }
+
+  start() {
+    this.started = true;
+    this.paused = false;
+    this.over = false;
+
+    this.score = 0;
+    this.distance = 0;
+    this.gameSpeed = 5.5;
+    this.multiplier = 1;
+    this.shield = false;
+    this.empCharges = 1;
+
+    this.obstacles = [];
+    this.collectibles = [];
+    this.burstParticles = [];
+    this.empPulse = null;
+    this.obstacleTimer = 0;
+    this.nextSpawnDistance = 80;
+
+    this.resetRunner();
+    this.updateUI();
+  }
+
+  resetRunner() {
+    this.runner.y = this.GROUND_Y - this.runner.normalHeight;
+    this.runner.width = this.runner.normalWidth;
+    this.runner.height = this.runner.normalHeight;
+    this.runner.vy = 0;
+    this.runner.isJumping = false;
+    this.runner.isDucking = false;
+    this.runner.jumpsRemaining = 2;
+    this.runner.particlesTrail = [];
+  }
+
+  reset() {
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+
+    this.score = 0;
+    this.distance = 0;
+    this.gameSpeed = 5.5;
+    this.multiplier = 1;
+    this.shield = false;
+    this.empCharges = 1;
+
+    this.obstacles = [];
+    this.collectibles = [];
+    this.burstParticles = [];
+    this.empPulse = null;
+    this.obstacleTimer = 0;
+
+    this.resetRunner();
+    this.updateUI();
+  }
+
+  togglePause() {
+    if (!this.started || this.over) return;
+    this.paused = !this.paused;
+    this.updateUI();
+  }
+
+  jump() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.runner.isDucking) return false;
+
+    if (!this.runner.isJumping) {
+      this.runner.vy = this.runner.jumpForce;
+      this.runner.isJumping = true;
+      this.runner.jumpsRemaining = 1;
+      if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playBounce === 'function') {
+        window.sfx.playBounce();
+      }
+      return true;
+    } else if (this.runner.jumpsRemaining > 0) {
+      // Mid-air double jump!
+      this.runner.vy = this.runner.jumpForce * 0.9;
+      this.runner.jumpsRemaining = 0;
+      this.spawnBurstParticles(this.runner.x + this.runner.width / 2, this.runner.y + this.runner.height, 'var(--runner-glow)', 8);
+      if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playBounce === 'function') {
+        window.sfx.playBounce();
+      }
+      return true;
+    }
+    return false;
+  }
+
+  duck(isDucking) {
+    if (!this.started || this.paused || this.over) return;
+
+    if (this.runner.isJumping && isDucking) {
+      // Quick drop when ducking in mid-air
+      this.runner.vy += 4;
+      return;
+    }
+
+    this.runner.isDucking = isDucking;
+    if (isDucking) {
+      this.runner.height = this.runner.duckHeight;
+      this.runner.width = this.runner.duckWidth;
+      this.runner.y = this.GROUND_Y - this.runner.duckHeight;
+    } else {
+      this.runner.height = this.runner.normalHeight;
+      this.runner.width = this.runner.normalWidth;
+      this.runner.y = this.GROUND_Y - this.runner.normalHeight;
     }
   }
 
-  function spawnEntity() {
-    obstacleTimer++;
-    if (obstacleTimer >= nextSpawnDistance) {
-      obstacleTimer = 0;
-      // Randomize next spawn gap
-      nextSpawnDistance = 100 + Math.random() * 80;
+  triggerEmpPulse() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.empCharges <= 0) return false;
 
-      // Spawn item or obstacle
-      const randomValue = Math.random();
-      if (randomValue < 0.70) {
-        // Spawn Obstacle
+    this.empCharges--;
+    this.obstacles.forEach(obs => {
+      this.spawnBurstParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, obs.color || 'var(--accent-pink)', 10);
+    });
+    this.obstacles = [];
+
+    this.empPulse = {
+      x: this.runner.x + this.runner.width / 2,
+      y: this.runner.y + this.runner.height / 2,
+      radius: 10,
+      maxRadius: 400,
+      alpha: 1.0
+    };
+
+    if (typeof window !== 'undefined' && window.sfx) {
+      if (typeof window.sfx.playEmp === 'function') {
+        window.sfx.playEmp();
+      } else if (typeof window.sfx.playLaser === 'function') {
+        window.sfx.playLaser();
+      }
+    }
+    this.updateUI();
+    return true;
+  }
+
+  spawnEntity() {
+    this.obstacleTimer++;
+    if (this.obstacleTimer >= this.nextSpawnDistance) {
+      this.obstacleTimer = 0;
+      this.nextSpawnDistance = 90 + Math.random() * 70;
+
+      const roll = Math.random();
+      if (roll < 0.65) {
         const types = ['fence', 'spike', 'drone', 'double_spike'];
         const chosenType = types[Math.floor(Math.random() * types.length)];
-        obstacles.push(new Obstacle(chosenType));
+        this.obstacles.push(new Obstacle(chosenType, this.CANVAS_WIDTH, this.GROUND_Y));
+      } else if (roll < 0.85) {
+        this.collectibles.push(new Collectible('node', this.CANVAS_WIDTH, this.GROUND_Y));
+      } else if (roll < 0.93) {
+        this.collectibles.push(new Collectible('shield', this.CANVAS_WIDTH, this.GROUND_Y));
       } else {
-        // Spawn Collectible
-        collectibles.push(new Collectible());
+        this.collectibles.push(new Collectible('emp', this.CANVAS_WIDTH, this.GROUND_Y));
       }
     }
   }
 
-  function checkCollision(rect1, rect2) {
-    return (
-      rect1.x < rect2.x + rect2.width &&
-      rect1.x + rect1.width > rect2.x &&
-      rect1.y < rect2.y + rect2.height &&
-      rect1.y + rect1.height > rect2.y
+  update() {
+    if (!this.started || this.paused || this.over) return;
+
+    this.distance++;
+    if (this.distance % 5 === 0) {
+      this.score += 1 * this.multiplier;
+    }
+
+    if (this.distance > 0 && this.distance % 350 === 0) {
+      this.gameSpeed = Math.min(this.maxSpeed, this.gameSpeed + 0.4);
+      this.updateUI();
+    }
+
+    this.spawnEntity();
+
+    // Runner physics update
+    if (this.runner.isJumping) {
+      this.runner.vy += this.runner.gravity;
+      this.runner.y += this.runner.vy;
+
+      if (this.runner.y >= this.GROUND_Y - this.runner.height) {
+        this.runner.y = this.GROUND_Y - this.runner.height;
+        this.runner.vy = 0;
+        this.runner.isJumping = false;
+        this.runner.jumpsRemaining = 2;
+      }
+    }
+
+    // Runner trail particles
+    if (!this.runner.isJumping && Math.random() < 0.25) {
+      this.runner.particlesTrail.push({
+        x: this.runner.x,
+        y: this.GROUND_Y - 3,
+        radius: 1 + Math.random() * 2,
+        vx: -this.gameSpeed * 0.7 - Math.random() * 2,
+        vy: (Math.random() - 0.5) * 1.5,
+        alpha: 0.8,
+        decay: 0.03 + Math.random() * 0.02,
+        color: 'var(--runner-glow)'
+      });
+    }
+
+    for (let i = this.runner.particlesTrail.length - 1; i >= 0; i--) {
+      const p = this.runner.particlesTrail[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= p.decay;
+      if (p.alpha <= 0) this.runner.particlesTrail.splice(i, 1);
+    }
+
+    // EMP pulse ring expansion update
+    if (this.empPulse) {
+      this.empPulse.radius += 20;
+      this.empPulse.alpha -= 0.04;
+      if (this.empPulse.alpha <= 0 || this.empPulse.radius >= this.empPulse.maxRadius) {
+        this.empPulse = null;
+      }
+    }
+
+    // Collision function helper check
+    const checkFn = typeof checkCollision === 'function' ? checkCollision : (r1, r2) => (
+      r1.x < r2.x + r2.width &&
+      r1.x + r1.width > r2.x &&
+      r1.y < r2.y + r2.height &&
+      r1.y + r1.height > r2.y
     );
+
+    // Update Obstacles
+    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+      const obs = this.obstacles[i];
+      obs.update(this.gameSpeed);
+
+      if (checkFn(this.runner, obs)) {
+        if (this.shield) {
+          this.shield = false;
+          this.spawnBurstParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, 'var(--runner-glow)', 18);
+          this.obstacles.splice(i, 1);
+          if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playHit === 'function') {
+            window.sfx.playHit();
+          }
+          this.updateUI();
+        } else {
+          this.handleGameOver();
+          break;
+        }
+      } else if (obs.x < -obs.width - 50) {
+        this.obstacles.splice(i, 1);
+      }
+    }
+
+    // Update Collectibles
+    for (let i = this.collectibles.length - 1; i >= 0; i--) {
+      const col = this.collectibles[i];
+      col.update(this.gameSpeed);
+
+      if (checkFn(this.runner, col)) {
+        if (col.type === 'node') {
+          this.score += 50 * this.multiplier;
+          if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+            window.sfx.playEat();
+          }
+          this.spawnBurstParticles(col.x + col.width / 2, col.y + col.height / 2, 'var(--node-glow)', 12);
+        } else if (col.type === 'shield') {
+          this.shield = true;
+          this.score += 25;
+          if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playPowerup === 'function') {
+            window.sfx.playPowerup();
+          } else if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+            window.sfx.playEat();
+          }
+          this.spawnBurstParticles(col.x + col.width / 2, col.y + col.height / 2, '#3b82f6', 15);
+        } else if (col.type === 'emp') {
+          this.empCharges = Math.min(3, this.empCharges + 1);
+          this.score += 25;
+          if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playPowerup === 'function') {
+            window.sfx.playPowerup();
+          } else if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playEat === 'function') {
+            window.sfx.playEat();
+          }
+          this.spawnBurstParticles(col.x + col.width / 2, col.y + col.height / 2, 'var(--accent-pink)', 15);
+        }
+        this.collectibles.splice(i, 1);
+        this.updateUI();
+      } else if (col.x < -col.width - 50) {
+        this.collectibles.splice(i, 1);
+      }
+    }
+
+    // Update Burst particles
+    for (let i = this.burstParticles.length - 1; i >= 0; i--) {
+      const p = this.burstParticles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.98;
+      p.vy *= 0.98;
+      p.alpha -= p.decay;
+      if (p.alpha <= 0) this.burstParticles.splice(i, 1);
+    }
   }
 
-  // ─── Input Handlers ────────────────────────────────────────────────────────
-  const keys = { KeyW: false, ArrowUp: false, Space: false, KeyS: false, ArrowDown: false };
+  handleGameOver() {
+    this.started = false;
+    this.over = true;
 
-  document.addEventListener('keydown', (e) => {
-    if (e.repeat) return; // Prevent toggle spam
-
-    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
-      keys[e.code] = true;
-      if (gameStarted && !gameOver && !gamePaused) {
-        runner.jump();
-      } else if (!gameStarted || gameOver) {
-        startNewGame();
-      }
-      e.preventDefault();
-    } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-      keys[e.code] = true;
-      if (gameStarted && !gameOver && !gamePaused) {
-        runner.duck(true);
-      }
-      e.preventDefault();
-    } else if (e.code === 'Escape' || e.key.toLowerCase() === 'p') {
-      if (gameStarted && !gameOver) {
-        togglePause();
-      }
-      e.preventDefault();
+    if (typeof window !== 'undefined' && window.sfx && typeof window.sfx.playGameOver === 'function') {
+      window.sfx.playGameOver();
     }
+    this.spawnBurstParticles(this.runner.x + this.runner.width / 2, this.runner.y + this.runner.height / 2, 'var(--accent-pink)', 30);
+
+    let isNewHigh = false;
+    if (typeof saveBestScore === 'function') {
+      isNewHigh = saveBestScore('cyberrunner', this.score);
+    }
+    if (isNewHigh) {
+      this.highScore = this.score;
+    }
+    this.updateUI(true, isNewHigh);
+  }
+
+  spawnBurstParticles(x, y, color, count = 12) {
+    for (let i = 0; i < count; i++) {
+      this.burstParticles.push({
+        x: x,
+        y: y,
+        radius: 2 + Math.random() * 3,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        alpha: 1.0,
+        decay: 0.02 + Math.random() * 0.02,
+        color: color
+      });
+    }
+  }
+
+  updateUI(isGameOver = false, isNewHigh = false) {
+    if (!this.ui) return;
+    if (this.ui.scoreVal) this.ui.scoreVal.textContent = this.score;
+    if (this.ui.speedVal) this.ui.speedVal.textContent = `${this.gameSpeed.toFixed(1)}x`;
+    if (this.ui.empVal) this.ui.empVal.textContent = this.empCharges;
+    if (this.ui.highScoreVal && typeof getBestScore === 'function') {
+      this.ui.highScoreVal.textContent = getBestScore('cyberrunner');
+    }
+
+    if (this.ui.pauseBtn) {
+      this.ui.pauseBtn.disabled = !this.started || this.over;
+      this.ui.pauseBtn.textContent = this.paused ? 'RESUME' : 'PAUSE';
+    }
+
+    if (this.ui.empBtn) {
+      this.ui.empBtn.disabled = !this.started || this.paused || this.over || this.empCharges <= 0;
+    }
+
+    if (isGameOver && this.ui.overlay) {
+      if (this.ui.overlayTitle) {
+        this.ui.overlayTitle.textContent = "GRID DE-SYNC";
+        this.ui.overlayTitle.style.background = "linear-gradient(135deg, var(--accent-pink), #ff5500)";
+        this.ui.overlayTitle.style.webkitBackgroundClip = "text";
+      }
+      if (this.ui.overlayDesc) {
+        this.ui.overlayDesc.textContent = "You collided with a cybersecurity obstacle thread! Re-sync connection to retry.";
+      }
+      if (this.ui.instructionsList) this.ui.instructionsList.classList.add('hidden');
+      if (this.ui.finalScoreEl) {
+        this.ui.finalScoreEl.textContent = `Extracted: ${this.score} Data Units`;
+        this.ui.finalScoreEl.classList.remove('hidden');
+      }
+      if (this.ui.highScoreBadge) {
+        if (isNewHigh) this.ui.highScoreBadge.classList.remove('hidden');
+        else this.ui.highScoreBadge.classList.add('hidden');
+      }
+      if (this.ui.startBtn) this.ui.startBtn.textContent = "RE-SYNC NODE";
+      this.ui.overlay.classList.remove('hidden');
+    }
+  }
+
+  draw() {
+    if (!this.ctx) return;
+    const ctx = this.ctx;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+    // 1. Parallax Skylines
+    ctx.save();
+    this.backgroundScroll -= this.gameSpeed * 0.15;
+    if (this.backgroundScroll <= -200) {
+      this.backgroundScroll = 0;
+    }
+
+    ctx.fillStyle = 'rgba(79, 131, 204, 0.08)';
+    for (let i = 0; i < 6; i++) {
+      const h = 80 + Math.sin(i * 1.5) * 40;
+      const w = 60 + Math.cos(i) * 20;
+      ctx.fillRect(this.backgroundScroll + i * 140, this.GROUND_Y - h, w, h);
+    }
+    ctx.restore();
+
+    // 2. Perspective Ground Grid
+    ctx.save();
+    ctx.strokeStyle = 'rgba(79, 131, 204, 0.4)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, this.GROUND_Y);
+    ctx.lineTo(this.CANVAS_WIDTH, this.GROUND_Y);
+    ctx.stroke();
+
+    const gridLineOffset = (this.distance * this.gameSpeed) % 40;
+    ctx.strokeStyle = 'rgba(79, 131, 204, 0.15)';
+    ctx.lineWidth = 1.5;
+    for (let x = this.CANVAS_WIDTH; x >= -40; x -= 40) {
+      ctx.beginPath();
+      ctx.moveTo(x - gridLineOffset, this.GROUND_Y);
+      ctx.lineTo(x - gridLineOffset - 25, this.CANVAS_HEIGHT);
+      ctx.stroke();
+    }
+
+    for (let y = this.GROUND_Y; y < this.CANVAS_HEIGHT; y += 15) {
+      ctx.strokeStyle = 'rgba(79, 131, 204, 0.1)';
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(this.CANVAS_WIDTH, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 3. Draw Collectibles
+    this.collectibles.forEach(col => col.draw(ctx));
+
+    // 4. Draw Obstacles
+    this.obstacles.forEach(obs => obs.draw(ctx));
+
+    // 5. Draw Runner
+    ctx.save();
+    // Trail particles
+    this.runner.particlesTrail.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Shield Aura
+    if (this.shield) {
+      ctx.save();
+      ctx.strokeStyle = '#3b82f6';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#3b82f6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(this.runner.x + this.runner.width / 2, this.runner.y + this.runner.height / 2, Math.max(this.runner.width, this.runner.height), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Body
+    ctx.fillStyle = this.over ? 'var(--accent-pink)' : 'var(--runner-glow)';
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = this.over ? 'var(--accent-pink)' : 'var(--runner-glow)';
+
+    if (this.runner.isDucking) {
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height, 6);
+      } else {
+        ctx.rect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
+      }
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(this.runner.x + 8, this.runner.y + 4, this.runner.width - 16, this.runner.height - 8, 4);
+      } else {
+        ctx.rect(this.runner.x + 8, this.runner.y + 4, this.runner.width - 16, this.runner.height - 8);
+      }
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(this.runner.x, this.runner.y, this.runner.width, this.runner.height, 4);
+      } else {
+        ctx.rect(this.runner.x, this.runner.y, this.runner.width, this.runner.height);
+      }
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(this.runner.x + 12, this.runner.y + 8, 11, 4);
+
+      if (!this.runner.isJumping && !this.over && !this.paused) {
+        const legPhase = Date.now() * 0.015;
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(this.runner.x + 6, this.runner.y + this.runner.height);
+        ctx.lineTo(this.runner.x + 6 + Math.sin(legPhase) * 6, this.runner.y + this.runner.height + 4);
+        ctx.moveTo(this.runner.x + this.runner.width - 6, this.runner.y + this.runner.height);
+        ctx.lineTo(this.runner.x + this.runner.width - 6 - Math.sin(legPhase) * 6, this.runner.y + this.runner.height + 4);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // 6. Draw EMP Shockwave Ring
+    if (this.empPulse) {
+      ctx.save();
+      ctx.globalAlpha = this.empPulse.alpha;
+      ctx.strokeStyle = 'var(--accent-pink)';
+      ctx.lineWidth = 4;
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = 'var(--accent-pink)';
+      ctx.beginPath();
+      ctx.arc(this.empPulse.x, this.empPulse.y, this.empPulse.radius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 7. Draw Burst Particles
+    this.burstParticles.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = { CyberRunnerEngine };
+}
+
+// ─── DOM Initialization & Controls ─────────────────────────────────────────
+if (typeof document !== 'undefined' && document.getElementById('game')) {
+  const safeGet = (id) => document.getElementById(id) ?? document.body;
+
+  const canvas = safeGet('game');
+  const uiElements = {
+    scoreVal: safeGet('score-val'),
+    speedVal: safeGet('speed-val'),
+    empVal: safeGet('emp-val'),
+    highScoreVal: safeGet('highscore-val'),
+    pauseBtn: safeGet('pause-btn'),
+    resetBtn: safeGet('reset-btn'),
+    empBtn: safeGet('emp-btn'),
+    startBtn: safeGet('start-btn'),
+    overlay: safeGet('overlay'),
+    overlayTitle: safeGet('overlay-title'),
+    overlayDesc: safeGet('overlay-desc'),
+    instructionsList: safeGet('instructions'),
+    finalScoreEl: safeGet('final-score'),
+    highScoreBadge: safeGet('high-score-badge')
+  };
+
+  ThemeManager.init();
+  KeyManager.init();
+
+  const engine = new CyberRunnerEngine(canvas, uiElements);
+
+  // Button Listeners
+  uiElements.startBtn.addEventListener('click', () => {
+    if (window.sfx && typeof window.sfx.init === 'function') window.sfx.init();
+    uiElements.overlay.classList.add('hidden');
+    engine.start();
   });
 
-  document.addEventListener('keyup', (e) => {
-    if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
-      keys[e.code] = false;
-    } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-      keys[e.code] = false;
-      // Only stop ducking if BOTH duck keys are released
-      const stillDucking = keys.ArrowDown || keys.KeyS;
-      if (!stillDucking && gameStarted && !gameOver && !gamePaused) {
-        runner.duck(false);
-      }
-    }
+  uiElements.resetBtn.addEventListener('click', () => {
+    if (window.sfx && typeof window.sfx.init === 'function') window.sfx.init();
+    engine.reset();
+    uiElements.startBtn.focus();
   });
 
-  // Mobile Buttons Control
-  const btnJump = safeGet('btn-jump');
-  const btnDuck = safeGet('btn-duck');
+  uiElements.pauseBtn.addEventListener('click', () => {
+    engine.togglePause();
+  });
 
-  btnJump.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (gameStarted && !gameOver && !gamePaused) {
-      runner.jump();
-    } else if (!gameStarted || gameOver) {
-      startNewGame();
-    }
-  }, { passive: false });
+  uiElements.empBtn.addEventListener('click', () => {
+    engine.triggerEmpPulse();
+  });
 
-  btnDuck.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (gameStarted && !gameOver && !gamePaused) {
-      runner.duck(true);
-    }
-  }, { passive: false });
-
-  btnDuck.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    if (gameStarted && !gameOver && !gamePaused) {
-      runner.duck(false);
-    }
-  }, { passive: false });
-
-  // DOM Buttons Setup
-  const startBtn = safeGet('start-btn');
-  const resetBtn = safeGet('reset-btn');
+  // Mute Control
   const muteBtn = safeGet('mute-btn');
-  const pauseBtn = safeGet('pause-btn');
+  let isMuted = getMuteState('cyberrunner_muted');
+  if (window.sfx) window.sfx.muted = isMuted;
 
-  const overlay = safeGet('overlay');
-  const overlayTitle = safeGet('overlay-title');
-  const overlayDesc = safeGet('overlay-desc');
-  const instructionsList = safeGet('instructions');
-  const finalScoreEl = safeGet('final-score');
-  const highScoreBadge = safeGet('high-score-badge');
-
-  startBtn.addEventListener('click', () => {
-    if (window.sfx) window.sfx.init();
-    startNewGame();
-  });
-
-  resetBtn.addEventListener('click', () => {
-    if (window.sfx) window.sfx.init();
-    initGameDetails();
-    if (gamePaused) togglePause();
-    startBtn.focus();
-  });
-
-  pauseBtn.addEventListener('click', () => {
-    togglePause();
-  });
-
-  // Mute Audio Toggle
-  let soundMuted = false;
-  try {
-    soundMuted = localStorage.getItem('cyberrunner_muted') === 'true';
-  } catch (e) {
-    soundMuted = false;
-  }
-
-  if (window.sfx) {
-    window.sfx.muted = soundMuted;
-  }
-
-  function updateMuteButtonUI() {
+  function updateMuteUI() {
     if (window.sfx) {
       muteBtn.textContent = window.sfx.muted ? '🔇 Sound Off' : '🔊 Sound On';
     }
@@ -936,269 +1229,108 @@
   function toggleMute() {
     if (window.sfx) {
       window.sfx.muted = !window.sfx.muted;
-      try {
-        localStorage.setItem('cyberrunner_muted', window.sfx.muted.toString());
-      } catch (e) {
-        console.error('localStorage save failed:', e);
-      }
-      updateMuteButtonUI();
-      if (typeof window.sfx.init === 'function') {
-        window.sfx.init();
-      }
+      saveMuteState('cyberrunner_muted', window.sfx.muted);
+      updateMuteUI();
+      if (typeof window.sfx.init === 'function') window.sfx.init();
     }
   }
 
-  updateMuteButtonUI();
+  updateMuteUI();
   muteBtn.addEventListener('click', toggleMute);
 
-  // M-key shortcut
-  window.addEventListener('keydown', (e) => {
-    if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
+  // Keyboard Handlers with KeyManager integration
+  const keys = { ArrowDown: false, KeyS: false };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
+
+    if (KeyManager.isKey(e, 'action') || e.code === 'ArrowUp' || e.code === 'KeyW') {
+      if (engine.started && !engine.over && !engine.paused) {
+        engine.jump();
+      } else if (!engine.started || engine.over) {
+        if (window.sfx && typeof window.sfx.init === 'function') window.sfx.init();
+        uiElements.overlay.classList.add('hidden');
+        engine.start();
+      }
+      e.preventDefault();
+    } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      keys[e.code] = true;
+      if (engine.started && !engine.over && !engine.paused) {
+        engine.duck(true);
+      }
+      e.preventDefault();
+    } else if (e.code === 'KeyE') {
+      if (engine.started && !engine.over && !engine.paused) {
+        engine.triggerEmpPulse();
+      }
+      e.preventDefault();
+    } else if (KeyManager.isKey(e, 'pause') || e.code === 'Escape' || e.key.toLowerCase() === 'p') {
+      if (engine.started && !engine.over) {
+        engine.togglePause();
+      }
+      e.preventDefault();
+    } else if ((e.key === 'm' || e.key === 'M') && !e.repeat) {
       toggleMute();
     }
   });
 
-  // ─── Game Loop & Controls Logic ───────────────────────────────────────────
-  function initGameDetails() {
-    score = 0;
-    distance = 0;
-    gameSpeed = 5.5;
-    gameOver = false;
-    obstacles = [];
-    collectibles = [];
-    burstParticles = [];
-    obstacleTimer = 0;
-    nextSpawnDistance = 120;
-
-    runner.reset();
-    updateUI();
-
-    pauseBtn.disabled = true;
-    overlayTitle.textContent = "CYBER RUNNER";
-    overlayDesc.textContent = "Dash through a neon-lit cyberpunk grid. Avoid high drones and low laser walls!";
-    instructionsList.classList.remove('hidden');
-    finalScoreEl.classList.add('hidden');
-    highScoreBadge.classList.add('hidden');
-    startBtn.textContent = "START RUN";
-    overlay.classList.remove('hidden');
-  }
-
-  function startNewGame() {
-    overlay.classList.add('hidden');
-    gameStarted = true;
-    gameOver = false;
-    gamePaused = false;
-    pauseBtn.disabled = false;
-
-    score = 0;
-    distance = 0;
-    gameSpeed = 5.5;
-    obstacles = [];
-    collectibles = [];
-    burstParticles = [];
-    obstacleTimer = 0;
-    nextSpawnDistance = 80; // Start spawn quickly
-
-    runner.reset();
-    updateUI();
-  }
-
-  function togglePause() {
-    gamePaused = !gamePaused;
-    pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
-
-    if (gamePaused) {
-      ctx.fillStyle = 'rgba(11, 15, 26, 0.7)';
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-      ctx.font = '800 24px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = 'var(--runner-glow)';
-      ctx.textAlign = 'center';
-      ctx.fillText('SYSTEM PAUSED', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-
-      ctx.font = '14px system-ui, -apple-system, sans-serif';
-      ctx.fillStyle = 'var(--text-dim)';
-      ctx.fillText('Press SPACE/ESC or click RESUME to restart run', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 30);
-    }
-  }
-
-  function handleGameOver() {
-    gameStarted = false;
-    gameOver = true;
-    pauseBtn.disabled = true;
-
-    if (window.sfx) window.sfx.playGameOver();
-    spawnBurstParticles(runner.x + runner.width / 2, runner.y + runner.height / 2, 'var(--accent-pink)', 30);
-
-    const isNewHigh = score > highscore;
-    if (isNewHigh) {
-      highscore = score;
-      try {
-        localStorage.setItem('cyberrunner_best', String(highscore));
-      } catch (e) {
-        // Fail silently
+  document.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      keys[e.code] = false;
+      const stillDucking = keys.ArrowDown || keys.KeyS;
+      if (!stillDucking && engine.started && !engine.over && !engine.paused) {
+        engine.duck(false);
       }
     }
+  });
 
-    if (isNewHigh) {
-      highScoreBadge.classList.remove('hidden');
-    } else {
-      highScoreBadge.classList.add('hidden');
+  // Mobile Handlers
+  const btnJump = safeGet('btn-jump');
+  const btnDuck = safeGet('btn-duck');
+  const btnEmpMobile = safeGet('btn-emp-mobile');
+
+  btnJump.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (engine.started && !engine.over && !engine.paused) {
+      engine.jump();
+    } else if (!engine.started || engine.over) {
+      uiElements.overlay.classList.add('hidden');
+      engine.start();
     }
+  }, { passive: false });
 
-    overlayTitle.textContent = "GRID DE-SYNC";
-    overlayTitle.style.background = "linear-gradient(135deg, var(--accent-pink), #ff5500)";
-    overlayTitle.style.webkitBackgroundClip = "text";
-    overlayDesc.textContent = "You collided with a cybersecurity obstacle thread! Re-sync connection to retry.";
-
-    instructionsList.classList.add('hidden');
-    finalScoreEl.textContent = `Extracted: ${score} Data Units`;
-    finalScoreEl.classList.remove('hidden');
-    startBtn.textContent = "RE-SYNC NODE";
-    overlay.classList.remove('hidden');
-  }
-
-  function updateUI() {
-    safeGet('score-val').textContent = score;
-    safeGet('speed-val').textContent = `${gameSpeed.toFixed(1)}x`;
-    safeGet('highscore-val').textContent = highscore;
-  }
-
-  // ─── Physics Engine ────────────────────────────────────────────────────────
-  function updatePhysics() {
-    if (!gameStarted || gamePaused || gameOver) return;
-
-    // Increment distance scorecard
-    distance++;
-    if (distance % 5 === 0) {
-      score += 1;
+  btnDuck.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (engine.started && !engine.over && !engine.paused) {
+      engine.duck(true);
     }
+  }, { passive: false });
 
-    // Dynamic speed ramp
-    if (distance > 0 && distance % 350 === 0) {
-      gameSpeed = Math.min(MAX_SPEED, gameSpeed + 0.4);
-      updateUI();
+  btnDuck.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (engine.started && !engine.over && !engine.paused) {
+      engine.duck(false);
     }
+  }, { passive: false });
 
-    // Spawn obstacles/nodes
-    spawnEntity();
-
-    // Update Runner
-    runner.update();
-
-    // Update Obstacles
-    obstacles.forEach(obs => {
-      obs.update();
-      // Collision check
-      if (checkCollision(runner, obs)) {
-        handleGameOver();
-      }
-    });
-    obstacles = obstacles.filter(obs => !obs.markedForDeletion);
-
-    // Update Collectibles
-    collectibles.forEach(col => {
-      col.update();
-      // Collision check (Item Extraction)
-      if (checkCollision(runner, col)) {
-        col.markedForDeletion = true;
-        score += 50;
-        if (window.sfx) window.sfx.playEat();
-
-        // Spawn success burst particles
-        spawnBurstParticles(col.x + 8, col.y + 8, 'var(--node-glow)', 15);
-        updateUI();
-      }
-    });
-    collectibles = collectibles.filter(col => !col.markedForDeletion);
-
-    // Update Burst Particles
-    for (let i = burstParticles.length - 1; i >= 0; i--) {
-      burstParticles[i].update();
-      if (burstParticles[i].alpha <= 0) {
-        burstParticles.splice(i, 1);
-      }
+  btnEmpMobile.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (engine.started && !engine.over && !engine.paused) {
+      engine.triggerEmpPulse();
     }
-  }
+  }, { passive: false });
 
-  // ─── Drawing Engine ────────────────────────────────────────────────────────
-  let backgroundScroll = 0;
-
-  function draw() {
-    // Clear screen
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    // 1. Draw Parallax Skylines
-    ctx.save();
-    backgroundScroll -= gameSpeed * 0.15;
-    if (backgroundScroll <= -200) {
-      backgroundScroll = 0;
-    }
-
-    ctx.fillStyle = 'rgba(79, 131, 204, 0.08)';
-    for (let i = 0; i < 6; i++) {
-      const h = 80 + Math.sin(i * 1.5) * 40;
-      const w = 60 + Math.cos(i) * 20;
-      ctx.fillRect(backgroundScroll + i * 140, GROUND_Y - h, w, h);
-    }
-    ctx.restore();
-
-    // 2. Draw Floor grid line (Perspective depth blocks)
-    ctx.save();
-    ctx.strokeStyle = 'rgba(79, 131, 204, 0.4)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(0, GROUND_Y);
-    ctx.lineTo(CANVAS_WIDTH, GROUND_Y);
-    ctx.stroke();
-
-    // Draw scrolling grid lines on the ground
-    const gridSpeed = gameSpeed;
-    const gridLineOffset = (distance * gridSpeed) % 40;
-    ctx.strokeStyle = 'rgba(79, 131, 204, 0.15)';
-    ctx.lineWidth = 1.5;
-    for (let x = CANVAS_WIDTH; x >= -40; x -= 40) {
-      ctx.beginPath();
-      ctx.moveTo(x - gridLineOffset, GROUND_Y);
-      ctx.lineTo(x - gridLineOffset - 25, CANVAS_HEIGHT);
-      ctx.stroke();
-    }
-
-    // Depth perspective grid deck
-    for (let y = GROUND_Y; y < CANVAS_HEIGHT; y += 15) {
-      ctx.strokeStyle = 'rgba(79, 131, 204, 0.1)';
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(CANVAS_WIDTH, y);
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // 3. Draw Collectibles
-    collectibles.forEach(col => col.draw());
-
-    // 4. Draw Obstacles
-    obstacles.forEach(obs => obs.draw());
-
-    // 5. Draw Runner
-    runner.draw();
-
-    // 6. Draw Burst Particles
-    burstParticles.forEach(p => p.draw());
-  }
-
-  // ─── Main Animation Loop ───────────────────────────────────────────────────
+  // Main Loop
   function loop() {
-    updatePhysics();
-    if (!gamePaused) {
-      draw();
+    engine.update();
+    if (!engine.paused) {
+      engine.draw();
     }
     requestAnimationFrame(loop);
   }
 
-  // Run the initializer and bootstrap animation loop
-  initGameDetails();
   loop();
+}
 </script>
 </body>
 </html>
