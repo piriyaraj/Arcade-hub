@@ -147,4 +147,39 @@ test('distance calculates 2D Euclidean distance and handles edge cases', () => {
   assert.strictEqual(utils.distance({ x: 'a', y: 0 }, { x: 3, y: 4 }), 0);
 });
 
+test('normalizeScore normalizes numbers and falls back to 0 for invalid inputs', () => {
+  assert.strictEqual(utils.normalizeScore(150), 150);
+  assert.strictEqual(utils.normalizeScore('250'), 250);
+  assert.strictEqual(utils.normalizeScore(-50), 0);
+  assert.strictEqual(utils.normalizeScore(NaN), 0);
+  assert.strictEqual(utils.normalizeScore('invalid'), 0);
+});
+
+test('randomRange returns value within bounds and handles swapped parameters', () => {
+  const val = utils.randomRange(10, 20);
+  assert.ok(val >= 10 && val <= 20);
+
+  const swapped = utils.randomRange(20, 10);
+  assert.ok(swapped >= 10 && swapped <= 20);
+
+  assert.strictEqual(utils.randomRange(NaN, 10), 0);
+});
+
+test('smoothStep calculates smooth Hermite interpolation', () => {
+  assert.strictEqual(utils.smoothStep(0, 10, 0), 0);
+  assert.strictEqual(utils.smoothStep(0, 10, 10), 1);
+  assert.strictEqual(utils.smoothStep(0, 10, 5), 0.5);
+  assert.strictEqual(utils.smoothStep(0, 10, -5), 0);
+  assert.strictEqual(utils.smoothStep(0, 10, 15), 1);
+  assert.strictEqual(utils.smoothStep('invalid', 10, 5), 0);
+});
+
+test('pointInRect correctly detects point inside rectangle', () => {
+  const rect = { x: 10, y: 10, width: 50, height: 50 };
+  assert.strictEqual(utils.pointInRect({ x: 20, y: 20 }, rect), true);
+  assert.strictEqual(utils.pointInRect({ x: 0, y: 0 }, rect), false);
+  assert.strictEqual(utils.pointInRect(null, rect), false);
+});
+
+
 

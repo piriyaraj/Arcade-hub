@@ -36,6 +36,7 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   mockStorage['snake_best'] = '100';
   mockStorage['bingball_best'] = '45';
   mockStorage['cyberracer_best'] = '1234';
+  mockStorage['cyberhacker_best'] = '880';
   mockStorage['neonsimon.highscore'] = '8';
   mockStorage['sokoban_best'] = '{"0":{"moves":12,"time":10},"1":{"moves":15,"time":20}}';
 
@@ -44,6 +45,7 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   const snake = scores.find(s => s.id === 'snake');
   const bingball = scores.find(s => s.id === 'bingball');
   const cyberracer = scores.find(s => s.id === 'cyberracer');
+  const cyberhacker = scores.find(s => s.id === 'cyberhacker');
   const tetris = scores.find(s => s.id === 'tetris');
   const neonsimon = scores.find(s => s.id === 'neonsimon');
   const sokoban = scores.find(s => s.id === 'sokoban');
@@ -51,9 +53,29 @@ test('Leaderboard - getScores() returns parsed numbers for valid stored entries'
   assert.strictEqual(snake.score, 100);
   assert.strictEqual(bingball.score, 45);
   assert.strictEqual(cyberracer.score, 1234);
+  assert.strictEqual(cyberhacker.score, 880);
   assert.strictEqual(tetris.score, 0); // fallback
   assert.strictEqual(neonsimon.score, 8);
   assert.strictEqual(sokoban.score, 2);
+});
+
+test('Leaderboard - getGameScore and setGameScore work correctly', () => {
+  mockStorage['cyberhacker_best'] = '500';
+  assert.strictEqual(Leaderboard.getGameScore('cyberhacker'), 500);
+
+  // set higher score
+  const updated = Leaderboard.setGameScore('cyberhacker', 750);
+  assert.strictEqual(updated, true);
+  assert.strictEqual(Leaderboard.getGameScore('cyberhacker'), 750);
+
+  // lower score should not update
+  const lower = Leaderboard.setGameScore('cyberhacker', 400);
+  assert.strictEqual(lower, false);
+  assert.strictEqual(Leaderboard.getGameScore('cyberhacker'), 750);
+
+  // invalid game ID
+  assert.strictEqual(Leaderboard.getGameScore('non_existent'), 0);
+  assert.strictEqual(Leaderboard.setGameScore('non_existent', 100), false);
 });
 
 test('Leaderboard - getScores() falls back to 0 for missing or NaN/invalid entries', () => {

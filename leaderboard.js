@@ -18,7 +18,9 @@ const Leaderboard = {
     { id: 'frogger', name: 'Neon Crossing', key: 'frogger_best', icon: '🐸' },
     { id: 'neonsimon', name: 'Neon Simon', key: 'neonsimon.highscore', icon: '🧠' },
     { id: 'sokoban', name: 'Sokoban', key: 'sokoban_best', icon: '📦' },
-    { id: 'pacman', name: 'Neon Pac-Man', key: 'pacman_best', icon: '🟡' }
+    { id: 'pacman', name: 'Neon Pac-Man', key: 'pacman_best', icon: '🟡' },
+    { id: 'cyberhacker', name: 'Cyber Hacker', key: 'cyberhacker_best', icon: '💻' },
+    { id: 'cyberdash', name: 'Cyber Dash', key: 'cyberdash_best', icon: '⚡' }
   ],
 
   getScores() {
@@ -51,6 +53,35 @@ const Leaderboard = {
         score: score
       };
     });
+  },
+
+  getGameScore(gameId) {
+    const found = this.games.find(g => g.id === gameId);
+    if (!found) return 0;
+    try {
+      const raw = localStorage.getItem(found.key);
+      const parsed = parseInt(raw, 10);
+      return Number.isFinite(parsed) ? parsed : 0;
+    } catch (e) {
+      return 0;
+    }
+  },
+
+  setGameScore(gameId, score) {
+    const found = this.games.find(g => g.id === gameId);
+    if (!found) return false;
+    const current = this.getGameScore(gameId);
+    const validScore = parseInt(score, 10);
+    if (!Number.isFinite(validScore)) return false;
+    if (validScore > current) {
+      try {
+        localStorage.setItem(found.key, validScore.toString());
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
   },
 
   resetAllScores() {

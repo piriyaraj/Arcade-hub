@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Hacker - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Hacker - Intercept encryption data nodes, breach firewall barriers, and deploy EMP pulses in a neon cyber terminal." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberhacker.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Hacker - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Hacker - Intercept encryption data nodes, breach firewall barriers, and deploy EMP pulses in a neon cyber terminal." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberhacker.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Hacker - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Hacker - Intercept encryption data nodes, breach firewall barriers, and deploy EMP pulses in a neon cyber terminal." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Cyber Hacker",
+  "url": "https://arcadehub.telekit.link/cyberhacker.html",
+  "description": "Play Cyber Hacker - Intercept encryption data nodes, breach firewall barriers, and deploy EMP pulses in a neon cyber terminal.",
+  "gamePlatform": "Web Browser",
+  "applicationCategory": "Game",
+  "genre": "Arcade",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <style>
+    :root {
+      --bg: #050a14;
+      --board-bg: #0d1527;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-neon: #00f0ff;
+      --accent-green: #4ade80;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-pink);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hud-bar {
+      display: flex;
+      gap: 24px;
+      margin: 8px 0 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-val {
+      color: var(--accent-neon);
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .game-container {
+      position: relative;
+      width: 480px;
+      height: 600px;
+      max-width: 95vw;
+      max-height: 75vh;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      background: var(--board-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 21, 39, 0.88);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      font-size: 2rem;
+      color: var(--accent-neon);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 80%;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--accent-neon), #00a8ff);
+      color: #000;
+      border: none;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-start:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+    }
+
+    .controls-hint {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Portal</a>
+    <h1>CYBER HACKER</h1>
+    <button class="mute-btn" id="mute-btn">🔊 Sound</button>
+  </header>
+
+  <div class="hud-bar">
+    <div class="hud-item">SCORE: <span class="hud-val" id="score-val">0</span></div>
+    <div class="hud-item">BEST: <span class="hud-val" id="best-val">0</span></div>
+    <div class="hud-item">EMP: <span class="hud-val" id="emp-val">1</span></div>
+  </div>
+
+  <div class="game-container">
+    <canvas id="gameCanvas" width="480" height="600"></canvas>
+
+    <div class="overlay" id="start-overlay">
+      <h2>SYSTEM BREACH</h2>
+      <p>Intercept cyber data packets, bypass security firewalls, and trigger EMP pulses to hack the mainframe!</p>
+      <button class="btn-start" id="start-btn">INITIALIZE HACK</button>
+      <div class="controls-hint">Controls: [← / →] or [A / D] Move | [SPACE / E] EMP Blast | [P] Pause</div>
+    </div>
+
+    <div class="overlay hidden" id="gameover-overlay">
+      <h2 style="color: var(--accent-pink);">CONNECTION TERMINATED</h2>
+      <p>Final Score: <span id="final-score" style="color: #fff; font-weight: bold;">0</span></p>
+      <button class="btn-start" id="restart-btn">RECONNECT</button>
+    </div>
+
+    <div class="overlay hidden" id="pause-overlay">
+      <h2>HACK PAUSED</h2>
+      <p>Press P or Esc to resume</p>
+      <button class="btn-start" id="resume-btn">RESUME</button>
+    </div>
+  </div>
+
+  <script>
+    // ─── Game Logic ─────────────────────────────────────────────────────────────
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const scoreVal = document.getElementById('score-val');
+    const bestVal = document.getElementById('best-val');
+    const empVal = document.getElementById('emp-val');
+
+    const startOverlay = document.getElementById('start-overlay');
+    const gameoverOverlay = document.getElementById('gameover-overlay');
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const finalScoreEl = document.getElementById('final-score');
+
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const resumeBtn = document.getElementById('resume-btn');
+    const muteBtn = document.getElementById('mute-btn');
+
+    let gameRunning = false;
+    let isPaused = false;
+    let gameOver = false;
+    let score = 0;
+    let bestScore = getBestScore('cyberhacker');
+    let empCharges = 1;
+    let level = 1;
+    let animationFrameId = null;
+
+    bestVal.textContent = formatScore(bestScore);
+
+    // Player Hacker Terminal Node
+    const player = {
+      x: canvas.width / 2 - 25,
+      y: canvas.height - 40,
+      width: 50,
+      height: 14,
+      speed: 7,
+      dx: 0,
+      shield: false,
+      shieldTime: 0
+    };
+
+    let packets = [];
+    let firewalls = [];
+    let empEffects = [];
+    let cryptoDrops = [];
+    let keys = {};
+
+    function updateMuteBtn() {
+      const muted = getMuteState('cyberhacker');
+      muteBtn.textContent = muted ? '🔇 Muted' : '🔊 Sound';
+      if (window.sfx) window.sfx.muted = muted;
+    }
+
+    muteBtn.addEventListener('click', () => {
+      const muted = !getMuteState('cyberhacker');
+      saveMuteState('cyberhacker', muted);
+      updateMuteBtn();
+    });
+
+    updateMuteBtn();
+
+    function triggerEmpPulse() {
+      if (empCharges <= 0 || !gameRunning || isPaused || gameOver) return;
+      empCharges--;
+      empVal.textContent = empCharges;
+
+      if (window.sfx && typeof window.sfx.playNitro === 'function') {
+        window.sfx.playNitro();
+      }
+
+      empEffects.push({
+        x: player.x + player.width / 2,
+        y: player.y + player.height / 2,
+        radius: 10,
+        maxRadius: 280,
+        alpha: 1
+      });
+
+      // Clear all active firewall obstacles on EMP
+      firewalls = [];
+      packets.forEach(p => {
+        score += 15;
+      });
+      packets = [];
+      scoreVal.textContent = formatScore(score);
+    }
+
+    function initGame() {
+      score = 0;
+      empCharges = 1;
+      level = 1;
+      gameRunning = true;
+      isPaused = false;
+      gameOver = false;
+      packets = [];
+      firewalls = [];
+      empEffects = [];
+      cryptoDrops = [];
+
+      player.x = canvas.width / 2 - player.width / 2;
+      player.shield = false;
+      player.shieldTime = 0;
+
+      scoreVal.textContent = '0';
+      empVal.textContent = '1';
+
+      startOverlay.classList.add('hidden');
+      gameoverOverlay.classList.add('hidden');
+      pauseOverlay.classList.add('hidden');
+
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      gameLoop();
+    }
+
+    function togglePause() {
+      if (!gameRunning || gameOver) return;
+      isPaused = !isPaused;
+      if (isPaused) {
+        pauseOverlay.classList.remove('hidden');
+      } else {
+        pauseOverlay.classList.add('hidden');
+        gameLoop();
+      }
+    }
+
+    // Input listeners
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+
+      if (KeyManager.isKey(e, 'action') || e.code === 'KeyE') {
+        triggerEmpPulse();
+      }
+      if (KeyManager.isKey(e, 'pause') || e.code === 'Escape') {
+        togglePause();
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      keys[e.code] = false;
+    });
+
+    // Touch / Mouse controls for player moving
+    let isDragging = false;
+    canvas.addEventListener('mousedown', e => {
+      isDragging = true;
+      movePlayerToMouse(e);
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (isDragging) movePlayerToMouse(e);
+    });
+    window.addEventListener('mouseup', () => isDragging = false);
+
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        const touchX = e.touches[0].clientX - rect.left;
+        player.x = clamp(touchX - player.width / 2, 0, canvas.width - player.width);
+      }
+    }, { passive: true });
+
+    function movePlayerToMouse(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      player.x = clamp(mouseX - player.width / 2, 0, canvas.width - player.width);
+    }
+
+    startBtn.addEventListener('click', initGame);
+    restartBtn.addEventListener('click', initGame);
+    resumeBtn.addEventListener('click', togglePause);
+
+    // Spawning data nodes and firewalls
+    let spawnTimer = 0;
+    function spawnObjects() {
+      spawnTimer++;
+      if (spawnTimer % Math.max(20, 60 - level * 3) === 0) {
+        const types = ['data', 'data', 'crypto', 'shield', 'firewall'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const x = randomRange(20, canvas.width - 40);
+
+        if (type === 'firewall') {
+          firewalls.push({
+            x,
+            y: -20,
+            width: randomRange(60, 100),
+            height: 12,
+            speed: randomRange(2.5, 4 + level * 0.3)
+          });
+        } else {
+          packets.push({
+            x,
+            y: -15,
+            radius: type === 'crypto' ? 10 : 8,
+            speed: randomRange(2.5, 4.5 + level * 0.2),
+            type
+          });
+        }
+      }
+    }
+
+    function update() {
+      if (!gameRunning || isPaused || gameOver) return;
+
+      // Handle keyboard movement
+      if (keys['ArrowLeft'] || keys['KeyA']) {
+        player.x = clamp(player.x - player.speed, 0, canvas.width - player.width);
+      }
+      if (keys['ArrowRight'] || keys['KeyD']) {
+        player.x = clamp(player.x + player.speed, 0, canvas.width - player.width);
+      }
+
+      spawnObjects();
+
+      // Shield timer
+      if (player.shield) {
+        player.shieldTime -= 16;
+        if (player.shieldTime <= 0) player.shield = false;
+      }
+
+      // EMP blast expansion
+      for (let i = empEffects.length - 1; i >= 0; i--) {
+        const emp = empEffects[i];
+        emp.radius += 12;
+        emp.alpha -= 0.04;
+        if (emp.alpha <= 0 || emp.radius >= emp.maxRadius) {
+          empEffects.splice(i, 1);
+        }
+      }
+
+      // Update packets
+      for (let i = packets.length - 1; i >= 0; i--) {
+        const p = packets[i];
+        p.y += p.speed;
+
+        // Collision with player paddle
+        const pBox = { x: p.x - p.radius, y: p.y - p.radius, width: p.radius * 2, height: p.radius * 2 };
+        if (checkCollision(player, pBox)) {
+          if (p.type === 'data') {
+            score += 10;
+            if (window.sfx && typeof window.sfx.playEat === 'function') window.sfx.playEat();
+          } else if (p.type === 'crypto') {
+            score += 50;
+            empCharges = Math.min(3, empCharges + 1);
+            empVal.textContent = empCharges;
+            if (window.sfx && typeof window.sfx.playPowerup === 'function') window.sfx.playPowerup();
+          } else if (p.type === 'shield') {
+            player.shield = true;
+            player.shieldTime = 5000;
+            if (window.sfx && typeof window.sfx.playShield === 'function') window.sfx.playShield();
+          }
+
+          scoreVal.textContent = formatScore(score);
+          if (score > bestScore) {
+            bestScore = score;
+            saveBestScore('cyberhacker', bestScore);
+            bestVal.textContent = formatScore(bestScore);
+          }
+
+          // Level scaling
+          if (score >= level * 150) {
+            level++;
+            if (window.sfx && typeof window.sfx.playLevelUp === 'function') window.sfx.playLevelUp();
+          }
+
+          packets.splice(i, 1);
+          continue;
+        }
+
+        if (p.y > canvas.height + 20) {
+          packets.splice(i, 1);
+        }
+      }
+
+      // Update firewalls (obstacles)
+      for (let i = firewalls.length - 1; i >= 0; i--) {
+        const fw = firewalls[i];
+        fw.y += fw.speed;
+
+        if (checkCollision(player, fw)) {
+          if (player.shield) {
+            player.shield = false;
+            firewalls.splice(i, 1);
+            if (window.sfx && typeof window.sfx.playBounce === 'function') window.sfx.playBounce();
+          } else {
+            // Game Over
+            gameOver = true;
+            gameRunning = false;
+            finalScoreEl.textContent = formatScore(score);
+            gameoverOverlay.classList.remove('hidden');
+            if (window.sfx && typeof window.sfx.playGameOver === 'function') window.sfx.playGameOver();
+            return;
+          }
+        } else if (fw.y > canvas.height + 30) {
+          firewalls.splice(i, 1);
+        }
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Matrix Cyber Grid Lines
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.06)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // EMP blast rendering
+      empEffects.forEach(emp => {
+        ctx.save();
+        ctx.strokeStyle = `rgba(0, 240, 255, ${emp.alpha})`;
+        ctx.lineWidth = 4;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(emp.x, emp.y, emp.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Data packets rendering
+      packets.forEach(p => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        if (p.type === 'crypto') {
+          ctx.fillStyle = '#facc15';
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = '#facc15';
+        } else if (p.type === 'shield') {
+          ctx.fillStyle = '#38bdf8';
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = '#38bdf8';
+        } else {
+          ctx.fillStyle = '#00f0ff';
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#00f0ff';
+        }
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Firewall obstacles rendering
+      firewalls.forEach(fw => {
+        ctx.save();
+        ctx.fillStyle = '#ff007f';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#ff007f';
+        ctx.fillRect(fw.x, fw.y, fw.width, fw.height);
+        ctx.restore();
+      });
+
+      // Player Hacker Terminal Node rendering
+      ctx.save();
+      ctx.fillStyle = player.shield ? '#38bdf8' : '#00f0ff';
+      ctx.shadowBlur = player.shield ? 20 : 12;
+      ctx.shadowColor = player.shield ? '#38bdf8' : '#00f0ff';
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      if (player.shield) {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.width / 2 + 6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      if (gameRunning && !isPaused && !gameOver) {
+        animationFrameId = requestAnimationFrame(gameLoop);
+      }
+    }
+  </script>
+</body>
+</html>

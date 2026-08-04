@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Dash - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Dash - High-speed retro-neon matrix dash arcade game. Slice through security gates, collect energy cores, and deploy EMP shockwaves." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberdash.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Dash - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Dash - High-speed retro-neon matrix dash arcade game. Slice through security gates, collect energy cores, and deploy EMP shockwaves." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberdash.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Dash - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Dash - High-speed retro-neon matrix dash arcade game." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Cyber Dash",
+  "url": "https://arcadehub.telekit.link/cyberdash.html",
+  "description": "High-speed retro-neon matrix dash arcade game.",
+  "gamePlatform": "Web Browser",
+  "applicationCategory": "Game",
+  "genre": "Arcade",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #111827;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: #00f0ff;
+      --dash-glow: #00f0ff;
+      --obstacle-glow: #ff007f;
+      --node-glow: #4ade80;
+      --accent-pink: #ff007f;
+      --accent-neon: #00f0ff;
+      --accent-yellow: #facc15;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--dash-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .header-actions {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mute-btn {
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-pink);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--dash-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      padding: 8px 0 4px;
+      width: 100%;
+      max-width: 600px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 75px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dash-glow);
+    }
+
+    #multiplier-stat .stat-value { color: var(--node-glow); }
+    #emp-stat .stat-value { color: var(--accent-yellow); }
+    #shield-stat .stat-value { color: var(--accent-pink); }
+
+    #canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 4px 12px 8px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      aspect-ratio: 600 / 380;
+      background-color: var(--board-bg);
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 2px rgba(0, 240, 255, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(0, 240, 255, 0.1);
+      display: block;
+    }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button.game-btn {
+      background: linear-gradient(135deg, rgba(0,240,255,0.2), var(--dash-glow));
+      color: #fff;
+      border: 1px solid var(--dash-glow);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 2px 12px rgba(0, 240, 255, 0.3);
+    }
+
+    button.game-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(0, 240, 255, 0.5);
+    }
+
+    button.play-btn {
+      background: linear-gradient(135deg, #00f0ff, #00b0ff);
+      color: #000;
+      font-weight: 800;
+      box-shadow: 0 2px 12px rgba(0, 240, 255, 0.4);
+      font-size: 1rem;
+      padding: 10px 28px;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 26, 0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+    }
+
+    #overlay.hidden { display: none; }
+
+    #overlay h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--dash-glow), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    #overlay p {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.5;
+    }
+
+    #overlay .final-score {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dash-glow);
+      margin-bottom: 20px;
+    }
+
+    .high-score-badge {
+      font-size: 1.2rem;
+      color: var(--accent-pink);
+      margin-bottom: 16px;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+    }
+
+    .instructions-list {
+      text-align: left;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      list-style-type: none;
+    }
+
+    .instructions-list li {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #mobile-controls {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 16px 8px;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .mobile-action-btn {
+      flex: 1;
+      height: 54px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 240, 255, 0.4);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .mobile-action-btn:active {
+      transform: scale(0.95);
+      background: rgba(0, 240, 255, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      body { overflow-y: auto; }
+      #mobile-controls { display: flex; }
+    }
+
+    canvas:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #00f0ff;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <h2 id="overlay-title">CYBER DASH</h2>
+  <p id="overlay-desc">Control your neon energy pod through the security grid! Shift lanes to slice firewall hazards, extract data nodes, and launch EMP shockwaves.</p>
+  <ul class="instructions-list" id="instructions">
+    <li>⬆️ / ⬇️ or W / S: Shift Matrix Lanes Up & Down</li>
+    <li>⚡ Spacebar / Action: Trigger EMP Shockwave (Wipes screen hazards!)</li>
+    <li>🟢 Green Nodes: Boost score multiplier & speed</li>
+    <li>🛡️ Shield Items: Absorb 1 firewall collision</li>
+    <li>⏸️ P or Escape: Pause / Resume</li>
+  </ul>
+  <div class="high-score-badge hidden" id="high-score-badge">🏆 NEW HIGH SCORE! 🏆</div>
+  <div class="final-score hidden" id="final-score">Score: 0</div>
+  <button class="game-btn play-btn" id="start-btn" aria-label="Start Cyber Dash">START DASH</button>
+</div>
+
+<header>
+  <a href="index.html" class="back-btn">&larr; Home</a>
+  <h1>CYBER DASH</h1>
+  <p>Matrix Lane Shifter & EMP Blast Arcade</p>
+  <div class="header-actions">
+    <div class="theme-selector-container"></div>
+    <button class="mute-btn" id="mute-btn" aria-label="Toggle sound">🔊 Sound On</button>
+  </div>
+</header>
+
+<div id="stats">
+  <div class="stat" id="score-stat">
+    <span class="stat-label">Score</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat" id="multiplier-stat">
+    <span class="stat-label">Multiplier</span>
+    <span class="stat-value" id="multiplier-val">1x</span>
+  </div>
+  <div class="stat" id="shield-stat">
+    <span class="stat-label">Shield</span>
+    <span class="stat-value" id="shield-val">OFF</span>
+  </div>
+  <div class="stat" id="emp-stat">
+    <span class="stat-label">EMP</span>
+    <span class="stat-value" id="emp-val">1</span>
+  </div>
+  <div class="stat" id="highscore-stat">
+    <span class="stat-label">Best</span>
+    <span class="stat-value" id="highscore-val">0</span>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="game" width="600" height="380" tabindex="0" aria-label="Cyber Dash game screen"></canvas>
+</div>
+
+<div id="mobile-controls">
+  <button id="btn-up" class="mobile-action-btn">▲ UP</button>
+  <button id="btn-down" class="mobile-action-btn">▼ DOWN</button>
+  <button id="btn-emp" class="mobile-action-btn" style="border-color: var(--accent-yellow); color: var(--accent-yellow);">⚡ EMP</button>
+</div>
+
+<div id="controls">
+  <button class="game-btn play-btn" id="pause-btn" aria-label="Pause game" disabled>PAUSE</button>
+  <button class="game-btn" id="reset-btn" aria-label="Restart game">RESTART</button>
+</div>
+
+<script src="theme.js"></script>
+<script src="input.js"></script>
+<script src="utils.js"></script>
+<script src="audio.js"></script>
+
+<script>
+// ─── Cyber Dash Game Engine Logic ─────────────────────────────────────────────
+
+class CyberDashEngine {
+  constructor(canvasElement = null, uiElements = {}) {
+    this.canvas = canvasElement;
+    this.ctx = canvasElement ? canvasElement.getContext('2d') : null;
+    this.ui = uiElements;
+
+    this.CANVAS_WIDTH = 600;
+    this.CANVAS_HEIGHT = 380;
+
+    // 4 Lane Grid Y Coordinates
+    this.lanes = [70, 150, 230, 310];
+    this.currentLane = 1;
+
+    // Game state
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+    this.score = 0;
+    this.multiplier = 1;
+    this.shield = false;
+    this.empCharges = 1;
+    this.gameSpeed = 5.0;
+    this.maxSpeed = 12.0;
+
+    this.player = {
+      x: 80,
+      y: this.lanes[1],
+      radius: 18,
+      targetY: this.lanes[1]
+    };
+
+    this.obstacles = [];
+    this.collectibles = [];
+    this.particles = [];
+    this.empPulse = null;
+
+    this.spawnTimer = 0;
+    this.nextSpawn = 60;
+
+    this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberdash') : 0;
+  }
+
+  reset() {
+    this.currentLane = 1;
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+    this.score = 0;
+    this.multiplier = 1;
+    this.shield = false;
+    this.empCharges = 1;
+    this.gameSpeed = 5.0;
+
+    this.player.y = this.lanes[1];
+    this.player.targetY = this.lanes[1];
+
+    this.obstacles = [];
+    this.collectibles = [];
+    this.particles = [];
+    this.empPulse = null;
+    this.spawnTimer = 0;
+
+    this.updateUI();
+  }
+
+  start() {
+    this.reset();
+    this.started = true;
+    this.updateUI();
+  }
+
+  moveUp() {
+    if (this.currentLane > 0) {
+      this.currentLane--;
+      this.player.targetY = this.lanes[this.currentLane];
+      if (typeof window !== 'undefined' && window.sfx) window.sfx.playBounce();
+    }
+  }
+
+  moveDown() {
+    if (this.currentLane < this.lanes.length - 1) {
+      this.currentLane++;
+      this.player.targetY = this.lanes[this.currentLane];
+      if (typeof window !== 'undefined' && window.sfx) window.sfx.playBounce();
+    }
+  }
+
+  triggerEmpPulse() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.empCharges <= 0) return false;
+
+    this.empCharges--;
+    this.empPulse = {
+      x: this.player.x,
+      y: this.player.y,
+      radius: 10,
+      maxRadius: 500,
+      alpha: 1.0
+    };
+
+    // Destroy all active obstacles on screen
+    this.obstacles.forEach(obs => {
+      this.spawnDebris(obs.x, obs.y, '#ff007f', 10);
+    });
+    this.obstacles = [];
+
+    if (typeof window !== 'undefined' && window.sfx) {
+      window.sfx.playNitro();
+    }
+    this.updateUI();
+    return true;
+  }
+
+  spawnEntity() {
+    this.spawnTimer++;
+    if (this.spawnTimer >= this.nextSpawn) {
+      this.spawnTimer = 0;
+      this.nextSpawn = Math.max(30, 75 - Math.floor(this.gameSpeed * 3));
+
+      const laneIndex = Math.floor(Math.random() * this.lanes.length);
+      const laneY = this.lanes[laneIndex];
+
+      const rand = Math.random();
+      if (rand < 0.60) {
+        // Spawn Obstacle (Laser Barrier or Cyber Virus)
+        const isVirus = Math.random() > 0.5;
+        this.obstacles.push({
+          x: this.CANVAS_WIDTH + 40,
+          y: laneY,
+          width: isVirus ? 28 : 20,
+          height: isVirus ? 28 : 45,
+          type: isVirus ? 'virus' : 'gate',
+          lane: laneIndex,
+          color: '#ff007f'
+        });
+      } else {
+        // Spawn Collectible (Node, Shield, or EMP)
+        let itemType = 'node';
+        let color = '#4ade80';
+        if (rand > 0.90 && !this.shield) {
+          itemType = 'shield';
+          color = '#ff007f';
+        } else if (rand > 0.85 && this.empCharges < 3) {
+          itemType = 'emp';
+          color = '#facc15';
+        }
+
+        this.collectibles.push({
+          x: this.CANVAS_WIDTH + 40,
+          y: laneY,
+          radius: 12,
+          type: itemType,
+          lane: laneIndex,
+          color: color
+        });
+      }
+    }
+  }
+
+  spawnDebris(x, y, color, count = 8) {
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        radius: 2 + Math.random() * 3,
+        alpha: 1.0,
+        decay: 0.03 + Math.random() * 0.02,
+        color: color
+      });
+    }
+  }
+
+  update() {
+    if (!this.started || this.paused || this.over) return;
+
+    // Smooth player lane transition
+    this.player.y += (this.player.targetY - this.player.y) * 0.25;
+
+    // Speed scaling
+    if (this.gameSpeed < this.maxSpeed) {
+      this.gameSpeed += 0.001;
+    }
+
+    // Spawn entities
+    this.spawnEntity();
+
+    // Player particle trail
+    if (Math.random() < 0.4) {
+      this.particles.push({
+        x: this.player.x - 10,
+        y: this.player.y + (Math.random() - 0.5) * 10,
+        vx: -this.gameSpeed * 0.5,
+        vy: (Math.random() - 0.5) * 1,
+        radius: 2 + Math.random() * 2,
+        alpha: 0.8,
+        decay: 0.04,
+        color: '#00f0ff'
+      });
+    }
+
+    // Update EMP Pulse
+    if (this.empPulse) {
+      this.empPulse.radius += 20;
+      this.empPulse.alpha -= 0.04;
+      if (this.empPulse.alpha <= 0 || this.empPulse.radius >= this.empPulse.maxRadius) {
+        this.empPulse = null;
+      }
+    }
+
+    // Update Obstacles
+    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+      const obs = this.obstacles[i];
+      obs.x -= this.gameSpeed;
+
+      // Collision Check
+      const obsRect = { x: obs.x - obs.width / 2, y: obs.y - obs.height / 2, width: obs.width, height: obs.height };
+      const playerCircle = { x: this.player.x, y: this.player.y, radius: this.player.radius };
+
+      const playerRect = {
+        x: this.player.x - this.player.radius,
+        y: this.player.y - this.player.radius,
+        width: this.player.radius * 2,
+        height: this.player.radius * 2
+      };
+
+      const isColliding = typeof checkCollision === 'function'
+        ? checkCollision(playerRect, obsRect)
+        : (Math.abs(this.player.x - obs.x) < (this.player.radius + obs.width / 2) &&
+           Math.abs(this.player.y - obs.y) < (this.player.radius + obs.height / 2));
+
+      if (isColliding) {
+        if (this.shield) {
+          // Shield absorbs hit
+          this.shield = false;
+          this.spawnDebris(obs.x, obs.y, '#ff007f', 12);
+          this.obstacles.splice(i, 1);
+          if (typeof window !== 'undefined' && window.sfx) window.sfx.playShield();
+          this.updateUI();
+          continue;
+        } else {
+          // Game Over
+          this.over = true;
+          this.spawnDebris(this.player.x, this.player.y, '#00f0ff', 20);
+          if (typeof window !== 'undefined' && window.sfx) window.sfx.playGameOver();
+
+          if (this.score > this.highScore) {
+            this.highScore = this.score;
+            if (typeof saveBestScore === 'function') {
+              saveBestScore('cyberdash', this.highScore);
+            }
+          }
+          this.updateUI();
+          return;
+        }
+      }
+
+      if (obs.x < -60) {
+        this.obstacles.splice(i, 1);
+        this.score += 10 * this.multiplier;
+        this.updateUI();
+      }
+    }
+
+    // Update Collectibles
+    for (let i = this.collectibles.length - 1; i >= 0; i--) {
+      const item = this.collectibles[i];
+      item.x -= this.gameSpeed;
+
+      const playerCircle = { x: this.player.x, y: this.player.y, radius: this.player.radius };
+      const itemCircle = { x: item.x, y: item.y, radius: item.radius };
+
+      const isCollected = typeof checkCircleCollision === 'function'
+        ? checkCircleCollision(playerCircle, itemCircle)
+        : (Math.hypot(this.player.x - item.x, this.player.y - item.y) < (this.player.radius + item.radius));
+
+      if (isCollected) {
+        this.spawnDebris(item.x, item.y, item.color, 10);
+        if (item.type === 'node') {
+          this.score += 50 * this.multiplier;
+          if (this.multiplier < 5 && Math.random() < 0.3) {
+            this.multiplier++;
+          }
+          if (typeof window !== 'undefined' && window.sfx) window.sfx.playEat();
+        } else if (item.type === 'shield') {
+          this.shield = true;
+          if (typeof window !== 'undefined' && window.sfx) window.sfx.playPowerup();
+        } else if (item.type === 'emp') {
+          this.empCharges = Math.min(3, this.empCharges + 1);
+          if (typeof window !== 'undefined' && window.sfx) window.sfx.playPowerup();
+        }
+
+        this.collectibles.splice(i, 1);
+        this.updateUI();
+        continue;
+      }
+
+      if (item.x < -40) {
+        this.collectibles.splice(i, 1);
+      }
+    }
+
+    // Update Particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= p.decay;
+      if (p.alpha <= 0) {
+        this.particles.splice(i, 1);
+      }
+    }
+  }
+
+  draw() {
+    if (!this.ctx) return;
+    const ctx = this.ctx;
+
+    ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+    // Draw Lane Matrix Grid Lines
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
+    ctx.lineWidth = 2;
+    this.lanes.forEach(y => {
+      ctx.beginPath();
+      ctx.setLineDash([8, 8]);
+      ctx.moveTo(0, y);
+      ctx.lineTo(this.CANVAS_WIDTH, y);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Draw Particles
+    this.particles.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.fillStyle = p.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Draw EMP Pulse Shockwave
+    if (this.empPulse) {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, this.empPulse.alpha);
+      ctx.strokeStyle = '#facc15';
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = '#facc15';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(this.empPulse.x, this.empPulse.y, this.empPulse.radius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Draw Collectibles
+    this.collectibles.forEach(item => {
+      ctx.save();
+      ctx.fillStyle = item.color;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = item.color;
+      ctx.beginPath();
+      ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core pulse ring
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Draw Obstacles
+    this.obstacles.forEach(obs => {
+      ctx.save();
+      ctx.fillStyle = obs.color;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = obs.color;
+      if (obs.type === 'gate') {
+        ctx.fillRect(obs.x - obs.width / 2, obs.y - obs.height / 2, obs.width, obs.height);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(obs.x - obs.width / 2 + 2, obs.y - obs.height / 2 + 2, obs.width - 4, 4);
+      } else {
+        // Virus diamond shape
+        ctx.beginPath();
+        ctx.translate(obs.x, obs.y);
+        ctx.rotate(Date.now() * 0.005);
+        ctx.rect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
+        ctx.fill();
+      }
+      ctx.restore();
+    });
+
+    // Draw Player Neon Pod
+    if (!this.over) {
+      ctx.save();
+      ctx.fillStyle = '#00f0ff';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#00f0ff';
+      ctx.beginPath();
+      ctx.arc(this.player.x, this.player.y, this.player.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner White Eye
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(this.player.x + 4, this.player.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Shield Aura
+      if (this.shield) {
+        ctx.strokeStyle = '#ff007f';
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#ff007f';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(this.player.x, this.player.y, this.player.radius + 6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  updateUI() {
+    if (this.ui.scoreVal) this.ui.scoreVal.textContent = typeof formatScore === 'function' ? formatScore(this.score) : this.score;
+    if (this.ui.multiplierVal) this.ui.multiplierVal.textContent = `${this.multiplier}x`;
+    if (this.ui.shieldVal) this.ui.shieldVal.textContent = this.shield ? 'ON' : 'OFF';
+    if (this.ui.empVal) this.ui.empVal.textContent = this.empCharges;
+    if (this.ui.highscoreVal) this.ui.highscoreVal.textContent = typeof formatScore === 'function' ? formatScore(this.highScore) : this.highScore;
+
+    if (this.ui.overlay) {
+      if (!this.started || this.over || this.paused) {
+        this.ui.overlay.classList.remove('hidden');
+
+        if (this.over) {
+          if (this.ui.overlayTitle) this.ui.overlayTitle.textContent = 'GAME OVER';
+          if (this.ui.overlayDesc) this.ui.overlayDesc.textContent = 'Firewall collision detected!';
+          if (this.ui.finalScore) {
+            this.ui.finalScore.classList.remove('hidden');
+            this.ui.finalScore.textContent = `Score: ${typeof formatScore === 'function' ? formatScore(this.score) : this.score}`;
+          }
+          if (this.ui.highScoreBadge) {
+            if (this.score >= this.highScore && this.score > 0) {
+              this.ui.highScoreBadge.classList.remove('hidden');
+            } else {
+              this.ui.highScoreBadge.classList.add('hidden');
+            }
+          }
+          if (this.ui.startBtn) this.ui.startBtn.textContent = 'TRY AGAIN';
+        } else if (this.paused) {
+          if (this.ui.overlayTitle) this.ui.overlayTitle.textContent = 'PAUSED';
+          if (this.ui.overlayDesc) this.ui.overlayDesc.textContent = 'Game is paused. Press P or RESUME to continue.';
+          if (this.ui.startBtn) this.ui.startBtn.textContent = 'RESUME';
+        } else {
+          if (this.ui.overlayTitle) this.ui.overlayTitle.textContent = 'CYBER DASH';
+          if (this.ui.overlayDesc) this.ui.overlayDesc.textContent = 'Control your neon energy pod through the security grid! Shift lanes to slice firewall hazards, extract data nodes, and launch EMP shockwaves.';
+          if (this.ui.startBtn) this.ui.startBtn.textContent = 'START DASH';
+        }
+      } else {
+        this.ui.overlay.classList.add('hidden');
+      }
+    }
+
+    if (this.ui.pauseBtn) {
+      this.ui.pauseBtn.disabled = !this.started || this.over;
+      this.ui.pauseBtn.textContent = this.paused ? 'RESUME' : 'PAUSE';
+    }
+  }
+}
+
+// ─── DOM Initialization & Event Handlers ─────────────────────────────────────
+
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('game');
+    const ui = {
+      scoreVal: document.getElementById('score-val'),
+      multiplierVal: document.getElementById('multiplier-val'),
+      shieldVal: document.getElementById('shield-val'),
+      empVal: document.getElementById('emp-val'),
+      highscoreVal: document.getElementById('highscore-val'),
+      overlay: document.getElementById('overlay'),
+      overlayTitle: document.getElementById('overlay-title'),
+      overlayDesc: document.getElementById('overlay-desc'),
+      finalScore: document.getElementById('final-score'),
+      highScoreBadge: document.getElementById('high-score-badge'),
+      startBtn: document.getElementById('start-btn'),
+      pauseBtn: document.getElementById('pause-btn'),
+      resetBtn: document.getElementById('reset-btn'),
+      muteBtn: document.getElementById('mute-btn'),
+      btnUp: document.getElementById('btn-up'),
+      btnDown: document.getElementById('btn-down'),
+      btnEmp: document.getElementById('btn-emp')
+    };
+
+    const engine = new CyberDashEngine(canvas, ui);
+    engine.reset();
+
+    // Button Listeners
+    if (ui.startBtn) {
+      ui.startBtn.addEventListener('click', () => {
+        if (engine.paused) {
+          engine.paused = false;
+          engine.updateUI();
+        } else {
+          engine.start();
+        }
+      });
+    }
+
+    if (ui.pauseBtn) {
+      ui.pauseBtn.addEventListener('click', () => {
+        if (engine.started && !engine.over) {
+          engine.paused = !engine.paused;
+          engine.updateUI();
+        }
+      });
+    }
+
+    if (ui.resetBtn) {
+      ui.resetBtn.addEventListener('click', () => engine.start());
+    }
+
+    if (ui.muteBtn) {
+      ui.muteBtn.addEventListener('click', () => {
+        if (window.audioManager) {
+          const isMuted = window.audioManager.toggleMute();
+          ui.muteBtn.textContent = isMuted ? '🔇 Sound Off' : '🔊 Sound On';
+        }
+      });
+    }
+
+    if (ui.btnUp) ui.btnUp.addEventListener('click', () => engine.moveUp());
+    if (ui.btnDown) ui.btnDown.addEventListener('click', () => engine.moveDown());
+    if (ui.btnEmp) ui.btnEmp.addEventListener('click', () => engine.triggerEmpPulse());
+
+    // Keyboard Input
+    window.addEventListener('keydown', (e) => {
+      if (typeof KeyManager !== 'undefined') {
+        if (KeyManager.isKey(e, 'pause')) {
+          if (engine.started && !engine.over) {
+            engine.paused = !engine.paused;
+            engine.updateUI();
+          }
+          return;
+        }
+        if (KeyManager.isKey(e, 'action')) {
+          engine.triggerEmpPulse();
+          return;
+        }
+      }
+
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+        engine.moveUp();
+      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        engine.moveDown();
+      } else if (e.key === ' ' || e.code === 'Space') {
+        engine.triggerEmpPulse();
+      } else if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+        if (engine.started && !engine.over) {
+          engine.paused = !engine.paused;
+          engine.updateUI();
+        }
+      }
+    });
+
+    // Theme Change Listener
+    window.addEventListener('themechange', () => {
+      engine.draw();
+    });
+
+    // Game Loop
+    function gameLoop() {
+      engine.update();
+      engine.draw();
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+  });
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = { CyberDashEngine };
+}
+</script>
+</body>
+</html>

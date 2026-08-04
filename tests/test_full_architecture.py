@@ -28,6 +28,8 @@ def test_html_script_and_css_links():
         "pong.html",
         "flappybird.html",
         "cyberracer.html",
+        "cyberhacker.html",
+        "cyberdash.html",
         "frogger.html",
         "leaderboard.html"
     ]

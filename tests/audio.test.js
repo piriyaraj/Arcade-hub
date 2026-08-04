@@ -78,5 +78,10 @@ test('SoundFX plays other sound effects without error', () => {
   sfx.playGameOver();
   sfx.playScoreSlot();
   sfx.playNitro();
+  sfx.playPowerup();
+  sfx.playShield();
+  sfx.playLevelUp();
+  sfx.playCombo();
   assert.ok(sfx.ctx !== null);
 });
+
