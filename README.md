@@ -1,3 +1,4 @@
+<!-- last-cron-run: 2026-08-04 -->
 # Arcade Game Portal
 Live on : https://arcadehub.telekit.link/
 A lightweight, framework-free browser arcade built using pure HTML, CSS, and vanilla JavaScript.
