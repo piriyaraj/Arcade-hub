@@ -91,6 +91,7 @@ test('Leaderboard aggregations', () => {
   mockStorage['cyberphantom_best'] = '3500';
   mockStorage['cyberecho_best'] = '3900';
   mockStorage['cyberwarp_best'] = '4200';
+  mockStorage['cyberforge_best'] = '4600';
 
   const scores = Leaderboard.getScores();
   const snakeScore = scores.find(s => s.id === 'snake');

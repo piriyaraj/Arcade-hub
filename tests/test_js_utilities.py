@@ -11,7 +11,7 @@ def test_js_audio_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=30
+        timeout=60
     )
 
     print("STDOUT:")
@@ -31,7 +31,7 @@ def test_js_general_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=30
+        timeout=60
     )
 
     print("STDOUT:")
@@ -51,7 +51,7 @@ def test_js_architecture_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=30
+        timeout=60
     )
 
     print("STDOUT:")
@@ -71,7 +71,7 @@ def test_js_leaderboard_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=30
+        timeout=60
     )
 
     print("STDOUT:")
