@@ -20,6 +20,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Surge](cybersurge.html)** — 360° vector matrix arena shooter with plasma surges, EMP shockwaves & Surge Singularity Bosses.
 - ⚡ **[Cyber Overdrive](cyberoverdrive.html)** — High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores.
 - 🌀 **[Cyber Vortex](cybervortex.html)** — High-octane orbital quantum core shooter with plasma beams, EMP vortex novas & Singularity Bosses.
+- ⚡ **[Cyber Pulse](cyberpulse.html)** — High-voltage matrix wave shooter with plasma pulse beams, EMP shockwaves, kinetic surge shields & Titan Pulse Bosses.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
