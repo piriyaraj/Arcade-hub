@@ -133,3 +133,50 @@ def test_index_links_and_readme():
     assert "theme.js" in readme_content, "README must mention theme.js"
     assert "input.js" in readme_content, "README must mention input.js"
     assert "leaderboard.js" in readme_content, "README must mention leaderboard.js"
+
+def test_seo_implementation():
+    """Verify SEO elements across all HTML pages, sitemap.xml, and robots.txt."""
+    import xml.etree.ElementTree as ET
+    root = get_repo_root()
+
+    # 1. robots.txt
+    robots_path = os.path.join(root, "robots.txt")
+    assert os.path.isfile(robots_path), "robots.txt must exist"
+    with open(robots_path, "r", encoding="utf-8") as f:
+        robots_content = f.read()
+    assert "Sitemap: https://arcadehub.telekit.link/sitemap.xml" in robots_content, "robots.txt must reference sitemap.xml"
+
+    # 2. sitemap.xml
+    sitemap_path = os.path.join(root, "sitemap.xml")
+    assert os.path.isfile(sitemap_path), "sitemap.xml must exist"
+    tree = ET.parse(sitemap_path)
+    sitemap_root = tree.getroot()
+    ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+    locs = [url.find('s:loc', ns).text for url in sitemap_root.findall('s:url', ns)]
+    
+    html_files = [f for f in os.listdir(root) if f.endswith(".html")]
+    for hf in html_files:
+        expected_loc = "https://arcadehub.telekit.link/" if hf == "index.html" else f"https://arcadehub.telekit.link/{hf}"
+        assert expected_loc in locs, f"{hf} ({expected_loc}) missing from sitemap.xml"
+
+    # 3. HTML Meta Tags and SEO attributes
+    for hf in html_files:
+        path = os.path.join(root, hf)
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        assert "<!DOCTYPE html>" in content or "<!doctype html>" in content, f"{hf} missing DOCTYPE"
+        assert '<html lang="en">' in content or "<html lang='en'>" in content, f"{hf} missing lang='en'"
+        assert "<title>" in content and "</title>" in content, f"{hf} missing <title>"
+        assert 'name="description"' in content or "name='description'", f"{hf} missing meta description"
+        assert 'rel="canonical"' in content or "rel='canonical'", f"{hf} missing canonical link"
+        assert 'property="og:title"' in content or "property='og:title'", f"{hf} missing og:title"
+        assert 'property="og:description"' in content or "property='og:description'", f"{hf} missing og:description"
+        assert 'property="og:url"' in content or "property='og:url'", f"{hf} missing og:url"
+        assert 'property="og:image"' in content or "property='og:image'", f"{hf} missing og:image"
+        assert 'name="twitter:card"' in content or "name='twitter:card'", f"{hf} missing twitter:card"
+        assert 'name="twitter:title"' in content or "name='twitter:title'", f"{hf} missing twitter:title"
+        assert 'name="twitter:description"' in content or "name='twitter:description'", f"{hf} missing twitter:description"
+        assert 'name="twitter:image"' in content or "name='twitter:image'", f"{hf} missing twitter:image"
+        assert 'type="application/ld+json"' in content or "type='application/ld+json'", f"{hf} missing JSON-LD script"
+
