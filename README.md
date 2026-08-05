@@ -27,6 +27,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🔮 **[Cyber Nexus](cybernexus.html)** — High-voltage orbital quantum grid defender & firewall breach shooter with EMP shockwaves & Omega Dreadnought Bosses.
 - ⚡ **[Cyber Storm](cyberstorm.html)** — High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters.
 - ⚔️ **[Cyber Blade](cyberblade.html)** — High-octane 360° cyber katana deflector & quantum blade slicer arena game with EMP Novas and Shadow Dreadnought bosses.
+- 🥷 **[Cyber Phantom](cyberphantom.html)** — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter with shadow decoys and Phase Overlord Bosses.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -109,6 +110,7 @@ All game HTML files available in this repository:
 | [cybernexus.html](cybernexus.html) | Cyber Nexus — Orbital quantum grid defender & firewall breach shooter |
 | [cyberstorm.html](cyberstorm.html) | Cyber Storm — High-octane orbital lightning matrix defense & tactical EMP pulse shooter |
 | [cyberblade.html](cyberblade.html) | Cyber Blade — High-octane 360° cyber katana deflector & quantum blade slicer arena game |
+| [cyberphantom.html](cyberphantom.html) | Cyber Phantom — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter |
 | [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |
 | [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |
