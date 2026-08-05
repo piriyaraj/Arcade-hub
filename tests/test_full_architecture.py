@@ -45,6 +45,7 @@ def test_html_script_and_css_links():
         "cybernexus.html",
         "cyberstorm.html",
         "cyberblade.html",
+        "cyberaegis.html",
         "leaderboard.html"
     ]
 

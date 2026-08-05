@@ -741,7 +741,7 @@
         }
 
         // Level Up check
-        if (this.score >= this.level * 1500 && !this.boss) {
+        else if (!this.boss && this.score >= this.level * 1500) {
           this.level += 1;
           if (this.audio && typeof this.audio.playSound === 'function') {
             try { this.audio.playSound('levelUp'); } catch(e) {}

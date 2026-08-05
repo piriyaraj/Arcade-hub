@@ -415,6 +415,10 @@
           maxShield: 100,
           empCharges: 3,
           maxEmpCharges: 5,
+          bladeEnergy: 0,
+          maxBladeEnergy: 100,
+          hyperBladeActive: false,
+          hyperBladeTimer: 0,
           phaseDashActive: false,
           phaseDashTimer: 0,
           phaseDashCooldown: 0,
@@ -519,6 +523,10 @@
           maxShield: 100,
           empCharges: 3,
           maxEmpCharges: 5,
+          bladeEnergy: 0,
+          maxBladeEnergy: 100,
+          hyperBladeActive: false,
+          hyperBladeTimer: 0,
           phaseDashActive: false,
           phaseDashTimer: 0,
           phaseDashCooldown: 0,
@@ -622,20 +630,30 @@
             diff = Math.abs(diff);
 
             if (diff <= arcWidth / 2) {
-              // Deflect laser back towards origin / direction
-              const speed = Math.hypot(eb.vx, eb.vy) * 1.5;
-              const returnAngle = angle + (Math.random() - 0.5) * 0.2;
+              const isPerfect = diff <= arcWidth / 4;
+              const speedMultiplier = isPerfect ? 2.0 : 1.5;
+              const baseDamage = isPerfect ? 65 : 35;
+              const speed = Math.hypot(eb.vx, eb.vy) * speedMultiplier;
+              const returnAngle = angle + (Math.random() - 0.5) * (isPerfect ? 0.05 : 0.2);
+
+              this.combo++;
+              this.maxCombo = Math.max(this.maxCombo || 0, this.combo);
+              this.comboTimer = 180;
+              this.multiplier = Math.min(8, 1 + Math.floor(this.combo / 5));
+              this.player.bladeEnergy = Math.min(100, (this.player.bladeEnergy || 0) + (isPerfect ? 25 : 15));
+
               this.bullets.push({
                 x: eb.x,
                 y: eb.y,
-                vx: Math.cos(returnAngle) * Math.max(speed, 12),
-                vy: Math.sin(returnAngle) * Math.max(speed, 12),
-                radius: 6,
-                damage: 35,
-                reflected: true
+                vx: Math.cos(returnAngle) * Math.max(speed, 14),
+                vy: Math.sin(returnAngle) * Math.max(speed, 14),
+                radius: isPerfect ? 8 : 6,
+                damage: baseDamage,
+                reflected: true,
+                perfect: isPerfect
               });
 
-              this.spawnParticles(eb.x, eb.y, '#39ff14', 8);
+              this.spawnParticles(eb.x, eb.y, isPerfect ? '#00f0ff' : '#39ff14', isPerfect ? 14 : 8);
               this.enemyBullets.splice(i, 1);
             }
           }
@@ -720,6 +738,35 @@
           speed: 15,
           damage: 130
         });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+        return true;
+      }
+
+      /**
+       * Triggers Hyper Blade Energy Surge mode.
+       * @returns {boolean} Whether hyper blade surge executed
+       */
+      triggerHyperBlade() {
+        if (this.over || this.paused || !this.started) return false;
+        if ((this.player.bladeEnergy || 0) < 100) return false;
+
+        this.player.bladeEnergy = 0;
+        this.player.hyperBladeActive = true;
+        this.player.hyperBladeTimer = 150; // 2.5s duration
+
+        this.empNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 360,
+          speed: 18,
+          damage: 150
+        });
+
+        this.spawnParticles(this.player.x, this.player.y, '#00f0ff', 30);
 
         if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
           SoundManager.playEmpSound();
@@ -814,6 +861,11 @@
           if (this.player.phaseDashTimer <= 0) this.player.phaseDashActive = false;
         }
         if (this.player.phaseDashCooldown > 0) this.player.phaseDashCooldown -= dt;
+
+        if (this.player.hyperBladeTimer > 0) {
+          this.player.hyperBladeTimer -= dt;
+          if (this.player.hyperBladeTimer <= 0) this.player.hyperBladeActive = false;
+        }
 
         // Combo decay
         if (this.combo > 0) {
@@ -979,7 +1031,7 @@
           }
 
           // Collision with Player
-          if (!this.player.phaseDashActive) {
+          if (!this.player.phaseDashActive && !this.player.hyperBladeActive) {
             const dist = Math.hypot(this.player.x - e.x, this.player.y - e.y);
             if (dist < this.player.radius + e.radius) {
               this.damagePlayer(25);
@@ -1000,7 +1052,7 @@
             continue;
           }
 
-          if (!this.player.phaseDashActive) {
+          if (!this.player.phaseDashActive && !this.player.hyperBladeActive) {
             const dist = Math.hypot(eb.x - this.player.x, eb.y - this.player.y);
             if (dist < eb.radius + this.player.radius) {
               this.damagePlayer(15);

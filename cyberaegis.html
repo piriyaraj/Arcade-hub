@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Aegis - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Aegis - 360° orbital kinetic shield & plasma pulse arena defender game. Rotate dual energy shields, deflect salvos, and purge Rogue Titans." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberaegis.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Aegis - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Aegis - 360° orbital kinetic shield & plasma pulse arena defender game. Rotate dual energy shields, deflect salvos, and purge Rogue Titans." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberaegis.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Aegis - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Aegis - 360° orbital kinetic shield & plasma pulse arena defender game." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Aegis",
+    "url": "https://arcadehub.telekit.link/cyberaegis.html",
+    "description": "360° orbital kinetic shield & plasma pulse arena defender game.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --board-bg: #0d1222;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent-neon: #00f0ff;
+      --accent-pink: #a855f7;
+      --accent-green: #39ff14;
+      --shield-glow: #00f0ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    #game-container {
+      position: relative;
+      margin-top: 10px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+      overflow: hidden;
+      background: var(--board-bg);
+    }
+
+    canvas {
+      display: block;
+      background: #050811;
+      cursor: crosshair;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 8, 17, 0.88);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--text);
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay h2 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0,240,255,0.4);
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      max-width: 480px;
+      text-align: center;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    .controls-guide {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .controls-guide span {
+      color: var(--accent-neon);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">&larr; Portal</a>
+    <h1>CYBER AEGIS</h1>
+    <p class="subtitle">360° Orbital Kinetic Shield & Plasma Pulse Defender Arena</p>
+    <button id="mute-btn" class="mute-btn">🔊 Mute</button>
+  </header>
+
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="start-overlay" class="overlay">
+      <h2>CYBER AEGIS</h2>
+      <p>Rotate dual Kinetic Aegis shields to block incoming salvos, fire Plasma Pulse charges, deploy EMP Shockwave Novas, and neutralize Rogue Titans!</p>
+      <button id="start-btn" class="btn">INITIALIZE AEGIS CORE</button>
+      <div class="controls-guide">
+        <span>WASD / Arrow Keys</span>: Move Aegis Core<br />
+        <span>Mouse Aim / Move</span>: Rotate Dual Kinetic Shield & Cannon<br />
+        <span>Left Click / Space</span>: Fire Plasma Pulse Cannon<br />
+        <span>E / Right Click</span>: Deploy EMP Aegis Shockwave<br />
+        <span>Q / Shift</span>: Activate Overdrive Forcefield (at 100% Energy)<br />
+        <span>P / Esc</span>: Pause / Resume
+      </div>
+    </div>
+
+    <div id="gameover-overlay" class="overlay hidden">
+      <h2 style="background: linear-gradient(135deg, #ff007f, #ff4757); -webkit-background-clip: text;">CORE BREACHED</h2>
+      <p id="final-score-text">Final Score: 0</p>
+      <button id="restart-btn" class="btn">REBOOT AEGIS CORE</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * @typedef {Object} AegisPlayerState
+     * @property {number} x
+     * @property {number} y
+     * @property {number} radius
+     * @property {number} speed
+     * @property {number} vx
+     * @property {number} vy
+     * @property {number} health
+     * @property {number} maxHealth
+     * @property {number} shield
+     * @property {number} maxShield
+     * @property {number} empCharges
+     * @property {number} maxEmpCharges
+     * @property {number} aegisEnergy
+     * @property {number} maxAegisEnergy
+     * @property {boolean} overdriveActive
+     * @property {number} overdriveTimer
+     * @property {number} shieldAngle
+     * @property {number} shootCooldown
+     */
+
+    class CyberAegisEngine {
+      /**
+       * @param {HTMLCanvasElement|null} canvas
+       * @param {Object} [config]
+       */
+      constructor(canvas, config = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberaegis') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+        this.maxCombo = 0;
+
+        /** @type {AegisPlayerState} */
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 20,
+          speed: 6.0,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 60,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          aegisEnergy: 0,
+          maxAegisEnergy: 100,
+          overdriveActive: false,
+          overdriveTimer: 0,
+          shieldAngle: 0,
+          shootCooldown: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empNovas = [];
+        this.powerups = [];
+
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 8;
+        this.bossSpawnedThisWave = false;
+
+        this.gridOffset = 0;
+        this.aimX = this.width / 2;
+        this.aimY = 0;
+      }
+
+      start() {
+        this.reset();
+        this.started = true;
+      }
+
+      pause() {
+        if (this.started && !this.over) this.paused = true;
+      }
+
+      resume() {
+        if (this.started && !this.over) this.paused = false;
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 20,
+          speed: 6.0,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 60,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          aegisEnergy: 0,
+          maxAegisEnergy: 100,
+          overdriveActive: false,
+          overdriveTimer: 0,
+          shieldAngle: 0,
+          shootCooldown: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empNovas = [];
+        this.powerups = [];
+
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 8;
+        this.bossSpawnedThisWave = false;
+      }
+
+      setScore(sc) {
+        this.score = sc;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberaegis', this.highScore);
+          }
+        }
+      }
+
+      movePlayer(dx, dy) {
+        if (this.over || this.paused || !this.started) return;
+
+        const mag = Math.hypot(dx, dy);
+        const curSpeed = this.player.overdriveActive ? this.player.speed * 1.6 : this.player.speed;
+
+        if (mag > 0) {
+          this.player.vx = (dx / mag) * curSpeed;
+          this.player.vy = (dy / mag) * curSpeed;
+        } else {
+          this.player.vx *= 0.8;
+          this.player.vy *= 0.8;
+        }
+
+        this.player.x += this.player.vx;
+        this.player.y += this.player.vy;
+
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.x = clampFn(this.player.x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clampFn(this.player.y, this.player.radius, this.height - this.player.radius);
+      }
+
+      aimAt(targetX, targetY) {
+        this.aimX = targetX;
+        this.aimY = targetY;
+        this.player.shieldAngle = Math.atan2(targetY - this.player.y, targetX - this.player.x);
+      }
+
+      shootPulse() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.shootCooldown > 0) return false;
+
+        this.player.shootCooldown = 12;
+
+        const angle = this.player.shieldAngle;
+        const speed = 14;
+
+        this.bullets.push({
+          x: this.player.x + Math.cos(angle) * (this.player.radius + 10),
+          y: this.player.y + Math.sin(angle) * (this.player.radius + 10),
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: 5,
+          damage: 30,
+          color: '#00f0ff'
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playLaserSound) {
+          SoundManager.playLaserSound();
+        }
+
+        return true;
+      }
+
+      triggerOverdrive() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.aegisEnergy < 100) return false;
+
+        this.player.aegisEnergy = 0;
+        this.player.overdriveActive = true;
+        this.player.overdriveTimer = 180; // 3 seconds
+
+        this.empNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 300,
+          speed: 16,
+          damage: 120
+        });
+
+        this.spawnParticles(this.player.x, this.player.y, '#a855f7', 24);
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+        return true;
+      }
+
+      triggerEmpNova() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.empCharges <= 0) return false;
+
+        this.player.empCharges -= 1;
+        this.empNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 400,
+          speed: 15,
+          damage: 140
+        });
+
+        this.spawnParticles(this.player.x, this.player.y, '#00f0ff', 30);
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+        return true;
+      }
+
+      spawnEnemy(type) {
+        const types = ['drone', 'vanguard', 'titan'];
+        const chosenType = type || types[Math.floor(Math.random() * types.length)];
+        const edge = Math.floor(Math.random() * 4);
+
+        let x, y;
+        if (edge === 0) { x = Math.random() * this.width; y = -20; }
+        else if (edge === 1) { x = Math.random() * this.width; y = this.height + 20; }
+        else if (edge === 2) { x = -20; y = Math.random() * this.height; }
+        else { x = this.width + 20; y = Math.random() * this.height; }
+
+        let hp = 30;
+        let speed = 2.2;
+        let radius = 16;
+        let color = '#39ff14';
+
+        if (chosenType === 'vanguard') {
+          hp = 60;
+          speed = 1.2;
+          radius = 20;
+          color = '#a855f7';
+        } else if (chosenType === 'titan') {
+          hp = 100;
+          speed = 2.8;
+          radius = 18;
+          color = '#ff007f';
+        }
+
+        this.enemies.push({
+          type: chosenType,
+          x, y,
+          vx: 0, vy: 0,
+          health: hp,
+          maxHealth: hp,
+          speed,
+          radius,
+          color,
+          shootTimer: Math.random() * 40,
+          empHit: false
+        });
+      }
+
+      spawnBoss() {
+        this.boss = {
+          name: 'ROGUE OVERLORD',
+          x: this.width / 2,
+          y: -80,
+          targetY: 120,
+          vx: 2.5,
+          vy: 0,
+          radius: 45,
+          health: 1200,
+          maxHealth: 1200,
+          shootTimer: 0,
+          color: '#a855f7'
+        };
+        this.bossSpawnedThisWave = true;
+      }
+
+      handleEnemyDeath(e) {
+        const index = this.enemies.indexOf(e);
+        if (index !== -1) {
+          this.enemies.splice(index, 1);
+        }
+
+        if (e === this.boss) {
+          this.boss = null;
+          this.score += 1500 * this.multiplier;
+        } else {
+          this.enemiesDefeatedInWave += 1;
+          const pts = e.type === 'vanguard' ? 200 : (e.type === 'titan' ? 300 : 100);
+          this.score += pts * this.multiplier;
+        }
+
+        this.combo++;
+        this.maxCombo = Math.max(this.maxCombo, this.combo);
+        this.comboTimer = 180;
+        this.multiplier = Math.min(8, 1 + Math.floor(this.combo / 5));
+
+        this.spawnParticles(e.x, e.y, e.color, 14);
+
+        // Powerup drop
+        if (Math.random() < 0.22) {
+          const pTypes = ['shield', 'health', 'emp', 'energy'];
+          const chosenP = pTypes[Math.floor(Math.random() * pTypes.length)];
+          this.powerups.push({
+            x: e.x,
+            y: e.y,
+            type: chosenP,
+            radius: 12
+          });
+        }
+
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberaegis', this.highScore);
+          }
+        }
+      }
+
+      collectPowerup(p) {
+        if (p.type === 'shield') {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 40);
+        } else if (p.type === 'health') {
+          this.player.health = Math.min(this.player.maxHealth, this.player.health + 30);
+        } else if (p.type === 'emp') {
+          this.player.empCharges = Math.min(this.player.maxEmpCharges, this.player.empCharges + 1);
+        } else if (p.type === 'energy') {
+          this.player.aegisEnergy = Math.min(this.player.maxAegisEnergy, this.player.aegisEnergy + 40);
+        }
+        this.spawnParticles(p.x, p.y, '#00f0ff', 12);
+        if (typeof SoundManager !== 'undefined' && SoundManager.playPowerupSound) {
+          SoundManager.playPowerupSound();
+        }
+      }
+
+      damagePlayer(amount) {
+        if (this.player.overdriveActive) return;
+
+        if (this.player.shield > 0) {
+          if (this.player.shield >= amount) {
+            this.player.shield -= amount;
+          } else {
+            const remainder = amount - this.player.shield;
+            this.player.shield = 0;
+            this.player.health = Math.max(0, this.player.health - remainder);
+          }
+        } else {
+          this.player.health = Math.max(0, this.player.health - amount);
+        }
+
+        this.spawnParticles(this.player.x, this.player.y, '#ff007f', 10);
+
+        if (this.player.health <= 0) {
+          this.over = true;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberaegis', this.score);
+          }
+        }
+      }
+
+      spawnParticles(x, y, color, count = 10) {
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 4 + 1;
+          this.particles.push({
+            x, y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            radius: Math.random() * 3 + 1,
+            color,
+            life: 25,
+            maxLife: 25
+          });
+        }
+      }
+
+      update(dt = 1) {
+        if (!this.started || this.paused || this.over) return;
+
+        this.gridOffset = (this.gridOffset + 1.8 * dt) % 40;
+
+        if (this.player.shootCooldown > 0) this.player.shootCooldown -= dt;
+
+        if (this.player.overdriveTimer > 0) {
+          this.player.overdriveTimer -= dt;
+          if (this.player.overdriveTimer <= 0) this.player.overdriveActive = false;
+        }
+
+        if (this.combo > 0) {
+          this.comboTimer -= dt;
+          if (this.comboTimer <= 0) {
+            this.combo = 0;
+            this.multiplier = 1;
+          }
+        }
+
+        // Update EMP Novas
+        for (let i = this.empNovas.length - 1; i >= 0; i--) {
+          const nova = this.empNovas[i];
+          nova.radius += nova.speed * dt;
+
+          for (let j = this.enemyBullets.length - 1; j >= 0; j--) {
+            const eb = this.enemyBullets[j];
+            if (Math.hypot(eb.x - nova.x, eb.y - nova.y) <= nova.radius) {
+              this.enemyBullets.splice(j, 1);
+            }
+          }
+
+          for (let k = this.enemies.length - 1; k >= 0; k--) {
+            const e = this.enemies[k];
+            if (!e) continue;
+            if (Math.hypot(e.x - nova.x, e.y - nova.y) <= nova.radius && !e.empHit) {
+              e.health -= nova.damage;
+              e.empHit = true;
+              if (e.health <= 0) this.handleEnemyDeath(e);
+            }
+          }
+
+          if (this.boss && Math.hypot(this.boss.x - nova.x, this.boss.y - nova.y) <= nova.radius + this.boss.radius) {
+            this.boss.health -= nova.damage * 0.5;
+            if (this.boss.health <= 0) this.handleEnemyDeath(this.boss);
+          }
+
+          if (nova.radius >= nova.maxRadius) {
+            this.empNovas.splice(i, 1);
+          }
+        }
+
+        // Update Player Bullets
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const b = this.bullets[i];
+          b.x += b.vx * dt;
+          b.y += b.vy * dt;
+
+          if (b.x < -30 || b.x > this.width + 30 || b.y < -30 || b.y > this.height + 30) {
+            this.bullets.splice(i, 1);
+            continue;
+          }
+
+          if (this.boss && typeof checkCircleCollision === 'function' && checkCircleCollision(b, this.boss)) {
+            this.boss.health -= b.damage;
+            this.bullets.splice(i, 1);
+            this.spawnParticles(b.x, b.y, '#00f0ff', 5);
+            if (this.boss.health <= 0) this.handleEnemyDeath(this.boss);
+            continue;
+          }
+
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const isHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(b, e) : (Math.hypot(b.x - e.x, b.y - e.y) < b.radius + e.radius);
+            if (isHit) {
+              e.health -= b.damage;
+              this.bullets.splice(i, 1);
+              this.spawnParticles(b.x, b.y, '#00f0ff', 5);
+              if (e.health <= 0) this.handleEnemyDeath(e);
+              break;
+            }
+          }
+        }
+
+        // Wave Logic
+        if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && !this.bossSpawnedThisWave && this.wave % 3 === 0) {
+          this.spawnBoss();
+        } else if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && this.enemies.length === 0) {
+          this.wave += 1;
+          this.enemiesDefeatedInWave = 0;
+          this.enemiesRequiredForWave = 8 + this.wave * 3;
+          this.bossSpawnedThisWave = false;
+          if (this.player.empCharges < this.player.maxEmpCharges) {
+            this.player.empCharges += 1;
+          }
+        } else if (!this.boss && this.enemies.length < 6) {
+          this.spawnTimer += dt;
+          if (this.spawnTimer >= 55) {
+            this.spawnTimer = 0;
+            this.spawnEnemy();
+          }
+        }
+
+        // Boss update
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += 2 * dt;
+          } else {
+            this.boss.x += this.boss.vx * dt;
+            if (this.boss.x - this.boss.radius < 20 || this.boss.x + this.boss.radius > this.width - 20) {
+              this.boss.vx = -this.boss.vx;
+            }
+          }
+
+          this.boss.shootTimer += dt;
+          if (this.boss.shootTimer > 35) {
+            this.boss.shootTimer = 0;
+            const angles = [-0.5, -0.25, 0, 0.25, 0.5];
+            angles.forEach(ang => {
+              this.enemyBullets.push({
+                x: this.boss.x,
+                y: this.boss.y + 35,
+                vx: Math.sin(ang) * 5.5,
+                vy: Math.cos(ang) * 5.5,
+                radius: 5,
+                color: '#a855f7'
+              });
+            });
+          }
+        }
+
+        // Enemies update
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angleToPlayer = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+
+          e.vx = Math.cos(angleToPlayer) * e.speed;
+          e.vy = Math.sin(angleToPlayer) * e.speed;
+          e.x += e.vx * dt;
+          e.y += e.vy * dt;
+
+          e.shootTimer += dt;
+          if (e.shootTimer > 75) {
+            e.shootTimer = 0;
+            this.enemyBullets.push({
+              x: e.x,
+              y: e.y,
+              vx: Math.cos(angleToPlayer) * 4.8,
+              vy: Math.sin(angleToPlayer) * 4.8,
+              radius: 4.5,
+              color: e.color
+            });
+          }
+
+          if (!this.player.overdriveActive) {
+            if (Math.hypot(this.player.x - e.x, this.player.y - e.y) < this.player.radius + e.radius) {
+              this.damagePlayer(25);
+              this.spawnParticles(e.x, e.y, e.color, 12);
+              this.enemies.splice(i, 1);
+            }
+          }
+        }
+
+        // Enemy Bullets & Dual Kinetic Aegis Shield Deflection Logic
+        const shieldRadius = 45;
+        const shieldArc = Math.PI * 0.7; // 126 degree shield arc
+
+        for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+          const eb = this.enemyBullets[i];
+          eb.x += eb.vx * dt;
+          eb.y += eb.vy * dt;
+
+          if (eb.x < -30 || eb.x > this.width + 30 || eb.y < -30 || eb.y > this.height + 30) {
+            this.enemyBullets.splice(i, 1);
+            continue;
+          }
+
+          const dist = Math.hypot(eb.x - this.player.x, eb.y - this.player.y);
+
+          // Kinetic Shield Deflection Check
+          if (dist <= shieldRadius + eb.radius && dist >= this.player.radius) {
+            const bAngle = Math.atan2(eb.y - this.player.y, eb.x - this.player.x);
+            let diff = Math.abs(bAngle - this.player.shieldAngle);
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            diff = Math.abs(diff);
+
+            if (diff <= shieldArc / 2) {
+              // Absorbed & Deflected by Kinetic Aegis Shield!
+              this.player.aegisEnergy = Math.min(this.player.maxAegisEnergy, this.player.aegisEnergy + 15);
+              this.bullets.push({
+                x: eb.x,
+                y: eb.y,
+                vx: -eb.vx * 1.4,
+                vy: -eb.vy * 1.4,
+                radius: 6,
+                damage: 40,
+                color: '#00f0ff'
+              });
+              this.spawnParticles(eb.x, eb.y, '#00f0ff', 8);
+              this.enemyBullets.splice(i, 1);
+              continue;
+            }
+          }
+
+          if (!this.player.overdriveActive && dist < eb.radius + this.player.radius) {
+            this.damagePlayer(15);
+            this.spawnParticles(eb.x, eb.y, '#ff007f', 6);
+            this.enemyBullets.splice(i, 1);
+          }
+        }
+
+        // Powerups collection
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const p = this.powerups[i];
+          const dist = Math.hypot(this.player.x - p.x, this.player.y - p.y);
+          if (dist < this.player.radius + p.radius) {
+            this.collectPowerup(p);
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.life -= dt;
+          if (p.life <= 0) this.particles.splice(i, 1);
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+
+        ctx.fillStyle = '#050811';
+        ctx.fillRect(0, 0, this.width, this.height);
+
+        // Cyber Grid Lines
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < this.width; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, this.height);
+          ctx.stroke();
+        }
+        for (let y = (this.gridOffset % 40); y < this.height; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(this.width, y);
+          ctx.stroke();
+        }
+
+        // Draw EMP Novas
+        this.empNovas.forEach(n => {
+          ctx.save();
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 4;
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = '#00f0ff';
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Powerups
+        this.powerups.forEach(p => {
+          ctx.save();
+          let color = '#00f0ff';
+          if (p.type === 'health') color = '#39ff14';
+          if (p.type === 'emp') color = '#a855f7';
+          if (p.type === 'energy') color = '#facc15';
+
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = color;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Player Bullets
+        this.bullets.forEach(b => {
+          ctx.save();
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = b.color || '#00f0ff';
+          ctx.fillStyle = b.color || '#00f0ff';
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Enemy Bullets
+        this.enemyBullets.forEach(eb => {
+          ctx.save();
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = eb.color || '#ff007f';
+          ctx.fillStyle = eb.color || '#ff007f';
+          ctx.beginPath();
+          ctx.arc(eb.x, eb.y, eb.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Enemies
+        this.enemies.forEach(e => {
+          ctx.save();
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = e.color;
+          ctx.fillStyle = e.color;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = '#a855f7';
+          ctx.fillStyle = '#a855f7';
+          ctx.beginPath();
+          ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Player & Dual Kinetic Shield
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+
+        // Aegis Core Glow
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = this.player.overdriveActive ? '#a855f7' : '#00f0ff';
+        ctx.fillStyle = this.player.overdriveActive ? '#a855f7' : '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.player.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dual Kinetic Shield Arc
+        ctx.rotate(this.player.shieldAngle);
+        ctx.strokeStyle = this.player.overdriveActive ? '#a855f7' : '#00f0ff';
+        ctx.lineWidth = 6;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(0, 0, 45, -Math.PI * 0.35, Math.PI * 0.35);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Particles
+        this.particles.forEach(p => {
+          ctx.save();
+          ctx.globalAlpha = p.life / p.maxLife;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // HUD Overlay
+        this.drawHUD(ctx);
+      }
+
+      drawHUD(ctx) {
+        ctx.save();
+        ctx.font = '16px "Segoe UI", sans-serif';
+        ctx.fillStyle = '#f8fafc';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00f0ff';
+
+        ctx.fillText(`SCORE: ${typeof formatScore === 'function' ? formatScore(this.score) : this.score}`, 20, 30);
+        ctx.fillText(`HIGH SCORE: ${typeof formatScore === 'function' ? formatScore(this.highScore) : this.highScore}`, 20, 55);
+        ctx.fillText(`WAVE: ${this.wave}`, 20, 80);
+
+        if (this.multiplier > 1) {
+          ctx.fillStyle = '#facc15';
+          ctx.fillText(`MULTIPLIER: x${this.multiplier}`, 20, 105);
+        }
+
+        // Shield & Health Bars
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.fillRect(this.width - 220, 20, 200, 14);
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(this.width - 220, 20, (this.player.shield / this.player.maxShield) * 200, 14);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.fillRect(this.width - 220, 42, 200, 14);
+        ctx.fillStyle = '#39ff14';
+        ctx.fillRect(this.width - 220, 42, (this.player.health / this.player.maxHealth) * 200, 14);
+
+        // Aegis Energy Meter
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.fillRect(this.width - 220, 64, 200, 10);
+        ctx.fillStyle = '#a855f7';
+        ctx.fillRect(this.width - 220, 64, (this.player.aegisEnergy / this.player.maxAegisEnergy) * 200, 10);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '12px "Segoe UI", sans-serif';
+        ctx.fillText(`EMP NOVAS: ${this.player.empCharges}`, this.width - 220, 92);
+        ctx.fillText(`OVERDRIVE: ${Math.floor(this.player.aegisEnergy)}%`, this.width - 110, 92);
+
+        ctx.restore();
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberAegisEngine };
+    }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof ThemeManager !== 'undefined') ThemeManager.init();
+      if (typeof KeyManager !== 'undefined') KeyManager.init();
+
+      const canvas = document.getElementById('gameCanvas');
+      const engine = new CyberAegisEngine(canvas);
+
+      const startOverlay = document.getElementById('start-overlay');
+      const gameoverOverlay = document.getElementById('gameover-overlay');
+      const startBtn = document.getElementById('start-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const finalScoreText = document.getElementById('final-score-text');
+      const muteBtn = document.getElementById('mute-btn');
+
+      if (muteBtn && typeof SoundManager !== 'undefined') {
+        muteBtn.addEventListener('click', () => {
+          const muted = SoundManager.toggleMute();
+          muteBtn.textContent = muted ? '🔇 Unmute' : '🔊 Mute';
+        });
+      }
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameoverOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      // Controls setup
+      const keys = {};
+      window.addEventListener('keydown', e => {
+        keys[e.code] = true;
+        if (e.code === 'KeyP' || e.code === 'Escape') {
+          engine.togglePause();
+        }
+        if (e.code === 'KeyE') {
+          engine.triggerEmpNova();
+        }
+        if (e.code === 'KeyQ' || e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+          engine.triggerOverdrive();
+        }
+        if (e.code === 'Space') {
+          engine.shootPulse();
+        }
+      });
+
+      window.addEventListener('keyup', e => {
+        keys[e.code] = false;
+      });
+
+      canvas.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        engine.aimAt(e.clientX - rect.left, e.clientY - rect.top);
+      });
+
+      canvas.addEventListener('mousedown', e => {
+        if (e.button === 0) {
+          engine.shootPulse();
+        } else if (e.button === 2) {
+          e.preventDefault();
+          engine.triggerEmpNova();
+        }
+      });
+
+      canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Loop
+      let lastTime = performance.now();
+      function loop(now) {
+        const dt = Math.min(2.0, (now - lastTime) / (1000 / 60));
+        lastTime = now;
+
+        if (engine.started && !engine.paused && !engine.over) {
+          let dx = 0, dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          engine.movePlayer(dx, dy);
+          engine.update(dt);
+
+          if (engine.over) {
+            gameoverOverlay.classList.remove('hidden');
+            finalScoreText.textContent = `Final Score: ${formatScore(engine.score)}`;
+          }
+        }
+
+        engine.draw();
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+    });
+  </script>
+</body>
+</html>

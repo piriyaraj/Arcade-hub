@@ -239,3 +239,57 @@ test('CyberBladeEngine - Player damage & Game Over trigger', () => {
   assert.strictEqual(engine.player.health, 0);
   assert.strictEqual(engine.over, true);
 });
+
+test('CyberBladeEngine - Perfect deflection & combo building', () => {
+  const engine = new CyberBladeEngine(null, {});
+  engine.start();
+
+  engine.player.x = 400;
+  engine.player.y = 300;
+  engine.aimAt(400, 200);
+
+  // Add bullet directly aligned with aim angle (sweet spot for perfect deflection)
+  engine.enemyBullets = [{
+    x: 400,
+    y: 250,
+    vx: 0,
+    vy: 5,
+    radius: 5,
+    color: '#ff007f'
+  }];
+
+  engine.slashBlade();
+
+  assert.strictEqual(engine.enemyBullets.length, 0);
+  assert.strictEqual(engine.bullets.length, 1);
+  assert.strictEqual(engine.bullets[0].perfect, true);
+  assert.strictEqual(engine.combo, 1);
+  assert.strictEqual(engine.maxCombo, 1);
+  assert.strictEqual(engine.player.bladeEnergy, 25);
+});
+
+test('CyberBladeEngine - Hyper Blade Energy Surge activation', () => {
+  const engine = new CyberBladeEngine(null, {});
+  engine.start();
+
+  assert.strictEqual(engine.triggerHyperBlade(), false); // Not enough energy
+
+  engine.player.bladeEnergy = 100;
+  const triggered = engine.triggerHyperBlade();
+  assert.strictEqual(triggered, true);
+  assert.strictEqual(engine.player.bladeEnergy, 0);
+  assert.strictEqual(engine.player.hyperBladeActive, true);
+  assert.strictEqual(engine.empNovas.length, 1);
+
+  // Verify invulnerability while hyperBladeActive
+  engine.enemyBullets = [{
+    x: engine.player.x,
+    y: engine.player.y,
+    vx: 0,
+    vy: 0,
+    radius: 5
+  }];
+
+  engine.update(1);
+  assert.strictEqual(engine.player.health, 100);
+});
