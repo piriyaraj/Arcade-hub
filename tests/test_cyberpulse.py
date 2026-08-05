@@ -57,6 +57,20 @@ def test_index_links_to_cyberpulse():
 
     assert re.search(r'href=["\']cyberpulse\.html["\']', index_content), "index.html must link to cyberpulse.html"
 
+def test_cyberpulse_combo_and_particle_mechanics():
+    """Verify that cyberpulse.html includes comboCount, comboMultiplier, maxParticles, and Boss Phase 2."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cyberpulse.html")
+    assert os.path.isfile(path)
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "comboCount" in content, "cyberpulse.html must contain comboCount logic"
+    assert "comboMultiplier" in content, "cyberpulse.html must contain comboMultiplier logic"
+    assert "maxParticles" in content, "cyberpulse.html must contain maxParticles bounding logic"
+    assert "phase === 2" in content or "phase = 2" in content, "cyberpulse.html must contain Boss Phase 2 transition"
+
 def test_cyberpulse_node_unit_tests():
     """Run node --test tests/cyberpulse.test.js and ensure exit code 0."""
     repo_root = get_repo_root()

@@ -373,6 +373,9 @@
         this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberpulse') : 0;
         this.level = 1;
         this.multiplier = 1;
+        this.comboCount = 0;
+        this.comboMultiplier = 1;
+        this.maxParticles = 200;
         this.overdriveActive = false;
         this.overdriveTimer = 0;
 
@@ -418,6 +421,8 @@
         this.score = 0;
         this.level = 1;
         this.multiplier = 1;
+        this.comboCount = 0;
+        this.comboMultiplier = 1;
         this.overdriveActive = false;
         this.overdriveTimer = 0;
 
@@ -450,6 +455,8 @@
         this.paused = false;
         this.over = false;
         this.score = 0;
+        this.comboCount = 0;
+        this.comboMultiplier = 1;
         this.bullets = [];
         this.enemyBullets = [];
         this.enemies = [];
@@ -670,6 +677,10 @@
           return;
         }
 
+        // Reset combo on taking unshielded damage
+        this.comboCount = 0;
+        this.comboMultiplier = 1;
+
         const dmg = typeof amount === 'number' && Number.isFinite(amount) ? amount : 10;
         this.player.health -= dmg;
         this.createExplosion(this.player.x, this.player.y, '#ff007f', 12);
@@ -709,6 +720,10 @@
             maxLife: 30,
             color: color
           });
+        }
+        // Cap particle count to prevent memory leaks
+        if (this.particles.length > this.maxParticles) {
+          this.particles.splice(0, this.particles.length - this.maxParticles);
         }
       }
 
@@ -818,24 +833,33 @@
 
         // Update Boss
         if (this.boss) {
+          // Check for Phase 2 transition (Enraged mode below 50% health)
+          if (this.boss.health <= this.boss.maxHealth / 2 && this.boss.phase === 1) {
+            this.boss.phase = 2;
+            this.boss.color = '#ff007f';
+            this.boss.vx = (this.boss.vx >= 0 ? 1 : -1) * 4;
+            this.createExplosion(this.boss.x, this.boss.y, '#ff007f', 20);
+          }
+
           this.boss.x += this.boss.vx;
           if (this.boss.x < this.boss.radius || this.boss.x > this.CANVAS_WIDTH - this.boss.radius) {
             this.boss.vx *= -1;
           }
 
           this.boss.shootTimer++;
-          if (this.boss.shootTimer % 45 === 0) {
-            const bulletCount = 8;
+          const fireInterval = this.boss.phase === 2 ? 30 : 45;
+          if (this.boss.shootTimer % fireInterval === 0) {
+            const bulletCount = this.boss.phase === 2 ? 12 : 8;
             for (let b = 0; b < bulletCount; b++) {
               const ang = (Math.PI * 2 / bulletCount) * b + (this.boss.shootTimer * 0.05);
               this.enemyBullets.push({
                 x: this.boss.x,
                 y: this.boss.y,
-                vx: Math.cos(ang) * 4,
-                vy: Math.sin(ang) * 4,
+                vx: Math.cos(ang) * (this.boss.phase === 2 ? 5 : 4),
+                vy: Math.sin(ang) * (this.boss.phase === 2 ? 5 : 4),
                 radius: 5,
                 damage: 12,
-                color: '#a855f7'
+                color: this.boss.color
               });
             }
           }
@@ -845,7 +869,7 @@
             const b = this.bullets[i];
             if (typeof checkCircleCollision === 'function' ? checkCircleCollision(b, this.boss) : Math.hypot(b.x - this.boss.x, b.y - this.boss.y) < (b.radius + this.boss.radius)) {
               this.boss.health -= b.damage;
-              this.createExplosion(b.x, b.y, '#a855f7', 4);
+              this.createExplosion(b.x, b.y, this.boss.color, 4);
               this.bullets.splice(i, 1);
 
               if (this.boss.health <= 0) {
@@ -903,7 +927,9 @@
               this.bullets.splice(j, 1);
 
               if (enemy.health <= 0) {
-                this.setScore(this.score + enemy.points * this.multiplier);
+                this.comboCount++;
+                this.comboMultiplier = Math.min(8, 1 + Math.floor(this.comboCount / 5));
+                this.setScore(this.score + enemy.points * this.multiplier * this.comboMultiplier);
                 this.createExplosion(enemy.x, enemy.y, enemy.color, 12);
 
                 // Chance to drop powerup

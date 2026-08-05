@@ -106,4 +106,4 @@ def test_dlq_entry_contains_full_error_context():
     assert dlq_entry["payload"] == payload
 
     # DLQ label fallback checking (replace 'Untitled task' with descriptive label)
-    assert dlq_entry["title"].startswith("[Untitlted] submission @ ")
+    assert dlq_entry["title"].startswith("[Untitled] submission @ ")

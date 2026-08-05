@@ -27,7 +27,7 @@ class DLQHandler:
             title = payload.get("title")
 
         if not isinstance(title, str) or not title.strip():
-            title = f"[Untitlted] submission @ {timestamp}"
+            title = f"[Untitled] submission @ {timestamp}"
 
         # Get error details
         error_message = str(exception) if exception else "Unknown queue execution failure"

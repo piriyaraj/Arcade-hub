@@ -229,3 +229,73 @@ test('CyberPulseEngine - NaN and invalid input resilience', () => {
   engine.takeDamage('invalid');
   assert.strictEqual(engine.player.health, 90); // Default damage 10
 });
+
+test('CyberPulseEngine - Combo multiplier accumulation and damage reset', () => {
+  const engine = new CyberPulseEngine(null, {});
+  engine.start();
+  engine.player.shieldTime = 0;
+
+  assert.strictEqual(engine.comboCount, 0);
+  assert.strictEqual(engine.comboMultiplier, 1);
+
+  // Spawn an enemy and hit with bullet to trigger destruction & combo
+  engine.enemies.push({
+    type: 'seeker',
+    x: 200,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    radius: 14,
+    health: 10,
+    maxHealth: 25,
+    points: 100,
+    color: '#ff007f'
+  });
+  engine.bullets.push({
+    x: 200,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    radius: 5,
+    damage: 20,
+    color: '#00f0ff'
+  });
+
+  engine.update();
+  assert.strictEqual(engine.comboCount, 1);
+  assert.strictEqual(engine.comboMultiplier, 1);
+  assert.ok(engine.score > 0);
+
+  // Trigger damage to reset combo
+  engine.takeDamage(10);
+  assert.strictEqual(engine.comboCount, 0);
+  assert.strictEqual(engine.comboMultiplier, 1);
+});
+
+test('CyberPulseEngine - Max particle count bounding', () => {
+  const engine = new CyberPulseEngine(null, {});
+  engine.start();
+
+  // Create excess explosions
+  for (let i = 0; i < 35; i++) {
+    engine.createExplosion(400, 300, '#00f0ff', 10);
+  }
+
+  assert.ok(engine.particles.length <= engine.maxParticles);
+});
+
+test('CyberPulseEngine - Titan Pulse Boss Phase 2 transition below 50% HP', () => {
+  const engine = new CyberPulseEngine(null, {});
+  engine.start();
+  engine.spawnBoss();
+
+  assert.strictEqual(engine.boss.phase, 1);
+  const initialMaxHp = engine.boss.maxHealth;
+
+  // Reduce boss health below 50%
+  engine.boss.health = Math.floor(initialMaxHp * 0.4);
+  engine.update();
+
+  assert.strictEqual(engine.boss.phase, 2);
+  assert.strictEqual(engine.boss.color, '#ff007f');
+});
