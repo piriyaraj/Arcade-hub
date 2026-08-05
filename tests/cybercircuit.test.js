@@ -173,3 +173,49 @@ test('CyberCircuitEngine - Game Over state & score persistence', () => {
   assert.strictEqual(engine.score, 1500);
   assert.strictEqual(engine.bestScore, 1500);
 });
+
+test('CyberCircuitEngine - Phase Dash, Shield Overcharge, Surge Overdrive & NaN resilience', () => {
+  const engine = new CyberCircuitEngine(null, {});
+  engine.start();
+
+  // Test Phase Dash
+  assert.strictEqual(engine.dashActive, false);
+  const dashTriggered = engine.triggerDash();
+  assert.strictEqual(dashTriggered, true);
+  assert.strictEqual(engine.dashActive, true);
+
+  // Dash grants invulnerability to damage
+  const initialLives = engine.lives;
+  engine.takeDamage();
+  assert.strictEqual(engine.lives, initialLives); // No life lost
+
+  // Expire dash over frames
+  for (let i = 0; i < 10; i++) {
+    engine.update(0.05);
+  }
+  assert.strictEqual(engine.dashActive, false);
+
+  // Test Shield Overcharge
+  assert.strictEqual(engine.shieldActive, false);
+  engine.activateShield(300);
+  assert.strictEqual(engine.shieldActive, true);
+
+  // Shield absorbs hit
+  engine.takeDamage();
+  assert.strictEqual(engine.lives, initialLives);
+  assert.strictEqual(engine.shieldActive, false);
+
+  // Test Surge Overdrive
+  assert.strictEqual(engine.overdriveActive, false);
+  engine.triggerOverdrive(400);
+  assert.strictEqual(engine.overdriveActive, true);
+  assert.ok(engine.multiplier >= 4);
+
+  // Test NaN resilience
+  engine.pulse.x = NaN;
+  engine.pulse.y = NaN;
+  engine.update(NaN);
+  assert.strictEqual(engine.pulse.x, engine.width / 2);
+  assert.strictEqual(engine.pulse.y, engine.height / 2);
+});
+

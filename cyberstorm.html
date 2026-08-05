@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Storm - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Storm - High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberstorm.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Storm - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Storm - High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberstorm.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Storm - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Storm - High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Storm",
+    "url": "https://arcadehub.telekit.link/cyberstorm.html",
+    "description": "Play Cyber Storm - High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #070913;
+      --board-bg: #05070e;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #4ade80;
+      --accent-purple: #a855f7;
+      --accent-yellow: #facc15;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: rgba(0, 240, 255, 0.25);
+      --storm-glow: rgba(0, 240, 255, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      user-select: none;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-neon);
+      text-shadow: 0 0 10px var(--storm-glow);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent-neon);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 12px var(--storm-glow);
+      transform: translateY(-1px);
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hud-panel {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hud-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hud-label {
+      font-size: 0.725rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+    }
+
+    .hud-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-neon);
+    }
+
+    .hud-value.pink { color: var(--accent-pink); }
+    .hud-value.yellow { color: var(--accent-yellow); }
+    .hud-value.green { color: var(--accent-green); }
+    .hud-value.purple { color: var(--accent-purple); }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 9, 19, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1.25rem;
+      z-index: 10;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-neon);
+      text-shadow: 0 0 15px var(--storm-glow);
+    }
+
+    .overlay-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
+      color: #000;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+    }
+
+    .controls-hint {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">
+      <a href="index.html" class="nav-btn">← Hub</a>
+      <h1>⚡ CYBER STORM</h1>
+    </div>
+    <div class="header-actions">
+      <button id="muteBtn" class="nav-btn">🔊 Mute</button>
+      <button id="pauseBtn" class="nav-btn">⏸️ Pause</button>
+    </div>
+  </header>
+
+  <main class="game-container">
+    <div class="hud-panel">
+      <div class="hud-card">
+        <span class="hud-label">Score</span>
+        <span id="scoreVal" class="hud-value">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">High Score</span>
+        <span id="highVal" class="hud-value yellow">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Wave</span>
+        <span id="waveVal" class="hud-value purple">1</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Health</span>
+        <span id="healthVal" class="hud-value green">100%</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">EMP Charges</span>
+        <span id="empVal" class="hud-value pink">3</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Multiplier</span>
+        <span id="multVal" class="hud-value">x1</span>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="startOverlay" class="overlay">
+        <div class="overlay-title">CYBER STORM</div>
+        <div class="overlay-subtitle">
+          Defend the quantum matrix core from wave surges, deploy EMP shockwaves, and unleash Kinetic Lightning Overload against Storm Titan bosses!
+        </div>
+        <button id="startBtn" class="btn-action">START DEFENSE</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameOverOverlay" class="overlay hidden">
+        <div class="overlay-title" style="color: var(--accent-pink);">MATRIX BREACHED</div>
+        <div id="finalScoreText" class="overlay-subtitle">Final Score: 0</div>
+        <button id="restartBtn" class="btn-action">RETRY</button>
+      </div>
+    </div>
+
+    <div class="controls-hint">
+      <span>Move: <span class="key-badge">WASD</span> / <span class="key-badge">Arrows</span></span>
+      <span>Fire Plasma: <span class="key-badge">Space</span></span>
+      <span>EMP Pulse: <span class="key-badge">Shift</span> / <span class="key-badge">E</span></span>
+      <span>Pause: <span class="key-badge">P</span></span>
+    </div>
+  </main>
+
+  <script>
+    /**
+     * @typedef {Object} PlayerState
+     * @property {number} x
+     * @property {number} y
+     * @property {number} radius
+     * @property {number} speed
+     * @property {number} vx
+     * @property {number} vy
+     * @property {number} health
+     * @property {number} maxHealth
+     * @property {number} shield
+     * @property {number} maxShield
+     * @property {number} empCharges
+     * @property {number} maxEmpCharges
+     * @property {boolean} tripleBeamActive
+     * @property {number} tripleBeamTimer
+     * @property {boolean} overloadActive
+     * @property {number} overloadTimer
+     */
+
+    /**
+     * CyberStormEngine - High-octane Orbital Lightning Matrix Defense Engine
+     */
+    class CyberStormEngine {
+      /**
+       * @param {HTMLCanvasElement|null} canvas
+       * @param {Object} [config]
+       */
+      constructor(canvas, config = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberstorm') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+
+        /** @type {PlayerState} */
+        this.player = {
+          x: this.width / 2,
+          y: this.height - 80,
+          radius: 18,
+          speed: 6,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          tripleBeamActive: false,
+          tripleBeamTimer: 0,
+          overloadActive: false,
+          overloadTimer: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empPulses = [];
+        this.powerups = [];
+        this.lightningArcs = [];
+
+        this.lastShotTime = 0;
+        this.shootInterval = 150;
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 10;
+        this.bossSpawnedThisWave = false;
+
+        this.gridOffset = 0;
+      }
+
+      /**
+       * Starts a new game session.
+       */
+      start() {
+        this.reset();
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+      }
+
+      /**
+       * Pauses gameplay.
+       */
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      /**
+       * Resumes gameplay.
+       */
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      /**
+       * Toggles pause state.
+       */
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      /**
+       * Sets active score explicitly.
+       * @param {number} val
+       */
+      setScore(val) {
+        this.score = Math.max(0, Math.floor(val));
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberstorm', this.highScore);
+          }
+        }
+      }
+
+      /**
+       * Resets all game entities and stats.
+       */
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height - 80,
+          radius: 18,
+          speed: 6,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          tripleBeamActive: false,
+          tripleBeamTimer: 0,
+          overloadActive: false,
+          overloadTimer: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empPulses = [];
+        this.powerups = [];
+        this.lightningArcs = [];
+
+        this.lastShotTime = 0;
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 10;
+        this.bossSpawnedThisWave = false;
+      }
+
+      /**
+       * Updates player movement vector and bounds.
+       * @param {number} dx
+       * @param {number} dy
+       */
+      movePlayer(dx, dy) {
+        if (this.over || this.paused) return;
+
+        const mag = Math.hypot(dx, dy);
+        if (mag > 0) {
+          this.player.vx = (dx / mag) * this.player.speed;
+          this.player.vy = (dy / mag) * this.player.speed;
+        } else {
+          this.player.vx *= 0.8;
+          this.player.vy *= 0.8;
+        }
+
+        this.player.x += this.player.vx;
+        this.player.y += this.player.vy;
+
+        // Clamp inside bounds
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.x = clampFn(this.player.x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clampFn(this.player.y, this.player.radius, this.height - this.player.radius);
+      }
+
+      /**
+       * Fires player plasma projectiles.
+       * @param {number} [now]
+       * @returns {boolean} Whether shot fired
+       */
+      fireBullet(now = Date.now()) {
+        if (this.over || this.paused || !this.started) return false;
+        if (now - this.lastShotTime < this.shootInterval) return false;
+
+        this.lastShotTime = now;
+
+        if (this.player.tripleBeamActive) {
+          // 3-way spread
+          [-0.25, 0, 0.25].forEach(angle => {
+            this.bullets.push({
+              x: this.player.x,
+              y: this.player.y - 15,
+              vx: Math.sin(angle) * 10,
+              vy: -Math.cos(angle) * 10,
+              radius: 4,
+              damage: 25
+            });
+          });
+        } else {
+          // Standard double beam
+          [-8, 8].forEach(offsetX => {
+            this.bullets.push({
+              x: this.player.x + offsetX,
+              y: this.player.y - 15,
+              vx: 0,
+              vy: -11,
+              radius: 4,
+              damage: 20
+            });
+          });
+        }
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playLaserSound) {
+          SoundManager.playLaserSound();
+        }
+        return true;
+      }
+
+      /**
+       * Triggers EMP shockwave pulse.
+       * @returns {boolean} Whether pulse triggered
+       */
+      triggerEmpPulse() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.empCharges <= 0) return false;
+
+        this.player.empCharges -= 1;
+        this.empPulses.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 350,
+          speed: 12,
+          damage: 120
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+        return true;
+      }
+
+      /**
+       * Activates Lightning Overload surge state.
+       * @param {number} duration
+       */
+      activateLightningOverload(duration = 300) {
+        this.player.overloadActive = true;
+        this.player.overloadTimer = duration;
+      }
+
+      /**
+       * Spawns an enemy.
+       * @param {string} [type]
+       */
+      spawnEnemy(type) {
+        const types = ['drone', 'spider', 'sentinel'];
+        const chosenType = type || types[Math.floor(Math.random() * types.length)];
+        const x = Math.random() * (this.width - 60) + 30;
+
+        let hp = 30;
+        let speed = 2;
+        let radius = 16;
+        let color = '#00f0ff';
+
+        if (chosenType === 'spider') {
+          hp = 50;
+          speed = 1.5;
+          radius = 20;
+          color = '#ff007f';
+        } else if (chosenType === 'sentinel') {
+          hp = 80;
+          speed = 1.0;
+          radius = 24;
+          color = '#a855f7';
+        }
+
+        this.enemies.push({
+          type: chosenType,
+          x,
+          y: -30,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: speed,
+          radius,
+          health: hp + (this.wave - 1) * 10,
+          maxHealth: hp + (this.wave - 1) * 10,
+          color,
+          shootTimer: Math.random() * 100
+        });
+      }
+
+      /**
+       * Spawns Wave Boss.
+       */
+      spawnBoss() {
+        this.boss = {
+          name: 'STORM TITAN CORE',
+          x: this.width / 2,
+          y: -80,
+          targetY: 120,
+          radius: 50,
+          health: 800 + (this.wave * 200),
+          maxHealth: 800 + (this.wave * 200),
+          phase: 1,
+          vx: 2,
+          vy: 1,
+          shootTimer: 0
+        };
+        this.bossSpawnedThisWave = true;
+      }
+
+      /**
+       * Main physics and game logic update step.
+       * @param {number} [dt] Delta time factor
+       */
+      update(dt = 1) {
+        if (!this.started || this.paused || this.over) return;
+
+        this.gridOffset = (this.gridOffset + 1.5 * dt) % 40;
+
+        // Player Timers
+        if (this.player.tripleBeamActive) {
+          this.player.tripleBeamTimer -= dt;
+          if (this.player.tripleBeamTimer <= 0) {
+            this.player.tripleBeamActive = false;
+          }
+        }
+
+        if (this.player.overloadActive) {
+          this.player.overloadTimer -= dt;
+          if (this.player.overloadTimer <= 0) {
+            this.player.overloadActive = false;
+          } else {
+            // Lightning Discharge to nearby enemies
+            if (Math.random() < 0.2) {
+              const target = this.enemies[0] || (this.boss ? this.boss : null);
+              if (target) {
+                target.health -= 15;
+                this.lightningArcs.push({
+                  x1: this.player.x,
+                  y1: this.player.y,
+                  x2: target.x,
+                  y2: target.y,
+                  life: 8
+                });
+                if (target.health <= 0) {
+                  this.handleEnemyDeath(target);
+                }
+              }
+            }
+          }
+        }
+
+        // Combo decay
+        if (this.combo > 0) {
+          this.comboTimer -= dt;
+          if (this.comboTimer <= 0) {
+            this.combo = 0;
+            this.multiplier = 1;
+          }
+        }
+
+        // Update Lightning Arcs
+        for (let i = this.lightningArcs.length - 1; i >= 0; i--) {
+          this.lightningArcs[i].life -= dt;
+          if (this.lightningArcs[i].life <= 0) {
+            this.lightningArcs.splice(i, 1);
+          }
+        }
+
+        // Update EMP Pulses
+        for (let i = this.empPulses.length - 1; i >= 0; i--) {
+          const pulse = this.empPulses[i];
+          pulse.radius += pulse.speed * dt;
+
+          // Clear enemy bullets caught in EMP
+          for (let j = this.enemyBullets.length - 1; j >= 0; j--) {
+            const eb = this.enemyBullets[j];
+            const dist = Math.hypot(eb.x - pulse.x, eb.y - pulse.y);
+            if (dist <= pulse.radius) {
+              this.enemyBullets.splice(j, 1);
+            }
+          }
+
+          // Damage enemies in EMP
+          this.enemies.forEach(e => {
+            const dist = Math.hypot(e.x - pulse.x, e.y - pulse.y);
+            if (dist <= pulse.radius && !e.empHit) {
+              e.health -= pulse.damage;
+              e.empHit = true;
+              if (e.health <= 0) this.handleEnemyDeath(e);
+            }
+          });
+
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - pulse.x, this.boss.y - pulse.y);
+            if (dist <= pulse.radius && !this.boss.empHit) {
+              this.boss.health -= pulse.damage;
+              this.boss.empHit = true;
+              if (this.boss.health <= 0) this.handleEnemyDeath(this.boss);
+            }
+          }
+
+          if (pulse.radius >= pulse.maxRadius) {
+            this.empPulses.splice(i, 1);
+          }
+        }
+
+        // Update Player Bullets
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const b = this.bullets[i];
+          b.x += b.vx * dt;
+          b.y += b.vy * dt;
+
+          if (b.y < -20 || b.x < -20 || b.x > this.width + 20) {
+            this.bullets.splice(i, 1);
+            continue;
+          }
+
+          // Hit Boss
+          if (this.boss && typeof checkCircleCollision === 'function' && checkCircleCollision(b, this.boss)) {
+            this.boss.health -= b.damage;
+            this.bullets.splice(i, 1);
+            this.spawnParticles(b.x, b.y, '#00f0ff', 3);
+            if (this.boss.health <= 0) {
+              this.handleEnemyDeath(this.boss);
+            }
+            continue;
+          }
+
+          // Hit Normal Enemies
+          let hit = false;
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const isHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(b, e) : (Math.hypot(b.x - e.x, b.y - e.y) < b.radius + e.radius);
+            if (isHit) {
+              e.health -= b.damage;
+              hit = true;
+              this.spawnParticles(b.x, b.y, e.color, 4);
+              if (e.health <= 0) {
+                this.handleEnemyDeath(e);
+              }
+              break;
+            }
+          }
+          if (hit) {
+            this.bullets.splice(i, 1);
+          }
+        }
+
+        // Enemy Spawning & Wave Progression
+        if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && !this.bossSpawnedThisWave && this.wave % 3 === 0) {
+          this.spawnBoss();
+        } else if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && this.enemies.length === 0) {
+          // Next wave
+          this.wave += 1;
+          this.enemiesDefeatedInWave = 0;
+          this.enemiesRequiredForWave = 10 + this.wave * 4;
+          this.bossSpawnedThisWave = false;
+          if (this.player.empCharges < this.player.maxEmpCharges) {
+            this.player.empCharges += 1;
+          }
+        } else if (!this.boss && this.enemies.length < 6) {
+          this.spawnTimer += dt;
+          if (this.spawnTimer >= 60) {
+            this.spawnTimer = 0;
+            this.spawnEnemy();
+          }
+        }
+
+        // Update Boss Logic
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += 2 * dt;
+          } else {
+            this.boss.x += this.boss.vx * dt;
+            if (this.boss.x - this.boss.radius < 20 || this.boss.x + this.boss.radius > this.width - 20) {
+              this.boss.vx = -this.boss.vx;
+            }
+          }
+
+          // Boss Shoot
+          this.boss.shootTimer += dt;
+          if (this.boss.shootTimer > 40) {
+            this.boss.shootTimer = 0;
+            const angles = [-0.4, -0.2, 0, 0.2, 0.4];
+            angles.forEach(ang => {
+              this.enemyBullets.push({
+                x: this.boss.x,
+                y: this.boss.y + 30,
+                vx: Math.sin(ang) * 5,
+                vy: Math.cos(ang) * 5,
+                radius: 6,
+                color: '#ff007f'
+              });
+            });
+          }
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          e.x += e.vx * dt;
+          e.y += e.vy * dt;
+
+          if (e.x - e.radius < 10 || e.x + e.radius > this.width - 10) e.vx = -e.vx;
+
+          if (e.y > this.height + 40) {
+            this.enemies.splice(i, 1);
+            continue;
+          }
+
+          // Enemy firing
+          e.shootTimer += dt;
+          if (e.shootTimer > 90) {
+            e.shootTimer = 0;
+            this.enemyBullets.push({
+              x: e.x,
+              y: e.y + 15,
+              vx: 0,
+              vy: 4,
+              radius: 4,
+              color: e.color
+            });
+          }
+
+          // Player collision
+          if (!this.player.overloadActive) {
+            const dist = Math.hypot(this.player.x - e.x, this.player.y - e.y);
+            if (dist < this.player.radius + e.radius) {
+              this.damagePlayer(25);
+              this.spawnParticles(e.x, e.y, e.color, 12);
+              this.enemies.splice(i, 1);
+            }
+          }
+        }
+
+        // Update Enemy Bullets
+        for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+          const eb = this.enemyBullets[i];
+          eb.x += eb.vx * dt;
+          eb.y += eb.vy * dt;
+
+          if (eb.y > this.height + 20 || eb.x < -20 || eb.x > this.width + 20) {
+            this.enemyBullets.splice(i, 1);
+            continue;
+          }
+
+          // Hit Player
+          const dist = Math.hypot(eb.x - this.player.x, eb.y - this.player.y);
+          if (dist < eb.radius + this.player.radius) {
+            if (!this.player.overloadActive) {
+              this.damagePlayer(15);
+            }
+            this.spawnParticles(eb.x, eb.y, '#ff007f', 6);
+            this.enemyBullets.splice(i, 1);
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const p = this.powerups[i];
+          p.y += 2 * dt;
+
+          if (p.y > this.height + 20) {
+            this.powerups.splice(i, 1);
+            continue;
+          }
+
+          const dist = Math.hypot(p.x - this.player.x, p.y - this.player.y);
+          if (dist < p.radius + this.player.radius) {
+            this.collectPowerup(p);
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Update Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx * dt;
+          pt.y += pt.vy * dt;
+          pt.alpha -= 0.02 * dt;
+          if (pt.alpha <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+      }
+
+      /**
+       * Inflicts damage on player health/shield.
+       * @param {number} amount
+       */
+      damagePlayer(amount) {
+        if (this.player.shield > 0) {
+          this.player.shield -= amount;
+          if (this.player.shield < 0) {
+            this.player.health += this.player.shield; // subtract overflow
+            this.player.shield = 0;
+          }
+        } else {
+          this.player.health -= amount;
+        }
+
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.health = clampFn(this.player.health, 0, this.player.maxHealth);
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playExplosionSound) {
+          SoundManager.playExplosionSound();
+        }
+
+        if (this.player.health <= 0) {
+          this.over = true;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberstorm', this.score);
+          }
+        }
+      }
+
+      /**
+       * Handles score, combo, particle explosion, and drops on enemy destruction.
+       * @param {Object} enemy
+       */
+      handleEnemyDeath(enemy) {
+        if (enemy === this.boss) {
+          this.setScore(this.score + 1000 * this.multiplier);
+          this.spawnParticles(this.boss.x, this.boss.y, '#facc15', 30);
+          this.boss = null;
+          this.enemiesDefeatedInWave += 5;
+          this.activateLightningOverload(350);
+        } else {
+          const idx = this.enemies.indexOf(enemy);
+          if (idx !== -1) this.enemies.splice(idx, 1);
+
+          this.enemiesDefeatedInWave += 1;
+          this.setScore(this.score + 100 * this.multiplier);
+          this.spawnParticles(enemy.x, enemy.y, enemy.color || '#00f0ff', 15);
+
+          // Spawn powerup chance
+          if (Math.random() < 0.25) {
+            this.spawnPowerup(enemy.x, enemy.y);
+          }
+        }
+
+        // Combo increment
+        this.combo += 1;
+        this.comboTimer = 180; // 3 seconds @ 60fps
+        this.multiplier = Math.min(5, 1 + Math.floor(this.combo / 5));
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playExplosionSound) {
+          SoundManager.playExplosionSound();
+        }
+      }
+
+      /**
+       * Spawns a collectible powerup item.
+       * @param {number} x
+       * @param {number} y
+       */
+      spawnPowerup(x, y) {
+        const types = ['shield', 'triple', 'emp', 'overload'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        this.powerups.push({
+          x,
+          y,
+          radius: 12,
+          type
+        });
+      }
+
+      /**
+       * Collects and applies a powerup item.
+       * @param {Object} powerup
+       */
+      collectPowerup(powerup) {
+        if (powerup.type === 'shield') {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 40);
+        } else if (powerup.type === 'triple') {
+          this.player.tripleBeamActive = true;
+          this.player.tripleBeamTimer = 400;
+        } else if (powerup.type === 'emp') {
+          this.player.empCharges = Math.min(this.player.maxEmpCharges, this.player.empCharges + 1);
+        } else if (powerup.type === 'overload') {
+          this.activateLightningOverload(300);
+        }
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playPowerupSound) {
+          SoundManager.playPowerupSound();
+        }
+      }
+
+      /**
+       * Spawns visual particle effects.
+       * @param {number} x
+       * @param {number} y
+       * @param {string} color
+       * @param {number} count
+       */
+      spawnParticles(x, y, color, count = 10) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 4 + 1;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: Math.random() * 3 + 1,
+            color,
+            alpha: 1
+          });
+        }
+      }
+
+      /**
+       * Render game frame to canvas.
+       */
+      draw() {
+        if (!this.ctx) return;
+
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        // Draw Matrix Grid Background
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
+        ctx.lineWidth = 1;
+
+        for (let x = 0; x < this.width; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, this.height);
+          ctx.stroke();
+        }
+
+        for (let y = (this.gridOffset % 40); y < this.height; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(this.width, y);
+          ctx.stroke();
+        }
+
+        // Draw EMP Shockwaves
+        this.empPulses.forEach(pulse => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(pulse.x, pulse.y, pulse.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = '#ff007f';
+          ctx.lineWidth = 4;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#ff007f';
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Draw Particles
+        this.particles.forEach(p => {
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Powerups
+        this.powerups.forEach(p => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          if (p.type === 'shield') ctx.fillStyle = '#4ade80';
+          else if (p.type === 'triple') ctx.fillStyle = '#00f0ff';
+          else if (p.type === 'emp') ctx.fillStyle = '#ff007f';
+          else ctx.fillStyle = '#facc15';
+
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Player Bullets
+        this.bullets.forEach(b => {
+          ctx.save();
+          ctx.fillStyle = '#00f0ff';
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#00f0ff';
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Enemy Bullets
+        this.enemyBullets.forEach(eb => {
+          ctx.save();
+          ctx.fillStyle = eb.color || '#ff007f';
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.beginPath();
+          ctx.arc(eb.x, eb.y, eb.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Enemies
+        this.enemies.forEach(e => {
+          ctx.save();
+          ctx.fillStyle = e.color;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = e.color;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.fillStyle = '#ff007f';
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = '#ff007f';
+          ctx.beginPath();
+          ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Boss Health Bar
+          const barWidth = 200;
+          const healthRatio = this.boss.health / this.boss.maxHealth;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.fillRect(this.width / 2 - barWidth / 2, 20, barWidth, 10);
+          ctx.fillStyle = '#ff007f';
+          ctx.fillRect(this.width / 2 - barWidth / 2, 20, barWidth * healthRatio, 10);
+          ctx.restore();
+        }
+
+        // Draw Lightning Arcs
+        this.lightningArcs.forEach(arc => {
+          ctx.save();
+          ctx.strokeStyle = '#facc15';
+          ctx.lineWidth = 3;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#facc15';
+          ctx.beginPath();
+          ctx.moveTo(arc.x1, arc.y1);
+          ctx.lineTo(arc.x2, arc.y2);
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Draw Player Ship
+        if (!this.over) {
+          ctx.save();
+          ctx.fillStyle = this.player.overloadActive ? '#facc15' : '#00f0ff';
+          ctx.shadowBlur = this.player.overloadActive ? 20 : 12;
+          ctx.shadowColor = ctx.fillStyle;
+
+          ctx.beginPath();
+          ctx.moveTo(this.player.x, this.player.y - this.player.radius * 1.3);
+          ctx.lineTo(this.player.x - this.player.radius, this.player.y + this.player.radius);
+          ctx.lineTo(this.player.x + this.player.radius, this.player.y + this.player.radius);
+          ctx.closePath();
+          ctx.fill();
+
+          // Draw Kinetic Shield
+          if (this.player.shield > 0) {
+            ctx.beginPath();
+            ctx.arc(this.player.x, this.player.y, this.player.radius + 8, 0, Math.PI * 2);
+            ctx.strokeStyle = '#4ade80';
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#4ade80';
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+      }
+    }
+
+    // DOM Binding & Initialization
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        const engine = new CyberStormEngine(canvas);
+
+        const startOverlay = document.getElementById('startOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        const scoreVal = document.getElementById('scoreVal');
+        const highVal = document.getElementById('highVal');
+        const waveVal = document.getElementById('waveVal');
+        const healthVal = document.getElementById('healthVal');
+        const empVal = document.getElementById('empVal');
+        const multVal = document.getElementById('multVal');
+        const finalScoreText = document.getElementById('finalScoreText');
+
+        let isMuted = typeof getMuteState === 'function' ? getMuteState('cyberstorm') : false;
+        if (muteBtn) {
+          muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Mute';
+          if (typeof SoundManager !== 'undefined' && SoundManager.setMuted) {
+            SoundManager.setMuted(isMuted);
+          }
+        }
+
+        if (muteBtn) {
+          muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (typeof saveMuteState === 'function') saveMuteState('cyberstorm', isMuted);
+            if (typeof SoundManager !== 'undefined' && SoundManager.setMuted) SoundManager.setMuted(isMuted);
+            muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Mute';
+          });
+        }
+
+        if (pauseBtn) {
+          pauseBtn.addEventListener('click', () => {
+            engine.togglePause();
+            pauseBtn.textContent = engine.paused ? '▶️ Resume' : '⏸️ Pause';
+          });
+        }
+
+        if (startBtn) {
+          startBtn.addEventListener('click', () => {
+            startOverlay.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        if (restartBtn) {
+          restartBtn.addEventListener('click', () => {
+            gameOverOverlay.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+          keys[e.code] = true;
+          if (e.code === 'KeyP') {
+            engine.togglePause();
+            if (pauseBtn) pauseBtn.textContent = engine.paused ? '▶️ Resume' : '⏸️ Pause';
+          }
+          if (e.code === 'ShiftLeft' || e.code === 'KeyE') {
+            engine.triggerEmpPulse();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          keys[e.code] = false;
+        });
+
+        // Game Loop
+        function gameLoop() {
+          if (engine.started && !engine.paused && !engine.over) {
+            let dx = 0, dy = 0;
+            if (keys['ArrowLeft'] || keys['KeyA']) dx -= 1;
+            if (keys['ArrowRight'] || keys['KeyD']) dx += 1;
+            if (keys['ArrowUp'] || keys['KeyW']) dy -= 1;
+            if (keys['ArrowDown'] || keys['KeyS']) dy += 1;
+
+            engine.movePlayer(dx, dy);
+
+            if (keys['Space'] || (typeof KeyManager !== 'undefined' && KeyManager.isKey({ code: 'Space' }, 'action'))) {
+              engine.fireBullet();
+            }
+
+            engine.update(1);
+
+            // Update HUD
+            if (scoreVal) scoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.score) : engine.score;
+            if (highVal) highVal.textContent = typeof formatScore === 'function' ? formatScore(engine.highScore) : engine.highScore;
+            if (waveVal) waveVal.textContent = engine.wave;
+            if (healthVal) healthVal.textContent = `${Math.max(0, Math.round(engine.player.health))}%`;
+            if (empVal) empVal.textContent = engine.player.empCharges;
+            if (multVal) multVal.textContent = `x${engine.multiplier}`;
+
+            if (engine.over) {
+              gameOverOverlay.classList.remove('hidden');
+              if (finalScoreText) {
+                finalScoreText.textContent = `Final Score: ${typeof formatScore === 'function' ? formatScore(engine.score) : engine.score}`;
+              }
+            }
+          }
+
+          engine.draw();
+          requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+      });
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberStormEngine };
+    }
+  </script>
+</body>
+</html>

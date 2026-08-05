@@ -56,3 +56,15 @@ def test_index_links_to_cybercircuit():
     assert 'href="cybercircuit.html"' in content or "href='cybercircuit.html'" in content, (
         "index.html must contain a link to cybercircuit.html"
     )
+
+def test_cybercircuit_new_abilities():
+    """Verify cybercircuit.html contains Phase Dash, Shield, and Overdrive methods."""
+    repo_root = get_repo_root()
+    path = os.path.join(repo_root, "cybercircuit.html")
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "triggerDash()" in content, "cybercircuit.html must include triggerDash method"
+    assert "activateShield(" in content, "cybercircuit.html must include activateShield method"
+    assert "triggerOverdrive(" in content, "cybercircuit.html must include triggerOverdrive method"
+

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cyber Circuit - Arcade Hub</title>
-  <meta name="description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game. Connect data channels, slice malware viruses, deploy EMP pulses, and defeat AI Core Overlords." />
-  <link rel="canonical" href="https://arcadehub.telekit.link/cybercircuit.html" />
+  <title>Cyber Nexus - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Nexus - High-voltage orbital quantum grid defender & firewall breach arcade shooter. Defend the central Nexus Core matrix, deploy EMP shockwaves, and purge Omega Dreadnought Bosses." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybernexus.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Arcade Hub" />
-  <meta property="og:title" content="Cyber Circuit - Arcade Hub" />
-  <meta property="og:description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game." />
-  <meta property="og:url" content="https://arcadehub.telekit.link/cybercircuit.html" />
+  <meta property="og:title" content="Cyber Nexus - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Nexus - High-voltage orbital quantum grid defender & firewall breach arcade shooter." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybernexus.html" />
   <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Cyber Circuit - Arcade Hub" />
-  <meta name="twitter:description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game." />
+  <meta name="twitter:title" content="Cyber Nexus - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Nexus - High-voltage orbital quantum grid defender & firewall breach arcade shooter." />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "VideoGame",
-    "name": "Cyber Circuit",
-    "url": "https://arcadehub.telekit.link/cybercircuit.html",
-    "description": "High-voltage matrix pulse routing & node overload arcade game.",
+    "name": "Cyber Nexus",
+    "url": "https://arcadehub.telekit.link/cybernexus.html",
+    "description": "High-voltage orbital quantum grid defender & firewall breach arcade shooter.",
     "gamePlatform": "Web Browser",
     "applicationCategory": "Game",
     "genre": "Arcade",
@@ -41,17 +41,17 @@
   <script src="leaderboard.js"></script>
   <style>
     :root {
-      --bg: #090d16;
-      --board-bg: #050811;
+      --bg: #070a14;
+      --board-bg: #040710;
       --accent-neon: #00f0ff;
       --accent-pink: #ff007f;
-      --accent-green: #4ade80;
-      --accent-purple: #a855f7;
-      --accent-yellow: #facc15;
+      --accent-green: #38ef7d;
+      --accent-purple: #9d4edd;
+      --accent-yellow: #ffd166;
       --text: #e8eaed;
       --text-dim: #9aa0a6;
-      --border: rgba(0, 240, 255, 0.25);
-      --circuit-glow: rgba(0, 240, 255, 0.4);
+      --border: rgba(0, 240, 255, 0.3);
+      --nexus-glow: rgba(157, 78, 221, 0.5);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -75,7 +75,7 @@
       align-items: center;
       margin-bottom: 1rem;
       padding: 0.75rem 1.25rem;
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.7);
       border: 1px solid var(--border);
       border-radius: 12px;
       backdrop-filter: blur(8px);
@@ -92,7 +92,7 @@
       font-weight: 700;
       letter-spacing: 1px;
       color: var(--accent-neon);
-      text-shadow: 0 0 10px var(--circuit-glow);
+      text-shadow: 0 0 10px var(--nexus-glow);
     }
 
     .nav-btn {
@@ -129,7 +129,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 0.5rem;
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 0.6rem 1rem;
@@ -160,7 +160,7 @@
       background: var(--board-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 30px rgba(157, 78, 221, 0.2);
       max-width: 100%;
       height: auto;
       touch-action: none;
@@ -179,8 +179,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(9, 13, 22, 0.85);
-      backdrop-filter: blur(6px);
+      background: rgba(7, 10, 20, 0.88);
+      backdrop-filter: blur(8px);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
@@ -193,9 +193,9 @@
     .overlay.hidden { display: none; }
 
     .overlay h2 {
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       color: var(--accent-neon);
-      text-shadow: 0 0 15px var(--accent-neon);
+      text-shadow: 0 0 18px var(--accent-purple);
     }
 
     .overlay p {
@@ -207,7 +207,7 @@
     }
 
     .btn-action {
-      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
       color: #000;
       border: none;
       padding: 0.75rem 2rem;
@@ -220,7 +220,7 @@
 
     .btn-action:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+      box-shadow: 0 0 22px rgba(157, 78, 221, 0.7);
     }
   </style>
 </head>
@@ -228,7 +228,7 @@
   <header>
     <div class="header-title">
       <a href="index.html" class="nav-btn">&larr; Portal</a>
-      <h1>⚡ CYBER CIRCUIT</h1>
+      <h1>🔮 CYBER NEXUS</h1>
     </div>
     <div style="display: flex; gap: 0.5rem;">
       <button id="muteBtn" class="nav-btn" aria-label="Toggle Sound">🔊 Sound</button>
@@ -264,47 +264,28 @@
       <canvas id="gameCanvas" width="800" height="500"></canvas>
 
       <div id="startOverlay" class="overlay">
-        <h2>CYBER CIRCUIT</h2>
-        <p>Route quantum pulse energy through node channels. Slice malware viruses, collect energy cores, and deploy EMP shockwaves to purge AI Core Overlords!</p>
-        <button id="startBtn" class="btn-action">INITIALIZE CIRCUIT</button>
+        <h2>CYBER NEXUS</h2>
+        <p>Orbit the central Nexus Core matrix, shoot plasma laser salvos at invading virus swarms, collect quantum data shards, and release EMP shockwaves to purge Omega Dreadnought Bosses!</p>
+        <button id="startBtn" class="btn-action">ACTIVATE NEXUS</button>
       </div>
 
       <div id="gameOverOverlay" class="overlay hidden">
-        <h2 style="color: var(--accent-pink); text-shadow: 0 0 15px var(--accent-pink);">CIRCUIT OVERLOAD</h2>
+        <h2 style="color: var(--accent-pink); text-shadow: 0 0 15px var(--accent-pink);">NEXUS BREACHED</h2>
         <p id="finalScoreText">Final Score: 0</p>
         <button id="restartBtn" class="btn-action">REBOOT SYSTEM</button>
       </div>
     </div>
 
     <div class="controls-hint">
-      Controls: <strong>Arrow Keys / WASD</strong> to steer Quantum Pulse &bull; <strong>SPACE</strong> to Trigger EMP Shockwave &bull; <strong>P</strong> to Pause
+      Controls: <strong>WASD / Arrow Keys</strong> to Move Quantum Sentinel &bull; <strong>CLICK / SPACE</strong> to Fire Plasma Salvo &bull; <strong>SHIFT / E</strong> to Deploy EMP Blast &bull; <strong>P</strong> to Pause
     </div>
   </div>
 
   <script>
     /**
-     * @typedef {Object} PulseState
-     * @property {number} x - X position
-     * @property {number} y - Y position
-     * @property {number} vx - Velocity X
-     * @property {number} vy - Velocity Y
-     * @property {number} radius - Pulse radius
-     * @property {number} speed - Pulse speed
+     * CyberNexusEngine - Core game loop and state machine for Cyber Nexus.
      */
-
-    /**
-     * @typedef {Object} CircuitNode
-     * @property {number} x - Node X
-     * @property {number} y - Node Y
-     * @property {number} type - Node type (0: normal, 1: energy, 2: emp, 3: overloaded)
-     * @property {boolean} active - Active state
-     * @property {number} rotation - Node orientation angle
-     */
-
-    /**
-     * CyberCircuitEngine - Core game loop and state machine for Cyber Circuit.
-     */
-    class CyberCircuitEngine {
+    class CyberNexusEngine {
       /**
        * @param {HTMLCanvasElement|null} canvas 
        * @param {Object} [options={}] 
@@ -327,44 +308,43 @@
 
         this.shieldActive = false;
         this.shieldTimer = 0;
-        this.dashActive = false;
-        this.dashTimer = 0;
         this.overdriveActive = false;
         this.overdriveTimer = 0;
-        this.surgeMeter = 0;
 
-        /** @type {PulseState} */
-        this.pulse = {
+        // Player Sentinel State
+        this.player = {
           x: this.width / 2,
-          y: this.height / 2,
+          y: this.height / 2 + 120,
           vx: 0,
           vy: 0,
-          radius: 10,
-          speed: 250
+          radius: 12,
+          speed: 280,
+          angle: 0,
+          fireCooldown: 0
         };
 
-        /** @type {Array<CircuitNode>} */
-        this.nodes = [];
+        // Core Matrix in center
+        this.core = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 35,
+          hp: 100,
+          maxHp: 100,
+          pulseAngle: 0
+        };
 
-        /** @type {Array<Object>} */
-        this.viruses = [];
-
-        /** @type {Array<Object>} */
+        this.bullets = [];
+        this.enemies = [];
         this.empShockwaves = [];
-
-        /** @type {Array<Object>} */
         this.particles = [];
-
-        /** @type {Object|null} */
+        this.shards = [];
         this.boss = null;
 
-        this.nodeSpawnTimer = 0;
-        this.virusSpawnTimer = 0;
-
+        this.enemySpawnTimer = 0;
         this.audio = typeof AudioSystem !== 'undefined' ? AudioSystem : null;
 
         if (typeof getBestScore === 'function') {
-          this.bestScore = getBestScore('cybercircuit') || 0;
+          this.bestScore = getBestScore('cybernexus') || 0;
         } else {
           this.bestScore = 0;
         }
@@ -385,27 +365,29 @@
 
           if (this.paused) return;
 
-          if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-            this.pulse.vx = -this.pulse.speed;
-            this.pulse.vy = 0;
-          } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-            this.pulse.vx = this.pulse.speed;
-            this.pulse.vy = 0;
-          } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
-            this.pulse.vy = -this.pulse.speed;
-            this.pulse.vx = 0;
-          } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
-            this.pulse.vy = this.pulse.speed;
-            this.pulse.vx = 0;
-          } else if (e.key === ' ' || e.code === 'Space') {
+          if (e.key === ' ' || e.code === 'Space') {
+            this.shoot();
+          } else if (e.key === 'Shift' || e.key === 'e' || e.key === 'E') {
             this.triggerEmp();
           }
         });
+
+        if (this.canvas) {
+          this.canvas.addEventListener('mousemove', (e) => {
+            if (!this.started || this.paused || this.over) return;
+            const rect = this.canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (this.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (this.height / rect.height);
+            this.player.angle = Math.atan2(mouseY - this.player.y, mouseX - this.player.x);
+          });
+
+          this.canvas.addEventListener('mousedown', () => {
+            if (!this.started || this.paused || this.over) return;
+            this.shoot();
+          });
+        }
       }
 
-      /**
-       * Start new game.
-       */
       start() {
         this.started = true;
         this.paused = false;
@@ -418,42 +400,32 @@
 
         this.shieldActive = false;
         this.shieldTimer = 0;
-        this.dashActive = false;
-        this.dashTimer = 0;
         this.overdriveActive = false;
         this.overdriveTimer = 0;
-        this.surgeMeter = 0;
 
-        this.pulse.x = this.width / 2;
-        this.pulse.y = this.height / 2;
-        this.pulse.vx = 0;
-        this.pulse.vy = 0;
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2 + 120;
+        this.player.vx = 0;
+        this.player.vy = 0;
 
-        this.nodes = [];
-        this.viruses = [];
+        this.core.hp = 100;
+        this.bullets = [];
+        this.enemies = [];
         this.empShockwaves = [];
         this.particles = [];
+        this.shards = [];
         this.boss = null;
 
-        this.spawnNodes(10);
-        this.spawnViruses(3);
+        this.spawnEnemies(4);
 
         if (this.audio && typeof this.audio.playSound === 'function') {
           try { this.audio.playSound('start'); } catch(e) {}
         }
       }
 
-      pause() {
-        this.paused = true;
-      }
-
-      resume() {
-        this.paused = false;
-      }
-
-      togglePause() {
-        this.paused = !this.paused;
-      }
+      pause() { this.paused = true; }
+      resume() { this.paused = false; }
+      togglePause() { this.paused = !this.paused; }
 
       reset() {
         this.started = false;
@@ -461,16 +433,11 @@
         this.over = false;
         this.score = 0;
         this.multiplier = 1;
-        this.shieldActive = false;
-        this.shieldTimer = 0;
-        this.dashActive = false;
-        this.dashTimer = 0;
-        this.overdriveActive = false;
-        this.overdriveTimer = 0;
-        this.nodes = [];
-        this.viruses = [];
+        this.bullets = [];
+        this.enemies = [];
         this.empShockwaves = [];
         this.particles = [];
+        this.shards = [];
         this.boss = null;
       }
 
@@ -479,7 +446,7 @@
         if (this.score > this.bestScore) {
           this.bestScore = this.score;
           if (typeof saveBestScore === 'function') {
-            saveBestScore('cybercircuit', this.bestScore);
+            saveBestScore('cybernexus', this.bestScore);
           }
         }
       }
@@ -489,29 +456,48 @@
         this.setScore(this.score + added);
       }
 
+      movePlayer(dirX, dirY) {
+        this.player.vx = dirX * this.player.speed;
+        this.player.vy = dirY * this.player.speed;
+      }
+
+      shoot() {
+        if (this.player.fireCooldown > 0) return false;
+
+        const speed = 500;
+        const angle = this.player.angle;
+        this.bullets.push({
+          x: this.player.x + Math.cos(angle) * 15,
+          y: this.player.y + Math.sin(angle) * 15,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: 4,
+          life: 1.5
+        });
+
+        this.player.fireCooldown = this.overdriveActive ? 0.08 : 0.15;
+
+        if (this.audio && typeof this.audio.playSound === 'function') {
+          try { this.audio.playSound('laser'); } catch(e) {}
+        }
+        return true;
+      }
+
       triggerEmp() {
         if (this.empCharge < 100) return false;
 
         this.empCharge = 0;
         this.empShockwaves.push({
-          x: this.pulse.x,
-          y: this.pulse.y,
+          x: this.player.x,
+          y: this.player.y,
           radius: 10,
-          maxRadius: 250,
-          speed: 400
+          maxRadius: 280,
+          speed: 450
         });
 
         if (this.audio && typeof this.audio.playSound === 'function') {
           try { this.audio.playSound('emp'); } catch(e) {}
         }
-        return true;
-      }
-
-      triggerDash() {
-        if (this.dashActive) return false;
-        this.dashActive = true;
-        this.dashTimer = 24; // ~0.4 sec at 60fps
-        this.createExplosion(this.pulse.x, this.pulse.y, '#00f0ff', 12);
         return true;
       }
 
@@ -528,30 +514,17 @@
         return true;
       }
 
-      spawnNodes(count) {
-        for (let i = 0; i < count; i++) {
-          this.nodes.push({
-            x: 40 + Math.random() * (this.width - 80),
-            y: 40 + Math.random() * (this.height - 80),
-            type: Math.random() < 0.25 ? 1 : 0, // 1: energy node, 0: regular node
-            radius: 15,
-            active: true,
-            pulseTimer: Math.random() * Math.PI * 2
-          });
-        }
-      }
-
-      spawnViruses(count) {
+      spawnEnemies(count) {
         for (let i = 0; i < count; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const dist = 150 + Math.random() * 200;
-          this.viruses.push({
-            x: clamp(this.pulse.x + Math.cos(angle) * dist, 30, this.width - 30),
-            y: clamp(this.pulse.y + Math.sin(angle) * dist, 30, this.height - 30),
-            vx: (Math.random() - 0.5) * 120,
-            vy: (Math.random() - 0.5) * 120,
+          const dist = 300 + Math.random() * 100;
+          this.enemies.push({
+            x: this.core.x + Math.cos(angle) * dist,
+            y: this.core.y + Math.sin(angle) * dist,
             radius: 12,
-            hp: 1
+            hp: 2,
+            speed: 60 + Math.random() * 40,
+            type: Math.random() < 0.2 ? 'fast' : 'standard'
           });
         }
       }
@@ -559,40 +532,24 @@
       spawnBoss() {
         this.boss = {
           x: this.width / 2,
-          y: 80,
-          vx: 150,
+          y: 70,
+          vx: 120,
           vy: 0,
-          radius: 35,
-          hp: 20,
-          maxHp: 20,
-          attackTimer: 0
+          radius: 40,
+          hp: 30,
+          maxHp: 30,
+          shootTimer: 0
         };
       }
 
-      /**
-       * Core update loop.
-       * @param {number} deltaSeconds 
-       */
       update(deltaSeconds) {
         if (!this.started || this.paused || this.over) return;
 
         const validDelta = Number.isFinite(deltaSeconds) && deltaSeconds > 0 ? deltaSeconds : 0.016;
         const dt = Math.min(validDelta, 0.05);
 
-        // Sanitize pulse positions
-        if (!Number.isFinite(this.pulse.x)) this.pulse.x = this.width / 2;
-        if (!Number.isFinite(this.pulse.y)) this.pulse.y = this.height / 2;
-        if (!Number.isFinite(this.pulse.vx)) this.pulse.vx = 0;
-        if (!Number.isFinite(this.pulse.vy)) this.pulse.vy = 0;
-
         // Timers
-        if (this.dashActive) {
-          this.dashTimer -= dt * 60;
-          if (this.dashTimer <= 0) {
-            this.dashActive = false;
-            this.dashTimer = 0;
-          }
-        }
+        if (this.player.fireCooldown > 0) this.player.fireCooldown -= dt;
 
         if (this.shieldActive) {
           this.shieldTimer -= dt * 60;
@@ -610,27 +567,60 @@
           }
         }
 
-        // Speed multiplier during dash or overdrive
-        const speedMult = (this.dashActive ? 1.8 : 1.0) * (this.overdriveActive ? 1.3 : 1.0);
+        // Move Player
+        this.player.x += this.player.vx * dt;
+        this.player.y += this.player.vy * dt;
 
-        // Move Pulse
-        this.pulse.x += this.pulse.vx * speedMult * dt;
-        this.pulse.y += this.pulse.vy * speedMult * dt;
+        // Clamp player
+        this.player.x = clamp(this.player.x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y, this.player.radius, this.height - this.player.radius);
 
-        // Clamp pulse within bounds
-        const minX = this.pulse.radius;
-        const maxX = this.width - this.pulse.radius;
-        const minY = this.pulse.radius;
-        const maxY = this.height - this.pulse.radius;
-
-        if (this.pulse.x < minX) { this.pulse.x = minX; this.pulse.vx = 0; }
-        if (this.pulse.x > maxX) { this.pulse.x = maxX; this.pulse.vx = 0; }
-        if (this.pulse.y < minY) { this.pulse.y = minY; this.pulse.vy = 0; }
-        if (this.pulse.y > maxY) { this.pulse.y = maxY; this.pulse.vy = 0; }
-
-        // Recharge EMP slowly over time
+        // Recharge EMP
         if (this.empCharge < 100) {
-          this.empCharge = Math.min(100, this.empCharge + 10 * dt);
+          this.empCharge = Math.min(100, this.empCharge + 12 * dt);
+        }
+
+        // Update Bullets
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const b = this.bullets[i];
+          b.x += b.vx * dt;
+          b.y += b.vy * dt;
+          b.life -= dt;
+
+          if (b.life <= 0 || b.x < 0 || b.x > this.width || b.y < 0 || b.y > this.height) {
+            this.bullets.splice(i, 1);
+            continue;
+          }
+
+          // Bullet vs Enemy
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const dist = Math.hypot(b.x - e.x, b.y - e.y);
+            if (dist <= b.radius + e.radius) {
+              e.hp -= 1;
+              this.bullets.splice(i, 1);
+              if (e.hp <= 0) {
+                this.addScore(150);
+                this.multiplier = Math.min(8, this.multiplier + 1);
+                this.createExplosion(e.x, e.y, '#ff007f');
+                // Spawn data shard
+                if (Math.random() < 0.4) {
+                  this.shards.push({ x: e.x, y: e.y, radius: 6, life: 6 });
+                }
+                this.enemies.splice(j, 1);
+              }
+              break;
+            }
+          }
+
+          // Bullet vs Boss
+          if (this.boss && b) {
+            const dist = Math.hypot(b.x - this.boss.x, b.y - this.boss.y);
+            if (dist <= b.radius + this.boss.radius) {
+              this.boss.hp -= 1;
+              this.bullets.splice(i, 1);
+            }
+          }
         }
 
         // Update EMP Shockwaves
@@ -638,22 +628,20 @@
           const wave = this.empShockwaves[i];
           wave.radius += wave.speed * dt;
 
-          // Destroy viruses hit by wave
-          for (let j = this.viruses.length - 1; j >= 0; j--) {
-            const v = this.viruses[j];
-            const dist = Math.hypot(v.x - wave.x, v.y - wave.y);
-            if (dist <= wave.radius + v.radius) {
-              this.addScore(100);
-              this.createExplosion(v.x, v.y, '#ff007f');
-              this.viruses.splice(j, 1);
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const dist = Math.hypot(e.x - wave.x, e.y - wave.y);
+            if (dist <= wave.radius + e.radius) {
+              this.addScore(200);
+              this.createExplosion(e.x, e.y, '#ff007f');
+              this.enemies.splice(j, 1);
             }
           }
 
-          // Damage boss if present
           if (this.boss) {
             const dist = Math.hypot(this.boss.x - wave.x, this.boss.y - wave.y);
             if (dist <= wave.radius + this.boss.radius) {
-              this.boss.hp -= 2 * dt;
+              this.boss.hp -= 3 * dt;
             }
           }
 
@@ -662,67 +650,58 @@
           }
         }
 
-        // Pulse vs Nodes collision
-        for (let i = this.nodes.length - 1; i >= 0; i--) {
-          const node = this.nodes[i];
-          const dist = Math.hypot(this.pulse.x - node.x, this.pulse.y - node.y);
-          if (dist <= this.pulse.radius + node.radius) {
-            // Collected node
-            const pts = node.type === 1 ? 250 : 100;
-            this.addScore(pts);
-            this.multiplier = Math.min(8, this.multiplier + 1);
-            this.empCharge = Math.min(100, this.empCharge + 20);
-
-            if (node.type === 1) {
-              this.surgeMeter += 25;
-              if (this.surgeMeter >= 100) {
-                this.surgeMeter = 0;
-                this.triggerOverdrive(450);
-              }
-            }
-
-            this.createExplosion(node.x, node.y, node.type === 1 ? '#4ade80' : '#00f0ff');
-            this.nodes.splice(i, 1);
-
-            if (this.audio && typeof this.audio.playSound === 'function') {
-              try { this.audio.playSound('score'); } catch(e) {}
-            }
+        // Update Shards
+        for (let i = this.shards.length - 1; i >= 0; i--) {
+          const s = this.shards[i];
+          s.life -= dt;
+          const dist = Math.hypot(this.player.x - s.x, this.player.y - s.y);
+          if (dist <= this.player.radius + s.radius) {
+            this.addScore(300);
+            this.triggerOverdrive(200);
+            this.createExplosion(s.x, s.y, '#ffd166');
+            this.shards.splice(i, 1);
+            continue;
           }
+          if (s.life <= 0) this.shards.splice(i, 1);
         }
 
-        // Spawn new nodes if low
-        if (this.nodes.length < 5) {
-          this.spawnNodes(3);
-        }
+        // Update Enemies heading towards Core
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angle = Math.atan2(this.core.y - e.y, this.core.x - e.x);
+          e.x += Math.cos(angle) * e.speed * dt;
+          e.y += Math.sin(angle) * e.speed * dt;
 
-        // Update Viruses
-        for (let i = this.viruses.length - 1; i >= 0; i--) {
-          const v = this.viruses[i];
-          v.x += v.vx * dt;
-          v.y += v.vy * dt;
+          // Enemy vs Core
+          const distCore = Math.hypot(e.x - this.core.x, e.y - this.core.y);
+          if (distCore <= e.radius + this.core.radius) {
+            this.core.hp -= 5;
+            this.createExplosion(e.x, e.y, '#ff007f');
+            this.enemies.splice(i, 1);
+            if (this.core.hp <= 0) {
+              this.gameOver();
+            }
+            continue;
+          }
 
-          // Bounce off walls
-          if (v.x <= v.radius || v.x >= this.width - v.radius) v.vx *= -1;
-          if (v.y <= v.radius || v.y >= this.height - v.radius) v.vy *= -1;
-
-          // Check collision with pulse
-          const dist = Math.hypot(this.pulse.x - v.x, this.pulse.y - v.y);
-          if (dist <= this.pulse.radius + v.radius) {
+          // Enemy vs Player
+          const distPlayer = Math.hypot(e.x - this.player.x, e.y - this.player.y);
+          if (distPlayer <= e.radius + this.player.radius) {
             this.takeDamage();
-            this.createExplosion(v.x, v.y, '#ff007f');
-            this.viruses.splice(i, 1);
+            this.createExplosion(e.x, e.y, '#ff007f');
+            this.enemies.splice(i, 1);
           }
         }
 
-        // Spawn viruses periodically
-        this.virusSpawnTimer += dt;
-        if (this.virusSpawnTimer > 4 && this.viruses.length < 8 + this.level * 2) {
-          this.virusSpawnTimer = 0;
-          this.spawnViruses(1 + Math.floor(this.level / 2));
+        // Spawn Enemies
+        this.enemySpawnTimer += dt;
+        if (this.enemySpawnTimer > 3.5 && this.enemies.length < 10 + this.level * 2) {
+          this.enemySpawnTimer = 0;
+          this.spawnEnemies(2 + Math.floor(this.level / 2));
         }
 
-        // Boss Logic
-        if (this.level % 5 === 0 && !this.boss) {
+        // Boss logic
+        if (this.level % 4 === 0 && !this.boss) {
           this.spawnBoss();
         }
 
@@ -733,15 +712,15 @@
           }
 
           if (this.boss.hp <= 0) {
-            this.addScore(5000);
-            this.createExplosion(this.boss.x, this.boss.y, '#facc15', 30);
+            this.addScore(6000);
+            this.createExplosion(this.boss.x, this.boss.y, '#ffd166', 35);
             this.boss = null;
             this.level += 1;
           }
         }
 
         // Level Up check
-        if (this.score >= this.level * 1500 && !this.boss) {
+        if (this.score >= this.level * 2000 && !this.boss) {
           this.level += 1;
           if (this.audio && typeof this.audio.playSound === 'function') {
             try { this.audio.playSound('levelUp'); } catch(e) {}
@@ -754,23 +733,15 @@
           p.x += p.vx * dt;
           p.y += p.vy * dt;
           p.life -= dt;
-          if (p.life <= 0) {
-            this.particles.splice(i, 1);
-          }
+          if (p.life <= 0) this.particles.splice(i, 1);
         }
       }
 
       takeDamage() {
-        if (this.dashActive) {
-          // Invulnerable during phase dash!
-          return;
-        }
-
         if (this.shieldActive) {
-          // Shield absorbs damage!
           this.shieldActive = false;
           this.shieldTimer = 0;
-          this.createExplosion(this.pulse.x, this.pulse.y, '#00f0ff', 15);
+          this.createExplosion(this.player.x, this.player.y, '#00f0ff', 15);
           return;
         }
 
@@ -788,7 +759,7 @@
         this.over = true;
         this.started = false;
         if (typeof saveBestScore === 'function') {
-          saveBestScore('cybercircuit', this.bestScore);
+          saveBestScore('cybernexus', this.bestScore);
         }
         if (this.audio && typeof this.audio.playSound === 'function') {
           try { this.audio.playSound('gameOver'); } catch(e) {}
@@ -798,7 +769,7 @@
       createExplosion(x, y, color, count = 10) {
         for (let i = 0; i < count; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const speed = 50 + Math.random() * 150;
+          const speed = 60 + Math.random() * 160;
           this.particles.push({
             x,
             y,
@@ -814,34 +785,74 @@
         if (!this.ctx) return;
 
         // Clear canvas
-        this.ctx.fillStyle = '#050811';
+        this.ctx.fillStyle = '#040710';
         this.ctx.fillRect(0, 0, this.width, this.height);
 
-        // Draw Circuit Grid background lines
-        this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
-        this.ctx.lineWidth = 1;
-        const gridSize = 40;
-        for (let x = 0; x < this.width; x += gridSize) {
-          this.ctx.beginPath();
-          this.ctx.moveTo(x, 0);
-          this.ctx.lineTo(x, this.height);
-          this.ctx.stroke();
-        }
-        for (let y = 0; y < this.height; y += gridSize) {
-          this.ctx.beginPath();
-          this.ctx.moveTo(0, y);
-          this.ctx.lineTo(this.width, y);
-          this.ctx.stroke();
-        }
+        // Core Matrix Rings
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(this.core.x, this.core.y, this.core.radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = '#9d4edd';
+        this.ctx.shadowColor = '#9d4edd';
+        this.ctx.shadowBlur = 25;
+        this.ctx.fill();
+        this.ctx.restore();
 
-        // Draw Nodes
-        this.nodes.forEach(node => {
+        // Draw Player Sentinel
+        if (this.started && !this.over) {
           this.ctx.save();
           this.ctx.beginPath();
-          this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-          this.ctx.fillStyle = node.type === 1 ? '#4ade80' : '#00f0ff';
-          this.ctx.shadowColor = node.type === 1 ? '#4ade80' : '#00f0ff';
+          this.ctx.arc(this.player.x, this.player.y, this.player.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = this.shieldActive ? '#00f0ff' : '#38ef7d';
+          this.ctx.shadowColor = this.shieldActive ? '#00f0ff' : '#38ef7d';
+          this.ctx.shadowBlur = 15;
+          this.ctx.fill();
+
+          // Barrel indicator
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.player.x, this.player.y);
+          this.ctx.lineTo(
+            this.player.x + Math.cos(this.player.angle) * 20,
+            this.player.y + Math.sin(this.player.angle) * 20
+          );
+          this.ctx.strokeStyle = '#ffffff';
+          this.ctx.lineWidth = 3;
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+
+        // Draw Bullets
+        this.bullets.forEach(b => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#00f0ff';
+          this.ctx.shadowColor = '#00f0ff';
           this.ctx.shadowBlur = 10;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Enemies
+        this.enemies.forEach(e => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#ff007f';
+          this.ctx.shadowColor = '#ff007f';
+          this.ctx.shadowBlur = 12;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Shards
+        this.shards.forEach(s => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#ffd166';
+          this.ctx.shadowColor = '#ffd166';
+          this.ctx.shadowBlur = 14;
           this.ctx.fill();
           this.ctx.restore();
         });
@@ -851,23 +862,11 @@
           this.ctx.save();
           this.ctx.beginPath();
           this.ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
-          this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.7)';
+          this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.8)';
           this.ctx.lineWidth = 4;
           this.ctx.shadowColor = '#00f0ff';
-          this.ctx.shadowBlur = 15;
+          this.ctx.shadowBlur = 18;
           this.ctx.stroke();
-          this.ctx.restore();
-        });
-
-        // Draw Viruses
-        this.viruses.forEach(v => {
-          this.ctx.save();
-          this.ctx.beginPath();
-          this.ctx.arc(v.x, v.y, v.radius, 0, Math.PI * 2);
-          this.ctx.fillStyle = '#ff007f';
-          this.ctx.shadowColor = '#ff007f';
-          this.ctx.shadowBlur = 12;
-          this.ctx.fill();
           this.ctx.restore();
         });
 
@@ -876,18 +875,17 @@
           this.ctx.save();
           this.ctx.beginPath();
           this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
-          this.ctx.fillStyle = '#facc15';
-          this.ctx.shadowColor = '#facc15';
-          this.ctx.shadowBlur = 20;
+          this.ctx.fillStyle = '#ffd166';
+          this.ctx.shadowColor = '#ffd166';
+          this.ctx.shadowBlur = 22;
           this.ctx.fill();
 
-          // Health bar
-          const barW = 100;
+          const barW = 120;
           const barH = 8;
           const pct = Math.max(0, this.boss.hp / this.boss.maxHp);
           this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
           this.ctx.fillRect(this.boss.x - barW / 2, this.boss.y - this.boss.radius - 15, barW, barH);
-          this.ctx.fillStyle = '#facc15';
+          this.ctx.fillStyle = '#ffd166';
           this.ctx.fillRect(this.boss.x - barW / 2, this.boss.y - this.boss.radius - 15, barW * pct, barH);
           this.ctx.restore();
         }
@@ -901,31 +899,19 @@
           this.ctx.fill();
           this.ctx.restore();
         });
-
-        // Draw Quantum Pulse (Player)
-        if (this.started && !this.over) {
-          this.ctx.save();
-          this.ctx.beginPath();
-          this.ctx.arc(this.pulse.x, this.pulse.y, this.pulse.radius, 0, Math.PI * 2);
-          this.ctx.fillStyle = '#00f0ff';
-          this.ctx.shadowColor = '#00f0ff';
-          this.ctx.shadowBlur = 15;
-          this.ctx.fill();
-          this.ctx.restore();
-        }
       }
     }
 
     // Export for Node unit testing environments
     if (typeof module !== 'undefined' && module.exports) {
-      module.exports = { CyberCircuitEngine };
+      module.exports = { CyberNexusEngine };
     }
 
     // DOM Glue for browser runtime
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       window.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('gameCanvas');
-        const engine = new CyberCircuitEngine(canvas);
+        const engine = new CyberNexusEngine(canvas);
 
         const startOverlay = document.getElementById('startOverlay');
         const gameOverOverlay = document.getElementById('gameOverOverlay');
@@ -974,10 +960,30 @@
           }
         });
 
+        // Key states for smooth movement
+        const keys = {};
+        window.addEventListener('keydown', (e) => { keys[e.key] = true; });
+        window.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
         let lastTime = performance.now();
         function loop(now) {
           const dt = (now - lastTime) / 1000;
           lastTime = now;
+
+          if (engine.started && !engine.paused && !engine.over) {
+            let dx = 0;
+            let dy = 0;
+            if (keys['ArrowLeft'] || keys['a'] || keys['A']) dx -= 1;
+            if (keys['ArrowRight'] || keys['d'] || keys['D']) dx += 1;
+            if (keys['ArrowUp'] || keys['w'] || keys['W']) dy -= 1;
+            if (keys['ArrowDown'] || keys['s'] || keys['S']) dy += 1;
+
+            if (dx !== 0 && dy !== 0) {
+              dx *= 0.7071;
+              dy *= 0.7071;
+            }
+            engine.movePlayer(dx, dy);
+          }
 
           engine.update(dt);
           engine.render();
