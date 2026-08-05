@@ -32,6 +32,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🛡️ **[Cyber Defense](https://arcadehub.telekit.link/cyberdefense.html)** — Tactical matrix firewall defense shooter.
 - 🥷 **[Cyber Phantom](https://arcadehub.telekit.link/cyberphantom.html)** — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter with shadow decoys and Phase Overlord Bosses.
 - 🌀 **[Cyber Echo](https://arcadehub.telekit.link/cyberecho.html)** — High-octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter with temporal ghost clones and Chrono-Overlord Bosses.
+- 🌀 **[Cyber Warp](https://arcadehub.telekit.link/cyberwarp.html)** — High-octane 360° Quantum Warp-Grid & Event-Horizon Arena Defender with phase rifts, EMP novas, and Warp Titan Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -119,6 +120,7 @@ All game HTML files available in this repository:
 | [cyberaegis.html](cyberaegis.html) | Cyber Aegis — 360° orbital kinetic shield & plasma pulse arena defender |
 | [cyberdefense.html](cyberdefense.html) | Cyber Defense — Tactical matrix firewall defense shooter |
 | [cyberphantom.html](cyberphantom.html) | Cyber Phantom — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter |
+| [cyberwarp.html](cyberwarp.html) | Cyber Warp — High-octane 360° Quantum Warp-Grid & Event-Horizon Arena Defender |
 | [minesweeper.html](minesweeper.html) | Neon Minesweeper — Classic mine-clearing puzzle game with a cyberpunk twist |
 | [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |

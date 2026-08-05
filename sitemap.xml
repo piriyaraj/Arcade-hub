@@ -79,6 +79,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://arcadehub.telekit.link/cyberwarp.html</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://arcadehub.telekit.link/cyberhacker.html</loc>
     <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>
