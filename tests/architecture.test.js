@@ -81,21 +81,25 @@ test('Leaderboard aggregations', () => {
   mockStorage['snake_best'] = '120';
   mockStorage['pong_best_streak'] = '5';
   mockStorage['breakout_best'] = '450';
+  mockStorage['cyberbreaker_best'] = '850';
 
   const scores = Leaderboard.getScores();
   const snakeScore = scores.find(s => s.id === 'snake');
   const pongScore = scores.find(s => s.id === 'pong');
   const breakoutScore = scores.find(s => s.id === 'breakout');
   const cyberRacerScore = scores.find(s => s.id === 'cyberracer');
+  const cyberBreakerScore = scores.find(s => s.id === 'cyberbreaker');
 
   assert.strictEqual(snakeScore.score, 120);
   assert.strictEqual(pongScore.score, 5);
   assert.strictEqual(breakoutScore.score, 450);
   assert.strictEqual(cyberRacerScore.score, 0); // Not set
+  assert.strictEqual(cyberBreakerScore.score, 850);
 
   // Test reset operations
   Leaderboard.resetAllScores();
   assert.strictEqual(mockStorage['snake_best'], undefined);
   assert.strictEqual(mockStorage['pong_best_streak'], undefined);
   assert.strictEqual(mockStorage['breakout_best'], undefined);
+  assert.strictEqual(mockStorage['cyberbreaker_best'], undefined);
 });

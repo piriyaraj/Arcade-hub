@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Defense - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Defense - Tactical neon mainframe matrix defense game with plasma cannons, EMP shockwaves, orbital defense shields, and dreadnought boss core encounters." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberdefense.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Defense - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Defense - Tactical neon mainframe matrix defense game with plasma cannons, EMP shockwaves, orbital defense shields, and dreadnought boss core encounters." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberdefense.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Defense - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Defense - Tactical neon mainframe matrix defense game with plasma cannons, EMP shockwaves, orbital defense shields, and dreadnought boss core encounters." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Cyber Defense",
+  "url": "https://arcadehub.telekit.link/cyberdefense.html",
+  "description": "Play Cyber Defense - Tactical neon mainframe matrix defense game with plasma cannons, EMP shockwaves, orbital defense shields, and dreadnought boss core encounters.",
+  "gamePlatform": "Web Browser",
+  "applicationCategory": "Game",
+  "genre": "Arcade",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #070a13;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #4ade80;
+      --accent-purple: #a855f7;
+      --accent-yellow: #facc15;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: rgba(0, 240, 255, 0.25);
+      --defense-glow: rgba(0, 240, 255, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+      max-width: 800px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 20px 30px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .hud-bar {
+      display: flex;
+      gap: 16px;
+      width: 600px;
+      justify-content: space-between;
+    }
+
+    .stat-card {
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 14px;
+      text-align: center;
+      flex: 1;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-neon);
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 30px var(--defense-glow);
+      border: 1px solid var(--border);
+      background: var(--board-bg);
+    }
+
+    canvas {
+      display: block;
+      width: 600px;
+      height: 400px;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 10, 19, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal-overlay h2 {
+      font-size: 2rem;
+      color: var(--accent-neon);
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+
+    .controls-list {
+      list-style: none;
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .controls-list strong {
+      color: var(--accent-neon);
+    }
+
+    .game-btn {
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
+      color: #0b0f1a;
+      font-weight: 700;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .game-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Portal</a>
+    <h1>CYBER DEFENSE MATRIX</h1>
+    <button id="mute-btn" class="mute-btn">🔊 Mute</button>
+  </header>
+
+  <main>
+    <div class="hud-bar">
+      <div class="stat-card">
+        <div class="stat-label">Core Integrity</div>
+        <div id="hud-health" class="stat-val" style="color: var(--accent-green);">100%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Score</div>
+        <div id="hud-score" class="stat-val">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">EMP Pulses</div>
+        <div id="hud-emp" class="stat-val" style="color: var(--accent-pink);">3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Wave / Level</div>
+        <div id="hud-level" class="stat-val" style="color: var(--accent-yellow);">1</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">High Score</div>
+        <div id="hud-best" class="stat-val">0</div>
+      </div>
+    </div>
+
+    <div class="canvas-container">
+      <canvas id="gameCanvas" width="600" height="400"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="start-modal" class="modal-overlay">
+        <h2>CYBER DEFENSE MATRIX</h2>
+        <p style="max-width: 420px; color: var(--text-dim); font-size: 0.95rem;">
+          Defend the Central Mainframe Core against corrupted virus waves, seeker drones, and dreadnought boss cores.
+        </p>
+        <ul class="controls-list">
+          <li><strong>Aim Turret:</strong> Left/Right Arrows or A / D</li>
+          <li><strong>Fire Plasma Cannon:</strong> Spacebar or Left Click</li>
+          <li><strong>EMP Shockwave:</strong> E Key (Clears wave hazards)</li>
+          <li><strong>Pause:</strong> P / Esc Key</li>
+        </ul>
+        <button id="start-btn" class="game-btn">INITIALIZE DEFENSE</button>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pause-modal" class="modal-overlay hidden">
+        <h2>DEFENSE PAUSED</h2>
+        <p>Mainframe defense grid held in stasis.</p>
+        <button id="resume-btn" class="game-btn">RESUME DEFENSE</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="game-over-modal" class="modal-overlay hidden">
+        <h2 id="over-title" style="color: var(--accent-pink);">MAINFRAME BREACHED</h2>
+        <p id="over-desc">Corrupted virus vectors compromised central core integrity.</p>
+        <div style="margin-bottom: 16px;">
+          <span style="color: var(--text-dim);">Final Score: </span>
+          <strong id="final-score" style="color: var(--accent-neon); font-size: 1.3rem;">0</strong>
+        </div>
+        <button id="restart-btn" class="game-btn">RETRY DEFENSE</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Arcade Hub — Built with HTML5 Canvas, Web Audio API & Pure JavaScript</p>
+  </footer>
+
+  <script>
+/**
+ * Typed CyberDefenseEngine class for Arcade Hub.
+ * Manages central defense turret mechanics, plasma projectile physics,
+ * virus wave spawning, EMP shockwaves, dreadnought boss cores,
+ * powerups, high score persistence, and canvas rendering.
+ *
+ * @class CyberDefenseEngine
+ */
+class CyberDefenseEngine {
+  /**
+   * Constructs a new CyberDefenseEngine instance.
+   * @param {HTMLCanvasElement|null} [canvasElement=null] - The HTML5 canvas element.
+   * @param {Object} [uiElements={}] - Object mapping DOM elements for UI updates.
+   */
+  constructor(canvasElement = null, uiElements = {}) {
+    this.canvas = canvasElement;
+    this.ctx = canvasElement ? canvasElement.getContext('2d') : null;
+    this.ui = uiElements;
+
+    this.CANVAS_WIDTH = 600;
+    this.CANVAS_HEIGHT = 400;
+
+    // Game state flags
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+
+    // Core stats & progression
+    this.score = 0;
+    this.multiplier = 1;
+    this.comboCount = 0;
+    this.level = 1;
+    this.health = 100;
+    this.maxHealth = 100;
+    this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberdefense') : 0;
+
+    // Turret properties
+    this.turret = {
+      x: 300,
+      y: 370,
+      angle: -Math.PI / 2, // Points straight up
+      rotationSpeed: 0.05,
+      length: 28,
+      empCharges: 3,
+      maxEmp: 5,
+      fireCooldown: 0,
+      fireRate: 10,
+      triShotActive: false,
+      triShotTimer: 0,
+      overdriveActive: false,
+      overdriveTimer: 0,
+      shieldActive: false,
+      shieldHealth: 0
+    };
+
+    // Game entities
+    /** @type {Array<{x: number, y: number, vx: number, vy: number, radius: number, damage: number, color: string}>} */
+    this.bullets = [];
+    /** @type {Array<{x: number, y: number, vx: number, vy: number, radius: number, type: string, health: number, maxHealth: number, points: number, color: string}>} */
+    this.enemies = [];
+    /** @type {Array<{x: number, y: number, vx: number, vy: number, radius: number, damage: number}>} */
+    this.enemyBullets = [];
+    /** @type {Array<{x: number, y: number, type: string, radius: number, vy: number}>} */
+    this.powerups = [];
+    /** @type {Array<{x: number, y: number, radius: number, maxRadius: number, alpha: number}>} */
+    this.empPulses = [];
+    /** @type {Array<{x: number, y: number, vx: number, vy: number, color: string, life: number, maxLife: number, radius: number}>} */
+    this.particles = [];
+    /** @type {Array<{x: number, y: number, text: string, color: string, life: number}>} */
+    this.floatingTexts = [];
+
+    // Boss Core state
+    /** @type {Object|null} */
+    this.boss = null;
+    this.spawnTimer = 0;
+
+    // Input state
+    this.keys = { left: false, right: false, space: false };
+    this.mouseTarget = null;
+  }
+
+  /**
+   * Starts a new game session or resets current state.
+   */
+  start() {
+    this.started = true;
+    this.paused = false;
+    this.over = false;
+    this.score = 0;
+    this.multiplier = 1;
+    this.comboCount = 0;
+    this.level = 1;
+    this.health = this.maxHealth;
+
+    this.turret.angle = -Math.PI / 2;
+    this.turret.empCharges = 3;
+    this.turret.triShotActive = false;
+    this.turret.triShotTimer = 0;
+    this.turret.overdriveActive = false;
+    this.turret.overdriveTimer = 0;
+    this.turret.shieldActive = false;
+    this.turret.shieldHealth = 0;
+
+    this.bullets = [];
+    this.enemies = [];
+    this.enemyBullets = [];
+    this.powerups = [];
+    this.empPulses = [];
+    this.particles = [];
+    this.floatingTexts = [];
+    this.boss = null;
+    this.spawnTimer = 0;
+
+    this.updateUI();
+  }
+
+  pause() { if (this.started && !this.over) this.paused = true; }
+  resume() { if (this.started && !this.over) this.paused = false; }
+  togglePause() {
+    if (!this.started || this.over) return;
+    this.paused = !this.paused;
+  }
+
+  reset() {
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+    this.score = 0;
+    this.multiplier = 1;
+    this.comboCount = 0;
+    this.level = 1;
+    this.health = this.maxHealth;
+    this.bullets = [];
+    this.enemies = [];
+    this.enemyBullets = [];
+    this.powerups = [];
+    this.empPulses = [];
+    this.particles = [];
+    this.floatingTexts = [];
+    this.boss = null;
+    this.updateUI();
+  }
+
+  setScore(score) {
+    const val = typeof score === 'number' && Number.isFinite(score) ? Math.max(0, Math.floor(score)) : 0;
+    this.score = val;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      if (typeof saveBestScore === 'function') saveBestScore('cyberdefense', this.highScore);
+    }
+    this.updateUI();
+  }
+
+  aimTurret(dir) {
+    if (typeof dir !== 'number' || Number.isNaN(dir)) return;
+    this.turret.angle = clamp(this.turret.angle + dir * this.turret.rotationSpeed, -Math.PI + 0.15, -0.15);
+  }
+
+  setTurretAngle(angle) {
+    if (typeof angle !== 'number' || Number.isNaN(angle)) return;
+    this.turret.angle = clamp(angle, -Math.PI + 0.15, -0.15);
+  }
+
+  firePlasma() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.turret.fireCooldown > 0) return false;
+
+    const cooldown = this.turret.overdriveActive ? 4 : (this.turret.triShotActive ? 7 : this.turret.fireRate);
+    this.turret.fireCooldown = cooldown;
+
+    const speed = 10;
+    const barrelX = this.turret.x + Math.cos(this.turret.angle) * this.turret.length;
+    const barrelY = this.turret.y + Math.sin(this.turret.angle) * this.turret.length;
+
+    if (this.turret.triShotActive || this.turret.overdriveActive) {
+      const angles = [this.turret.angle - 0.2, this.turret.angle, this.turret.angle + 0.2];
+      for (const a of angles) {
+        this.bullets.push({
+          x: barrelX,
+          y: barrelY,
+          vx: Math.cos(a) * speed,
+          vy: Math.sin(a) * speed,
+          radius: 5,
+          damage: 25,
+          color: this.turret.overdriveActive ? '#ff007f' : '#00f0ff'
+        });
+      }
+    } else {
+      this.bullets.push({
+        x: barrelX,
+        y: barrelY,
+        vx: Math.cos(this.turret.angle) * speed,
+        vy: Math.sin(this.turret.angle) * speed,
+        radius: 5,
+        damage: 25,
+        color: '#00f0ff'
+      });
+    }
+
+    if (typeof SoundFX !== 'undefined' && SoundFX.playLaser) SoundFX.playLaser();
+    return true;
+  }
+
+  triggerEMP() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.turret.empCharges <= 0) return false;
+
+    this.turret.empCharges--;
+    this.empPulses.push({
+      x: this.turret.x,
+      y: this.turret.y,
+      radius: 10,
+      maxRadius: 450,
+      alpha: 1
+    });
+
+    // Wipe non-boss enemies and bullets
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.enemies[i];
+      if (enemy.type !== 'boss') {
+        this.spawnParticles(enemy.x, enemy.y, enemy.color || '#ff007f', 12);
+        this.addScore(enemy.points || 20);
+        this.enemies.splice(i, 1);
+      } else {
+        enemy.health -= 150;
+        if (enemy.health <= 0) {
+          this.spawnParticles(enemy.x, enemy.y, '#facc15', 30);
+          this.addScore(enemy.points);
+          this.boss = null;
+          this.enemies.splice(i, 1);
+          this.addFloatingText(this.CANVAS_WIDTH / 2, 100, 'BOSS DESTROYED!', '#facc15');
+        }
+      }
+    }
+
+    this.enemyBullets = [];
+    this.addFloatingText(this.turret.x, this.turret.y - 40, 'EMP PULSE!', '#ff007f');
+    if (typeof SoundFX !== 'undefined' && SoundFX.playEMP) SoundFX.playEMP();
+    this.updateUI();
+    return true;
+  }
+
+  addScore(pts) {
+    if (typeof pts !== 'number' || Number.isNaN(pts) || pts <= 0) return;
+    const earned = Math.floor(pts * this.multiplier);
+    this.score += earned;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      if (typeof saveBestScore === 'function') saveBestScore('cyberdefense', this.highScore);
+    }
+    this.updateUI();
+  }
+
+  spawnEnemy() {
+    const types = ['virus', 'seeker', 'heavy'];
+    const rand = Math.random();
+    let type = 'virus';
+    let health = 1;
+    let radius = 12;
+    let speed = 1.5 + this.level * 0.2;
+    let points = 20;
+    let color = '#ff007f';
+
+    if (rand < 0.2) {
+      type = 'heavy';
+      health = 3;
+      radius = 18;
+      speed = 0.8 + this.level * 0.1;
+      points = 50;
+      color = '#a855f7';
+    } else if (rand < 0.5) {
+      type = 'seeker';
+      health = 1;
+      radius = 10;
+      speed = 2.2 + this.level * 0.2;
+      points = 35;
+      color = '#facc15';
+    }
+
+    const x = randomRange(30, this.CANVAS_WIDTH - 30);
+    const targetAngle = Math.atan2(this.turret.y - 0, this.turret.x - x);
+
+    this.enemies.push({
+      x,
+      y: 0,
+      vx: Math.cos(targetAngle) * speed,
+      vy: Math.sin(targetAngle) * speed,
+      radius,
+      type,
+      health,
+      maxHealth: health,
+      points,
+      color
+    });
+  }
+
+  spawnBoss() {
+    if (this.boss) return;
+    const bossHealth = 300 + this.level * 150;
+    const boss = {
+      x: this.CANVAS_WIDTH / 2,
+      y: 70,
+      vx: 2,
+      vy: 0,
+      radius: 35,
+      type: 'boss',
+      health: bossHealth,
+      maxHealth: bossHealth,
+      points: 1000,
+      color: '#facc15',
+      shootTimer: 0
+    };
+    this.boss = boss;
+    this.enemies.push(boss);
+    this.addFloatingText(this.CANVAS_WIDTH / 2, 120, 'WARNING: TITAN VIRUS CORE!', '#ff007f');
+  }
+
+  update(deltaTime = 16) {
+    if (!this.started || this.paused || this.over) return;
+    const dt = typeof deltaTime === 'number' && Number.isFinite(deltaTime) && deltaTime > 0 ? Math.min(deltaTime, 50) : 16;
+
+    if (this.turret.fireCooldown > 0) this.turret.fireCooldown--;
+
+    if (this.turret.triShotActive) {
+      this.turret.triShotTimer--;
+      if (this.turret.triShotTimer <= 0) this.turret.triShotActive = false;
+    }
+    if (this.turret.overdriveActive) {
+      this.turret.overdriveTimer--;
+      if (this.turret.overdriveTimer <= 0) this.turret.overdriveActive = false;
+    }
+
+    // Input handle
+    if (this.keys.left) this.aimTurret(-1);
+    if (this.keys.right) this.aimTurret(1);
+    if (this.keys.space) this.firePlasma();
+
+    // Spawn progression
+    this.spawnTimer += dt;
+    const spawnThreshold = Math.max(400, 1500 - this.level * 120);
+    if (this.spawnTimer >= spawnThreshold) {
+      this.spawnTimer = 0;
+      if (this.enemies.length < 15 + this.level * 2) {
+        this.spawnEnemy();
+      }
+    }
+
+    // Wave / Boss check
+    if (this.score >= this.level * 800 && !this.boss) {
+      this.spawnBoss();
+    }
+
+    // Update Plasma Bullets
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const b = this.bullets[i];
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x < 0 || b.x > this.CANVAS_WIDTH || b.y < 0 || b.y > this.CANVAS_HEIGHT) {
+        this.bullets.splice(i, 1);
+        continue;
+      }
+
+      // Check collision with enemies
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const e = this.enemies[j];
+        if (checkCircleCollision({ x: b.x, y: b.y, radius: b.radius }, { x: e.x, y: e.y, radius: e.radius })) {
+          e.health -= (b.damage || 1);
+          this.spawnParticles(b.x, b.y, b.color, 4);
+          this.bullets.splice(i, 1);
+
+          if (e.health <= 0) {
+            this.spawnParticles(e.x, e.y, e.color, 12);
+            this.addScore(e.points);
+            this.comboCount++;
+            this.multiplier = 1 + Math.min(Math.floor(this.comboCount / 5), 4);
+
+            // Chance to drop powerup
+            if (Math.random() < 0.2 || e.type === 'heavy') {
+              this.spawnPowerup(e.x, e.y);
+            }
+
+            if (e.type === 'boss') {
+              this.boss = null;
+              this.level++;
+              this.addFloatingText(this.CANVAS_WIDTH / 2, 100, `LEVEL ${this.level} CLEARED!`, '#4ade80');
+            }
+            this.enemies.splice(j, 1);
+          }
+          break;
+        }
+      }
+    }
+
+    // Update Enemies & Boss logic
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const e = this.enemies[i];
+      if (e.type === 'boss') {
+        e.x += e.vx;
+        if (e.x - e.radius < 50 || e.x + e.radius > this.CANVAS_WIDTH - 50) e.vx *= -1;
+
+        e.shootTimer = (e.shootTimer || 0) + 1;
+        if (e.shootTimer % 45 === 0) {
+          const angle = Math.atan2(this.turret.y - e.y, this.turret.x - e.x);
+          this.enemyBullets.push({
+            x: e.x,
+            y: e.y + e.radius,
+            vx: Math.cos(angle) * 4,
+            vy: Math.sin(angle) * 4,
+            radius: 6,
+            damage: 15
+          });
+        }
+      } else {
+        e.x += e.vx;
+        e.y += e.vy;
+      }
+
+      // Check collision with Mainframe Base (bottom)
+      if (e.y + e.radius >= this.turret.y - 10) {
+        this.damageCore(e.type === 'heavy' ? 25 : 10);
+        this.spawnParticles(e.x, e.y, '#ff007f', 10);
+        if (e.type === 'boss') this.boss = null;
+        this.enemies.splice(i, 1);
+      }
+    }
+
+    // Update Enemy Bullets
+    for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+      const eb = this.enemyBullets[i];
+      eb.x += eb.vx;
+      eb.y += eb.vy;
+
+      if (eb.y > this.CANVAS_HEIGHT || eb.x < 0 || eb.x > this.CANVAS_WIDTH) {
+        this.enemyBullets.splice(i, 1);
+        continue;
+      }
+
+      if (checkCircleCollision({ x: eb.x, y: eb.y, radius: eb.radius }, { x: this.turret.x, y: this.turret.y, radius: 25 })) {
+        this.damageCore(eb.damage);
+        this.spawnParticles(eb.x, eb.y, '#ff007f', 8);
+        this.enemyBullets.splice(i, 1);
+      }
+    }
+
+    // Update Powerups
+    for (let i = this.powerups.length - 1; i >= 0; i--) {
+      const p = this.powerups[i];
+      p.y += p.vy;
+
+      if (p.y > this.CANVAS_HEIGHT) {
+        this.powerups.splice(i, 1);
+        continue;
+      }
+
+      if (checkCircleCollision({ x: p.x, y: p.y, radius: p.radius }, { x: this.turret.x, y: this.turret.y, radius: 30 })) {
+        this.collectPowerup(p.type);
+        this.powerups.splice(i, 1);
+      }
+    }
+
+    // Update EMP Pulses
+    for (let i = this.empPulses.length - 1; i >= 0; i--) {
+      const emp = this.empPulses[i];
+      emp.radius += 12;
+      emp.alpha = Math.max(0, 1 - emp.radius / emp.maxRadius);
+      if (emp.radius >= emp.maxRadius) {
+        this.empPulses.splice(i, 1);
+      }
+    }
+
+    // Update Particles & Floating Text
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const pt = this.particles[i];
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      pt.life++;
+      if (pt.life >= pt.maxLife) this.particles.splice(i, 1);
+    }
+
+    for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+      const ft = this.floatingTexts[i];
+      ft.y -= 0.5;
+      ft.life--;
+      if (ft.life <= 0) this.floatingTexts.splice(i, 1);
+    }
+  }
+
+  damageCore(amount) {
+    if (this.turret.shieldActive && this.turret.shieldHealth > 0) {
+      this.turret.shieldHealth -= amount;
+      if (this.turret.shieldHealth <= 0) {
+        this.turret.shieldActive = false;
+        this.addFloatingText(this.turret.x, this.turret.y - 30, 'SHIELD COMPROMISED', '#ff007f');
+      } else {
+        this.addFloatingText(this.turret.x, this.turret.y - 30, 'SHIELD ABSORBED DAMAGE', '#00f0ff');
+      }
+      return;
+    }
+
+    this.health = Math.max(0, this.health - amount);
+    this.comboCount = 0;
+    this.multiplier = 1;
+    if (typeof SoundFX !== 'undefined' && SoundFX.playExplosion) SoundFX.playExplosion();
+    this.updateUI();
+
+    if (this.health <= 0) {
+      this.triggerGameOver();
+    }
+  }
+
+  spawnPowerup(x, y) {
+    const types = ['triShot', 'shield', 'emp', 'overdrive', 'repair'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    this.powerups.push({
+      x,
+      y,
+      type,
+      radius: 10,
+      vy: 1.5
+    });
+  }
+
+  collectPowerup(type) {
+    if (type === 'triShot') {
+      this.turret.triShotActive = true;
+      this.turret.triShotTimer = (this.turret.triShotActive ? this.turret.triShotTimer : 0) + 360;
+      this.addFloatingText(this.turret.x, this.turret.y - 30, 'TRI-PLASMA ACTIVE', '#00f0ff');
+    } else if (type === 'shield') {
+      this.turret.shieldActive = true;
+      this.turret.shieldHealth = 50;
+      this.addFloatingText(this.turret.x, this.turret.y - 30, 'KINETIC SHIELD ONLINE', '#a855f7');
+    } else if (type === 'emp') {
+      this.turret.empCharges = Math.min(this.turret.maxEmp, this.turret.empCharges + 1);
+      this.addFloatingText(this.turret.x, this.turret.y - 30, '+1 EMP PULSE', '#ff007f');
+    } else if (type === 'overdrive') {
+      this.turret.overdriveActive = true;
+      this.turret.overdriveTimer = (this.turret.overdriveActive ? this.turret.overdriveTimer : 0) + 300;
+      this.addFloatingText(this.turret.x, this.turret.y - 30, 'OVERDRIVE SURGE!', '#facc15');
+    } else if (type === 'repair') {
+      this.health = Math.min(this.maxHealth, this.health + 30);
+      this.addFloatingText(this.turret.x, this.turret.y - 30, 'CORE REPAIRED +30%', '#4ade80');
+    }
+    if (typeof SoundFX !== 'undefined' && SoundFX.playPowerup) SoundFX.playPowerup();
+    this.updateUI();
+  }
+
+  triggerGameOver() {
+    this.over = true;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      if (typeof saveBestScore === 'function') saveBestScore('cyberdefense', this.highScore);
+    }
+    if (this.ui.gameOverModal) this.ui.gameOverModal.classList.remove('hidden');
+    if (this.ui.finalScore) this.ui.finalScore.textContent = formatScore(this.score);
+  }
+
+  spawnParticles(x, y, color, count = 8) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = randomRange(1, 4);
+      this.particles.push({
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color,
+        life: 0,
+        maxLife: Math.floor(randomRange(15, 30)),
+        radius: randomRange(1.5, 3)
+      });
+    }
+  }
+
+  addFloatingText(x, y, text, color) {
+    this.floatingTexts.push({ x, y, text, color, life: 40 });
+  }
+
+  updateUI() {
+    if (this.ui.health) this.ui.health.textContent = `${Math.ceil(this.health)}%`;
+    if (this.ui.score) this.ui.score.textContent = formatScore(this.score);
+    if (this.ui.emp) this.ui.emp.textContent = this.turret.empCharges;
+    if (this.ui.level) this.ui.level.textContent = this.level;
+    if (this.ui.best) this.ui.best.textContent = formatScore(this.highScore);
+  }
+
+  render() {
+    if (!this.ctx) return;
+
+    // Clear background
+    this.ctx.fillStyle = '#070a13';
+    this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+    // Draw Grid Lines
+    this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+    this.ctx.lineWidth = 1;
+    for (let x = 0; x < this.CANVAS_WIDTH; x += 40) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.CANVAS_HEIGHT);
+      this.ctx.stroke();
+    }
+    for (let y = 0; y < this.CANVAS_HEIGHT; y += 40) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.CANVAS_WIDTH, y);
+      this.ctx.stroke();
+    }
+
+    // Render EMP Pulses
+    for (const emp of this.empPulses) {
+      this.ctx.save();
+      this.ctx.strokeStyle = `rgba(255, 0, 127, ${emp.alpha})`;
+      this.ctx.lineWidth = 4;
+      this.ctx.shadowBlur = 15;
+      this.ctx.shadowColor = '#ff007f';
+      this.ctx.beginPath();
+      this.ctx.arc(emp.x, emp.y, emp.radius, 0, Math.PI * 2);
+      this.ctx.stroke();
+      this.ctx.restore();
+    }
+
+    // Render Mainframe Base
+    this.ctx.save();
+    this.ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+    this.ctx.strokeStyle = '#00f0ff';
+    this.ctx.lineWidth = 2;
+    this.ctx.shadowBlur = 10;
+    this.ctx.shadowColor = '#00f0ff';
+    this.ctx.fillRect(0, 385, this.CANVAS_WIDTH, 15);
+    this.ctx.strokeRect(0, 385, this.CANVAS_WIDTH, 15);
+
+    // Render Turret Core
+    this.ctx.fillStyle = this.turret.overdriveActive ? '#facc15' : '#00f0ff';
+    this.ctx.beginPath();
+    this.ctx.arc(this.turret.x, this.turret.y, 22, 0, Math.PI * 2);
+    this.ctx.fill();
+
+    // Render Turret Barrel
+    this.ctx.strokeStyle = this.turret.overdriveActive ? '#ff007f' : '#00f0ff';
+    this.ctx.lineWidth = 6;
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.turret.x, this.turret.y);
+    this.ctx.lineTo(
+      this.turret.x + Math.cos(this.turret.angle) * this.turret.length,
+      this.turret.y + Math.sin(this.turret.angle) * this.turret.length
+    );
+    this.ctx.stroke();
+
+    if (this.turret.shieldActive) {
+      this.ctx.strokeStyle = '#a855f7';
+      this.ctx.lineWidth = 3;
+      this.ctx.beginPath();
+      this.ctx.arc(this.turret.x, this.turret.y, 35, 0, Math.PI * 2);
+      this.ctx.stroke();
+    }
+    this.ctx.restore();
+
+    // Render Plasma Bullets
+    for (const b of this.bullets) {
+      this.ctx.save();
+      this.ctx.fillStyle = b.color;
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = b.color;
+      this.ctx.beginPath();
+      this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    // Render Enemy Bullets
+    for (const eb of this.enemyBullets) {
+      this.ctx.save();
+      this.ctx.fillStyle = '#ff007f';
+      this.ctx.shadowBlur = 8;
+      this.ctx.shadowColor = '#ff007f';
+      this.ctx.beginPath();
+      this.ctx.arc(eb.x, eb.y, eb.radius, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    // Render Enemies
+    for (const e of this.enemies) {
+      this.ctx.save();
+      this.ctx.fillStyle = e.color;
+      this.ctx.strokeStyle = '#ffffff';
+      this.ctx.lineWidth = 1.5;
+      this.ctx.shadowBlur = 12;
+      this.ctx.shadowColor = e.color;
+      this.ctx.beginPath();
+      this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.stroke();
+
+      if (e.type === 'boss') {
+        // Draw boss health bar
+        const hpRatio = Math.max(0, e.health / e.maxHealth);
+        this.ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+        this.ctx.fillRect(e.x - 30, e.y - e.radius - 12, 60, 6);
+        this.ctx.fillStyle = '#4ade80';
+        this.ctx.fillRect(e.x - 30, e.y - e.radius - 12, 60 * hpRatio, 6);
+      }
+      this.ctx.restore();
+    }
+
+    // Render Powerups
+    for (const p of this.powerups) {
+      this.ctx.save();
+      this.ctx.fillStyle = p.type === 'triShot' ? '#00f0ff' : (p.type === 'shield' ? '#a855f7' : (p.type === 'emp' ? '#ff007f' : '#facc15'));
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = this.ctx.fillStyle;
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    // Render Particles
+    for (const pt of this.particles) {
+      this.ctx.save();
+      this.ctx.fillStyle = pt.color;
+      this.ctx.globalAlpha = 1 - pt.life / pt.maxLife;
+      this.ctx.beginPath();
+      this.ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    // Render Floating Text
+    for (const ft of this.floatingTexts) {
+      this.ctx.save();
+      this.ctx.fillStyle = ft.color;
+      this.ctx.font = 'bold 13px system-ui';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(ft.text, ft.x, ft.y);
+      this.ctx.restore();
+    }
+  }
+}
+
+// DOM Setup & Loop initialization
+if (typeof window !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('gameCanvas');
+    const ui = {
+      health: document.getElementById('hud-health'),
+      score: document.getElementById('hud-score'),
+      emp: document.getElementById('hud-emp'),
+      level: document.getElementById('hud-level'),
+      best: document.getElementById('hud-best'),
+      startModal: document.getElementById('start-modal'),
+      pauseModal: document.getElementById('pause-modal'),
+      gameOverModal: document.getElementById('game-over-modal'),
+      finalScore: document.getElementById('final-score')
+    };
+
+    const engine = new CyberDefenseEngine(canvas, ui);
+
+    document.getElementById('start-btn')?.addEventListener('click', () => {
+      ui.startModal.classList.add('hidden');
+      engine.start();
+    });
+
+    document.getElementById('resume-btn')?.addEventListener('click', () => {
+      ui.pauseModal.classList.add('hidden');
+      engine.resume();
+    });
+
+    document.getElementById('restart-btn')?.addEventListener('click', () => {
+      ui.gameOverModal.classList.add('hidden');
+      engine.start();
+    });
+
+    document.getElementById('mute-btn')?.addEventListener('click', (e) => {
+      if (typeof SoundFX !== 'undefined') {
+        const muted = SoundFX.toggleMute('cyberdefense');
+        e.target.textContent = muted ? '🔇 Muted' : '🔊 Mute';
+      }
+    });
+
+    // Key listeners
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') engine.keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') engine.keys.right = true;
+      if (e.key === ' ' || e.code === 'Space') engine.keys.space = true;
+      if (e.key === 'e' || e.key === 'E') engine.triggerEMP();
+      if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+        engine.togglePause();
+        if (engine.paused) ui.pauseModal.classList.remove('hidden');
+        else ui.pauseModal.classList.add('hidden');
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') engine.keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') engine.keys.right = false;
+      if (e.key === ' ' || e.code === 'Space') engine.keys.space = false;
+    });
+
+    canvas?.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      const angle = Math.atan2(mouseY - engine.turret.y, mouseX - engine.turret.x);
+      engine.setTurretAngle(angle);
+    });
+
+    canvas?.addEventListener('click', () => {
+      engine.firePlasma();
+    });
+
+    let lastTime = performance.now();
+    function gameLoop(now) {
+      const dt = now - lastTime;
+      lastTime = now;
+
+      engine.update(dt);
+      engine.render();
+
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+  });
+}
+
+// Export for Node unit testing environments
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { CyberDefenseEngine };
+}
+  </script>
+</body>
+</html>
