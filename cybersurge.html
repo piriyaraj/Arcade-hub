@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Surge - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Surge - High-octane directional matrix arcade shooter with plasma surges, EMP shockwaves, kinetic shields, and dreadnought boss core encounters." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybersurge.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Surge - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Surge - High-octane directional matrix arcade shooter with plasma surges, EMP shockwaves, kinetic shields, and dreadnought boss core encounters." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybersurge.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Surge - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Surge - High-octane directional matrix arcade shooter with plasma surges, EMP shockwaves, kinetic shields, and dreadnought boss core encounters." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Surge",
+    "url": "https://arcadehub.telekit.link/cybersurge.html",
+    "description": "Play Cyber Surge - High-octane directional matrix arcade shooter with plasma surges, EMP shockwaves, kinetic shields, and dreadnought boss core encounters.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #070a13;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #4ade80;
+      --accent-purple: #a855f7;
+      --accent-yellow: #facc15;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: rgba(0, 240, 255, 0.25);
+      --surge-glow: rgba(0, 240, 255, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-neon);
+      text-shadow: 0 0 10px var(--surge-glow);
+    }
+
+    .nav-btn {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent-neon);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 12px var(--surge-glow);
+      transform: translateY(-1px);
+    }
+
+    .game-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hud-panel {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hud-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hud-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hud-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    .hud-value.neon { color: var(--accent-neon); }
+    .hud-value.pink { color: var(--accent-pink); }
+    .hud-value.green { color: var(--accent-green); }
+    .hud-value.yellow { color: var(--accent-yellow); }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 6 / 4;
+      background: var(--board-bg);
+      border: 2px solid var(--accent-neon);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 10, 19, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      font-size: 2rem;
+      color: var(--accent-neon);
+      text-shadow: 0 0 15px var(--surge-glow);
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      max-width: 400px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .primary-btn {
+      background: var(--accent-neon);
+      color: #000;
+      border: none;
+      padding: 0.65rem 1.75rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--surge-glow);
+      transition: all 0.2s ease;
+    }
+
+    .primary-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--accent-neon);
+    }
+
+    .controls-grid {
+      width: 100%;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem;
+    }
+
+    .control-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    kbd {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--border);
+      color: var(--accent-neon);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">
+      <a href="index.html" class="nav-btn">← Portal</a>
+      <h1>⚡ CYBER SURGE</h1>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button id="btnControls" class="nav-btn">⚙️ Keys</button>
+      <a href="leaderboard.html" class="nav-btn">🏆 Leaderboard</a>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="hud-panel">
+      <div class="hud-card">
+        <span class="hud-label">Score</span>
+        <span id="hudScore" class="hud-value neon">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Best</span>
+        <span id="hudBest" class="hud-value yellow">0</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Integrity</span>
+        <span id="hudHealth" class="hud-value green">100%</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Shield</span>
+        <span id="hudShield" class="hud-value neon">OFF</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">EMP Pulse</span>
+        <span id="hudEmp" class="hud-value pink">3 / 3</span>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Combo</span>
+        <span id="hudMultiplier" class="hud-value yellow">x1</span>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="600" height="400"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="startOverlay" class="overlay">
+        <h2>CYBER SURGE</h2>
+        <p>Pilot your High-Tech Core Avatar inside the digital vector grid. Neutralize virus corruption drones and defeat Dreadnought Singularity Bosses!</p>
+        <button id="btnStart" class="primary-btn">INITIALIZE CORE</button>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pauseOverlay" class="overlay hidden">
+        <h2>SYSTEM PAUSED</h2>
+        <p>Tactical data stream frozen.</p>
+        <button id="btnResume" class="primary-btn">RESUME SURGE</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameOverOverlay" class="overlay hidden">
+        <h2>MATRIX BREACHED</h2>
+        <p id="finalScoreText">Final Score: 0</p>
+        <button id="btnRestart" class="primary-btn">REBOOT SYSTEM</button>
+      </div>
+    </div>
+
+    <div class="controls-grid">
+      <div class="control-item"><kbd>WASD / Arrows</kbd> Move Cyber Core</div>
+      <div class="control-item"><kbd>Space / Action</kbd> Plasma Surge Beam</div>
+      <div class="control-item"><kbd>Shift / Key E</kbd> EMP Shockwave Clear</div>
+      <div class="control-item"><kbd>Key P</kbd> Pause Matrix</div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * CyberSurgeEngine - High-octane directional matrix arcade engine
+     * @class CyberSurgeEngine
+     */
+    class CyberSurgeEngine {
+      /**
+       * Constructs a new CyberSurgeEngine instance.
+       * @param {HTMLCanvasElement|null} [canvasElement=null]
+       * @param {Object} [uiElements={}]
+       */
+      constructor(canvasElement = null, uiElements = {}) {
+        this.canvas = canvasElement;
+        this.ctx = canvasElement ? canvasElement.getContext('2d') : null;
+        this.ui = uiElements;
+
+        this.CANVAS_WIDTH = 600;
+        this.CANVAS_HEIGHT = 400;
+
+        // State flags
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        // Stats & Progression
+        this.score = 0;
+        this.multiplier = 1;
+        this.comboCount = 0;
+        this.level = 1;
+        this.wave = 1;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cybersurge') : 0;
+
+        // Player Core
+        this.player = {
+          x: 300,
+          y: 200,
+          radius: 14,
+          speed: 4.5,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shieldActive: false,
+          shieldHealth: 0,
+          empCharges: 3,
+          maxEmp: 3,
+          fireCooldown: 0,
+          fireRate: 8,
+          triBeamActive: false,
+          triBeamTimer: 0,
+          overchargeActive: false,
+          overchargeTimer: 0,
+          aimAngle: 0
+        };
+
+        // Entities
+        this.playerBullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.powerups = [];
+        this.empPulses = [];
+        this.particles = [];
+        this.boss = null;
+
+        // Spawning counters
+        this.spawnTimer = 0;
+        this.spawnInterval = 70;
+        this.bossSpawnedForWave = false;
+
+        this.updateHUD();
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.reset();
+        this.started = true;
+        this.updateHUD();
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+          this.updateHUD();
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+          this.updateHUD();
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.score = 0;
+        this.multiplier = 1;
+        this.comboCount = 0;
+        this.level = 1;
+        this.wave = 1;
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.bossSpawnedForWave = false;
+
+        this.player.x = 300;
+        this.player.y = 200;
+        this.player.vx = 0;
+        this.player.vy = 0;
+        this.player.health = 100;
+        this.player.shieldActive = false;
+        this.player.shieldHealth = 0;
+        this.player.empCharges = 3;
+        this.player.fireCooldown = 0;
+        this.player.triBeamActive = false;
+        this.player.triBeamTimer = 0;
+        this.player.overchargeActive = false;
+        this.player.overchargeTimer = 0;
+        this.player.aimAngle = 0;
+
+        this.playerBullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.powerups = [];
+        this.empPulses = [];
+        this.particles = [];
+        this.boss = null;
+
+        this.updateHUD();
+      }
+
+      setScore(val) {
+        const parsed = parseInt(val, 10);
+        if (Number.isFinite(parsed) && parsed >= 0) {
+          this.score = parsed;
+        } else {
+          this.score = 0;
+        }
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cybersurge', this.highScore);
+          }
+        }
+        this.updateHUD();
+      }
+
+      movePlayer(dx, dy) {
+        if (!this.started || this.paused || this.over) return;
+        const normDx = typeof dx === 'number' && Number.isFinite(dx) ? dx : 0;
+        const normDy = typeof dy === 'number' && Number.isFinite(dy) ? dy : 0;
+
+        this.player.vx = normDx * this.player.speed;
+        this.player.vy = normDy * this.player.speed;
+
+        if (normDx !== 0 || normDy !== 0) {
+          this.player.aimAngle = Math.atan2(normDy, normDx);
+        }
+      }
+
+      fireBullet() {
+        if (!this.started || this.paused || this.over) return false;
+        if (this.player.fireCooldown > 0) return false;
+
+        const effectiveRate = this.player.overchargeActive ? 4 : this.player.fireRate;
+        this.player.fireCooldown = effectiveRate;
+
+        const angle = this.player.aimAngle;
+        const speed = 10;
+
+        if (this.player.triBeamActive) {
+          const angles = [angle - 0.25, angle, angle + 0.25];
+          angles.forEach(a => {
+            this.playerBullets.push({
+              x: this.player.x,
+              y: this.player.y,
+              vx: Math.cos(a) * speed,
+              vy: Math.sin(a) * speed,
+              radius: 4,
+              damage: 25,
+              color: '#00f0ff'
+            });
+          });
+        } else {
+          this.playerBullets.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 5,
+            damage: 30,
+            color: '#00f0ff'
+          });
+        }
+
+        if (typeof playSound === 'function') {
+          playSound('laser');
+        }
+        return true;
+      }
+
+      triggerEmpPulse() {
+        if (!this.started || this.paused || this.over) return false;
+        if (this.player.empCharges <= 0) return false;
+
+        this.player.empCharges--;
+        this.empPulses.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 280,
+          growthRate: 14
+        });
+
+        // Wipe enemy bullets & deal heavy damage to enemies
+        this.enemyBullets = [];
+        this.enemies.forEach(e => {
+          e.health -= 60;
+        });
+
+        if (this.boss) {
+          this.boss.health -= 120;
+        }
+
+        if (typeof playSound === 'function') {
+          playSound('emp');
+        }
+
+        this.updateHUD();
+        return true;
+      }
+
+      spawnEnemy(typeOverride = null) {
+        const types = ['drone', 'interceptor', 'seeker'];
+        const type = typeOverride || types[Math.floor(Math.random() * types.length)];
+
+        let x, y;
+        const edge = Math.floor(Math.random() * 4);
+        if (edge === 0) { x = Math.random() * 600; y = -20; }
+        else if (edge === 1) { x = 620; y = Math.random() * 400; }
+        else if (edge === 2) { x = Math.random() * 600; y = 420; }
+        else { x = -20; y = Math.random() * 400; }
+
+        let enemy = {
+          x, y,
+          type,
+          radius: type === 'drone' ? 12 : (type === 'seeker' ? 16 : 10),
+          speed: type === 'drone' ? 2.2 : (type === 'seeker' ? 1.5 : 3.5),
+          health: type === 'drone' ? 30 : (type === 'seeker' ? 60 : 20),
+          maxHealth: type === 'drone' ? 30 : (type === 'seeker' ? 60 : 20),
+          scoreValue: type === 'drone' ? 50 : (type === 'seeker' ? 100 : 75),
+          fireTimer: 0,
+          color: type === 'drone' ? '#ff007f' : (type === 'seeker' ? '#a855f7' : '#facc15')
+        };
+
+        this.enemies.push(enemy);
+      }
+
+      spawnBoss() {
+        if (this.boss) return;
+        this.boss = {
+          name: 'SURGE SINGULARITY',
+          x: 300,
+          y: -60,
+          targetY: 80,
+          radius: 36,
+          health: 500,
+          maxHealth: 500,
+          fireTimer: 0,
+          phase: 1,
+          color: '#ff0055'
+        };
+      }
+
+      collectPowerup(type) {
+        if (type === 'shield') {
+          this.player.shieldActive = true;
+          this.player.shieldHealth = 60;
+        } else if (type === 'emp') {
+          this.player.empCharges = Math.min(this.player.maxEmp, this.player.empCharges + 1);
+        } else if (type === 'triBeam') {
+          this.player.triBeamActive = true;
+          this.player.triBeamTimer = 350;
+        } else if (type === 'overcharge') {
+          this.player.overchargeActive = true;
+          this.player.overchargeTimer = 300;
+        } else if (type === 'repair') {
+          this.player.health = Math.min(this.player.maxHealth, this.player.health + 30);
+        }
+        if (typeof playSound === 'function') {
+          playSound('powerup');
+        }
+        this.updateHUD();
+      }
+
+      damagePlayer(amount) {
+        if (!this.started || this.paused || this.over) return;
+        const dmg = typeof amount === 'number' && Number.isFinite(amount) ? amount : 10;
+
+        if (this.player.shieldActive) {
+          this.player.shieldHealth -= dmg;
+          if (this.player.shieldHealth <= 0) {
+            this.player.shieldActive = false;
+            this.player.shieldHealth = 0;
+          }
+        } else {
+          this.player.health -= dmg;
+        }
+
+        // Reset combo on hit
+        this.comboCount = 0;
+        this.multiplier = 1;
+
+        if (this.player.health <= 0) {
+          this.player.health = 0;
+          this.over = true;
+          if (this.score > this.highScore) {
+            this.highScore = this.score;
+            if (typeof saveBestScore === 'function') {
+              saveBestScore('cybersurge', this.highScore);
+            }
+          }
+          if (typeof playSound === 'function') {
+            playSound('gameover');
+          }
+        } else {
+          if (typeof playSound === 'function') {
+            playSound('hit');
+          }
+        }
+        this.updateHUD();
+      }
+
+      updateHUD() {
+        if (!this.ui) return;
+        if (this.ui.score) this.ui.score.textContent = typeof formatScore === 'function' ? formatScore(this.score) : this.score;
+        if (this.ui.best) this.ui.best.textContent = typeof formatScore === 'function' ? formatScore(this.highScore) : this.highScore;
+        if (this.ui.health) this.ui.health.textContent = `${Math.ceil(this.player.health)}%`;
+        if (this.ui.shield) this.ui.shield.textContent = this.player.shieldActive ? `${Math.ceil(this.player.shieldHealth)} HP` : 'OFF';
+        if (this.ui.emp) this.ui.emp.textContent = `${this.player.empCharges} / ${this.player.maxEmp}`;
+        if (this.ui.multiplier) this.ui.multiplier.textContent = `x${this.multiplier}`;
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Player Cooldowns
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+        if (this.player.triBeamActive) {
+          this.player.triBeamTimer--;
+          if (this.player.triBeamTimer <= 0) this.player.triBeamActive = false;
+        }
+
+        if (this.player.overchargeActive) {
+          this.player.overchargeTimer--;
+          if (this.player.overchargeTimer <= 0) this.player.overchargeActive = false;
+        }
+
+        // Update player position
+        this.player.x += this.player.vx;
+        this.player.y += this.player.vy;
+
+        // Friction / Damping
+        this.player.vx *= 0.85;
+        this.player.vy *= 0.85;
+
+        // Canvas Boundary Clamping
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.x = clampFn(this.player.x, this.player.radius, this.CANVAS_WIDTH - this.player.radius);
+        this.player.y = clampFn(this.player.y, this.player.radius, this.CANVAS_HEIGHT - this.player.radius);
+
+        // Update Player Bullets
+        for (let i = this.playerBullets.length - 1; i >= 0; i--) {
+          const b = this.playerBullets[i];
+          b.x += b.vx;
+          b.y += b.vy;
+
+          if (b.x < 0 || b.x > 600 || b.y < 0 || b.y > 400) {
+            this.playerBullets.splice(i, 1);
+          }
+        }
+
+        // Update Enemy Bullets
+        for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+          const eb = this.enemyBullets[i];
+          eb.x += eb.vx;
+          eb.y += eb.vy;
+
+          // Check collision with player
+          const circleCheck = typeof checkCircleCollision === 'function'
+            ? checkCircleCollision
+            : (c1, c2) => Math.hypot(c1.x - c2.x, c1.y - c2.y) < (c1.radius + c2.radius);
+
+          if (circleCheck(eb, this.player)) {
+            this.damagePlayer(eb.damage || 10);
+            this.enemyBullets.splice(i, 1);
+            continue;
+          }
+
+          if (eb.x < -20 || eb.x > 620 || eb.y < -20 || eb.y > 420) {
+            this.enemyBullets.splice(i, 1);
+          }
+        }
+
+        // Update EMP Shockwaves
+        for (let i = this.empPulses.length - 1; i >= 0; i--) {
+          const pulse = this.empPulses[i];
+          pulse.radius += pulse.growthRate;
+          if (pulse.radius >= pulse.maxRadius) {
+            this.empPulses.splice(i, 1);
+          }
+        }
+
+        // Spawn Enemies & Boss Wave
+        this.spawnTimer++;
+        if (this.spawnTimer >= this.spawnInterval && !this.boss) {
+          this.spawnTimer = 0;
+          this.spawnEnemy();
+        }
+
+        if (this.score >= 500 * this.wave && !this.boss && !this.bossSpawnedForWave) {
+          this.spawnBoss();
+          this.bossSpawnedForWave = true;
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const enemy = this.enemies[i];
+          const angle = Math.atan2(this.player.y - enemy.y, this.player.x - enemy.x);
+          enemy.x += Math.cos(angle) * enemy.speed;
+          enemy.y += Math.sin(angle) * enemy.speed;
+
+          // Enemy Firing
+          if (enemy.type === 'seeker') {
+            enemy.fireTimer = (enemy.fireTimer || 0) + 1;
+            if (enemy.fireTimer >= 90) {
+              enemy.fireTimer = 0;
+              this.enemyBullets.push({
+                x: enemy.x,
+                y: enemy.y,
+                vx: Math.cos(angle) * 4,
+                vy: Math.sin(angle) * 4,
+                radius: 4,
+                damage: 12,
+                color: '#ff007f'
+              });
+            }
+          }
+
+          // Check collision with Player Bullets
+          for (let j = this.playerBullets.length - 1; j >= 0; j--) {
+            const pb = this.playerBullets[j];
+            const dist = Math.hypot(pb.x - enemy.x, pb.y - enemy.y);
+            if (dist < pb.radius + enemy.radius) {
+              enemy.health -= pb.damage;
+              this.playerBullets.splice(j, 1);
+
+              if (enemy.health <= 0) {
+                // Combo & Score
+                this.comboCount++;
+                this.multiplier = Math.min(5, 1 + Math.floor(this.comboCount / 5));
+                this.setScore(this.score + enemy.scoreValue * this.multiplier);
+
+                // Chance to drop powerup
+                if (Math.random() < 0.25) {
+                  const pTypes = ['shield', 'emp', 'triBeam', 'overcharge', 'repair'];
+                  this.powerups.push({
+                    x: enemy.x,
+                    y: enemy.y,
+                    type: pTypes[Math.floor(Math.random() * pTypes.length)],
+                    radius: 10
+                  });
+                }
+                this.enemies.splice(i, 1);
+                break;
+              }
+            }
+          }
+
+          // Check collision with Player
+          const circleCheck = typeof checkCircleCollision === 'function'
+            ? checkCircleCollision
+            : (c1, c2) => Math.hypot(c1.x - c2.x, c1.y - c2.y) < (c1.radius + c2.radius);
+
+          if (this.enemies[i] && circleCheck(enemy, this.player)) {
+            this.damagePlayer(15);
+            this.enemies.splice(i, 1);
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += 2;
+          }
+
+          this.boss.fireTimer++;
+          if (this.boss.fireTimer >= 60) {
+            this.boss.fireTimer = 0;
+            // Radial boss bullet ring
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+              this.enemyBullets.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(a) * 3.5,
+                vy: Math.sin(a) * 3.5,
+                radius: 5,
+                damage: 15,
+                color: '#ff0055'
+              });
+            }
+          }
+
+          // Check player bullet hits on boss
+          for (let j = this.playerBullets.length - 1; j >= 0; j--) {
+            const pb = this.playerBullets[j];
+            const dist = Math.hypot(pb.x - this.boss.x, pb.y - this.boss.y);
+            if (dist < pb.radius + this.boss.radius) {
+              this.boss.health -= pb.damage;
+              this.playerBullets.splice(j, 1);
+
+              if (this.boss.health <= 0) {
+                this.setScore(this.score + 500 * this.multiplier);
+                this.boss = null;
+                this.wave++;
+                this.bossSpawnedForWave = false;
+                this.collectPowerup('emp');
+                break;
+              }
+            }
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const pw = this.powerups[i];
+          pw.y += 0.5;
+
+          const dist = Math.hypot(pw.x - this.player.x, pw.y - this.player.y);
+          if (dist < pw.radius + this.player.radius) {
+            this.collectPowerup(pw.type);
+            this.powerups.splice(i, 1);
+          } else if (pw.y > 420) {
+            this.powerups.splice(i, 1);
+          }
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+
+        // Clear Canvas
+        ctx.fillStyle = '#070a13';
+        ctx.fillRect(0, 0, 600, 400);
+
+        // Draw Matrix Grid Background
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < 600; x += 30) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, 400);
+          ctx.stroke();
+        }
+        for (let y = 0; y < 400; y += 30) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(600, y);
+          ctx.stroke();
+        }
+
+        // Draw EMP Pulses
+        this.empPulses.forEach(p => {
+          ctx.save();
+          ctx.strokeStyle = '#ff007f';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Draw Powerups
+        this.powerups.forEach(pw => {
+          ctx.save();
+          ctx.fillStyle = pw.type === 'shield' ? '#00f0ff' : (pw.type === 'emp' ? '#ff007f' : '#facc15');
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(pw.x, pw.y, pw.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Player Bullets
+        this.playerBullets.forEach(b => {
+          ctx.save();
+          ctx.fillStyle = b.color;
+          ctx.shadowColor = b.color;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Enemy Bullets
+        this.enemyBullets.forEach(eb => {
+          ctx.save();
+          ctx.fillStyle = eb.color;
+          ctx.shadowColor = eb.color;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(eb.x, eb.y, eb.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Enemies
+        this.enemies.forEach(e => {
+          ctx.save();
+          ctx.fillStyle = e.color;
+          ctx.shadowColor = e.color;
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.fillStyle = this.boss.color;
+          ctx.shadowColor = this.boss.color;
+          ctx.shadowBlur = 20;
+          ctx.beginPath();
+          ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Boss Health Bar
+          ctx.fillStyle = 'rgba(255, 0, 0, 0.4)';
+          ctx.fillRect(this.boss.x - 30, this.boss.y - 45, 60, 6);
+          ctx.fillStyle = '#ff0055';
+          ctx.fillRect(this.boss.x - 30, this.boss.y - 45, (this.boss.health / this.boss.maxHealth) * 60, 6);
+          ctx.restore();
+        }
+
+        // Draw Player Cyber Core
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+        ctx.rotate(this.player.aimAngle);
+
+        // Core Shield Ring
+        if (this.player.shieldActive) {
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#00f0ff';
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.arc(0, 0, this.player.radius + 6, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Core Body
+        ctx.fillStyle = '#00f0ff';
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.player.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cannon Pointer
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, -3, this.player.radius + 6, 6);
+
+        ctx.restore();
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberSurgeEngine };
+    }
+
+    // ─── DOM Initialization
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        const uiElements = {
+          score: document.getElementById('hudScore'),
+          best: document.getElementById('hudBest'),
+          health: document.getElementById('hudHealth'),
+          shield: document.getElementById('hudShield'),
+          emp: document.getElementById('hudEmp'),
+          multiplier: document.getElementById('hudMultiplier')
+        };
+
+        const engine = new CyberSurgeEngine(canvas, uiElements);
+
+        const startOverlay = document.getElementById('startOverlay');
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const finalScoreText = document.getElementById('finalScoreText');
+
+        document.getElementById('btnStart').addEventListener('click', () => {
+          startOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        document.getElementById('btnResume').addEventListener('click', () => {
+          pauseOverlay.classList.add('hidden');
+          engine.resume();
+        });
+
+        document.getElementById('btnRestart').addEventListener('click', () => {
+          gameOverOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        if (typeof KeyManager !== 'undefined') {
+          document.getElementById('btnControls').addEventListener('click', () => {
+            KeyManager.showModal();
+          });
+        }
+
+        // Inputs
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+          keys[e.code] = true;
+          if (e.code === 'KeyP') {
+            if (engine.started && !engine.over) {
+              engine.togglePause();
+              if (engine.paused) pauseOverlay.classList.remove('hidden');
+              else pauseOverlay.classList.add('hidden');
+            }
+          }
+          if (e.code === 'ShiftLeft' || e.code === 'ShiftRight' || e.code === 'KeyE') {
+            engine.triggerEmpPulse();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          keys[e.code] = false;
+        });
+
+        // Mouse Aiming & Firing
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const mx = (e.clientX - rect.left) * (600 / rect.width);
+          const my = (e.clientY - rect.top) * (400 / rect.height);
+          engine.player.aimAngle = Math.atan2(my - engine.player.y, mx - engine.player.x);
+        });
+
+        canvas.addEventListener('mousedown', () => {
+          engine.fireBullet();
+        });
+
+        // Main Loop
+        function loop() {
+          let dx = 0, dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          if (keys['Space']) {
+            engine.fireBullet();
+          }
+
+          engine.movePlayer(dx, dy);
+          engine.update();
+          engine.draw();
+
+          if (engine.over) {
+            finalScoreText.textContent = `Final Score: ${formatScore ? formatScore(engine.score) : engine.score}`;
+            gameOverOverlay.classList.remove('hidden');
+          }
+
+          requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);
+      });
+    }
+  </script>
+</body>
+</html>
