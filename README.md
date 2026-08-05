@@ -1,3 +1,4 @@
+<!-- worker-execution-verification: verified -->
 <!-- last-cron-run: 2026-08-04 -->
 # Arcade Game Portal
 Live on : https://arcadehub.telekit.link/
