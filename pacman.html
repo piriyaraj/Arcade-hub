@@ -257,10 +257,17 @@
 </head>
 <body>
   <header>
-    <a href="index.html" class="back-btn">&larr; Portal</a>
-    <h1>NEON PAC-MAN</h1>
-    <p>Use Arrow Keys or WASD to navigate & eat energizers!</p>
-    <button id="mute-btn" class="mute-btn" aria-label="Toggle sound">🔊 Sound</button>
+    <div class="header-left">
+      <a href="index.html" class="back-btn nav-btn">&larr; Home</a>
+    </div>
+    <div class="header-title">
+      <h1>NEON PAC-MAN</h1>
+      <p class="subtitle">Use Arrow Keys or WASD to navigate & eat energizers!</p>
+    </div>
+    <div class="header-actions">
+      <button id="mute-btn" class="mute-btn nav-btn action-btn" aria-label="Toggle sound">🔊 Sound</button>
+      <a href="leaderboard.html" class="nav-btn action-btn">🏆 Leaderboard</a>
+    </div>
   </header>
 
   <div id="stats">

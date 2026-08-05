@@ -304,12 +304,17 @@
 </head>
 <body>
   <header>
-    <a href="index.html" class="back-btn">← Arcade Portal</a>
-    <h1>Cyber Siege</h1>
-    <p>Defend the Cyber Matrix against rogue virus swarms & Dreadnought Bosses!</p>
+    <div class="header-left">
+      <a href="index.html" class="back-btn nav-btn">&larr; Home</a>
+    </div>
+    <div class="header-title">
+      <h1>Cyber Siege</h1>
+      <p class="subtitle">Defend the Cyber Matrix against rogue virus swarms & Dreadnought Bosses!</p>
+    </div>
     <div class="header-actions">
-      <button id="kb-btn" class="action-btn" onclick="KeyManager.showModal()">⌨️ Controls</button>
-      <button id="mute-btn" class="action-btn">🔊 Sound On</button>
+      <button id="kb-btn" class="nav-btn action-btn" onclick="KeyManager.showModal()">⌨️ Controls</button>
+      <button id="mute-btn" class="mute-btn nav-btn action-btn" aria-label="Toggle sound">🔊 Sound On</button>
+      <a href="leaderboard.html" class="nav-btn action-btn">🏆 Leaderboard</a>
     </div>
   </header>
 
