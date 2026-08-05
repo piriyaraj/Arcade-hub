@@ -82,6 +82,8 @@ test('Leaderboard aggregations', () => {
   mockStorage['pong_best_streak'] = '5';
   mockStorage['breakout_best'] = '450';
   mockStorage['cyberbreaker_best'] = '850';
+  mockStorage['cyberoverdrive_best'] = '1050';
+  mockStorage['cybervortex_best'] = '1450';
 
   const scores = Leaderboard.getScores();
   const snakeScore = scores.find(s => s.id === 'snake');
@@ -89,12 +91,16 @@ test('Leaderboard aggregations', () => {
   const breakoutScore = scores.find(s => s.id === 'breakout');
   const cyberRacerScore = scores.find(s => s.id === 'cyberracer');
   const cyberBreakerScore = scores.find(s => s.id === 'cyberbreaker');
+  const cyberOverdriveScore = scores.find(s => s.id === 'cyberoverdrive');
+  const cyberVortexScore = scores.find(s => s.id === 'cybervortex');
 
   assert.strictEqual(snakeScore.score, 120);
   assert.strictEqual(pongScore.score, 5);
   assert.strictEqual(breakoutScore.score, 450);
   assert.strictEqual(cyberRacerScore.score, 0); // Not set
   assert.strictEqual(cyberBreakerScore.score, 850);
+  assert.strictEqual(cyberOverdriveScore.score, 1050);
+  assert.strictEqual(cyberVortexScore.score, 1450);
 
   // Test reset operations
   Leaderboard.resetAllScores();
@@ -102,4 +108,6 @@ test('Leaderboard aggregations', () => {
   assert.strictEqual(mockStorage['pong_best_streak'], undefined);
   assert.strictEqual(mockStorage['breakout_best'], undefined);
   assert.strictEqual(mockStorage['cyberbreaker_best'], undefined);
+  assert.strictEqual(mockStorage['cyberoverdrive_best'], undefined);
+  assert.strictEqual(mockStorage['cybervortex_best'], undefined);
 });

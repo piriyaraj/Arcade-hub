@@ -1,13 +1,14 @@
 import logging
+from typing import Any, Optional
 from src.queue.handler import TaskQueue, dlq_handler
 
 logger = logging.getLogger("scheduler")
 
 class TaskScheduler:
-    def __init__(self, queue=None):
+    def __init__(self, queue: Optional[TaskQueue] = None) -> None:
         self.queue = queue or TaskQueue()
 
-    def schedule_task(self, payload):
+    def schedule_task(self, payload: Any) -> str:
         """
         Schedules a task by submitting it to the queue.
         """

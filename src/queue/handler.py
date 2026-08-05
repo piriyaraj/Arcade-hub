@@ -2,6 +2,7 @@ import logging
 import uuid
 import traceback
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 from src.tasks.validation import validate_task_payload
 
 logger = logging.getLogger("queue")
@@ -11,10 +12,10 @@ class DLQHandler:
     DLQ (dead-letter queue) handler.
     Stores and formats failed tasks.
     """
-    def __init__(self):
-        self.dlq_store = []
+    def __init__(self) -> None:
+        self.dlq_store: List[Dict[str, Any]] = []
 
-    def handle_failure(self, payload, exception):
+    def handle_failure(self, payload: Any, exception: Optional[Exception]) -> Dict[str, Any]:
         """
         Processes a task failure and saves it to the DLQ.
         """
@@ -55,11 +56,11 @@ class DLQHandler:
 dlq_handler = DLQHandler()
 
 class TaskQueue:
-    def __init__(self, dlq=dlq_handler):
-        self.queue = []
+    def __init__(self, dlq: DLQHandler = dlq_handler) -> None:
+        self.queue: List[Dict[str, Any]] = []
         self.dlq = dlq
 
-    def submit(self, payload):
+    def submit(self, payload: Any) -> str:
         """
         Submits a task to the queue after validation.
         """

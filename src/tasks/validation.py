@@ -1,6 +1,7 @@
 import logging
 import inspect
 from enum import Enum
+from typing import Any, Dict, Optional, Union
 
 class TaskType(str, Enum):
     EMAIL = "email"
@@ -13,7 +14,7 @@ class TaskValidationError(Exception):
 
 logger = logging.getLogger("tasks")
 
-def validate_task_payload(payload):
+def validate_task_payload(payload: Any) -> bool:
     """
     Validates the task payload.
     Must contain a non-empty string 'title' and a valid enum value for 'type'.
@@ -72,7 +73,7 @@ def validate_task_payload(payload):
 
     return True
 
-def sanitize_payload(payload):
+def sanitize_payload(payload: Any) -> Any:
     """
     Returns a sanitized copy of the payload with potential secrets/credentials redacted.
     """
@@ -80,7 +81,7 @@ def sanitize_payload(payload):
         return payload
 
     sensitive_keys = {"password", "secret", "token", "key", "auth", "credential"}
-    sanitized = {}
+    sanitized: Dict[str, Any] = {}
     for k, v in payload.items():
         if any(sk in k.lower() for sk in sensitive_keys):
             sanitized[k] = "[REDACTED]"

@@ -18,6 +18,8 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 💻 **[Cyber Hacker](cyberhacker.html)** — Intercept data packets, breach firewall security barriers, and deploy EMP pulses.
 - ⚡ **[Cyber Dash](cyberdash.html)** — Fast-paced neon matrix lane dash arcade game with EMP shockwaves.
 - ⚡ **[Cyber Surge](cybersurge.html)** — 360° vector matrix arena shooter with plasma surges, EMP shockwaves & Surge Singularity Bosses.
+- ⚡ **[Cyber Overdrive](cyberoverdrive.html)** — High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores.
+- 🌀 **[Cyber Vortex](cybervortex.html)** — High-octane orbital quantum core shooter with plasma beams, EMP vortex novas & Singularity Bosses.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -92,6 +94,7 @@ All game HTML files available in this repository:
 | [cyberdash.html](cyberdash.html) | Cyber Dash — Fast-paced neon matrix lane dash arcade game |
 | [cybersiege.html](cybersiege.html) | Cyber Siege — Tactical matrix defense shooter with Kinetic Shields & Dreadnought Bosses |
 | [cybersurge.html](cybersurge.html) | Cyber Surge — 360° vector matrix arena shooter with plasma surges, EMP shockwaves & Surge Singularity Bosses |
+| [cyberoverdrive.html](cyberoverdrive.html) | Cyber Overdrive — High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores |
 | [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |
 | [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |
