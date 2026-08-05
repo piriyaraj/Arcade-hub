@@ -27,6 +27,8 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🔮 **[Cyber Nexus](cybernexus.html)** — High-voltage orbital quantum grid defender & firewall breach shooter with EMP shockwaves & Omega Dreadnought Bosses.
 - ⚡ **[Cyber Storm](cyberstorm.html)** — High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters.
 - ⚔️ **[Cyber Blade](cyberblade.html)** — High-octane 360° cyber katana deflector & quantum blade slicer arena game with EMP Novas and Shadow Dreadnought bosses.
+- 🛡️ **[Cyber Aegis](cyberaegis.html)** — 360° orbital kinetic shield & plasma pulse arena defender game.
+- 🛡️ **[Cyber Defense](cyberdefense.html)** — Tactical matrix firewall defense shooter.
 - 🥷 **[Cyber Phantom](cyberphantom.html)** — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter with shadow decoys and Phase Overlord Bosses.
 - 🌀 **[Cyber Echo](cyberecho.html)** — High-octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter with temporal ghost clones and Chrono-Overlord Bosses.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
@@ -111,7 +113,10 @@ All game HTML files available in this repository:
 | [cybernexus.html](cybernexus.html) | Cyber Nexus — Orbital quantum grid defender & firewall breach shooter |
 | [cyberstorm.html](cyberstorm.html) | Cyber Storm — High-octane orbital lightning matrix defense & tactical EMP pulse shooter |
 | [cyberblade.html](cyberblade.html) | Cyber Blade — High-octane 360° cyber katana deflector & quantum blade slicer arena game |
+| [cyberaegis.html](cyberaegis.html) | Cyber Aegis — 360° orbital kinetic shield & plasma pulse arena defender |
+| [cyberdefense.html](cyberdefense.html) | Cyber Defense — Tactical matrix firewall defense shooter |
 | [cyberphantom.html](cyberphantom.html) | Cyber Phantom — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter |
+| [minesweeper.html](minesweeper.html) | Neon Minesweeper — Classic mine-clearing puzzle game with a cyberpunk twist |
 | [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |
 | [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |
