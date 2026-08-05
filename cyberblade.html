@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Blade - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Blade - High-octane cyber katana deflector & quantum blade slicer arena game. Slash hostile drones, deflect laser bolts, and defeat Shadow Dreadnoughts." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberblade.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Blade - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Blade - High-octane cyber katana deflector & quantum blade slicer arena game. Slash hostile drones, deflect laser bolts, and defeat Shadow Dreadnoughts." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberblade.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Blade - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Blade - High-octane cyber katana deflector & quantum blade slicer arena game." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Blade",
+    "url": "https://arcadehub.telekit.link/cyberblade.html",
+    "description": "High-octane cyber katana deflector & quantum blade slicer arena game.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <style>
+    :root {
+      --bg: #070913;
+      --board-bg: #0d1222;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #39ff14;
+      --blade-glow: #00f0ff;
+      --deflect-glow: #39ff14;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .mute-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #00f0ff 0%, #39ff14 50%, #ff007f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 800px;
+      max-width: 95vw;
+      margin: 10px 0;
+      padding: 10px 18px;
+      background: rgba(13, 18, 34, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .hud-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+
+    .stat-val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-neon);
+    }
+
+    .bar-container {
+      width: 120px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 4px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      transition: width 0.15s ease-out;
+    }
+
+    .health-fill { background: linear-gradient(90deg, #ff007f, #ff3300); }
+    .shield-fill { background: linear-gradient(90deg, #00f0ff, #0077ff); }
+
+    .game-container {
+      position: relative;
+      width: 800px;
+      height: 600px;
+      max-width: 95vw;
+      max-height: 70vh;
+      aspect-ratio: 4 / 3;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      background: var(--board-bg);
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+      display: block;
+      cursor: crosshair;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(7, 9, 19, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: var(--accent-neon);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px var(--accent-neon);
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 450px;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #00f0ff, #0077ff);
+      color: #000;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    .controls-hint {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .controls-hint span {
+      color: var(--accent-neon);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Portal</a>
+    <h1>Cyber Blade</h1>
+    <div class="subtitle">360° Neon Katana Slicer & Laser Deflector Arena</div>
+    <button id="muteBtn" class="mute-btn">🔊 Sound: ON</button>
+  </header>
+
+  <div class="hud-bar">
+    <div class="hud-stat">
+      <span class="stat-label">Health & Shield</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <div class="bar-container" title="Health">
+          <div id="healthFill" class="bar-fill health-fill" style="width: 100%;"></div>
+        </div>
+        <div class="bar-container" title="Shield">
+          <div id="shieldFill" class="bar-fill shield-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-stat">
+      <span class="stat-label">Score</span>
+      <span id="scoreVal" class="stat-val">0</span>
+    </div>
+
+    <div class="hud-stat">
+      <span class="stat-label">High Score</span>
+      <span id="highScoreVal" class="stat-val">0</span>
+    </div>
+
+    <div class="hud-stat">
+      <span class="stat-label">Wave</span>
+      <span id="waveVal" class="stat-val">1</span>
+    </div>
+
+    <div class="hud-stat">
+      <span class="stat-label">EMP Charges</span>
+      <span id="empVal" class="stat-val" style="color: var(--accent-pink);">⚡ 3</span>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="startOverlay" class="overlay">
+      <h2>Cyber Blade Arena</h2>
+      <p>Wield the Katana to slice corrupted AI drones and deflect incoming plasma bolts back at enemies! Dash to evade damage and trigger Katana Storm NOVAs when overwhelmed.</p>
+      <button id="startBtn" class="btn">Initiate Blade</button>
+      <div class="controls-hint">
+        <div><span>Move:</span> WASD / Arrow Keys</div>
+        <div><span>Slash / Deflect:</span> Left Click / Space</div>
+        <div><span>Phase Dash:</span> Shift / Double Tap</div>
+        <div><span>EMP Nova:</span> E / Right Click</div>
+      </div>
+    </div>
+
+    <div id="pauseOverlay" class="overlay hidden">
+      <h2>Matrix Paused</h2>
+      <p>Game loop suspended.</p>
+      <button id="resumeBtn" class="btn">Resume</button>
+    </div>
+
+    <div id="gameOverOverlay" class="overlay hidden">
+      <h2 style="color: var(--accent-pink);">System Failure</h2>
+      <p id="gameOverStats">Final Score: 0 | Wave Reached: 1</p>
+      <button id="restartBtn" class="btn">Reboot System</button>
+    </div>
+  </div>
+
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <script>
+    /**
+     * @typedef {Object} PlayerState
+     * @property {number} x
+     * @property {number} y
+     * @property {number} radius
+     * @property {number} speed
+     * @property {number} vx
+     * @property {number} vy
+     * @property {number} health
+     * @property {number} maxHealth
+     * @property {number} shield
+     * @property {number} maxShield
+     * @property {number} empCharges
+     * @property {number} maxEmpCharges
+     * @property {boolean} phaseDashActive
+     * @property {number} phaseDashTimer
+     * @property {number} phaseDashCooldown
+     * @property {number} bladeAngle
+     * @property {boolean} bladeActive
+     * @property {number} bladeTimer
+     * @property {number} bladeCooldown
+     */
+
+    /**
+     * CyberBladeEngine - High-Octane Cyber Katana Deflector & Quantum Blade Slicer Arena Engine
+     */
+    class CyberBladeEngine {
+      /**
+       * @param {HTMLCanvasElement|null} canvas
+       * @param {Object} [config]
+       */
+      constructor(canvas, config = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberblade') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+
+        /** @type {PlayerState} */
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          speed: 6.5,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          phaseDashActive: false,
+          phaseDashTimer: 0,
+          phaseDashCooldown: 0,
+          bladeAngle: 0,
+          bladeActive: false,
+          bladeTimer: 0,
+          bladeCooldown: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empNovas = [];
+        this.powerups = [];
+        this.slashArcEffects = [];
+
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 8;
+        this.bossSpawnedThisWave = false;
+
+        this.gridOffset = 0;
+        this.aimX = this.width / 2;
+        this.aimY = 0;
+      }
+
+      /**
+       * Starts a new game session.
+       */
+      start() {
+        this.reset();
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+      }
+
+      /**
+       * Pauses gameplay.
+       */
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      /**
+       * Resumes gameplay.
+       */
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      /**
+       * Toggles pause state.
+       */
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      /**
+       * Sets active score explicitly.
+       * @param {number} val
+       */
+      setScore(val) {
+        this.score = Math.max(0, Math.floor(val));
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberblade', this.highScore);
+          }
+        }
+      }
+
+      /**
+       * Resets all game entities and stats.
+       */
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.combo = 0;
+        this.comboTimer = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          speed: 6.5,
+          vx: 0,
+          vy: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          phaseDashActive: false,
+          phaseDashTimer: 0,
+          phaseDashCooldown: 0,
+          bladeAngle: 0,
+          bladeActive: false,
+          bladeTimer: 0,
+          bladeCooldown: 0
+        };
+
+        this.bullets = [];
+        this.enemyBullets = [];
+        this.enemies = [];
+        this.boss = null;
+        this.particles = [];
+        this.empNovas = [];
+        this.powerups = [];
+        this.slashArcEffects = [];
+
+        this.spawnTimer = 0;
+        this.enemiesDefeatedInWave = 0;
+        this.enemiesRequiredForWave = 8;
+        this.bossSpawnedThisWave = false;
+      }
+
+      /**
+       * Updates player position with directional vector and bounds clamping.
+       * @param {number} dx
+       * @param {number} dy
+       */
+      movePlayer(dx, dy) {
+        if (this.over || this.paused || !this.started) return;
+
+        const mag = Math.hypot(dx, dy);
+        const curSpeed = this.player.phaseDashActive ? this.player.speed * 2.2 : this.player.speed;
+
+        if (mag > 0) {
+          this.player.vx = (dx / mag) * curSpeed;
+          this.player.vy = (dy / mag) * curSpeed;
+        } else {
+          this.player.vx *= 0.8;
+          this.player.vy *= 0.8;
+        }
+
+        this.player.x += this.player.vx;
+        this.player.y += this.player.vy;
+
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.x = clampFn(this.player.x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clampFn(this.player.y, this.player.radius, this.height - this.player.radius);
+      }
+
+      /**
+       * Updates player aiming coordinate for katana slashing.
+       * @param {number} targetX
+       * @param {number} targetY
+       */
+      aimAt(targetX, targetY) {
+        this.aimX = targetX;
+        this.aimY = targetY;
+        this.player.bladeAngle = Math.atan2(targetY - this.player.y, targetX - this.player.x);
+      }
+
+      /**
+       * Triggers Katana Slicer Slash towards aim target.
+       * @returns {boolean} Whether slash executed
+       */
+      slashBlade() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.bladeCooldown > 0) return false;
+
+        this.player.bladeActive = true;
+        this.player.bladeTimer = 12; // 12 frames active arc
+        this.player.bladeCooldown = 20; // cooldown
+
+        const angle = this.player.bladeAngle;
+        const slashRadius = 75;
+
+        // Visual Slash Arc Effect
+        this.slashArcEffects.push({
+          x: this.player.x,
+          y: this.player.y,
+          angle: angle,
+          radius: slashRadius,
+          life: 12,
+          maxLife: 12
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playLaserSound) {
+          SoundManager.playLaserSound();
+        }
+
+        // Deflect / Reflect incoming enemy bullets caught in slash arc
+        const arcWidth = Math.PI * 0.7; // 126 degree arc
+        for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+          const eb = this.enemyBullets[i];
+          const dist = Math.hypot(eb.x - this.player.x, eb.y - this.player.y);
+          if (dist <= slashRadius + eb.radius) {
+            const bAngle = Math.atan2(eb.y - this.player.y, eb.x - this.player.x);
+            let diff = Math.abs(bAngle - angle);
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            diff = Math.abs(diff);
+
+            if (diff <= arcWidth / 2) {
+              // Deflect laser back towards origin / direction
+              const speed = Math.hypot(eb.vx, eb.vy) * 1.5;
+              const returnAngle = angle + (Math.random() - 0.5) * 0.2;
+              this.bullets.push({
+                x: eb.x,
+                y: eb.y,
+                vx: Math.cos(returnAngle) * Math.max(speed, 12),
+                vy: Math.sin(returnAngle) * Math.max(speed, 12),
+                radius: 6,
+                damage: 35,
+                reflected: true
+              });
+
+              this.spawnParticles(eb.x, eb.y, '#39ff14', 8);
+              this.enemyBullets.splice(i, 1);
+            }
+          }
+        }
+
+        // Damage Enemies caught in slash arc
+        const hitEnemies = [];
+        this.enemies.forEach(e => {
+          const dist = Math.hypot(e.x - this.player.x, e.y - this.player.y);
+          if (dist <= slashRadius + e.radius) {
+            const eAngle = Math.atan2(e.y - this.player.y, e.x - this.player.x);
+            let diff = Math.abs(eAngle - angle);
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            diff = Math.abs(diff);
+
+            if (diff <= arcWidth / 2) {
+              hitEnemies.push(e);
+            }
+          }
+        });
+
+        hitEnemies.forEach(e => {
+          e.health -= 45;
+          this.spawnParticles(e.x, e.y, '#00f0ff', 6);
+          if (e.health <= 0) {
+            this.handleEnemyDeath(e);
+          }
+        });
+
+        // Damage Boss if in slash arc
+        if (this.boss) {
+          const dist = Math.hypot(this.boss.x - this.player.x, this.boss.y - this.player.y);
+          if (dist <= slashRadius + this.boss.radius) {
+            const bossAngle = Math.atan2(this.boss.y - this.player.y, this.boss.x - this.player.x);
+            let diff = Math.abs(bossAngle - angle);
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            diff = Math.abs(diff);
+
+            if (diff <= arcWidth / 2) {
+              this.boss.health -= 60;
+              this.spawnParticles(this.boss.x, this.boss.y, '#facc15', 10);
+              if (this.boss.health <= 0) {
+                this.handleEnemyDeath(this.boss);
+              }
+            }
+          }
+        }
+
+        return true;
+      }
+
+      /**
+       * Triggers Phase Dash invulnerable surge.
+       * @returns {boolean} Whether dash executed
+       */
+      triggerPhaseDash() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.phaseDashCooldown > 0) return false;
+
+        this.player.phaseDashActive = true;
+        this.player.phaseDashTimer = 18; // 18 frames duration
+        this.player.phaseDashCooldown = 60; // 1 sec cooldown
+
+        this.spawnParticles(this.player.x, this.player.y, '#00f0ff', 15);
+        return true;
+      }
+
+      /**
+       * Triggers EMP Katana Storm Nova.
+       * @returns {boolean} Whether EMP triggered
+       */
+      triggerEmpNova() {
+        if (this.over || this.paused || !this.started) return false;
+        if (this.player.empCharges <= 0) return false;
+
+        this.player.empCharges -= 1;
+        this.empNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 15,
+          maxRadius: 380,
+          speed: 15,
+          damage: 130
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+        return true;
+      }
+
+      /**
+       * Spawns hostile AI Drone.
+       * @param {string} [type]
+       */
+      spawnEnemy(type) {
+        const types = ['drone', 'turret', 'shadow'];
+        const chosenType = type || types[Math.floor(Math.random() * types.length)];
+        const edge = Math.floor(Math.random() * 4);
+
+        let x, y;
+        if (edge === 0) { x = Math.random() * this.width; y = -20; }
+        else if (edge === 1) { x = Math.random() * this.width; y = this.height + 20; }
+        else if (edge === 2) { x = -20; y = Math.random() * this.height; }
+        else { x = this.width + 20; y = Math.random() * this.height; }
+
+        let hp = 35;
+        let speed = 2.4;
+        let radius = 16;
+        let color = '#39ff14';
+
+        if (chosenType === 'turret') {
+          hp = 60;
+          speed = 1.0;
+          radius = 20;
+          color = '#ff007f';
+        } else if (chosenType === 'shadow') {
+          hp = 90;
+          speed = 3.2;
+          radius = 18;
+          color = '#a855f7';
+        }
+
+        this.enemies.push({
+          type: chosenType,
+          x,
+          y,
+          vx: 0,
+          vy: 0,
+          speed,
+          radius,
+          health: hp + (this.wave - 1) * 8,
+          maxHealth: hp + (this.wave - 1) * 8,
+          color,
+          shootTimer: Math.random() * 60
+        });
+      }
+
+      /**
+       * Spawns Shadow Dreadnought Boss.
+       */
+      spawnBoss() {
+        this.boss = {
+          name: 'SHADOW DREADNOUGHT',
+          x: this.width / 2,
+          y: -100,
+          targetY: 130,
+          radius: 52,
+          health: 900 + (this.wave * 250),
+          maxHealth: 900 + (this.wave * 250),
+          vx: 2.2,
+          vy: 1,
+          shootTimer: 0
+        };
+        this.bossSpawnedThisWave = true;
+      }
+
+      /**
+       * Physics & Game state update step.
+       * @param {number} [dt] Delta time factor
+       */
+      update(dt = 1) {
+        if (!this.started || this.paused || this.over) return;
+
+        this.gridOffset = (this.gridOffset + 1.8 * dt) % 40;
+
+        // Player Timers
+        if (this.player.bladeTimer > 0) {
+          this.player.bladeTimer -= dt;
+          if (this.player.bladeTimer <= 0) this.player.bladeActive = false;
+        }
+        if (this.player.bladeCooldown > 0) this.player.bladeCooldown -= dt;
+
+        if (this.player.phaseDashTimer > 0) {
+          this.player.phaseDashTimer -= dt;
+          if (this.player.phaseDashTimer <= 0) this.player.phaseDashActive = false;
+        }
+        if (this.player.phaseDashCooldown > 0) this.player.phaseDashCooldown -= dt;
+
+        // Combo decay
+        if (this.combo > 0) {
+          this.comboTimer -= dt;
+          if (this.comboTimer <= 0) {
+            this.combo = 0;
+            this.multiplier = 1;
+          }
+        }
+
+        // Update Slash Arc Visual Effects
+        for (let i = this.slashArcEffects.length - 1; i >= 0; i--) {
+          const arc = this.slashArcEffects[i];
+          arc.life -= dt;
+          if (arc.life <= 0) this.slashArcEffects.splice(i, 1);
+        }
+
+        // Update EMP Novas safely without array mutation skipping
+        for (let i = this.empNovas.length - 1; i >= 0; i--) {
+          const nova = this.empNovas[i];
+          nova.radius += nova.speed * dt;
+
+          // Clear enemy projectiles
+          for (let j = this.enemyBullets.length - 1; j >= 0; j--) {
+            const eb = this.enemyBullets[j];
+            const dist = Math.hypot(eb.x - nova.x, eb.y - nova.y);
+            if (dist <= nova.radius) {
+              this.enemyBullets.splice(j, 1);
+            }
+          }
+
+          // Damage enemies safely without array mutation skipping
+          for (let k = this.enemies.length - 1; k >= 0; k--) {
+            const e = this.enemies[k];
+            if (!e) continue;
+            const dist = Math.hypot(e.x - nova.x, e.y - nova.y);
+            if (dist <= nova.radius && !e.empHit) {
+              e.health -= nova.damage;
+              e.empHit = true;
+              if (e.health <= 0) this.handleEnemyDeath(e);
+            }
+          }
+
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - nova.x, this.boss.y - nova.y);
+            if (dist <= nova.radius && !this.boss.empHit) {
+              this.boss.health -= nova.damage;
+              this.boss.empHit = true;
+              if (this.boss.health <= 0) this.handleEnemyDeath(this.boss);
+            }
+          }
+
+          if (nova.radius >= nova.maxRadius) {
+            this.empNovas.splice(i, 1);
+          }
+        }
+
+        // Update Player/Reflected Bullets
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const b = this.bullets[i];
+          b.x += b.vx * dt;
+          b.y += b.vy * dt;
+
+          if (b.x < -30 || b.x > this.width + 30 || b.y < -30 || b.y > this.height + 30) {
+            this.bullets.splice(i, 1);
+            continue;
+          }
+
+          // Hit Boss
+          if (this.boss && typeof checkCircleCollision === 'function' && checkCircleCollision(b, this.boss)) {
+            this.boss.health -= b.damage;
+            this.bullets.splice(i, 1);
+            this.spawnParticles(b.x, b.y, '#39ff14', 4);
+            if (this.boss.health <= 0) this.handleEnemyDeath(this.boss);
+            continue;
+          }
+
+          // Hit Enemies
+          let hit = false;
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const isHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(b, e) : (Math.hypot(b.x - e.x, b.y - e.y) < b.radius + e.radius);
+            if (isHit) {
+              e.health -= b.damage;
+              hit = true;
+              this.spawnParticles(b.x, b.y, e.color, 5);
+              if (e.health <= 0) this.handleEnemyDeath(e);
+              break;
+            }
+          }
+          if (hit) this.bullets.splice(i, 1);
+        }
+
+        // Enemy Spawning & Wave Logic
+        if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && !this.bossSpawnedThisWave && this.wave % 3 === 0) {
+          this.spawnBoss();
+        } else if (!this.boss && this.enemiesDefeatedInWave >= this.enemiesRequiredForWave && this.enemies.length === 0) {
+          this.wave += 1;
+          this.enemiesDefeatedInWave = 0;
+          this.enemiesRequiredForWave = 8 + this.wave * 3;
+          this.bossSpawnedThisWave = false;
+          if (this.player.empCharges < this.player.maxEmpCharges) {
+            this.player.empCharges += 1;
+          }
+        } else if (!this.boss && this.enemies.length < 6) {
+          this.spawnTimer += dt;
+          if (this.spawnTimer >= 55) {
+            this.spawnTimer = 0;
+            this.spawnEnemy();
+          }
+        }
+
+        // Update Boss Logic
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += 2 * dt;
+          } else {
+            this.boss.x += this.boss.vx * dt;
+            if (this.boss.x - this.boss.radius < 20 || this.boss.x + this.boss.radius > this.width - 20) {
+              this.boss.vx = -this.boss.vx;
+            }
+          }
+
+          this.boss.shootTimer += dt;
+          if (this.boss.shootTimer > 35) {
+            this.boss.shootTimer = 0;
+            const angles = [-0.5, -0.25, 0, 0.25, 0.5];
+            angles.forEach(ang => {
+              this.enemyBullets.push({
+                x: this.boss.x,
+                y: this.boss.y + 35,
+                vx: Math.sin(ang) * 5.5,
+                vy: Math.cos(ang) * 5.5,
+                radius: 6,
+                color: '#ff007f'
+              });
+            });
+          }
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angleToPlayer = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+
+          e.vx = Math.cos(angleToPlayer) * e.speed;
+          e.vy = Math.sin(angleToPlayer) * e.speed;
+          e.x += e.vx * dt;
+          e.y += e.vy * dt;
+
+          // Enemy Firing
+          e.shootTimer += dt;
+          if (e.shootTimer > 80) {
+            e.shootTimer = 0;
+            this.enemyBullets.push({
+              x: e.x,
+              y: e.y,
+              vx: Math.cos(angleToPlayer) * 5,
+              vy: Math.sin(angleToPlayer) * 5,
+              radius: 4.5,
+              color: e.color
+            });
+          }
+
+          // Collision with Player
+          if (!this.player.phaseDashActive) {
+            const dist = Math.hypot(this.player.x - e.x, this.player.y - e.y);
+            if (dist < this.player.radius + e.radius) {
+              this.damagePlayer(25);
+              this.spawnParticles(e.x, e.y, e.color, 12);
+              this.enemies.splice(i, 1);
+            }
+          }
+        }
+
+        // Update Enemy Bullets
+        for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+          const eb = this.enemyBullets[i];
+          eb.x += eb.vx * dt;
+          eb.y += eb.vy * dt;
+
+          if (eb.x < -30 || eb.x > this.width + 30 || eb.y < -30 || eb.y > this.height + 30) {
+            this.enemyBullets.splice(i, 1);
+            continue;
+          }
+
+          if (!this.player.phaseDashActive) {
+            const dist = Math.hypot(eb.x - this.player.x, eb.y - this.player.y);
+            if (dist < eb.radius + this.player.radius) {
+              this.damagePlayer(15);
+              this.spawnParticles(eb.x, eb.y, '#ff007f', 6);
+              this.enemyBullets.splice(i, 1);
+            }
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const p = this.powerups[i];
+          p.y += 1.5 * dt;
+
+          if (p.y > this.height + 20) {
+            this.powerups.splice(i, 1);
+            continue;
+          }
+
+          const dist = Math.hypot(p.x - this.player.x, p.y - this.player.y);
+          if (dist < p.radius + this.player.radius) {
+            this.collectPowerup(p);
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Update Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx * dt;
+          pt.y += pt.vy * dt;
+          pt.alpha -= 0.025 * dt;
+          if (pt.alpha <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+      }
+
+      /**
+       * Inflicts damage on player.
+       * @param {number} amount
+       */
+      damagePlayer(amount) {
+        if (this.player.shield > 0) {
+          this.player.shield -= amount;
+          if (this.player.shield < 0) {
+            this.player.health += this.player.shield;
+            this.player.shield = 0;
+          }
+        } else {
+          this.player.health -= amount;
+        }
+
+        const clampFn = typeof clamp === 'function' ? clamp : (v, min, max) => Math.min(Math.max(v, min), max);
+        this.player.health = clampFn(this.player.health, 0, this.player.maxHealth);
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playExplosionSound) {
+          SoundManager.playExplosionSound();
+        }
+
+        if (this.player.health <= 0) {
+          this.over = true;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberblade', this.score);
+          }
+        }
+      }
+
+      /**
+       * Handles enemy death score, particles, and powerups.
+       * @param {Object} enemy
+       */
+      handleEnemyDeath(enemy) {
+        if (enemy === this.boss) {
+          this.setScore(this.score + 1200 * this.multiplier);
+          this.spawnParticles(this.boss.x, this.boss.y, '#facc15', 35);
+          this.boss = null;
+          this.enemiesDefeatedInWave += 6;
+        } else {
+          const idx = this.enemies.indexOf(enemy);
+          if (idx !== -1) this.enemies.splice(idx, 1);
+
+          this.enemiesDefeatedInWave += 1;
+          this.setScore(this.score + 120 * this.multiplier);
+          this.spawnParticles(enemy.x, enemy.y, enemy.color || '#39ff14', 16);
+
+          if (Math.random() < 0.3) {
+            this.spawnPowerup(enemy.x, enemy.y);
+          }
+        }
+
+        this.combo += 1;
+        this.comboTimer = 180;
+        this.multiplier = Math.min(5, 1 + Math.floor(this.combo / 4));
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playExplosionSound) {
+          SoundManager.playExplosionSound();
+        }
+      }
+
+      /**
+       * Spawns powerup node at (x,y).
+       * @param {number} x
+       * @param {number} y
+       */
+      spawnPowerup(x, y) {
+        const types = ['shield', 'emp', 'health'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        this.powerups.push({ type, x, y, radius: 10 });
+      }
+
+      /**
+       * Processes collected powerup.
+       * @param {Object} powerup
+       */
+      collectPowerup(powerup) {
+        if (powerup.type === 'shield') {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 40);
+        } else if (powerup.type === 'health') {
+          this.player.health = Math.min(this.player.maxHealth, this.player.health + 30);
+        } else if (powerup.type === 'emp') {
+          this.player.empCharges = Math.min(this.player.maxEmpCharges, this.player.empCharges + 1);
+        }
+        this.spawnParticles(this.player.x, this.player.y, '#00f0ff', 12);
+      }
+
+      /**
+       * Spawns visual particle burst.
+       * @param {number} x
+       * @param {number} y
+       * @param {string} color
+       * @param {number} count
+       */
+      spawnParticles(x, y, color, count) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 4 + 1;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd,
+            radius: Math.random() * 3 + 1,
+            color,
+            alpha: 1
+          });
+        }
+      }
+
+      /**
+       * Main Render Frame.
+       */
+      render() {
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+
+        // Clear Background
+        ctx.fillStyle = '#070913';
+        ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw Matrix Cyber Grid
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < this.width; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, this.height);
+          ctx.stroke();
+        }
+        for (let y = this.gridOffset; y < this.height; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(this.width, y);
+          ctx.stroke();
+        }
+
+        // Render EMP Novas
+        this.empNovas.forEach(n => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = '#00f0ff';
+          ctx.lineWidth = 4;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#00f0ff';
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Render Slash Arc Visual Effects
+        this.slashArcEffects.forEach(arc => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(arc.x, arc.y, arc.radius, arc.angle - Math.PI * 0.35, arc.angle + Math.PI * 0.35);
+          ctx.strokeStyle = 'rgba(0, 240, 255, ' + (arc.life / arc.maxLife) + ')';
+          ctx.lineWidth = 6;
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = '#00f0ff';
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // Render Player
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+        ctx.rotate(this.player.bladeAngle);
+
+        if (this.player.phaseDashActive) {
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = '#00f0ff';
+        } else {
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#39ff14';
+        }
+
+        ctx.fillStyle = this.player.phaseDashActive ? '#00f0ff' : '#39ff14';
+        ctx.beginPath();
+        ctx.moveTo(this.player.radius, 0);
+        ctx.lineTo(-this.player.radius * 0.7, -this.player.radius * 0.6);
+        ctx.lineTo(-this.player.radius * 0.4, 0);
+        ctx.lineTo(-this.player.radius * 0.7, this.player.radius * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        // Katana Blade Indicator
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(35, 0);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Render Player / Reflected Bullets
+        this.bullets.forEach(b => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          ctx.fillStyle = b.reflected ? '#39ff14' : '#00f0ff';
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = b.reflected ? '#39ff14' : '#00f0ff';
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Render Enemy Bullets
+        this.enemyBullets.forEach(eb => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(eb.x, eb.y, eb.radius, 0, Math.PI * 2);
+          ctx.fillStyle = eb.color || '#ff007f';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = eb.color || '#ff007f';
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Render Enemies
+        this.enemies.forEach(e => {
+          ctx.save();
+          ctx.translate(e.x, e.y);
+          ctx.fillStyle = e.color;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = e.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Render Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.translate(this.boss.x, this.boss.y);
+          ctx.fillStyle = '#ff007f';
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = '#ff007f';
+          ctx.beginPath();
+          ctx.arc(0, 0, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Render Powerups
+        this.powerups.forEach(p => {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.fillStyle = p.type === 'shield' ? '#00f0ff' : p.type === 'health' ? '#39ff14' : '#ff007f';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Render Particles
+        this.particles.forEach(pt => {
+          ctx.save();
+          ctx.globalAlpha = pt.alpha;
+          ctx.fillStyle = pt.color;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberBladeEngine };
+    }
+
+    // UI Controller Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      const engine = new CyberBladeEngine(canvas);
+
+      const healthFill = document.getElementById('healthFill');
+      const shieldFill = document.getElementById('shieldFill');
+      const scoreVal = document.getElementById('scoreVal');
+      const highScoreVal = document.getElementById('highScoreVal');
+      const waveVal = document.getElementById('waveVal');
+      const empVal = document.getElementById('empVal');
+
+      const startOverlay = document.getElementById('startOverlay');
+      const pauseOverlay = document.getElementById('pauseOverlay');
+      const gameOverOverlay = document.getElementById('gameOverOverlay');
+      const gameOverStats = document.getElementById('gameOverStats');
+
+      const startBtn = document.getElementById('startBtn');
+      const resumeBtn = document.getElementById('resumeBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const muteBtn = document.getElementById('muteBtn');
+
+      let keys = {};
+      let mouseX = 400;
+      let mouseY = 300;
+
+      highScoreVal.textContent = engine.highScore;
+
+      function updateHUD() {
+        healthFill.style.width = (engine.player.health / engine.player.maxHealth * 100) + '%';
+        shieldFill.style.width = (engine.player.shield / engine.player.maxShield * 100) + '%';
+        scoreVal.textContent = engine.score;
+        highScoreVal.textContent = engine.highScore;
+        waveVal.textContent = engine.wave;
+        empVal.textContent = '⚡ ' + engine.player.empCharges;
+      }
+
+      function gameLoop() {
+        if (engine.started && !engine.paused && !engine.over) {
+          let dx = 0, dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          engine.movePlayer(dx, dy);
+          engine.aimAt(mouseX, mouseY);
+
+          if (keys['Space']) {
+            engine.slashBlade();
+          }
+
+          engine.update(1);
+          updateHUD();
+
+          if (engine.over) {
+            gameOverStats.textContent = `Final Score: ${engine.score} | Wave Reached: ${engine.wave}`;
+            gameOverOverlay.classList.remove('hidden');
+          }
+        }
+
+        engine.render();
+        requestAnimationFrame(gameLoop);
+      }
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      resumeBtn.addEventListener('click', () => {
+        pauseOverlay.classList.add('hidden');
+        engine.resume();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+      });
+
+      canvas.addEventListener('click', (e) => {
+        if (engine.started && !engine.paused && !engine.over) {
+          engine.slashBlade();
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+
+        if (e.code === 'KeyE' || e.code === 'KeyX') {
+          engine.triggerEmpNova();
+        } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+          engine.triggerPhaseDash();
+        } else if (e.code === 'KeyP' || e.code === 'Escape') {
+          if (engine.started && !engine.over) {
+            engine.togglePause();
+            if (engine.paused) pauseOverlay.classList.remove('hidden');
+            else pauseOverlay.classList.add('hidden');
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+      });
+
+      if (muteBtn && typeof getMuteState === 'function') {
+        let muted = getMuteState();
+        muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        muteBtn.addEventListener('click', () => {
+          muted = !muted;
+          if (typeof saveMuteState === 'function') saveMuteState(muted);
+          muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
+
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>

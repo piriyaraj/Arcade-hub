@@ -752,15 +752,17 @@
             }
           }
 
-          // Damage enemies in EMP
-          this.enemies.forEach(e => {
+          // Damage enemies in EMP safely without array mutation skipping
+          for (let k = this.enemies.length - 1; k >= 0; k--) {
+            const e = this.enemies[k];
+            if (!e) continue;
             const dist = Math.hypot(e.x - pulse.x, e.y - pulse.y);
             if (dist <= pulse.radius && !e.empHit) {
               e.health -= pulse.damage;
               e.empHit = true;
               if (e.health <= 0) this.handleEnemyDeath(e);
             }
-          });
+          }
 
           if (this.boss) {
             const dist = Math.hypot(this.boss.x - pulse.x, this.boss.y - pulse.y);

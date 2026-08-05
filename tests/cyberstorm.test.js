@@ -226,3 +226,26 @@ test('CyberStormEngine - Player damage & Game Over trigger', () => {
   assert.strictEqual(engine.player.health, 0);
   assert.strictEqual(engine.over, true);
 });
+
+test('CyberStormEngine - EMP pulse handles multiple lethal enemy hits without array iteration skips', () => {
+  const engine = new CyberStormEngine(null, {});
+  engine.start();
+
+  // Add 3 low-health enemies within EMP radius
+  engine.enemies = [
+    { type: 'drone', x: engine.player.x + 10, y: engine.player.y - 20, radius: 10, health: 10, maxHealth: 30, color: '#00f0ff', empHit: false },
+    { type: 'drone', x: engine.player.x + 20, y: engine.player.y - 30, radius: 10, health: 10, maxHealth: 30, color: '#00f0ff', empHit: false },
+    { type: 'drone', x: engine.player.x + 30, y: engine.player.y - 40, radius: 10, health: 10, maxHealth: 30, color: '#00f0ff', empHit: false }
+  ];
+
+  engine.triggerEmpPulse();
+  assert.strictEqual(engine.empPulses.length, 1);
+
+  // Expand pulse to cover all enemies
+  engine.empPulses[0].radius = 100;
+  engine.update(1);
+
+  // All 3 enemies should be destroyed without array mutation skipping any element
+  assert.strictEqual(engine.enemies.length, 0);
+  assert.strictEqual(engine.enemiesDefeatedInWave, 3);
+});
