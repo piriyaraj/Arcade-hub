@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Echo - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Echo - High-Octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter. Deploy temporal clones, trigger EMP Chrono-Waves, and purge Chrono-Overlord Bosses." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberecho.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Echo - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Echo - High-Octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberecho.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Echo - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Echo - High-Octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Echo",
+    "url": "https://arcadehub.telekit.link/cyberecho.html",
+    "description": "High-Octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #070914;
+      --board-bg: #0c0f24;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #39ff14;
+      --echo-glow: #00f0ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-neon);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .header-controls {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .hdr-btn {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .hdr-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: var(--accent-neon);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #00f0ff, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    #game-container {
+      position: relative;
+      margin-top: 10px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    canvas {
+      display: block;
+      background: var(--board-bg);
+    }
+
+    .hud-bar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+
+    .hud-stat {
+      background: rgba(12, 15, 36, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .hud-stat span {
+      color: var(--accent-neon);
+      font-weight: bold;
+    }
+
+    .gauge-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 140px;
+    }
+
+    .gauge {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .gauge-fill-health {
+      height: 100%;
+      background: linear-gradient(90deg, #ff3366, #ff007f);
+      width: 100%;
+      transition: width 0.1s linear;
+    }
+
+    .gauge-fill-shield {
+      height: 100%;
+      background: linear-gradient(90deg, #00f0ff, #0077ff);
+      width: 100%;
+      transition: width 0.1s linear;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 9, 20, 0.88);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+      color: var(--text);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #00f0ff, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay p {
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      max-width: 440px;
+      line-height: 1.5;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #00f0ff, #0077ff);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-start:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Main Menu</a>
+    <h1>Cyber Echo</h1>
+    <div class="subtitle">360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter</div>
+    <div class="header-controls">
+      <button id="keybindings-btn" class="hdr-btn">⌨️ Controls</button>
+      <button id="theme-btn" class="hdr-btn">🎨 Theme</button>
+      <button id="mute-btn" class="hdr-btn">🔊 Sound: ON</button>
+    </div>
+  </header>
+
+  <div id="game-container">
+    <div class="hud-bar">
+      <div class="gauge-container">
+        <div style="font-size:0.7rem; color:var(--text-dim);">HEALTH / SHIELD</div>
+        <div class="gauge"><div id="health-bar" class="gauge-fill-health"></div></div>
+        <div class="gauge"><div id="shield-bar" class="gauge-fill-shield"></div></div>
+      </div>
+      <div class="hud-stat">SCORE: <span id="score-val">0</span></div>
+      <div class="hud-stat">HIGH: <span id="high-score-val">0</span></div>
+      <div class="hud-stat">WAVE: <span id="wave-val">1</span></div>
+      <div class="hud-stat">ECHOES: <span id="echo-val">3</span></div>
+      <div class="hud-stat">EMP: <span id="emp-val">3</span></div>
+    </div>
+
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+
+    <div id="start-overlay" class="overlay">
+      <h2>Cyber Echo</h2>
+      <p>Navigate the vector matrix arena! Deploy time-loop Echo Ghosts that duplicate your tactical trajectory & laser blasts. Consume EMP pulses to neutralize hostile swarms.</p>
+      <button id="start-btn" class="btn-start">Initiate Core</button>
+    </div>
+
+    <div id="pause-overlay" class="overlay hidden">
+      <h2>Paused</h2>
+      <p>Chrono Loop Suspended. Press Escape or Action key to resume.</p>
+      <button id="resume-btn" class="btn-start">Resume Mission</button>
+    </div>
+
+    <div id="game-over-overlay" class="overlay hidden">
+      <h2>System Breached</h2>
+      <p>Your temporal core was compromised.</p>
+      <div style="font-size: 1.2rem; margin-bottom: 20px;">FINAL SCORE: <span id="final-score-val" style="color:var(--accent-neon); font-weight:bold;">0</span></div>
+      <button id="restart-btn" class="btn-start">Restart Mission</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * CyberEchoEngine - High-Octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter
+     */
+    class CyberEchoEngine {
+      /**
+       * @param {HTMLCanvasElement|null} canvas
+       * @param {Object} [config={}]
+       */
+      constructor(canvas, config = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberecho') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        // Player state
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 14,
+          speed: 4.5,
+          angle: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 50,
+          empCharges: 3,
+          echoCharges: 3,
+          dashCooldown: 0,
+          maxDashCooldown: 120
+        };
+
+        // Ring buffer for player movement/weapon history for time loop replays
+        this.actionHistory = [];
+        this.maxHistoryLength = 300; // 5 seconds of history at 60fps
+
+        // Entity collections
+        this.echoes = [];
+        this.enemies = [];
+        this.projectiles = [];
+        this.boss = null;
+        this.powerups = [];
+        this.particles = [];
+
+        this.waveTimer = 0;
+        this.spawnTimer = 0;
+        this.fireTimer = 0;
+        this.echoTimer = 0;
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.reset();
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.health = this.player.maxHealth;
+        this.player.shield = this.player.maxShield;
+        this.player.empCharges = 3;
+        this.player.echoCharges = 3;
+        this.player.dashCooldown = 0;
+
+        this.actionHistory = [];
+        this.echoes = [];
+        this.enemies = [];
+        this.projectiles = [];
+        this.boss = null;
+        this.powerups = [];
+        this.particles = [];
+
+        this.waveTimer = 0;
+        this.spawnTimer = 0;
+        this.fireTimer = 0;
+        this.echoTimer = 0;
+      }
+
+      setScore(val) {
+        this.score = Math.max(0, val);
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberecho', this.highScore);
+          }
+        }
+      }
+
+      addScore(pts) {
+        this.setScore(this.score + pts * this.multiplier);
+      }
+
+      /**
+       * Move player vessel with delta directions
+       * @param {number} dx (-1 to 1)
+       * @param {number} dy (-1 to 1)
+       */
+      movePlayer(dx, dy) {
+        if (!this.started || this.paused || this.over) return;
+        this.player.x += dx * this.player.speed;
+        this.player.y += dy * this.player.speed;
+
+        // Clamp to boundaries
+        this.player.x = clamp(this.player.x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y, this.player.radius, this.height - this.player.radius);
+      }
+
+      /**
+       * Set player aim direction angle
+       * @param {number} angle 
+       */
+      setPlayerAngle(angle) {
+        this.player.angle = angle;
+      }
+
+      /**
+       * Primary weapon plasma fire
+       * @returns {boolean} Whether projectile was fired
+       */
+      fireWeapon() {
+        if (!this.started || this.paused || this.over || this.fireTimer > 0) return false;
+        this.fireTimer = 10; // 10 frames cooldown
+
+        const vx = Math.cos(this.player.angle) * 10;
+        const vy = Math.sin(this.player.angle) * 10;
+
+        this.projectiles.push({
+          x: this.player.x + Math.cos(this.player.angle) * 16,
+          y: this.player.y + Math.sin(this.player.angle) * 16,
+          vx: vx,
+          vy: vy,
+          radius: 4,
+          isPlayer: true,
+          damage: 25
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playLaserSound) {
+          SoundManager.playLaserSound();
+        }
+
+        // Record firing in action history
+        this.actionHistory.push({
+          x: this.player.x,
+          y: this.player.y,
+          angle: this.player.angle,
+          fired: true,
+          time: Date.now()
+        });
+
+        return true;
+      }
+
+      /**
+       * Deploy Temporal Echo Ghost Clone
+       * Replays recorded historical movement and attacks!
+       * @returns {boolean} Whether Echo clone was deployed
+       */
+      deployEcho() {
+        if (!this.started || this.paused || this.over || this.player.echoCharges <= 0) return false;
+        if (this.actionHistory.length < 10) return false;
+
+        this.player.echoCharges--;
+
+        // Copy recorded history slice
+        const historyCopy = [...this.actionHistory];
+        this.echoes.push({
+          x: historyCopy[0].x,
+          y: historyCopy[0].y,
+          angle: historyCopy[0].angle,
+          history: historyCopy,
+          step: 0,
+          duration: 360, // 6 seconds active
+          fireTimer: 0,
+          radius: 12
+        });
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+
+        return true;
+      }
+
+      /**
+       * Trigger EMP Shockwave Blast
+       * @returns {boolean} Whether EMP shockwave was triggered
+       */
+      triggerEmp() {
+        if (!this.started || this.paused || this.over || this.player.empCharges <= 0) return false;
+        this.player.empCharges--;
+
+        // Clear hostile projectiles & damage nearby enemies
+        this.projectiles = this.projectiles.filter(p => p.isPlayer);
+        this.enemies.forEach(enemy => {
+          const dist = Math.hypot(enemy.x - this.player.x, enemy.y - this.player.y);
+          if (dist < 260) {
+            enemy.health -= 80;
+          }
+        });
+
+        if (this.boss) {
+          const bossDist = Math.hypot(this.boss.x - this.player.x, this.boss.y - this.player.y);
+          if (bossDist < 300) {
+            this.boss.health -= 150;
+          }
+        }
+
+        // Create visual shockwave particles
+        for (let i = 0; i < 36; i++) {
+          const rad = (i * 10 * Math.PI) / 180;
+          this.particles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(rad) * 8,
+            vy: Math.sin(rad) * 8,
+            life: 30,
+            maxLife: 30,
+            color: '#00f0ff'
+          });
+        }
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playEmpSound) {
+          SoundManager.playEmpSound();
+        }
+
+        return true;
+      }
+
+      spawnEnemy() {
+        // Spawn edge coordinates
+        let x, y;
+        if (Math.random() < 0.5) {
+          x = Math.random() < 0.5 ? -20 : this.width + 20;
+          y = Math.random() * this.height;
+        } else {
+          x = Math.random() * this.width;
+          y = Math.random() < 0.5 ? -20 : this.height + 20;
+        }
+
+        const typeChoice = Math.random();
+        let type = 'drone';
+        let health = 30;
+        let speed = 2.2;
+        let radius = 12;
+
+        if (typeChoice > 0.7) {
+          type = 'seeker';
+          health = 60;
+          speed = 3.0;
+          radius = 16;
+        } else if (typeChoice > 0.4) {
+          type = 'weaver';
+          health = 45;
+          speed = 1.8;
+          radius = 14;
+        }
+
+        this.enemies.push({
+          x: x,
+          y: y,
+          type: type,
+          health: health,
+          maxHealth: health,
+          speed: speed,
+          radius: radius,
+          fireCooldown: 0
+        });
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: -60,
+          targetY: 120,
+          radius: 38,
+          health: 800 + this.wave * 200,
+          maxHealth: 800 + this.wave * 200,
+          angle: 0,
+          phase: 1,
+          fireTimer: 0
+        };
+      }
+
+      spawnPowerup(x, y) {
+        const types = ['health', 'shield', 'emp', 'echo'];
+        const chosen = types[Math.floor(Math.random() * types.length)];
+        this.powerups.push({
+          x: x,
+          y: y,
+          type: chosen,
+          radius: 10,
+          life: 400
+        });
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Timers
+        if (this.fireTimer > 0) this.fireTimer--;
+        this.spawnTimer++;
+        this.waveTimer++;
+
+        // Record history frame for time loops
+        this.actionHistory.push({
+          x: this.player.x,
+          y: this.player.y,
+          angle: this.player.angle,
+          fired: false,
+          time: Date.now()
+        });
+        if (this.actionHistory.length > this.maxHistoryLength) {
+          this.actionHistory.shift();
+        }
+
+        // Spawn wave logic
+        if (this.spawnTimer > Math.max(30, 100 - this.wave * 8) && !this.boss) {
+          this.spawnTimer = 0;
+          this.spawnEnemy();
+        }
+
+        // Spawn Boss every 1200 frames (20 seconds) if not present
+        if (this.waveTimer > 1200 && !this.boss) {
+          this.spawnBoss();
+        }
+
+        // Update Echo Ghosts
+        this.echoes = this.echoes.filter(echo => {
+          echo.duration--;
+          if (echo.duration <= 0) return false;
+
+          // Replay position from history step
+          echo.step = (echo.step + 1) % echo.history.length;
+          const point = echo.history[echo.step];
+          echo.x = point.x;
+          echo.y = point.y;
+          echo.angle = point.angle;
+
+          // Echo auto-fire
+          echo.fireTimer++;
+          if (echo.fireTimer > 15) {
+            echo.fireTimer = 0;
+            const vx = Math.cos(echo.angle) * 10;
+            const vy = Math.sin(echo.angle) * 10;
+            this.projectiles.push({
+              x: echo.x + Math.cos(echo.angle) * 14,
+              y: echo.y + Math.sin(echo.angle) * 14,
+              vx: vx,
+              vy: vy,
+              radius: 4,
+              isPlayer: true,
+              damage: 20
+            });
+          }
+          return true;
+        });
+
+        // Update Projectiles
+        this.projectiles = this.projectiles.filter(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          return p.x >= 0 && p.x <= this.width && p.y >= 0 && p.y <= this.height;
+        });
+
+        // Update Enemies
+        this.enemies = this.enemies.filter(enemy => {
+          // Move towards player
+          const angle = Math.atan2(this.player.y - enemy.y, this.player.x - enemy.x);
+          enemy.x += Math.cos(angle) * enemy.speed;
+          enemy.y += Math.sin(angle) * enemy.speed;
+
+          // Weaver fire projectile
+          if (enemy.type === 'weaver') {
+            enemy.fireCooldown++;
+            if (enemy.fireCooldown > 120) {
+              enemy.fireCooldown = 0;
+              this.projectiles.push({
+                x: enemy.x,
+                y: enemy.y,
+                vx: Math.cos(angle) * 5,
+                vy: Math.sin(angle) * 5,
+                radius: 4,
+                isPlayer: false,
+                damage: 15
+              });
+            }
+          }
+
+          // Check player collision
+          if (checkCircleCollision(this.player, enemy)) {
+            this.damagePlayer(20);
+            return false; // enemy destroyed on impact
+          }
+
+          // Check projectile collision with enemy
+          for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const p = this.projectiles[i];
+            if (p.isPlayer && checkCircleCollision(enemy, p)) {
+              enemy.health -= p.damage;
+              this.projectiles.splice(i, 1);
+              if (enemy.health <= 0) {
+                this.addScore(100);
+                if (Math.random() < 0.25) this.spawnPowerup(enemy.x, enemy.y);
+                return false;
+              }
+            }
+          }
+
+          return true;
+        });
+
+        // Update Boss
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += 2;
+          }
+          this.boss.angle += 0.02;
+          this.boss.fireTimer++;
+
+          if (this.boss.fireTimer > 60) {
+            this.boss.fireTimer = 0;
+            // Ring burst projectiles
+            for (let i = 0; i < 8; i++) {
+              const bAngle = this.boss.angle + (i * Math.PI) / 4;
+              this.projectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(bAngle) * 4,
+                vy: Math.sin(bAngle) * 4,
+                radius: 5,
+                isPlayer: false,
+                damage: 20
+              });
+            }
+          }
+
+          // Check projectile collisions with boss
+          for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const p = this.projectiles[i];
+            if (p.isPlayer && checkCircleCollision(this.boss, p)) {
+              this.boss.health -= p.damage;
+              this.projectiles.splice(i, 1);
+              if (this.boss.health <= 0) {
+                this.addScore(2500);
+                this.wave++;
+                this.waveTimer = 0;
+                this.spawnPowerup(this.boss.x, this.boss.y);
+                this.boss = null;
+                break;
+              }
+            }
+          }
+        }
+
+        // Check enemy projectile collisions with player
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          if (!p.isPlayer && checkCircleCollision(this.player, p)) {
+            this.damagePlayer(p.damage);
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        // Update Powerups
+        this.powerups = this.powerups.filter(pow => {
+          pow.life--;
+          if (pow.life <= 0) return false;
+
+          if (checkCircleCollision(this.player, pow)) {
+            if (pow.type === 'health') this.player.health = Math.min(this.player.maxHealth, this.player.health + 35);
+            else if (pow.type === 'shield') this.player.shield = Math.min(this.player.maxShield, this.player.shield + 25);
+            else if (pow.type === 'emp') this.player.empCharges = Math.min(5, this.player.empCharges + 1);
+            else if (pow.type === 'echo') this.player.echoCharges = Math.min(5, this.player.echoCharges + 1);
+
+            this.addScore(150);
+            if (typeof SoundManager !== 'undefined' && SoundManager.playPowerupSound) {
+              SoundManager.playPowerupSound();
+            }
+            return false;
+          }
+          return true;
+        });
+
+        // Update Particles
+        this.particles = this.particles.filter(pt => {
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          return pt.life > 0;
+        });
+      }
+
+      damagePlayer(amt) {
+        if (this.player.shield > 0) {
+          if (this.player.shield >= amt) {
+            this.player.shield -= amt;
+            amt = 0;
+          } else {
+            amt -= this.player.shield;
+            this.player.shield = 0;
+          }
+        }
+
+        if (amt > 0) {
+          this.player.health -= amt;
+          if (this.player.health <= 0) {
+            this.player.health = 0;
+            this.over = true;
+            if (typeof saveBestScore === 'function') {
+              saveBestScore('cyberecho', this.highScore);
+            }
+            if (typeof SoundManager !== 'undefined' && SoundManager.playExplosionSound) {
+              SoundManager.playExplosionSound();
+            }
+          }
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Draw grid lines
+        this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+        this.ctx.lineWidth = 1;
+        for (let x = 0; x < this.width; x += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        // Draw Powerups
+        this.powerups.forEach(pow => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(pow.x, pow.y, pow.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = pow.type === 'health' ? '#ff3366' : pow.type === 'shield' ? '#00f0ff' : '#ff007f';
+          this.ctx.shadowColor = this.ctx.fillStyle;
+          this.ctx.shadowBlur = 10;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Echo Ghosts
+        this.echoes.forEach(echo => {
+          this.ctx.save();
+          this.ctx.translate(echo.x, echo.y);
+          this.ctx.rotate(echo.angle);
+          this.ctx.beginPath();
+          this.ctx.moveTo(14, 0);
+          this.ctx.lineTo(-10, -10);
+          this.ctx.lineTo(-6, 0);
+          this.ctx.lineTo(-10, 10);
+          this.ctx.closePath();
+          this.ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+          this.ctx.strokeStyle = '#00f0ff';
+          this.ctx.lineWidth = 1.5;
+          this.ctx.shadowColor = '#00f0ff';
+          this.ctx.shadowBlur = 12;
+          this.ctx.fill();
+          this.ctx.stroke();
+          this.ctx.restore();
+        });
+
+        // Draw Player
+        if (!this.over) {
+          this.ctx.save();
+          this.ctx.translate(this.player.x, this.player.y);
+          this.ctx.rotate(this.player.angle);
+          this.ctx.beginPath();
+          this.ctx.moveTo(16, 0);
+          this.ctx.lineTo(-12, -12);
+          this.ctx.lineTo(-7, 0);
+          this.ctx.lineTo(-12, 12);
+          this.ctx.closePath();
+          this.ctx.fillStyle = '#00f0ff';
+          this.ctx.shadowColor = '#00f0ff';
+          this.ctx.shadowBlur = 15;
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Enemies
+        this.enemies.forEach(enemy => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = enemy.type === 'seeker' ? '#ff0055' : enemy.type === 'weaver' ? '#a855f7' : '#ff9900';
+          this.ctx.shadowColor = this.ctx.fillStyle;
+          this.ctx.shadowBlur = 10;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Boss
+        if (this.boss) {
+          this.ctx.save();
+          this.ctx.translate(this.boss.x, this.boss.y);
+          this.ctx.rotate(this.boss.angle);
+          this.ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const rad = (i * Math.PI) / 3;
+            const bx = Math.cos(rad) * this.boss.radius;
+            const by = Math.sin(rad) * this.boss.radius;
+            if (i === 0) this.ctx.moveTo(bx, by);
+            else this.ctx.lineTo(bx, by);
+          }
+          this.ctx.closePath();
+          this.ctx.fillStyle = '#ff0055';
+          this.ctx.strokeStyle = '#00f0ff';
+          this.ctx.lineWidth = 3;
+          this.ctx.shadowColor = '#ff0055';
+          this.ctx.shadowBlur = 20;
+          this.ctx.fill();
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+
+        // Draw Projectiles
+        this.projectiles.forEach(p => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = p.isPlayer ? '#00f0ff' : '#ff0055';
+          this.ctx.shadowColor = this.ctx.fillStyle;
+          this.ctx.shadowBlur = 8;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Particles
+        this.particles.forEach(pt => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+          this.ctx.fillStyle = pt.color;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberEchoEngine };
+    }
+  </script>
+
+  <script>
+    // Browser runtime initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('game-canvas');
+      const engine = new CyberEchoEngine(canvas);
+
+      const healthBar = document.getElementById('health-bar');
+      const shieldBar = document.getElementById('shield-bar');
+      const scoreVal = document.getElementById('score-val');
+      const highScoreVal = document.getElementById('high-score-val');
+      const waveVal = document.getElementById('wave-val');
+      const echoVal = document.getElementById('echo-val');
+      const empVal = document.getElementById('emp-val');
+      const finalScoreVal = document.getElementById('final-score-val');
+
+      const startOverlay = document.getElementById('start-overlay');
+      const pauseOverlay = document.getElementById('pause-overlay');
+      const gameOverOverlay = document.getElementById('game-over-overlay');
+
+      const startBtn = document.getElementById('start-btn');
+      const resumeBtn = document.getElementById('resume-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const muteBtn = document.getElementById('mute-btn');
+      const themeBtn = document.getElementById('theme-btn');
+      const keybindingsBtn = document.getElementById('keybindings-btn');
+
+      let mouseX = 400;
+      let mouseY = 300;
+      let keys = {};
+      let muted = false;
+
+      if (typeof ThemeManager !== 'undefined') ThemeManager.init();
+      if (typeof KeyManager !== 'undefined') KeyManager.init();
+
+      if (themeBtn && typeof ThemeManager !== 'undefined') {
+        themeBtn.addEventListener('click', () => {
+          const themes = ['dark', 'light', 'retro-neon'];
+          const current = ThemeManager.currentTheme || 'dark';
+          const next = themes[(themes.indexOf(current) + 1) % themes.length];
+          ThemeManager.setTheme(next);
+        });
+      }
+
+      if (keybindingsBtn && typeof KeyManager !== 'undefined') {
+        keybindingsBtn.addEventListener('click', () => {
+          KeyManager.showModal();
+        });
+      }
+
+      if (muteBtn) {
+        muteBtn.addEventListener('click', () => {
+          muted = !muted;
+          if (typeof saveMuteState === 'function') saveMuteState(muted);
+          muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+
+      canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+          engine.fireWeapon();
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+
+        if (KeyManager && KeyManager.isKey(e, 'action')) {
+          engine.deployEcho();
+        }
+        if (e.code === 'KeyE') {
+          engine.triggerEmp();
+        }
+        if (KeyManager && KeyManager.isKey(e, 'pause')) {
+          if (engine.started && !engine.over) {
+            engine.togglePause();
+            pauseOverlay.classList.toggle('hidden', !engine.paused);
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+      });
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      resumeBtn.addEventListener('click', () => {
+        engine.resume();
+        pauseOverlay.classList.add('hidden');
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverOverlay.classList.add('hidden');
+        engine.reset();
+        engine.start();
+      });
+
+      function updateHUD() {
+        scoreVal.textContent = engine.score;
+        highScoreVal.textContent = engine.highScore;
+        waveVal.textContent = engine.wave;
+        echoVal.textContent = engine.player.echoCharges;
+        empVal.textContent = engine.player.empCharges;
+
+        healthBar.style.width = Math.max(0, (engine.player.health / engine.player.maxHealth) * 100) + '%';
+        shieldBar.style.width = Math.max(0, (engine.player.shield / engine.player.maxShield) * 100) + '%';
+
+        if (engine.over) {
+          finalScoreVal.textContent = engine.score;
+          gameOverOverlay.classList.remove('hidden');
+        }
+      }
+
+      function gameLoop() {
+        if (engine.started && !engine.paused && !engine.over) {
+          let dx = 0;
+          let dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          if (dx !== 0 && dy !== 0) {
+            dx *= 0.7071;
+            dy *= 0.7071;
+          }
+          engine.movePlayer(dx, dy);
+
+          const angle = Math.atan2(mouseY - engine.player.y, mouseX - engine.player.x);
+          engine.setPlayerAngle(angle);
+
+          engine.update();
+          engine.draw();
+        }
+        updateHUD();
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>

@@ -28,6 +28,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Storm](cyberstorm.html)** — High-octane orbital lightning matrix defense & tactical EMP pulse shooter with kinetic surge shields and storm titan boss encounters.
 - ⚔️ **[Cyber Blade](cyberblade.html)** — High-octane 360° cyber katana deflector & quantum blade slicer arena game with EMP Novas and Shadow Dreadnought bosses.
 - 🥷 **[Cyber Phantom](cyberphantom.html)** — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter with shadow decoys and Phase Overlord Bosses.
+- 🌀 **[Cyber Echo](cyberecho.html)** — High-octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter with temporal ghost clones and Chrono-Overlord Bosses.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
