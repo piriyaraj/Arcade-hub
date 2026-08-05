@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Siege - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Siege - High-octane retro-neon tactical matrix defense arcade shooter. Defend the cyber core against rogue virus swarms, deploy Kinetic Shields, unleash EMP Shockwaves, and destroy Boss Dreadnoughts." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybersiege.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Siege - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Siege - Tactical matrix defense shooter with EMP shockwaves, reflective kinetic shields, and epic boss fights." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybersiege.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Siege - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Siege - Tactical matrix defense shooter." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Cyber Siege",
+  "url": "https://arcadehub.telekit.link/cybersiege.html",
+  "description": "Tactical matrix defense shooter game with reflective kinetic shields, EMP shockwaves, and dreadnought boss encounters.",
+  "gamePlatform": "Web Browser",
+  "applicationCategory": "Game",
+  "genre": "Arcade",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --board-bg: #111827;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: #00f0ff;
+      --siege-glow: #00f0ff;
+      --obstacle-glow: #ff007f;
+      --node-glow: #4ade80;
+      --accent-pink: #ff007f;
+      --accent-neon: #00f0ff;
+      --accent-yellow: #facc15;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 40%);
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--siege-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .header-actions {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      color: var(--text);
+      border-color: var(--siege-glow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 12px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .stat {
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat span {
+      font-weight: 700;
+      color: var(--accent-neon);
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
+      display: block;
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      aspect-ratio: 4 / 5;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11, 15, 26, 0.9);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay h2 {
+      font-size: 2rem;
+      color: var(--accent-neon);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      font-size: 1rem;
+      max-width: 80%;
+      text-align: center;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, var(--accent-neon), #00a8ff);
+      color: #0b0f1a;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-main:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    #controls-hint {
+      margin-top: 12px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    /* Mobile virtual controls */
+    .mobile-controls {
+      display: none;
+      width: 100%;
+      max-width: 640px;
+      margin-top: 12px;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 10px;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls { display: flex; }
+    }
+
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 44px);
+      grid-template-rows: repeat(3, 44px);
+      gap: 4px;
+    }
+
+    .dpad-btn, .action-pad-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: var(--text);
+      font-weight: bold;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .dpad-btn:active, .action-pad-btn:active {
+      background: var(--accent-neon);
+      color: #0b0f1a;
+    }
+
+    .action-pad {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .action-pad-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Arcade Portal</a>
+    <h1>Cyber Siege</h1>
+    <p>Defend the Cyber Matrix against rogue virus swarms & Dreadnought Bosses!</p>
+    <div class="header-actions">
+      <button id="kb-btn" class="action-btn" onclick="KeyManager.showModal()">⌨️ Controls</button>
+      <button id="mute-btn" class="action-btn">🔊 Sound On</button>
+    </div>
+  </header>
+
+  <div id="stats">
+    <div class="stat">Score: <span id="score-val">0</span></div>
+    <div class="stat">Best: <span id="high-score-val">0</span></div>
+    <div class="stat">Core Health: <span id="health-val">100%</span></div>
+    <div class="stat">EMP Charges: <span id="emp-val">2</span></div>
+    <div class="stat">Shield: <span id="shield-val">READY</span></div>
+    <div class="stat">Multiplier: <span id="multiplier-val">x1</span></div>
+  </div>
+
+  <div id="game-container">
+    <canvas id="gameCanvas" width="640" height="800"></canvas>
+
+    <!-- Start Overlay -->
+    <div id="start-overlay" class="overlay">
+      <h2>Cyber Siege</h2>
+      <p>Control the Defense Turret. Shoot descending virus nodes, deploy Kinetic Shields to reflect projectiles, and trigger EMP pulses to purge swarms!</p>
+      <p><strong>Controls:</strong> Arrow Keys / WASD = Move | Space = Fire | E / Shift = EMP Pulse | Q / Alt = Kinetic Shield | P = Pause</p>
+      <button id="start-btn" class="btn-main">INITIALIZE CORE</button>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" class="overlay hidden">
+      <h2>PAUSED</h2>
+      <p>System offline. Press P or resume button to continue.</p>
+      <button id="resume-btn" class="btn-main">RESUME SIEGE</button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div id="game-over-overlay" class="overlay hidden">
+      <h2 style="color: var(--accent-pink);">MATRIX BREACHED</h2>
+      <p>Final Defense Score: <span id="final-score" style="color: var(--accent-neon); font-weight: bold;">0</span></p>
+      <p id="high-score-badge" style="color: var(--accent-yellow); font-weight: bold;"></p>
+      <button id="restart-btn" class="btn-main">REBOOT SIEGE</button>
+    </div>
+  </div>
+
+  <div class="mobile-controls">
+    <div class="dpad">
+      <div></div>
+      <button class="dpad-btn" id="btn-up">▲</button>
+      <div></div>
+      <button class="dpad-btn" id="btn-left">◄</button>
+      <div></div>
+      <button class="dpad-btn" id="btn-right">►</button>
+      <div></div>
+      <button class="dpad-btn" id="btn-down">▼</button>
+      <div></div>
+    </div>
+    <div class="action-pad">
+      <button class="action-pad-btn" id="btn-fire" style="border-color: var(--accent-neon);">FIRE</button>
+      <button class="action-pad-btn" id="btn-shield" style="border-color: var(--accent-yellow);">SHIELD</button>
+      <button class="action-pad-btn" id="btn-emp" style="border-color: var(--accent-pink);">EMP</button>
+    </div>
+  </div>
+
+  <div id="controls-hint">Tip: Collect glowing energy powerups to upgrade laser weapons and repair core health!</div>
+
+<script>
+// ─── Cyber Siege Core Game Engine ──────────────────────────────────────────────
+class CyberSiegeEngine {
+  constructor(canvas, ui = {}) {
+    this.canvas = canvas;
+    this.ctx = canvas ? canvas.getContext('2d') : null;
+    this.ui = ui;
+
+    this.width = canvas ? canvas.width : 640;
+    this.height = canvas ? canvas.height : 800;
+
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+
+    this.score = 0;
+    this.highScore = getBestScore('cybersiege');
+    this.multiplier = 1;
+    this.streak = 0;
+    this.level = 1;
+
+    this.player = {
+      x: this.width / 2,
+      y: this.height - 80,
+      width: 44,
+      height: 44,
+      speed: 7,
+      vx: 0,
+      vy: 0,
+      health: 100,
+      maxHealth: 100,
+      empCharges: 2,
+      maxEmpCharges: 5,
+      shieldActive: false,
+      shieldTime: 0,
+      shieldMaxTime: 300, // 5 seconds at 60fps
+      weaponLevel: 1,
+      maxWeaponLevel: 4,
+      fireCooldown: 0
+    };
+
+    this.bullets = [];
+    this.enemyBullets = [];
+    this.enemies = [];
+    this.powerups = [];
+    this.particles = [];
+    this.floatingTexts = [];
+    this.empPulses = [];
+
+    this.boss = null;
+    this.spawnTimer = 0;
+    this.spawnInterval = 75; // frames between enemy spawns
+    this.frameCount = 0;
+
+    this.updateUI();
+  }
+
+  start() {
+    this.started = true;
+    this.paused = false;
+    this.over = false;
+    this.reset();
+  }
+
+  pause() {
+    if (this.started && !this.over) {
+      this.paused = true;
+      this.updateUI();
+    }
+  }
+
+  resume() {
+    if (this.started && !this.over) {
+      this.paused = false;
+      this.updateUI();
+    }
+  }
+
+  togglePause() {
+    if (this.paused) this.resume();
+    else this.pause();
+  }
+
+  reset() {
+    this.score = 0;
+    this.multiplier = 1;
+    this.streak = 0;
+    this.level = 1;
+
+    this.player.x = this.width / 2;
+    this.player.y = this.height - 80;
+    this.player.vx = 0;
+    this.player.vy = 0;
+    this.player.health = 100;
+    this.player.empCharges = 2;
+    this.player.shieldActive = false;
+    this.player.shieldTime = 0;
+    this.player.weaponLevel = 1;
+    this.player.fireCooldown = 0;
+
+    this.bullets = [];
+    this.enemyBullets = [];
+    this.enemies = [];
+    this.powerups = [];
+    this.particles = [];
+    this.floatingTexts = [];
+    this.empPulses = [];
+    this.boss = null;
+    this.spawnTimer = 0;
+    this.frameCount = 0;
+
+    this.updateUI();
+  }
+
+  setScore(val) {
+    this.score = Math.max(0, val);
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      saveBestScore('cybersiege', this.highScore);
+    }
+    this.updateUI();
+  }
+
+  addScore(pts) {
+    const total = pts * this.multiplier;
+    this.score += total;
+    this.streak++;
+    if (this.streak >= 5 && this.multiplier < 8) {
+      this.multiplier = Math.min(8, Math.floor(this.streak / 5) + 1);
+    }
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      saveBestScore('cybersiege', this.highScore);
+    }
+    this.updateUI();
+  }
+
+  movePlayer(dx, dy) {
+    this.player.vx = dx * this.player.speed;
+    this.player.vy = dy * this.player.speed;
+  }
+
+  fireBullet() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.player.fireCooldown > 0) return false;
+
+    this.player.fireCooldown = Math.max(8, 16 - this.player.weaponLevel * 2);
+
+    const px = this.player.x;
+    const py = this.player.y - 20;
+
+    if (this.player.weaponLevel === 1) {
+      this.bullets.push({ x: px, y: py, vx: 0, vy: -12, width: 4, height: 16, color: '#00f0ff', damage: 25 });
+    } else if (this.player.weaponLevel === 2) {
+      this.bullets.push({ x: px - 10, y: py, vx: 0, vy: -12, width: 4, height: 16, color: '#00f0ff', damage: 25 });
+      this.bullets.push({ x: px + 10, y: py, vx: 0, vy: -12, width: 4, height: 16, color: '#00f0ff', damage: 25 });
+    } else if (this.player.weaponLevel === 3) {
+      this.bullets.push({ x: px, y: py, vx: 0, vy: -13, width: 6, height: 18, color: '#facc15', damage: 30 });
+      this.bullets.push({ x: px - 14, y: py, vx: -2, vy: -12, width: 4, height: 16, color: '#00f0ff', damage: 20 });
+      this.bullets.push({ x: px + 14, y: py, vx: 2, vy: -12, width: 4, height: 16, color: '#00f0ff', damage: 20 });
+    } else {
+      // Weapon Level 4+ Super Tri-Beam
+      this.bullets.push({ x: px, y: py, vx: 0, vy: -14, width: 8, height: 22, color: '#ff007f', damage: 40 });
+      this.bullets.push({ x: px - 16, y: py, vx: -3, vy: -12, width: 5, height: 16, color: '#00f0ff', damage: 25 });
+      this.bullets.push({ x: px + 16, y: py, vx: 3, vy: -12, width: 5, height: 16, color: '#00f0ff', damage: 25 });
+    }
+
+    if (typeof AudioManager !== 'undefined' && window.audioMgr) {
+      window.audioMgr.playLaser ? window.audioMgr.playLaser() : null;
+    }
+    return true;
+  }
+
+  activateShield() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.player.shieldActive) return false;
+
+    this.player.shieldActive = true;
+    this.player.shieldTime = this.player.shieldMaxTime;
+    this.createParticles(this.player.x, this.player.y, '#facc15', 20);
+    this.addFloatingText(this.player.x, this.player.y - 30, 'SHIELD ON!', '#facc15');
+    return true;
+  }
+
+  triggerEmpPulse() {
+    if (!this.started || this.paused || this.over) return false;
+    if (this.player.empCharges <= 0) return false;
+
+    this.player.empCharges--;
+    this.empPulses.push({
+      x: this.player.x,
+      y: this.player.y,
+      radius: 10,
+      maxRadius: Math.max(this.width, this.height),
+      speed: 16,
+      color: '#ff007f'
+    });
+
+    // Clear all enemy bullets
+    const clearedBullets = this.enemyBullets.length;
+    this.enemyBullets = [];
+
+    // Damage and stun all enemies
+    this.enemies.forEach(enemy => {
+      enemy.health -= 50;
+      enemy.stunned = 60; // stun for 1 second
+      this.createParticles(enemy.x, enemy.y, '#ff007f', 12);
+    });
+
+    if (this.boss) {
+      this.boss.health -= 150;
+      this.createParticles(this.boss.x, this.boss.y, '#ff007f', 30);
+    }
+
+    this.addFloatingText(this.player.x, this.player.y - 40, 'EMP SHOCKWAVE!', '#ff007f');
+    this.updateUI();
+    return true;
+  }
+
+  spawnEnemy() {
+    const types = ['scout', 'chaser', 'heavy'];
+    const weights = [0.6, 0.3, 0.1];
+    const rand = Math.random();
+    let type = 'scout';
+
+    if (rand > 0.9) type = 'heavy';
+    else if (rand > 0.6) type = 'chaser';
+
+    const radius = type === 'scout' ? 16 : (type === 'chaser' ? 20 : 28);
+    const x = randomRange(radius + 20, this.width - radius - 20);
+    const health = type === 'scout' ? 25 : (type === 'chaser' ? 45 : 100);
+    const speed = type === 'scout' ? 3.5 : (type === 'chaser' ? 4.5 : 1.8);
+    const color = type === 'scout' ? '#ff007f' : (type === 'chaser' ? '#facc15' : '#4ade80');
+
+    this.enemies.push({
+      type,
+      x,
+      y: -30,
+      radius,
+      width: radius * 2,
+      height: radius * 2,
+      health,
+      maxHealth: health,
+      speed,
+      vy: speed,
+      vx: type === 'chaser' ? (Math.random() - 0.5) * 2 : 0,
+      color,
+      fireTimer: Math.floor(Math.random() * 60),
+      stunned: 0
+    });
+  }
+
+  spawnBoss() {
+    if (this.boss) return;
+    this.boss = {
+      x: this.width / 2,
+      y: -80,
+      targetY: 120,
+      width: 140,
+      height: 80,
+      health: 800 + this.level * 400,
+      maxHealth: 800 + this.level * 400,
+      color: '#ff007f',
+      phase: 1,
+      fireTimer: 0,
+      moveDir: 1,
+      speed: 2 + this.level * 0.5
+    };
+    this.addFloatingText(this.width / 2, 200, '⚠️ BOSS DREADNOUGHT APPROACHING ⚠️', '#ff007f');
+  }
+
+  spawnPowerup(x, y) {
+    const types = ['weapon', 'shield', 'emp', 'repair', 'multiplier'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const colors = {
+      weapon: '#00f0ff',
+      shield: '#facc15',
+      emp: '#ff007f',
+      repair: '#4ade80',
+      multiplier: '#a855f7'
+    };
+
+    this.powerups.push({
+      type,
+      x,
+      y,
+      radius: 12,
+      vy: 2,
+      color: colors[type] || '#ffffff'
+    });
+  }
+
+  createParticles(x, y, color, count = 10) {
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 4 + 1;
+      this.particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        radius: Math.random() * 3 + 1,
+        color,
+        life: 1.0,
+        decay: Math.random() * 0.04 + 0.02
+      });
+    }
+  }
+
+  addFloatingText(x, y, text, color = '#00f0ff') {
+    this.floatingTexts.push({
+      x, y, text, color,
+      life: 1.0,
+      vy: -1.2
+    });
+  }
+
+  update() {
+    if (!this.started || this.paused || this.over) return;
+
+    this.frameCount++;
+
+    // Decrement player fire cooldown
+    if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+    // Handle shield duration
+    if (this.player.shieldActive) {
+      this.player.shieldTime--;
+      if (this.player.shieldTime <= 0) {
+        this.player.shieldActive = false;
+        this.addFloatingText(this.player.x, this.player.y - 30, 'SHIELD DOWN', '#9aa0a6');
+      }
+    }
+
+    // Move player
+    this.player.x += this.player.vx;
+    this.player.y += this.player.vy;
+
+    // Clamp player to canvas boundaries
+    const halfW = this.player.width / 2;
+    const halfH = this.player.height / 2;
+    this.player.x = clamp(this.player.x, halfW, this.width - halfW);
+    this.player.y = clamp(this.player.y, this.height / 2, this.height - halfH);
+
+    // Update EMP shockwaves
+    for (let i = this.empPulses.length - 1; i >= 0; i--) {
+      const pulse = this.empPulses[i];
+      pulse.radius += pulse.speed;
+      if (pulse.radius >= pulse.maxRadius) {
+        this.empPulses.splice(i, 1);
+      }
+    }
+
+    // Update Player Bullets
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const b = this.bullets[i];
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.y < -20 || b.x < -20 || b.x > this.width + 20) {
+        this.bullets.splice(i, 1);
+        continue;
+      }
+
+      // Check collision with Boss
+      if (this.boss) {
+        const bossRect = { x: this.boss.x - this.boss.width/2, y: this.boss.y - this.boss.height/2, width: this.boss.width, height: this.boss.height };
+        const bRect = { x: b.x - b.width/2, y: b.y - b.height/2, width: b.width, height: b.height };
+        if (checkCollision(bRect, bossRect)) {
+          this.boss.health -= b.damage;
+          this.createParticles(b.x, b.y, b.color, 4);
+          this.bullets.splice(i, 1);
+
+          if (this.boss.health <= 0) {
+            this.addScore(1000);
+            this.createParticles(this.boss.x, this.boss.y, '#ff007f', 50);
+            this.spawnPowerup(this.boss.x, this.boss.y);
+            this.addFloatingText(this.boss.x, this.boss.y, 'BOSS DESTROYED! +1000', '#facc15');
+            this.boss = null;
+            this.level++;
+          }
+          continue;
+        }
+      }
+
+      // Check collision with Enemies
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const e = this.enemies[j];
+        const eCirc = { x: e.x, y: e.y, radius: e.radius };
+        const bRect = { x: b.x - b.width/2, y: b.y - b.height/2, width: b.width, height: b.height };
+
+        if (checkCollision(bRect, { x: e.x - e.radius, y: e.y - e.radius, width: e.radius * 2, height: e.radius * 2 })) {
+          e.health -= b.damage;
+          this.createParticles(b.x, b.y, b.color, 4);
+          this.bullets.splice(i, 1);
+
+          if (e.health <= 0) {
+            const pts = e.type === 'scout' ? 50 : (e.type === 'chaser' ? 100 : 250);
+            this.addScore(pts);
+            this.createParticles(e.x, e.y, e.color, 12);
+            if (Math.random() < 0.25) this.spawnPowerup(e.x, e.y);
+            this.enemies.splice(j, 1);
+          }
+          break;
+        }
+      }
+    }
+
+    // Update Enemy Bullets & Shield Reflection
+    for (let i = this.enemyBullets.length - 1; i >= 0; i--) {
+      const eb = this.enemyBullets[i];
+      eb.x += eb.vx;
+      eb.y += eb.vy;
+
+      if (eb.y > this.height + 20 || eb.x < -20 || eb.x > this.width + 20 || eb.y < -20) {
+        this.enemyBullets.splice(i, 1);
+        continue;
+      }
+
+      // Player Shield Reflection
+      const playerCircle = { x: this.player.x, y: this.player.y, radius: this.player.width / 2 + 10 };
+      const bulletCircle = { x: eb.x, y: eb.y, radius: 4 };
+
+      if (this.player.shieldActive && checkCircleCollision(playerCircle, bulletCircle)) {
+        // Reflect bullet back upward!
+        eb.vy = -Math.abs(eb.vy) * 1.5;
+        eb.vx = (Math.random() - 0.5) * 4;
+        eb.reflected = true;
+        this.createParticles(eb.x, eb.y, '#facc15', 6);
+        continue;
+      }
+
+      // Hit player core
+      const playerBox = { x: this.player.x - halfW, y: this.player.y - halfH, width: this.player.width, height: this.player.height };
+      if (!eb.reflected && checkCollision({ x: eb.x - 4, y: eb.y - 4, width: 8, height: 8 }, playerBox)) {
+        this.damagePlayer(15);
+        this.enemyBullets.splice(i, 1);
+      }
+    }
+
+    // Update Enemies
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const e = this.enemies[i];
+
+      if (e.stunned > 0) {
+        e.stunned--;
+      } else {
+        e.y += e.vy;
+        e.x += e.vx;
+
+        // Bounce off canvas edges
+        if (e.x < e.radius || e.x > this.width - e.radius) e.vx *= -1;
+
+        // Enemy firing
+        e.fireTimer++;
+        if (e.fireTimer >= 90) {
+          e.fireTimer = 0;
+          this.enemyBullets.push({
+            x: e.x,
+            y: e.y + e.radius,
+            vx: (this.player.x - e.x) * 0.02,
+            vy: 5,
+            color: e.color
+          });
+        }
+      }
+
+      // Check reaching bottom or hitting player
+      const playerBox = { x: this.player.x - halfW, y: this.player.y - halfH, width: this.player.width, height: this.player.height };
+      const enemyBox = { x: e.x - e.radius, y: e.y - e.radius, width: e.radius * 2, height: e.radius * 2 };
+
+      if (checkCollision(enemyBox, playerBox)) {
+        if (this.player.shieldActive) {
+          // Shield vaporizes enemy
+          this.createParticles(e.x, e.y, '#facc15', 15);
+          this.addScore(50);
+          this.enemies.splice(i, 1);
+        } else {
+          this.damagePlayer(25);
+          this.createParticles(e.x, e.y, e.color, 15);
+          this.enemies.splice(i, 1);
+        }
+        continue;
+      }
+
+      if (e.y > this.height + 40) {
+        // Escaped enemy damages core health slightly
+        this.damagePlayer(10);
+        this.enemies.splice(i, 1);
+      }
+    }
+
+    // Boss update
+    if (this.boss) {
+      if (this.boss.y < this.boss.targetY) {
+        this.boss.y += 2;
+      } else {
+        this.boss.x += this.boss.speed * this.boss.moveDir;
+        if (this.boss.x < 100 || this.boss.x > this.width - 100) {
+          this.boss.moveDir *= -1;
+        }
+
+        this.boss.fireTimer++;
+        if (this.boss.fireTimer % 45 === 0) {
+          // Boss spreads 3 bullets
+          for (let angle = -0.4; angle <= 0.4; angle += 0.4) {
+            this.enemyBullets.push({
+              x: this.boss.x,
+              y: this.boss.y + this.boss.height / 2,
+              vx: Math.sin(angle) * 5,
+              vy: Math.cos(angle) * 5,
+              color: '#ff007f'
+            });
+          }
+        }
+      }
+    } else {
+      // Spawn Boss every 1200 frames if none present and level milestone reached
+      if (this.frameCount > 0 && this.frameCount % 1200 === 0) {
+        this.spawnBoss();
+      }
+    }
+
+    // Enemy Spawn Spooling
+    this.spawnTimer++;
+    if (this.spawnTimer >= this.spawnInterval) {
+      this.spawnTimer = 0;
+      if (this.enemies.length < 12) {
+        this.spawnEnemy();
+      }
+    }
+
+    // Update Powerups
+    for (let i = this.powerups.length - 1; i >= 0; i--) {
+      const p = this.powerups[i];
+      p.y += p.vy;
+
+      if (p.y > this.height + 20) {
+        this.powerups.splice(i, 1);
+        continue;
+      }
+
+      const pCirc = { x: p.x, y: p.y, radius: p.radius };
+      const playerCirc = { x: this.player.x, y: this.player.y, radius: this.player.width / 2 };
+
+      if (checkCircleCollision(pCirc, playerCirc)) {
+        this.applyPowerup(p.type);
+        this.createParticles(p.x, p.y, p.color, 12);
+        this.powerups.splice(i, 1);
+      }
+    }
+
+    // Update Particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const pt = this.particles[i];
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      pt.life -= pt.decay;
+      if (pt.life <= 0) {
+        this.particles.splice(i, 1);
+      }
+    }
+
+    // Update Floating Texts
+    for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+      const ft = this.floatingTexts[i];
+      ft.y += ft.vy;
+      ft.life -= 0.02;
+      if (ft.life <= 0) {
+        this.floatingTexts.splice(i, 1);
+      }
+    }
+
+    this.updateUI();
+  }
+
+  applyPowerup(type) {
+    if (type === 'weapon') {
+      this.player.weaponLevel = Math.min(this.player.maxWeaponLevel, this.player.weaponLevel + 1);
+      this.addFloatingText(this.player.x, this.player.y - 30, 'WEAPON UPGRADE!', '#00f0ff');
+    } else if (type === 'shield') {
+      this.activateShield();
+    } else if (type === 'emp') {
+      this.player.empCharges = Math.min(this.player.maxEmpCharges, this.player.empCharges + 1);
+      this.addFloatingText(this.player.x, this.player.y - 30, '+1 EMP CHARGE', '#ff007f');
+    } else if (type === 'repair') {
+      this.player.health = Math.min(this.player.maxHealth, this.player.health + 30);
+      this.addFloatingText(this.player.x, this.player.y - 30, 'CORE REPAIRED +30%', '#4ade80');
+    } else if (type === 'multiplier') {
+      this.multiplier = Math.min(8, this.multiplier + 2);
+      this.addFloatingText(this.player.x, this.player.y - 30, 'MULTIPLIER BOOST!', '#a855f7');
+    }
+  }
+
+  damagePlayer(amount) {
+    if (this.player.shieldActive) return;
+
+    this.player.health -= amount;
+    this.streak = 0;
+    this.multiplier = 1;
+    this.createParticles(this.player.x, this.player.y, '#ff007f', 15);
+    this.addFloatingText(this.player.x, this.player.y - 30, `-${amount}%`, '#ff007f');
+
+    if (this.player.health <= 0) {
+      this.player.health = 0;
+      this.gameOver();
+    }
+  }
+
+  gameOver() {
+    this.over = true;
+    this.started = false;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      saveBestScore('cybersiege', this.highScore);
+    }
+    this.updateUI();
+  }
+
+  draw() {
+    if (!this.ctx) return;
+    const ctx = this.ctx;
+
+    // Clear Screen
+    ctx.fillStyle = '#0b0f1a';
+    ctx.fillRect(0, 0, this.width, this.height);
+
+    // Draw Cyber Background Grid
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+    ctx.lineWidth = 1;
+    const gridSize = 40;
+    const offset = (this.frameCount * 2) % gridSize;
+    for (let x = 0; x < this.width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, this.height);
+      ctx.stroke();
+    }
+    for (let y = offset; y < this.height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(this.width, y);
+      ctx.stroke();
+    }
+
+    // Draw EMP Shockwaves
+    this.empPulses.forEach(p => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = 4;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 20;
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // Draw Player Turret
+    ctx.save();
+    ctx.translate(this.player.x, this.player.y);
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 15;
+
+    // Outer Turret Wings
+    ctx.fillStyle = '#00f0ff';
+    ctx.beginPath();
+    ctx.moveTo(0, -22);
+    ctx.lineTo(22, 22);
+    ctx.lineTo(10, 16);
+    ctx.lineTo(-10, 16);
+    ctx.lineTo(-22, 22);
+    ctx.closePath();
+    ctx.fill();
+
+    // Inner Core Glow
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(0, 0, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Shield Aura
+    if (this.player.shieldActive) {
+      ctx.beginPath();
+      ctx.arc(0, 0, 32, 0, Math.PI * 2);
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 25;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Draw Bullets
+    this.bullets.forEach(b => {
+      ctx.save();
+      ctx.fillStyle = b.color;
+      ctx.shadowColor = b.color;
+      ctx.shadowBlur = 10;
+      ctx.fillRect(b.x - b.width / 2, b.y - b.height / 2, b.width, b.height);
+      ctx.restore();
+    });
+
+    // Draw Enemy Bullets
+    this.enemyBullets.forEach(eb => {
+      ctx.save();
+      ctx.fillStyle = eb.reflected ? '#facc15' : eb.color;
+      ctx.shadowColor = eb.reflected ? '#facc15' : eb.color;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(eb.x, eb.y, eb.reflected ? 6 : 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Draw Enemies
+    this.enemies.forEach(e => {
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.shadowColor = e.color;
+      ctx.shadowBlur = 12;
+
+      ctx.fillStyle = e.color;
+      ctx.beginPath();
+      if (e.type === 'scout') {
+        ctx.arc(0, 0, e.radius, 0, Math.PI * 2);
+      } else if (e.type === 'chaser') {
+        ctx.moveTo(0, e.radius);
+        ctx.lineTo(-e.radius, -e.radius);
+        ctx.lineTo(e.radius, -e.radius);
+        ctx.closePath();
+      } else {
+        ctx.rect(-e.radius, -e.radius, e.radius * 2, e.radius * 2);
+      }
+      ctx.fill();
+
+      // Health bar for Heavy enemy
+      if (e.type === 'heavy') {
+        const hpPercent = e.health / e.maxHealth;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.fillRect(-e.radius, -e.radius - 8, e.radius * 2, 4);
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(-e.radius, -e.radius - 8, e.radius * 2 * hpPercent, 4);
+      }
+
+      ctx.restore();
+    });
+
+    // Draw Boss
+    if (this.boss) {
+      ctx.save();
+      ctx.translate(this.boss.x, this.boss.y);
+      ctx.shadowColor = '#ff007f';
+      ctx.shadowBlur = 20;
+
+      ctx.fillStyle = '#ff007f';
+      ctx.fillRect(-this.boss.width/2, -this.boss.height/2, this.boss.width, this.boss.height);
+
+      // Boss Health Bar
+      const bossHpPct = Math.max(0, this.boss.health / this.boss.maxHealth);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(-this.boss.width/2, -this.boss.height/2 - 14, this.boss.width, 8);
+      ctx.fillStyle = '#ff007f';
+      ctx.fillRect(-this.boss.width/2, -this.boss.height/2 - 14, this.boss.width * bossHpPct, 8);
+
+      ctx.restore();
+    }
+
+    // Draw Powerups
+    this.powerups.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Draw Particles
+    this.particles.forEach(pt => {
+      ctx.save();
+      ctx.globalAlpha = pt.life;
+      ctx.fillStyle = pt.color;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // Draw Floating Texts
+    this.floatingTexts.forEach(ft => {
+      ctx.save();
+      ctx.globalAlpha = ft.life;
+      ctx.fillStyle = ft.color;
+      ctx.font = 'bold 14px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    });
+  }
+
+  updateUI() {
+    if (this.ui.scoreVal) this.ui.scoreVal.textContent = formatScore(this.score);
+    if (this.ui.highScoreVal) this.ui.highScoreVal.textContent = formatScore(this.highScore);
+    if (this.ui.healthVal) this.ui.healthVal.textContent = `${Math.max(0, Math.ceil(this.player.health))}%`;
+    if (this.ui.empVal) this.ui.empVal.textContent = this.player.empCharges;
+    if (this.ui.shieldVal) this.ui.shieldVal.textContent = this.player.shieldActive ? `${Math.ceil(this.player.shieldTime / 60)}s` : 'READY';
+    if (this.ui.multiplierVal) this.ui.multiplierVal.textContent = `x${this.multiplier}`;
+
+    if (this.ui.startOverlay) {
+      if (!this.started && !this.over) this.ui.startOverlay.classList.remove('hidden');
+      else this.ui.startOverlay.classList.add('hidden');
+    }
+
+    if (this.ui.pauseOverlay) {
+      if (this.paused && !this.over) this.ui.pauseOverlay.classList.remove('hidden');
+      else this.ui.pauseOverlay.classList.add('hidden');
+    }
+
+    if (this.ui.gameOverOverlay) {
+      if (this.over) {
+        this.ui.gameOverOverlay.classList.remove('hidden');
+        if (this.ui.finalScore) this.ui.finalScore.textContent = formatScore(this.score);
+        if (this.ui.highScoreBadge) {
+          if (this.score >= this.highScore && this.score > 0) {
+            this.ui.highScoreBadge.textContent = '🏆 NEW HIGH SCORE!';
+          } else {
+            this.ui.highScoreBadge.textContent = '';
+          }
+        }
+      } else {
+        this.ui.gameOverOverlay.classList.add('hidden');
+      }
+    }
+  }
+}
+
+// ─── DOM Initialization ──────────────────────────────────────────────────────
+if (typeof window !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('gameCanvas');
+    const uiElements = {
+      scoreVal: document.getElementById('score-val'),
+      highScoreVal: document.getElementById('high-score-val'),
+      healthVal: document.getElementById('health-val'),
+      empVal: document.getElementById('emp-val'),
+      shieldVal: document.getElementById('shield-val'),
+      multiplierVal: document.getElementById('multiplier-val'),
+      startOverlay: document.getElementById('start-overlay'),
+      pauseOverlay: document.getElementById('pause-overlay'),
+      gameOverOverlay: document.getElementById('game-over-overlay'),
+      startBtn: document.getElementById('start-btn'),
+      resumeBtn: document.getElementById('resume-btn'),
+      restartBtn: document.getElementById('restart-btn'),
+      muteBtn: document.getElementById('mute-btn'),
+      highScoreBadge: document.getElementById('high-score-badge'),
+      finalScore: document.getElementById('final-score')
+    };
+
+    const engine = new CyberSiegeEngine(canvas, uiElements);
+
+    if (uiElements.startBtn) {
+      uiElements.startBtn.addEventListener('click', () => {
+        engine.start();
+        canvas.focus();
+      });
+    }
+
+    if (uiElements.resumeBtn) {
+      uiElements.resumeBtn.addEventListener('click', () => {
+        engine.resume();
+      });
+    }
+
+    if (uiElements.restartBtn) {
+      uiElements.restartBtn.addEventListener('click', () => {
+        engine.reset();
+        engine.start();
+      });
+    }
+
+    if (uiElements.muteBtn) {
+      uiElements.muteBtn.addEventListener('click', () => {
+        if (typeof SoundFX !== 'undefined' && SoundFX.toggleMute) {
+          const muted = SoundFX.toggleMute();
+          uiElements.muteBtn.textContent = muted ? '🔇 Muted' : '🔊 Sound On';
+        }
+      });
+    }
+
+    // Keyboard & KeyManager Input Controls
+    const activeKeys = {};
+    window.addEventListener('keydown', (e) => {
+      activeKeys[e.key] = true;
+
+      if (KeyManager.isKey(e, 'action') || e.key === ' ' || e.code === 'Space') {
+        engine.fireBullet();
+      } else if (e.key === 'e' || e.key === 'E' || e.key === 'Shift') {
+        engine.triggerEmpPulse();
+      } else if (e.key === 'q' || e.key === 'Q' || e.key === 'Alt') {
+        engine.activateShield();
+      } else if (KeyManager.isKey(e, 'pause') || e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+        engine.togglePause();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      activeKeys[e.key] = false;
+    });
+
+    // Mobile controls setup
+    const bindMobileBtn = (id, actionDown, actionUp) => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); actionDown(); });
+        btn.addEventListener('touchend', (e) => { e.preventDefault(); actionUp(); });
+        btn.addEventListener('mousedown', actionDown);
+        btn.addEventListener('mouseup', actionUp);
+      }
+    };
+
+    bindMobileBtn('btn-up', () => engine.movePlayer(0, -1), () => engine.movePlayer(0, 0));
+    bindMobileBtn('btn-down', () => engine.movePlayer(0, 1), () => engine.movePlayer(0, 0));
+    bindMobileBtn('btn-left', () => engine.movePlayer(-1, 0), () => engine.movePlayer(0, 0));
+    bindMobileBtn('btn-right', () => engine.movePlayer(1, 0), () => engine.movePlayer(0, 0));
+    bindMobileBtn('btn-fire', () => engine.fireBullet(), () => {});
+    bindMobileBtn('btn-shield', () => engine.activateShield(), () => {});
+    bindMobileBtn('btn-emp', () => engine.triggerEmpPulse(), () => {});
+
+    // Theme change listener
+    window.addEventListener('themechange', () => {
+      engine.draw();
+    });
+
+    // Game loop
+    function gameLoop() {
+      let dx = 0, dy = 0;
+      if (activeKeys['ArrowUp'] || activeKeys['w'] || activeKeys['W']) dy -= 1;
+      if (activeKeys['ArrowDown'] || activeKeys['s'] || activeKeys['S']) dy += 1;
+      if (activeKeys['ArrowLeft'] || activeKeys['a'] || activeKeys['A']) dx -= 1;
+      if (activeKeys['ArrowRight'] || activeKeys['d'] || activeKeys['D']) dx += 1;
+
+      if (dx !== 0 || dy !== 0) {
+        engine.movePlayer(dx, dy);
+      } else if (!activeKeys['ArrowUp'] && !activeKeys['ArrowDown'] && !activeKeys['w'] && !activeKeys['s']) {
+        engine.movePlayer(0, 0);
+      }
+
+      engine.update();
+      engine.draw();
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+  });
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = { CyberSiegeEngine };
+}
+</script>
+</body>
+</html>

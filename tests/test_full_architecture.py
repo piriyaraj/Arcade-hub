@@ -32,6 +32,8 @@ def test_html_script_and_css_links():
         "cyberdash.html",
         "cyberrunner.html",
         "frogger.html",
+        "cyberstriker.html",
+        "cybersiege.html",
         "leaderboard.html"
     ]
 

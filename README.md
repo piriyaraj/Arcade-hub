@@ -11,6 +11,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🚀 **[Asteroids](asteroids.html)** — Classic vector space-drift shooter game with dividing asteroids.
 - 🎰 **[Bing Ball](bingball.html)** — Pachinko/Plinko style pin-drop game.
 - 🧱 **[Breakout](breakout.html)** — Classic breakout brick-destroying arcade game.
+- 🛡️ **[Cyber Siege](cybersiege.html)** — Defend the core matrix with Kinetic Shields, EMP shockwaves, and tri-beam lasers against virus swarms and Boss Dreadnoughts.
 - 🏃‍♂️ **[Cyber Runner](cyberrunner.html)** — Dodge laser fences and cyber hacker drones in a fast-paced neon runner.
 - 🏎️ **[CyberRacer](cyberracer.html)** — Race down the retro digital superhighway, steer left/right to dodge barriers and retrieve energy nodes.
 - 💻 **[Cyber Hacker](cyberhacker.html)** — Intercept data packets, breach firewall security barriers, and deploy EMP pulses.
@@ -86,6 +87,8 @@ All game HTML files available in this repository:
 | [bingball.html](bingball.html) | Bing Ball — Pachinko/Plinko style pin-drop game |
 | [breakout.html](breakout.html) | Breakout — Classic brick-destroying arcade game |
 | [cyberdash.html](cyberdash.html) | Cyber Dash — Fast-paced neon matrix lane dash arcade game |
+| [cybersiege.html](cybersiege.html) | Cyber Siege — Tactical matrix defense shooter with Kinetic Shields & Dreadnought Bosses |
+| [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |
 | [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |
 | [cyberrunner.html](cyberrunner.html) | Cyber Runner — Fast-paced neon runner/dodger |

@@ -56,9 +56,18 @@ function formatScore(score) {
   return parsed.toLocaleString();
 }
 
+/**
+ * Clamps a numerical value within a given min and max bound.
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 function clamp(value, min, max) {
-  if (typeof value !== 'number' || Number.isNaN(value)) return min;
-  return Math.min(Math.max(value, min), max);
+  if (typeof value !== 'number' || Number.isNaN(value)) return Number.isFinite(min) ? min : 0;
+  const actualMin = Math.min(min, max);
+  const actualMax = Math.max(min, max);
+  return Math.min(Math.max(value, actualMin), actualMax);
 }
 
 function checkCollision(r1, r2) {
