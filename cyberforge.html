@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Forge - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Forge - High-Octane 360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter. Siphon elemental plasma, deploy EMP novas, trigger elemental surges, and eradicate Forge Titan Bosses." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberforge.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Forge - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Forge - High-Octane 360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberforge.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Forge - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Forge - High-Octane 360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Forge",
+    "url": "https://arcadehub.telekit.link/cyberforge.html",
+    "description": "High-Octane 360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #090314;
+      --board-bg: #120626;
+      --border: #2e1065;
+      --text: #f8fafc;
+      --text-dim: #a78bfa;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #39ff14;
+      --forge-thermal: #ff3366;
+      --forge-cryo: #00d2ff;
+      --forge-electro: #ffcc00;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--forge-thermal);
+      background: rgba(255, 51, 102, 0.15);
+    }
+
+    .header-controls {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .hdr-btn {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .hdr-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: var(--forge-cryo);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--forge-thermal), var(--forge-cryo), var(--forge-electro));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .game-container {
+      position: relative;
+      margin-top: 10px;
+      border-radius: 12px;
+      box-shadow: 0 0 35px rgba(255, 51, 102, 0.25);
+      border: 1px solid var(--border);
+      background: var(--board-bg);
+      overflow: hidden;
+    }
+
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(18, 6, 38, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.85rem;
+    }
+
+    .stat-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .bar-container {
+      width: 110px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      transition: width 0.15s ease;
+    }
+
+    .health-fill { background: linear-gradient(90deg, #ff3366, #ff6b8b); }
+    .shield-fill { background: linear-gradient(90deg, #00d2ff, #3a7bd5); }
+    .surge-fill { background: linear-gradient(90deg, #ffcc00, #ff9900); }
+
+    .element-indicator {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .element-thermal { background: rgba(255, 51, 102, 0.2); color: var(--forge-thermal); border-color: var(--forge-thermal); }
+    .element-cryo { background: rgba(0, 210, 255, 0.2); color: var(--forge-cryo); border-color: var(--forge-cryo); }
+    .element-electro { background: rgba(255, 204, 0, 0.2); color: var(--forge-electro); border-color: var(--forge-electro); }
+
+    canvas {
+      display: block;
+      background: #090314;
+      cursor: crosshair;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 3, 20, 0.88);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--forge-thermal), var(--forge-cryo));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay-desc {
+      max-width: 480px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, var(--forge-thermal), var(--forge-cryo));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
+    }
+
+    .controls-hint {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .controls-hint span {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text);
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Main Menu</a>
+    <h1>Cyber Forge</h1>
+    <div class="subtitle">360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter</div>
+    <div class="header-controls">
+      <button id="mute-btn" class="hdr-btn">🔊 Sound: ON</button>
+      <button id="pause-btn" class="hdr-btn">⏸ Pause</button>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="hud-bar">
+      <div class="stat-group">
+        <div class="stat-box">
+          <span class="stat-label">Health</span>
+          <div class="bar-container"><div id="health-bar" class="bar-fill health-fill"></div></div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Shield</span>
+          <div class="bar-container"><div id="shield-bar" class="bar-fill shield-fill"></div></div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Surge Charge</span>
+          <div class="bar-container"><div id="surge-bar" class="bar-fill surge-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-group">
+        <div id="element-badge" class="element-indicator element-thermal">🔥 Thermal</div>
+        <div class="stat-box">
+          <span class="stat-label">EMP Pulses</span>
+          <span id="emp-val" class="stat-value">3</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Wave</span>
+          <span id="wave-val" class="stat-value">1</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Score</span>
+          <span id="score-val" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Best</span>
+          <span id="high-score-val" class="stat-value">0</span>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+
+    <div id="start-overlay" class="overlay">
+      <div class="overlay-title">Cyber Forge</div>
+      <div class="overlay-desc">
+        Rotate 360° to defend the central Matrix Siphon!<br/>
+        Switch elements (1: Thermal 🔥, 2: Cryo ❄️, 3: Electro ⚡) to match corrupt virus weaknesses for 3x Critical Damage!<br/>
+        Deploy EMP shockwaves [E] and unleash Elemental Surge Beam Storms [Shift]!
+      </div>
+      <button id="start-btn" class="btn-primary">Initialize Forge</button>
+      <div class="controls-hint">
+        <span>WASD / Mouse</span> Aim & Move | <span>1 / 2 / 3</span> Switch Element | <span>Click / Space</span> Fire Plasma | <span>E</span> EMP Nova | <span>Shift</span> Surge Storm
+      </div>
+    </div>
+
+    <div id="pause-overlay" class="overlay hidden">
+      <div class="overlay-title">Forge Paused</div>
+      <div class="overlay-desc">System grid suspended.</div>
+      <button id="resume-btn" class="btn-primary">Resume Operation</button>
+    </div>
+
+    <div id="gameover-overlay" class="overlay hidden">
+      <div class="overlay-title">Core Breached</div>
+      <div class="overlay-desc">The Matrix Siphon was compromised by virus corruption.</div>
+      <button id="restart-btn" class="btn-primary">Reboot Siphon</button>
+    </div>
+  </div>
+
+  <script>
+    class CyberForgeEngine {
+      constructor(canvas, options = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberforge') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        // Player / Siphon Turret at center
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 20,
+          angle: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 50,
+          maxShield: 50,
+          empCharges: 3,
+          surgeEnergy: 0,
+          maxSurgeEnergy: 100,
+          activeElement: 'thermal', // 'thermal', 'cryo', 'electro'
+          surgeActiveTimer: 0,
+          fireCooldown: 0
+        };
+
+        this.projectiles = [];
+        this.enemies = [];
+        this.empShockwaves = [];
+        this.particles = [];
+        this.boss = null;
+
+        this.waveSpawnTimer = 0;
+        this.waveEnemiesToSpawn = 0;
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        this.player.health = 100;
+        this.player.shield = 50;
+        this.player.empCharges = 3;
+        this.player.surgeEnergy = 0;
+        this.player.surgeActiveTimer = 0;
+        this.player.fireCooldown = 0;
+        this.player.activeElement = 'thermal';
+
+        this.projectiles = [];
+        this.enemies = [];
+        this.empShockwaves = [];
+        this.particles = [];
+        this.boss = null;
+
+        this.initWave();
+      }
+
+      initWave() {
+        this.waveEnemiesToSpawn = 8 + this.wave * 4;
+        this.waveSpawnTimer = 0;
+
+        // Boss wave every 5 waves
+        if (this.wave % 5 === 0) {
+          this.spawnBoss();
+        }
+      }
+
+      pause() {
+        if (this.started && !this.over) this.paused = true;
+      }
+
+      resume() {
+        if (this.started && !this.over) this.paused = false;
+      }
+
+      togglePause() {
+        if (!this.started || this.over) return;
+        this.paused = !this.paused;
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+        this.enemies = [];
+        this.projectiles = [];
+        this.empShockwaves = [];
+        this.particles = [];
+        this.boss = null;
+      }
+
+      setScore(score) {
+        this.score = score;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberforge', this.highScore);
+          }
+        }
+      }
+
+      setPlayerAngle(angle) {
+        this.player.angle = angle;
+      }
+
+      movePlayer(dx, dy) {
+        // Subtle drift movement around central siphon
+        const speed = 2.5;
+        this.player.x = clamp(this.player.x + dx * speed, 100, this.width - 100);
+        this.player.y = clamp(this.player.y + dy * speed, 100, this.height - 100);
+      }
+
+      setElementMode(element) {
+        if (['thermal', 'cryo', 'electro'].includes(element)) {
+          this.player.activeElement = element;
+          if (typeof playSound === 'function') playSound('select');
+        }
+      }
+
+      cycleElement() {
+        const elements = ['thermal', 'cryo', 'electro'];
+        const idx = elements.indexOf(this.player.activeElement);
+        this.player.activeElement = elements[(idx + 1) % elements.length];
+        if (typeof playSound === 'function') playSound('select');
+      }
+
+      firePlasma() {
+        if (!this.started || this.paused || this.over) return false;
+        if (this.player.fireCooldown > 0) return false;
+
+        this.player.fireCooldown = 12;
+
+        const speed = 9;
+        const vx = Math.cos(this.player.angle) * speed;
+        const vy = Math.sin(this.player.angle) * speed;
+
+        this.projectiles.push({
+          x: this.player.x + Math.cos(this.player.angle) * 25,
+          y: this.player.y + Math.sin(this.player.angle) * 25,
+          vx: vx,
+          vy: vy,
+          element: this.player.activeElement,
+          radius: 5,
+          life: 90
+        });
+
+        if (typeof playSound === 'function') playSound('laser');
+        return true;
+      }
+
+      triggerEMP() {
+        if (!this.started || this.paused || this.over) return false;
+        if (this.player.empCharges <= 0) return false;
+
+        this.player.empCharges--;
+        this.empShockwaves.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 350,
+          speed: 15,
+          opacity: 1
+        });
+
+        if (typeof playSound === 'function') playSound('emp');
+        return true;
+      }
+
+      triggerSurge() {
+        if (!this.started || this.paused || this.over) return false;
+        if (this.player.surgeEnergy < 100) return false;
+
+        this.player.surgeEnergy = 0;
+        this.player.surgeActiveTimer = 240; // 4 seconds storm
+
+        if (typeof playSound === 'function') playSound('powerup');
+        return true;
+      }
+
+      spawnEnemy() {
+        // Spawn from canvas perimeter
+        let x, y;
+        if (Math.random() < 0.5) {
+          x = Math.random() < 0.5 ? -20 : this.width + 20;
+          y = Math.random() * this.height;
+        } else {
+          x = Math.random() * this.width;
+          y = Math.random() < 0.5 ? -20 : this.height + 20;
+        }
+
+        const elements = ['thermal', 'cryo', 'electro'];
+        const enemyElement = elements[Math.floor(Math.random() * elements.length)];
+        const speed = 1.2 + Math.random() * 1.5 + this.wave * 0.1;
+
+        this.enemies.push({
+          x: x,
+          y: y,
+          radius: 14,
+          element: enemyElement, // Weakness is matching element!
+          health: 30 + this.wave * 5,
+          maxHealth: 30 + this.wave * 5,
+          speed: speed,
+          isBoss: false
+        });
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: 80,
+          radius: 40,
+          element: 'thermal',
+          health: 500 + this.wave * 200,
+          maxHealth: 500 + this.wave * 200,
+          phase: 1,
+          attackTimer: 0,
+          isBoss: true
+        };
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Recharge shield over time
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.05);
+        }
+
+        // Fire cooldown & surge timer
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+        if (this.player.surgeActiveTimer > 0) {
+          this.player.surgeActiveTimer--;
+          // Fire automatic tri-stream plasma while surge active
+          if (this.player.surgeActiveTimer % 8 === 0) {
+            for (let i = -1; i <= 1; i++) {
+              const ang = this.player.angle + i * 0.25;
+              this.projectiles.push({
+                x: this.player.x,
+                y: this.player.y,
+                vx: Math.cos(ang) * 11,
+                vy: Math.sin(ang) * 11,
+                element: this.player.activeElement,
+                radius: 6,
+                life: 90
+              });
+            }
+          }
+        }
+
+        // Spawning logic
+        if (this.waveEnemiesToSpawn > 0) {
+          this.waveSpawnTimer++;
+          if (this.waveSpawnTimer > 35 - Math.min(20, this.wave * 2)) {
+            this.spawnEnemy();
+            this.waveEnemiesToSpawn--;
+            this.waveSpawnTimer = 0;
+          }
+        }
+
+        // Update Projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life--;
+
+          if (p.life <= 0 || p.x < -20 || p.x > this.width + 20 || p.y < -20 || p.y > this.height + 20) {
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        // Update EMP Shockwaves
+        for (let i = this.empShockwaves.length - 1; i >= 0; i--) {
+          const wave = this.empShockwaves[i];
+          wave.radius += wave.speed;
+          wave.opacity = 1 - wave.radius / wave.maxRadius;
+
+          // Hit normal enemies
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const dist = Math.hypot(e.x - wave.x, e.y - wave.y);
+            if (dist <= wave.radius) {
+              this.createExplosion(e.x, e.y, e.element);
+              this.enemies.splice(j, 1);
+              this.score += 50;
+            }
+          }
+
+          // Damage boss
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - wave.x, this.boss.y - wave.y);
+            if (dist <= wave.radius) {
+              this.boss.health -= 5;
+            }
+          }
+
+          if (wave.radius >= wave.maxRadius) {
+            this.empShockwaves.splice(i, 1);
+          }
+        }
+
+        // Update Normal Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+          e.x += Math.cos(angle) * e.speed;
+          e.y += Math.sin(angle) * e.speed;
+
+          // Collision with player siphon
+          const distToPlayer = Math.hypot(this.player.x - e.x, this.player.y - e.y);
+          if (distToPlayer <= e.radius + this.player.radius) {
+            this.takeDamage(20);
+            this.createExplosion(e.x, e.y, e.element);
+            this.enemies.splice(i, 1);
+            continue;
+          }
+
+          // Collision with projectiles
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            const distToProj = Math.hypot(p.x - e.x, p.y - e.y);
+            if (distToProj <= e.radius + p.radius) {
+              // Element matching bonus: matching element deals 3x critical damage!
+              const isMatch = p.element === e.element;
+              const dmg = isMatch ? 60 : 20;
+
+              e.health -= dmg;
+              this.projectiles.splice(j, 1);
+
+              this.createImpact(p.x, p.y, p.element);
+
+              if (e.health <= 0) {
+                this.createExplosion(e.x, e.y, e.element);
+                this.enemies.splice(i, 1);
+
+                const points = isMatch ? 150 : 50;
+                this.score += points;
+                this.player.surgeEnergy = Math.min(this.player.maxSurgeEnergy, this.player.surgeEnergy + (isMatch ? 15 : 5));
+
+                if (typeof playSound === 'function') playSound('explosion');
+                break;
+              }
+            }
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          this.boss.attackTimer++;
+          if (this.boss.attackTimer % 60 === 0) {
+            // Cycle boss element phase
+            const elements = ['thermal', 'cryo', 'electro'];
+            this.boss.element = elements[Math.floor(Math.random() * elements.length)];
+          }
+
+          // Boss collision with projectiles
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            const distToBoss = Math.hypot(this.boss.x - p.x, this.boss.y - p.y);
+            if (distToBoss <= this.boss.radius + p.radius) {
+              const isMatch = p.element === this.boss.element;
+              const dmg = isMatch ? 40 : 12;
+              this.boss.health -= dmg;
+              this.projectiles.splice(j, 1);
+              this.createImpact(p.x, p.y, p.element);
+
+              if (this.boss.health <= 0) {
+                this.createExplosion(this.boss.x, this.boss.y, 'thermal');
+                this.score += 2000;
+                this.boss = null;
+                if (typeof playSound === 'function') playSound('bossDeath');
+                break;
+              }
+            }
+          }
+        }
+
+        // Check wave clear
+        if (this.waveEnemiesToSpawn <= 0 && this.enemies.length === 0 && !this.boss) {
+          this.wave++;
+          this.score += 500;
+          this.player.empCharges = Math.min(5, this.player.empCharges + 1);
+          this.initWave();
+        }
+
+        // Update particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          if (pt.life <= 0) this.particles.splice(i, 1);
+        }
+
+        // Update high score
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberforge', this.highScore);
+          }
+        }
+      }
+
+      takeDamage(amount) {
+        if (this.player.shield > 0) {
+          this.player.shield -= amount;
+          if (this.player.shield < 0) {
+            this.player.health += this.player.shield; // Overflow to health
+            this.player.shield = 0;
+          }
+        } else {
+          this.player.health -= amount;
+        }
+
+        if (this.player.health <= 0) {
+          this.player.health = 0;
+          this.gameOver();
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        if (typeof playSound === 'function') playSound('gameover');
+      }
+
+      createImpact(x, y, element) {
+        const color = element === 'thermal' ? '#ff3366' : (element === 'cryo' ? '#00d2ff' : '#ffcc00');
+        for (let i = 0; i < 4; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 2 + 1;
+          this.particles.push({
+            x: x, y: y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            color: color,
+            life: 12
+          });
+        }
+      }
+
+      createExplosion(x, y, element) {
+        const color = element === 'thermal' ? '#ff3366' : (element === 'cryo' ? '#00d2ff' : '#ffcc00');
+        for (let i = 0; i < 16; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 4 + 1;
+          this.particles.push({
+            x: x, y: y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            color: color,
+            life: 25
+          });
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Draw Matrix Grid Background
+        this.ctx.strokeStyle = 'rgba(46, 16, 101, 0.25)';
+        this.ctx.lineWidth = 1;
+        const gridSize = 40;
+        for (let x = 0; x < this.width; x += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        // Draw EMP Shockwaves
+        for (const wave of this.empShockwaves) {
+          this.ctx.save();
+          this.ctx.strokeStyle = `rgba(0, 240, 255, ${wave.opacity})`;
+          this.ctx.lineWidth = 4;
+          this.ctx.beginPath();
+          this.ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+
+        // Draw Projectiles
+        for (const p of this.projectiles) {
+          const color = p.element === 'thermal' ? '#ff3366' : (p.element === 'cryo' ? '#00d2ff' : '#ffcc00');
+          this.ctx.save();
+          this.ctx.fillStyle = color;
+          this.ctx.shadowColor = color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Enemies
+        for (const e of this.enemies) {
+          const color = e.element === 'thermal' ? '#ff3366' : (e.element === 'cryo' ? '#00d2ff' : '#ffcc00');
+          this.ctx.save();
+          this.ctx.fillStyle = color;
+          this.ctx.shadowColor = color;
+          this.ctx.shadowBlur = 8;
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Boss if active
+        if (this.boss) {
+          const color = this.boss.element === 'thermal' ? '#ff3366' : (this.boss.element === 'cryo' ? '#00d2ff' : '#ffcc00');
+          this.ctx.save();
+          this.ctx.fillStyle = color;
+          this.ctx.shadowColor = color;
+          this.ctx.shadowBlur = 20;
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Player Turret Siphon
+        this.ctx.save();
+        this.ctx.translate(this.player.x, this.player.y);
+        this.ctx.rotate(this.player.angle);
+
+        // Active Element Glow Turret
+        const elementColor = this.player.activeElement === 'thermal' ? '#ff3366' : (this.player.activeElement === 'cryo' ? '#00d2ff' : '#ffcc00');
+        this.ctx.fillStyle = elementColor;
+        this.ctx.shadowColor = elementColor;
+        this.ctx.shadowBlur = 15;
+
+        // Turret Barrel
+        this.ctx.fillRect(0, -5, 28, 10);
+
+        // Core Siphon Ring
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.player.radius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.restore();
+
+        // Draw Particles
+        for (const pt of this.particles) {
+          this.ctx.save();
+          this.ctx.fillStyle = pt.color;
+          this.ctx.beginPath();
+          this.ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberForgeEngine };
+    }
+
+    // Browser Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('game-canvas');
+      const engine = new CyberForgeEngine(canvas);
+
+      const startOverlay = document.getElementById('start-overlay');
+      const pauseOverlay = document.getElementById('pause-overlay');
+      const gameOverOverlay = document.getElementById('gameover-overlay');
+
+      const startBtn = document.getElementById('start-btn');
+      const resumeBtn = document.getElementById('resume-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const pauseBtn = document.getElementById('pause-btn');
+      const muteBtn = document.getElementById('mute-btn');
+
+      const healthBar = document.getElementById('health-bar');
+      const shieldBar = document.getElementById('shield-bar');
+      const surgeBar = document.getElementById('surge-bar');
+      const elementBadge = document.getElementById('element-badge');
+      const empVal = document.getElementById('emp-val');
+      const waveVal = document.getElementById('wave-val');
+      const scoreVal = document.getElementById('score-val');
+      const highScoreVal = document.getElementById('high-score-val');
+
+      let mouseX = engine.width / 2;
+      let mouseY = engine.height / 2;
+      const keys = {};
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      resumeBtn.addEventListener('click', () => {
+        engine.togglePause();
+        pauseOverlay.classList.add('hidden');
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      pauseBtn.addEventListener('click', () => {
+        if (engine.started && !engine.over) {
+          engine.togglePause();
+          if (engine.paused) pauseOverlay.classList.remove('hidden');
+          else pauseOverlay.classList.add('hidden');
+        }
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+
+      canvas.addEventListener('click', () => {
+        if (engine.started && !engine.paused && !engine.over) {
+          engine.firePlasma();
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (e.code === 'Digit1') engine.setElementMode('thermal');
+        else if (e.code === 'Digit2') engine.setElementMode('cryo');
+        else if (e.code === 'Digit3') engine.setElementMode('electro');
+        else if (e.code === 'KeyE' || e.code === 'KeyX') engine.triggerEMP();
+        else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') engine.triggerSurge();
+        else if (e.code === 'Space') engine.firePlasma();
+        else if (e.code === 'KeyP' || e.code === 'Escape') {
+          if (engine.started && !engine.over) {
+            engine.togglePause();
+            if (engine.paused) pauseOverlay.classList.remove('hidden');
+            else pauseOverlay.classList.add('hidden');
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+      });
+
+      if (muteBtn && typeof getMuteState === 'function') {
+        let muted = getMuteState();
+        muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        muteBtn.addEventListener('click', () => {
+          muted = !muted;
+          if (typeof saveMuteState === 'function') saveMuteState(muted);
+          muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
+
+      function updateHUD() {
+        scoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.score) : engine.score;
+        highScoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.highScore) : engine.highScore;
+        waveVal.textContent = engine.wave;
+        empVal.textContent = engine.player.empCharges;
+
+        healthBar.style.width = Math.max(0, (engine.player.health / engine.player.maxHealth) * 100) + '%';
+        shieldBar.style.width = Math.max(0, (engine.player.shield / engine.player.maxShield) * 100) + '%';
+        surgeBar.style.width = Math.max(0, (engine.player.surgeEnergy / engine.player.maxSurgeEnergy) * 100) + '%';
+
+        const elem = engine.player.activeElement;
+        elementBadge.className = `element-indicator element-${elem}`;
+        elementBadge.textContent = elem === 'thermal' ? '🔥 Thermal' : (elem === 'cryo' ? '❄️ Cryo' : '⚡ Electro');
+
+        if (engine.over) {
+          gameOverOverlay.classList.remove('hidden');
+        }
+      }
+
+      function gameLoop() {
+        if (engine.started && !engine.paused && !engine.over) {
+          let dx = 0;
+          let dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          if (dx !== 0 && dy !== 0) {
+            dx *= 0.7071;
+            dy *= 0.7071;
+          }
+          engine.movePlayer(dx, dy);
+
+          const angle = Math.atan2(mouseY - engine.player.y, mouseX - engine.player.x);
+          engine.setPlayerAngle(angle);
+
+          engine.update();
+          engine.draw();
+        }
+        updateHUD();
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>

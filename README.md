@@ -33,6 +33,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🥷 **[Cyber Phantom](https://arcadehub.telekit.link/cyberphantom.html)** — High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter with shadow decoys and Phase Overlord Bosses.
 - 🌀 **[Cyber Echo](https://arcadehub.telekit.link/cyberecho.html)** — High-octane 360° Quantum Time-Loop & Echo Decoy Tactical Arena Shooter with temporal ghost clones and Chrono-Overlord Bosses.
 - 🌀 **[Cyber Warp](https://arcadehub.telekit.link/cyberwarp.html)** — High-octane 360° Quantum Warp-Grid & Event-Horizon Arena Defender with phase rifts, EMP novas, and Warp Titan Bosses.
+- 🔥 **[Cyber Forge](https://arcadehub.telekit.link/cyberforge.html)** — High-octane 360° Matrix Element Forge & Cyber Core Overdrive Arena Shooter with elemental plasma, EMP novas, and Forge Titan Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
