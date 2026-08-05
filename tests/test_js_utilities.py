@@ -98,3 +98,24 @@ def test_js_utils_html_exists():
     assert "saveHighScore" in content, "utils.test.html should cover saveHighScore"
     assert "getMuteState" in content, "utils.test.html should cover getMuteState"
     assert "saveMuteState" in content, "utils.test.html should cover saveMuteState"
+
+
+def test_js_cybercircuit_utilities():
+    """Runs the JavaScript Node.js unit tests for cybercircuit.test.js and asserts success."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "cybercircuit.test.js")
+
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True,
+        timeout=30
+    )
+
+    print("STDOUT:")
+    print(result.stdout)
+    print("STDERR:", file=sys.stderr)
+    print(result.stderr, file=sys.stderr)
+
+    assert result.returncode == 0, f"JS test cybercircuit.test.js failed with code {result.returncode}"
+

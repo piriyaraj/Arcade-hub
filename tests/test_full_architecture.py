@@ -40,6 +40,8 @@ def test_html_script_and_css_links():
         "cyberoverdrive.html",
         "cybervortex.html",
         "cyberpulse.html",
+        "cybermatrix.html",
+        "cybercircuit.html",
         "leaderboard.html"
     ]
 

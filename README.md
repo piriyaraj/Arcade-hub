@@ -21,6 +21,8 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Overdrive](cyberoverdrive.html)** — High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores.
 - 🌀 **[Cyber Vortex](cybervortex.html)** — High-octane orbital quantum core shooter with plasma beams, EMP vortex novas & Singularity Bosses.
 - ⚡ **[Cyber Pulse](cyberpulse.html)** — High-voltage matrix wave shooter with plasma pulse beams, EMP shockwaves, kinetic surge shields & Titan Pulse Bosses.
+- 🔮 **[Cyber Matrix](cybermatrix.html)** — High-octane phase-shifting quantum arena with dual-color laser bolts, EMP shockwaves, phase dash & Matrix Overlord Bosses.
+- ⚡ **[Cyber Circuit](cybercircuit.html)** — High-voltage matrix pulse routing & node overload arcade game with EMP shockwaves & AI Core Overlords.
 - 💻 **[Flappy Byte](flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -96,6 +98,9 @@ All game HTML files available in this repository:
 | [cybersiege.html](cybersiege.html) | Cyber Siege — Tactical matrix defense shooter with Kinetic Shields & Dreadnought Bosses |
 | [cybersurge.html](cybersurge.html) | Cyber Surge — 360° vector matrix arena shooter with plasma surges, EMP shockwaves & Surge Singularity Bosses |
 | [cyberoverdrive.html](cyberoverdrive.html) | Cyber Overdrive — High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores |
+| [cybervortex.html](cybervortex.html) | Cyber Vortex — Orbital quantum core shooter with plasma beams, EMP vortex novas & Singularity Bosses |
+| [cyberpulse.html](cyberpulse.html) | Cyber Pulse — High-voltage matrix wave shooter with plasma pulse beams & Titan Pulse Bosses |
+| [cybermatrix.html](cybermatrix.html) | Cyber Matrix — High-octane phase-shifting quantum arena with dual-color laser bolts & Matrix Overlord Bosses |
 | [cyberstriker.html](cyberstriker.html) | Cyber Striker — High-octane space defense & dreadnought boss arcade shooter |
 | [cyberhacker.html](cyberhacker.html) | Cyber Hacker — Retro terminal node hacking arcade game |
 | [cyberracer.html](cyberracer.html) | CyberRacer — Retro digital superhighway racer |

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Circuit - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game. Connect data channels, slice malware viruses, deploy EMP pulses, and defeat AI Core Overlords." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybercircuit.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Circuit - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybercircuit.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Circuit - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Circuit - High-voltage matrix pulse routing & node overload arcade game." />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Circuit",
+    "url": "https://arcadehub.telekit.link/cybercircuit.html",
+    "description": "High-voltage matrix pulse routing & node overload arcade game.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --board-bg: #050811;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #4ade80;
+      --accent-purple: #a855f7;
+      --accent-yellow: #facc15;
+      --text: #e8eaed;
+      --text-dim: #9aa0a6;
+      --border: rgba(0, 240, 255, 0.25);
+      --circuit-glow: rgba(0, 240, 255, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-neon);
+      text-shadow: 0 0 10px var(--circuit-glow);
+    }
+
+    .nav-btn {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent-neon);
+      color: #000;
+      box-shadow: 0 0 12px var(--accent-neon);
+    }
+
+    .game-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hud-bar {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      backdrop-filter: blur(6px);
+      text-align: center;
+    }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hud-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+
+    .hud-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-neon);
+    }
+
+    canvas {
+      background: var(--board-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+      max-width: 100%;
+      height: auto;
+      touch-action: none;
+    }
+
+    .controls-hint {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1.25rem;
+      z-index: 10;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      font-size: 2.2rem;
+      color: var(--accent-neon);
+      text-shadow: 0 0 15px var(--accent-neon);
+    }
+
+    .overlay p {
+      max-width: 80%;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
+      color: #000;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-action:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">
+      <a href="index.html" class="nav-btn">&larr; Portal</a>
+      <h1>⚡ CYBER CIRCUIT</h1>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button id="muteBtn" class="nav-btn" aria-label="Toggle Sound">🔊 Sound</button>
+      <button id="pauseBtn" class="nav-btn" aria-label="Pause Game">⏸️ Pause</button>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="hud-bar">
+      <div class="hud-item">
+        <span class="hud-label">Score</span>
+        <span id="scoreVal" class="hud-value">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Best</span>
+        <span id="bestVal" class="hud-value">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Wave</span>
+        <span id="levelVal" class="hud-value">1</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Multiplier</span>
+        <span id="multVal" class="hud-value">1x</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">EMP Charge</span>
+        <span id="empVal" class="hud-value">100%</span>
+      </div>
+    </div>
+
+    <div style="position: relative; width: 100%; display: flex; justify-content: center;">
+      <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+      <div id="startOverlay" class="overlay">
+        <h2>CYBER CIRCUIT</h2>
+        <p>Route quantum pulse energy through node channels. Slice malware viruses, collect energy cores, and deploy EMP shockwaves to purge AI Core Overlords!</p>
+        <button id="startBtn" class="btn-action">INITIALIZE CIRCUIT</button>
+      </div>
+
+      <div id="gameOverOverlay" class="overlay hidden">
+        <h2 style="color: var(--accent-pink); text-shadow: 0 0 15px var(--accent-pink);">CIRCUIT OVERLOAD</h2>
+        <p id="finalScoreText">Final Score: 0</p>
+        <button id="restartBtn" class="btn-action">REBOOT SYSTEM</button>
+      </div>
+    </div>
+
+    <div class="controls-hint">
+      Controls: <strong>Arrow Keys / WASD</strong> to steer Quantum Pulse &bull; <strong>SPACE</strong> to Trigger EMP Shockwave &bull; <strong>P</strong> to Pause
+    </div>
+  </div>
+
+  <script>
+    /**
+     * @typedef {Object} PulseState
+     * @property {number} x - X position
+     * @property {number} y - Y position
+     * @property {number} vx - Velocity X
+     * @property {number} vy - Velocity Y
+     * @property {number} radius - Pulse radius
+     * @property {number} speed - Pulse speed
+     */
+
+    /**
+     * @typedef {Object} CircuitNode
+     * @property {number} x - Node X
+     * @property {number} y - Node Y
+     * @property {number} type - Node type (0: normal, 1: energy, 2: emp, 3: overloaded)
+     * @property {boolean} active - Active state
+     * @property {number} rotation - Node orientation angle
+     */
+
+    /**
+     * CyberCircuitEngine - Core game loop and state machine for Cyber Circuit.
+     */
+    class CyberCircuitEngine {
+      /**
+       * @param {HTMLCanvasElement|null} canvas 
+       * @param {Object} [options={}] 
+       */
+      constructor(canvas, options = {}) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 500;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.multiplier = 1;
+        this.level = 1;
+        this.lives = 3;
+        this.empCharge = 100; // 0 - 100%
+
+        /** @type {PulseState} */
+        this.pulse = {
+          x: this.width / 2,
+          y: this.height / 2,
+          vx: 0,
+          vy: 0,
+          radius: 10,
+          speed: 250
+        };
+
+        /** @type {Array<CircuitNode>} */
+        this.nodes = [];
+
+        /** @type {Array<Object>} */
+        this.viruses = [];
+
+        /** @type {Array<Object>} */
+        this.empShockwaves = [];
+
+        /** @type {Array<Object>} */
+        this.particles = [];
+
+        /** @type {Object|null} */
+        this.boss = null;
+
+        this.nodeSpawnTimer = 0;
+        this.virusSpawnTimer = 0;
+
+        this.audio = typeof AudioSystem !== 'undefined' ? AudioSystem : null;
+
+        if (typeof getBestScore === 'function') {
+          this.bestScore = getBestScore('cybercircuit') || 0;
+        } else {
+          this.bestScore = 0;
+        }
+
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        if (typeof window === 'undefined') return;
+
+        window.addEventListener('keydown', (e) => {
+          if (!this.started || this.over) return;
+
+          if (e.key === 'p' || e.key === 'P') {
+            this.togglePause();
+            return;
+          }
+
+          if (this.paused) return;
+
+          if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+            this.pulse.vx = -this.pulse.speed;
+            this.pulse.vy = 0;
+          } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+            this.pulse.vx = this.pulse.speed;
+            this.pulse.vy = 0;
+          } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+            this.pulse.vy = -this.pulse.speed;
+            this.pulse.vx = 0;
+          } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+            this.pulse.vy = this.pulse.speed;
+            this.pulse.vx = 0;
+          } else if (e.key === ' ' || e.code === 'Space') {
+            this.triggerEmp();
+          }
+        });
+      }
+
+      /**
+       * Start new game.
+       */
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.multiplier = 1;
+        this.level = 1;
+        this.lives = 3;
+        this.empCharge = 100;
+
+        this.pulse.x = this.width / 2;
+        this.pulse.y = this.height / 2;
+        this.pulse.vx = 0;
+        this.pulse.vy = 0;
+
+        this.nodes = [];
+        this.viruses = [];
+        this.empShockwaves = [];
+        this.particles = [];
+        this.boss = null;
+
+        this.spawnNodes(10);
+        this.spawnViruses(3);
+
+        if (this.audio && typeof this.audio.playSound === 'function') {
+          try { this.audio.playSound('start'); } catch(e) {}
+        }
+      }
+
+      pause() {
+        this.paused = true;
+      }
+
+      resume() {
+        this.paused = false;
+      }
+
+      togglePause() {
+        this.paused = !this.paused;
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.multiplier = 1;
+        this.nodes = [];
+        this.viruses = [];
+        this.empShockwaves = [];
+        this.particles = [];
+        this.boss = null;
+      }
+
+      setScore(val) {
+        this.score = Math.max(0, val);
+        if (this.score > this.bestScore) {
+          this.bestScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cybercircuit', this.bestScore);
+          }
+        }
+      }
+
+      addScore(pts) {
+        const added = pts * this.multiplier;
+        this.setScore(this.score + added);
+      }
+
+      triggerEmp() {
+        if (this.empCharge < 100) return false;
+
+        this.empCharge = 0;
+        this.empShockwaves.push({
+          x: this.pulse.x,
+          y: this.pulse.y,
+          radius: 10,
+          maxRadius: 250,
+          speed: 400
+        });
+
+        if (this.audio && typeof this.audio.playSound === 'function') {
+          try { this.audio.playSound('emp'); } catch(e) {}
+        }
+        return true;
+      }
+
+      spawnNodes(count) {
+        for (let i = 0; i < count; i++) {
+          this.nodes.push({
+            x: 40 + Math.random() * (this.width - 80),
+            y: 40 + Math.random() * (this.height - 80),
+            type: Math.random() < 0.2 ? 1 : 0, // 1: energy node, 0: regular node
+            radius: 15,
+            active: true,
+            pulseTimer: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      spawnViruses(count) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 150 + Math.random() * 200;
+          this.viruses.push({
+            x: clamp(this.pulse.x + Math.cos(angle) * dist, 30, this.width - 30),
+            y: clamp(this.pulse.y + Math.sin(angle) * dist, 30, this.height - 30),
+            vx: (Math.random() - 0.5) * 120,
+            vy: (Math.random() - 0.5) * 120,
+            radius: 12,
+            hp: 1
+          });
+        }
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: 80,
+          vx: 150,
+          vy: 0,
+          radius: 35,
+          hp: 20,
+          maxHp: 20,
+          attackTimer: 0
+        };
+      }
+
+      /**
+       * Core update loop.
+       * @param {number} deltaSeconds 
+       */
+      update(deltaSeconds) {
+        if (!this.started || this.paused || this.over) return;
+
+        const dt = Math.min(deltaSeconds, 0.05);
+
+        // Move Pulse
+        this.pulse.x += this.pulse.vx * dt;
+        this.pulse.y += this.pulse.vy * dt;
+
+        // Clamp pulse within bounds
+        const minX = this.pulse.radius;
+        const maxX = this.width - this.pulse.radius;
+        const minY = this.pulse.radius;
+        const maxY = this.height - this.pulse.radius;
+
+        if (this.pulse.x < minX) { this.pulse.x = minX; this.pulse.vx = 0; }
+        if (this.pulse.x > maxX) { this.pulse.x = maxX; this.pulse.vx = 0; }
+        if (this.pulse.y < minY) { this.pulse.y = minY; this.pulse.vy = 0; }
+        if (this.pulse.y > maxY) { this.pulse.y = maxY; this.pulse.vy = 0; }
+
+        // Recharge EMP slowly over time
+        if (this.empCharge < 100) {
+          this.empCharge = Math.min(100, this.empCharge + 10 * dt);
+        }
+
+        // Update EMP Shockwaves
+        for (let i = this.empShockwaves.length - 1; i >= 0; i--) {
+          const wave = this.empShockwaves[i];
+          wave.radius += wave.speed * dt;
+
+          // Destroy viruses hit by wave
+          for (let j = this.viruses.length - 1; j >= 0; j--) {
+            const v = this.viruses[j];
+            const dist = Math.hypot(v.x - wave.x, v.y - wave.y);
+            if (dist <= wave.radius + v.radius) {
+              this.addScore(100);
+              this.createExplosion(v.x, v.y, '#ff007f');
+              this.viruses.splice(j, 1);
+            }
+          }
+
+          // Damage boss if present
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - wave.x, this.boss.y - wave.y);
+            if (dist <= wave.radius + this.boss.radius) {
+              this.boss.hp -= 2 * dt;
+            }
+          }
+
+          if (wave.radius >= wave.maxRadius) {
+            this.empShockwaves.splice(i, 1);
+          }
+        }
+
+        // Pulse vs Nodes collision
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          const node = this.nodes[i];
+          const dist = Math.hypot(this.pulse.x - node.x, this.pulse.y - node.y);
+          if (dist <= this.pulse.radius + node.radius) {
+            // Collected node
+            const pts = node.type === 1 ? 250 : 100;
+            this.addScore(pts);
+            this.multiplier = Math.min(8, this.multiplier + 1);
+            this.empCharge = Math.min(100, this.empCharge + 20);
+            this.createExplosion(node.x, node.y, node.type === 1 ? '#4ade80' : '#00f0ff');
+            this.nodes.splice(i, 1);
+
+            if (this.audio && typeof this.audio.playSound === 'function') {
+              try { this.audio.playSound('score'); } catch(e) {}
+            }
+          }
+        }
+
+        // Spawn new nodes if low
+        if (this.nodes.length < 5) {
+          this.spawnNodes(3);
+        }
+
+        // Update Viruses
+        for (let i = this.viruses.length - 1; i >= 0; i--) {
+          const v = this.viruses[i];
+          v.x += v.vx * dt;
+          v.y += v.vy * dt;
+
+          // Bounce off walls
+          if (v.x <= v.radius || v.x >= this.width - v.radius) v.vx *= -1;
+          if (v.y <= v.radius || v.y >= this.height - v.radius) v.vy *= -1;
+
+          // Check collision with pulse
+          const dist = Math.hypot(this.pulse.x - v.x, this.pulse.y - v.y);
+          if (dist <= this.pulse.radius + v.radius) {
+            this.takeDamage();
+            this.createExplosion(v.x, v.y, '#ff007f');
+            this.viruses.splice(i, 1);
+          }
+        }
+
+        // Spawn viruses periodically
+        this.virusSpawnTimer += dt;
+        if (this.virusSpawnTimer > 4 && this.viruses.length < 8 + this.level * 2) {
+          this.virusSpawnTimer = 0;
+          this.spawnViruses(1 + Math.floor(this.level / 2));
+        }
+
+        // Boss Logic
+        if (this.level % 5 === 0 && !this.boss) {
+          this.spawnBoss();
+        }
+
+        if (this.boss) {
+          this.boss.x += this.boss.vx * dt;
+          if (this.boss.x <= this.boss.radius || this.boss.x >= this.width - this.boss.radius) {
+            this.boss.vx *= -1;
+          }
+
+          if (this.boss.hp <= 0) {
+            this.addScore(5000);
+            this.createExplosion(this.boss.x, this.boss.y, '#facc15', 30);
+            this.boss = null;
+            this.level += 1;
+          }
+        }
+
+        // Level Up check
+        if (this.score >= this.level * 1500 && !this.boss) {
+          this.level += 1;
+          if (this.audio && typeof this.audio.playSound === 'function') {
+            try { this.audio.playSound('levelUp'); } catch(e) {}
+          }
+        }
+
+        // Update Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.life -= dt;
+          if (p.life <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+      }
+
+      takeDamage() {
+        this.lives -= 1;
+        this.multiplier = 1;
+        if (this.audio && typeof this.audio.playSound === 'function') {
+          try { this.audio.playSound('hit'); } catch(e) {}
+        }
+        if (this.lives <= 0) {
+          this.gameOver();
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        this.started = false;
+        if (typeof saveBestScore === 'function') {
+          saveBestScore('cybercircuit', this.bestScore);
+        }
+        if (this.audio && typeof this.audio.playSound === 'function') {
+          try { this.audio.playSound('gameOver'); } catch(e) {}
+        }
+      }
+
+      createExplosion(x, y, color, count = 10) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 50 + Math.random() * 150;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color,
+            life: 0.3 + Math.random() * 0.4
+          });
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.fillStyle = '#050811';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw Circuit Grid background lines
+        this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+        this.ctx.lineWidth = 1;
+        const gridSize = 40;
+        for (let x = 0; x < this.width; x += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        // Draw Nodes
+        this.nodes.forEach(node => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = node.type === 1 ? '#4ade80' : '#00f0ff';
+          this.ctx.shadowColor = node.type === 1 ? '#4ade80' : '#00f0ff';
+          this.ctx.shadowBlur = 10;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw EMP Shockwaves
+        this.empShockwaves.forEach(wave => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+          this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.7)';
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowColor = '#00f0ff';
+          this.ctx.shadowBlur = 15;
+          this.ctx.stroke();
+          this.ctx.restore();
+        });
+
+        // Draw Viruses
+        this.viruses.forEach(v => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(v.x, v.y, v.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#ff007f';
+          this.ctx.shadowColor = '#ff007f';
+          this.ctx.shadowBlur = 12;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Boss
+        if (this.boss) {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#facc15';
+          this.ctx.shadowColor = '#facc15';
+          this.ctx.shadowBlur = 20;
+          this.ctx.fill();
+
+          // Health bar
+          const barW = 100;
+          const barH = 8;
+          const pct = Math.max(0, this.boss.hp / this.boss.maxHp);
+          this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          this.ctx.fillRect(this.boss.x - barW / 2, this.boss.y - this.boss.radius - 15, barW, barH);
+          this.ctx.fillStyle = '#facc15';
+          this.ctx.fillRect(this.boss.x - barW / 2, this.boss.y - this.boss.radius - 15, barW * pct, barH);
+          this.ctx.restore();
+        }
+
+        // Draw Particles
+        this.particles.forEach(p => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          this.ctx.fillStyle = p.color;
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Draw Quantum Pulse (Player)
+        if (this.started && !this.over) {
+          this.ctx.save();
+          this.ctx.beginPath();
+          this.ctx.arc(this.pulse.x, this.pulse.y, this.pulse.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = '#00f0ff';
+          this.ctx.shadowColor = '#00f0ff';
+          this.ctx.shadowBlur = 15;
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+      }
+    }
+
+    // Export for Node unit testing environments
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberCircuitEngine };
+    }
+
+    // DOM Glue for browser runtime
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        const engine = new CyberCircuitEngine(canvas);
+
+        const startOverlay = document.getElementById('startOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+
+        const scoreVal = document.getElementById('scoreVal');
+        const bestVal = document.getElementById('bestVal');
+        const levelVal = document.getElementById('levelVal');
+        const multVal = document.getElementById('multVal');
+        const empVal = document.getElementById('empVal');
+        const finalScoreText = document.getElementById('finalScoreText');
+
+        if (bestVal) bestVal.textContent = engine.bestScore;
+
+        function updateHUD() {
+          if (scoreVal) scoreVal.textContent = engine.score;
+          if (bestVal) bestVal.textContent = engine.bestScore;
+          if (levelVal) levelVal.textContent = engine.level;
+          if (multVal) multVal.textContent = `${engine.multiplier}x`;
+          if (empVal) empVal.textContent = `${Math.floor(engine.empCharge)}%`;
+        }
+
+        startBtn.addEventListener('click', () => {
+          startOverlay.classList.add('hidden');
+          gameOverOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        restartBtn.addEventListener('click', () => {
+          gameOverOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+          engine.togglePause();
+          pauseBtn.textContent = engine.paused ? '▶️ Resume' : '⏸️ Pause';
+        });
+
+        muteBtn.addEventListener('click', () => {
+          if (typeof AudioSystem !== 'undefined' && AudioSystem.toggleMute) {
+            const isMuted = AudioSystem.toggleMute();
+            muteBtn.textContent = isMuted ? '🔇 Muted' : '🔊 Sound';
+          }
+        });
+
+        let lastTime = performance.now();
+        function loop(now) {
+          const dt = (now - lastTime) / 1000;
+          lastTime = now;
+
+          engine.update(dt);
+          engine.render();
+          updateHUD();
+
+          if (engine.over) {
+            gameOverOverlay.classList.remove('hidden');
+            finalScoreText.textContent = `Final Score: ${engine.score}`;
+          }
+
+          requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);
+      });
+    }
+  </script>
+</body>
+</html>

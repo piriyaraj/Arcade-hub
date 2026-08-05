@@ -28,7 +28,10 @@ const Leaderboard = {
     { id: 'cybersurge', name: 'Cyber Surge', key: 'cybersurge_best', icon: '🌀' },
     { id: 'cyberoverdrive', name: 'Cyber Overdrive', key: 'cyberoverdrive_best', icon: '⚡' },
     { id: 'cybervortex', name: 'Cyber Vortex', key: 'cybervortex_best', icon: '🌀' },
-    { id: 'cyberpulse', name: 'Cyber Pulse', key: 'cyberpulse_best', icon: '⚡' }
+    { id: 'cyberpulse', name: 'Cyber Pulse', key: 'cyberpulse_best', icon: '⚡' },
+    { id: 'cybermatrix', name: 'Cyber Matrix', key: 'cybermatrix_best', icon: '🔮' },
+    { id: 'cybercircuit', name: 'Cyber Circuit', key: 'cybercircuit_best', icon: '⚡' },
+    { id: 'minesweeper', name: 'Minesweeper', key: 'minesweeper_best', icon: '💣' }
   ],
 
   getScores() {
