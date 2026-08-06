@@ -54,6 +54,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🌌 **[Cyber Singularity](https://arcadehub.telekit.link/cybersingularity.html)** — High-octane orbital quantum gravity defender & Singularity Core annihilator with black hole gravitational waves, EMP shockwaves, plasma beams, and Singularity Overlord Bosses.
 - 💫 **[Cyber Pulsar](https://arcadehub.telekit.link/cyberpulsar.html)** — High-octane 360° Quantum Pulsar Nova & Relativistic Beam Defense Arena with electromagnetic wave surges, EMP shockwaves, plasma beams, and Pulsar Titan Dreadnought Bosses.
 - ✨ **[Cyber Quasar](https://arcadehub.telekit.link/cyberquasar.html)** — High-octane 360° Quantum Starlight & Gravitational Shockwave Arena Defender with Nova Beams, Cosmic Flares & Quasar Overlord Bosses.
+- 🌌 **[Cyber Nebula](https://arcadehub.telekit.link/cybernebula.html)** — High-octane 360° Cosmic Stardust & Gravitational Singularity Defender with Cosmic Plasma Bursts, Singularity EMPs & Nebula Overlord Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.

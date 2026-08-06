@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Nebula — 360° Cosmic Stardust & Gravitational Singularity Defender</title>
+  <meta name="description" content="High-octane orbital stardust defender & nebula core shooter with cosmic plasma bursts, gravitational singularity EMPs, and Nebula Overlord Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybernebula.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Nebula — 360° Cosmic Stardust Defender">
+  <meta property="og:description" content="High-octane orbital stardust defender & nebula core shooter with cosmic plasma bursts, gravitational singularity EMPs, and Nebula Overlord Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybernebula.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Nebula — 360° Cosmic Stardust Defender">
+  <meta name="twitter:description" content="Pilot the Nebula Core Defender, launch cosmic plasma bursts, trigger gravitational singularity shockwaves, and defeat Nebula Overlord Titans.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Nebula",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cybernebula.html",
+    "description": "High-octane orbital stardust defender & nebula core shooter with cosmic plasma bursts, gravitational singularity EMPs, and Nebula Overlord Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c084fc, #ec4899, #38bdf8, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #ec4899;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #090314;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(192, 132, 252, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 3, 20, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 2rem;
+      text-align: center;
+      color: #f8fafc;
+      z-index: 10;
+      transition: opacity 0.25s ease;
+    }
+
+    .overlay-screen.hidden {
+      display: none;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #c084fc, #ec4899, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .controls-hint {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(192, 132, 252, 0.2);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: left;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #c084fc, #ec4899);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(192, 132, 252, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+    }
+
+    .nav-bar {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.8);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.9);
+      color: #ec4899;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">🌌 CYBER NEBULA</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="score-display" class="stat-value">0</span></div>
+        <div class="stat-item">HIGH: <span id="high-display" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="wave-display" class="stat-value">1</span></div>
+        <div class="stat-item">SINGULARITY: <span id="singularity-display" class="stat-value">🌌3</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="start-screen" class="overlay-screen">
+        <h2 class="overlay-title">CYBER NEBULA</h2>
+        <p style="max-width: 500px; color: #cbd5e1; font-size: 0.95rem;">
+          Defend the cosmic nebula core! Launch Plasma Bursts, trigger Gravitational Singularity EMPs, and vanquish Nebula Overlord Bosses!
+        </p>
+        <div class="controls-hint">
+          <div><strong style="color:#ec4899;">WASD / Arrows:</strong> Move Starfighter</div>
+          <div><strong style="color:#ec4899;">Mouse / Touch:</strong> Aim Target & Direction</div>
+          <div><strong style="color:#ec4899;">Left Click / Space:</strong> Fire Plasma Bursts</div>
+          <div><strong style="color:#ec4899;">E / Right Click:</strong> Trigger Singularity EMP</div>
+        </div>
+        <button id="start-btn" class="btn-action">LAUNCH STARFIGHTER</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameover-screen" class="overlay-screen hidden">
+        <h2 class="overlay-title" style="background: linear-gradient(135deg, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CORE COLLAPSED</h2>
+        <p style="font-size: 1.2rem; color: #e2e8f0; margin: 0;">FINAL SCORE: <span id="final-score" style="color:#ec4899; font-weight:800;">0</span></p>
+        <p id="new-high-notice" style="color: #4ade80; font-weight: 700; display: none;">NEW HIGH SCORE RECORD!</p>
+        <button id="restart-btn" class="btn-action">RE-INITIALIZE CORE</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <a href="index.html" class="btn-secondary">🏠 Portal Home</a>
+      <a href="leaderboard.html" class="btn-secondary">🏆 Global Leaderboard</a>
+    </div>
+  </div>
+
+  <script>
+    class CyberNebulaEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = this.loadHighScore();
+        this.wave = 1;
+        this.enemiesDefeated = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          speed: 6.0,
+          angle: 0,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          shieldRechargeDelay: 0,
+          singularityCharges: 3,
+          maxSingularityCharges: 5,
+          fireCooldown: 0
+        };
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.singularityNovas = [];
+        this.powerups = [];
+        this.boss = null;
+
+        this.keys = {};
+        this.mousePos = { x: this.width / 2, y: 0 };
+        this.isMouseDown = false;
+
+        this.initStars();
+      }
+
+      loadHighScore() {
+        try {
+          if (typeof localStorage !== 'undefined') {
+            const saved = localStorage.getItem('cybernebula_best');
+            return saved ? parseInt(saved, 10) || 0 : 0;
+          }
+        } catch (e) {
+          // Fallback
+        }
+        return 0;
+      }
+
+      saveHighScore() {
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          try {
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem('cybernebula_best', this.highScore.toString());
+            }
+          } catch (e) {
+            // Fallback
+          }
+        }
+      }
+
+      initStars() {
+        this.stars = [];
+        for (let i = 0; i < 60; i++) {
+          this.stars.push({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            size: Math.random() * 2.2 + 0.8,
+            alpha: Math.random() * 0.7 + 0.3,
+            speed: Math.random() * 0.4 + 0.1
+          });
+        }
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.enemiesDefeated = 0;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.hp = this.player.maxHp;
+        this.player.shield = this.player.maxShield;
+        this.player.singularityCharges = 3;
+        this.player.fireCooldown = 0;
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.singularityNovas = [];
+        this.powerups = [];
+        this.boss = null;
+
+        this.spawnWaveEnemies();
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.saveHighScore();
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.singularityNovas = [];
+        this.particles = [];
+        this.powerups = [];
+        this.boss = null;
+      }
+
+      setScore(val) {
+        this.score = val;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+        }
+      }
+
+      movePlayer(dx, dy) {
+        this.player.x = clamp(this.player.x + dx, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y + dy, this.player.radius, this.height - this.player.radius);
+      }
+
+      fireLaser() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.fireCooldown > 0) return;
+
+        this.player.fireCooldown = 12; // frame cooldown
+
+        const angle = Math.atan2(this.mousePos.y - this.player.y, this.mousePos.x - this.player.x);
+        const speed = 11;
+
+        this.projectiles.push({
+          x: this.player.x + Math.cos(angle) * this.player.radius,
+          y: this.player.y + Math.sin(angle) * this.player.radius,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: 5,
+          color: '#c084fc'
+        });
+
+        if (typeof playSound === 'function') {
+          playSound('laser');
+        }
+      }
+
+      triggerSingularity() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.singularityCharges <= 0) return;
+
+        this.player.singularityCharges--;
+        this.singularityNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 280,
+          speed: 12,
+          damage: 150
+        });
+
+        if (typeof playSound === 'function') {
+          playSound('explosion');
+        }
+      }
+
+      spawnWaveEnemies() {
+        const count = 4 + this.wave * 2;
+        for (let i = 0; i < count; i++) {
+          const edge = Math.floor(Math.random() * 4);
+          let x, y;
+          if (edge === 0) { x = Math.random() * this.width; y = -30; }
+          else if (edge === 1) { x = this.width + 30; y = Math.random() * this.height; }
+          else if (edge === 2) { x = Math.random() * this.width; y = this.height + 30; }
+          else { x = -30; y = Math.random() * this.height; }
+
+          const isCruiser = Math.random() < 0.25;
+          this.enemies.push({
+            x, y,
+            radius: isCruiser ? 22 : 14,
+            hp: isCruiser ? 60 : 25,
+            maxHp: isCruiser ? 60 : 25,
+            speed: isCruiser ? 1.5 : 2.8,
+            type: isCruiser ? 'Cruiser' : 'Drone',
+            color: isCruiser ? '#ec4899' : '#38bdf8',
+            shootCooldown: Math.random() * 60 + 40
+          });
+        }
+
+        if (this.wave % 5 === 0 && !this.boss) {
+          this.spawnBoss();
+        }
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: 90,
+          radius: 45,
+          hp: 450 + this.wave * 100,
+          maxHp: 450 + this.wave * 100,
+          type: 'NebulaOverlord',
+          color: '#f59e0b',
+          angle: 0,
+          shootCooldown: 30
+        };
+      }
+
+      destroyBoss() {
+        if (this.boss) {
+          this.score += 2000;
+          this.boss = null;
+          if (this.player.singularityCharges < this.player.maxSingularityCharges) {
+            this.player.singularityCharges++;
+          }
+        }
+      }
+
+      damagePlayer(amount) {
+        this.player.shieldRechargeDelay = 120; // 2 sec delay
+        if (this.player.shield > 0) {
+          this.player.shield -= amount;
+          if (this.player.shield < 0) {
+            this.player.hp += this.player.shield; // subtract overflow
+            this.player.shield = 0;
+          }
+        } else {
+          this.player.hp -= amount;
+        }
+
+        if (this.player.hp <= 0) {
+          this.player.hp = 0;
+          this.over = true;
+          this.saveHighScore();
+          if (typeof playSound === 'function') {
+            playSound('gameover');
+          }
+        }
+      }
+
+      update(dt = 1) {
+        if (!this.started || this.paused || this.over) return;
+
+        // Player input movement
+        let dx = 0, dy = 0;
+        if (this.keys['KeyW'] || this.keys['ArrowUp']) dy -= this.player.speed;
+        if (this.keys['KeyS'] || this.keys['ArrowDown']) dy += this.player.speed;
+        if (this.keys['KeyA'] || this.keys['ArrowLeft']) dx -= this.player.speed;
+        if (this.keys['KeyD'] || this.keys['ArrowRight']) dx += this.player.speed;
+
+        if (dx !== 0 || dy !== 0) {
+          this.movePlayer(dx, dy);
+        }
+
+        // Aim angle
+        this.player.angle = Math.atan2(this.mousePos.y - this.player.y, this.mousePos.x - this.player.x);
+
+        // Cooldowns
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+        if (this.isMouseDown) {
+          this.fireLaser();
+        }
+
+        // Shield recharge
+        if (this.player.shieldRechargeDelay > 0) {
+          this.player.shieldRechargeDelay--;
+        } else if (this.player.shield < this.player.maxShield) {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.2);
+        }
+
+        // Update stars
+        this.stars.forEach(star => {
+          star.y += star.speed;
+          if (star.y > this.height) {
+            star.y = 0;
+            star.x = Math.random() * this.width;
+          }
+        });
+
+        // Update projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > this.width || p.y < 0 || p.y > this.height) {
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        // Update enemy projectiles
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+          const ep = this.enemyProjectiles[i];
+          ep.x += ep.vx;
+          ep.y += ep.vy;
+
+          // Hit player check
+          if (checkCircleCollision(ep, this.player)) {
+            this.damagePlayer(15);
+            this.enemyProjectiles.splice(i, 1);
+            continue;
+          }
+
+          if (ep.x < 0 || ep.x > this.width || ep.y < 0 || ep.y > this.height) {
+            this.enemyProjectiles.splice(i, 1);
+          }
+        }
+
+        // Update singularity novas
+        for (let i = this.singularityNovas.length - 1; i >= 0; i--) {
+          const nova = this.singularityNovas[i];
+          nova.radius += nova.speed;
+
+          // Damage enemies inside nova
+          this.enemies.forEach(e => {
+            const dist = Math.hypot(e.x - nova.x, e.y - nova.y);
+            if (dist < nova.radius + e.radius) {
+              e.hp -= 3;
+            }
+          });
+
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - nova.x, this.boss.y - nova.y);
+            if (dist < nova.radius + this.boss.radius) {
+              this.boss.hp -= 2;
+            }
+          }
+
+          if (nova.radius >= nova.maxRadius) {
+            this.singularityNovas.splice(i, 1);
+          }
+        }
+
+        // Update enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+          e.x += Math.cos(angle) * e.speed;
+          e.y += Math.sin(angle) * e.speed;
+
+          // Enemy shooting
+          e.shootCooldown--;
+          if (e.shootCooldown <= 0) {
+            e.shootCooldown = 90 + Math.random() * 60;
+            this.enemyProjectiles.push({
+              x: e.x, y: e.y,
+              vx: Math.cos(angle) * 4.5,
+              vy: Math.sin(angle) * 4.5,
+              radius: 4,
+              color: e.color
+            });
+          }
+
+          // Player collision
+          if (checkCircleCollision(e, this.player)) {
+            this.damagePlayer(20);
+            this.enemies.splice(i, 1);
+            continue;
+          }
+
+          // Projectile collisions
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            if (checkCircleCollision(p, e)) {
+              e.hp -= 25;
+              this.projectiles.splice(j, 1);
+
+              if (e.hp <= 0) {
+                this.score += e.type === 'Cruiser' ? 250 : 100;
+                this.enemiesDefeated++;
+                this.enemies.splice(i, 1);
+                break;
+              }
+            }
+          }
+        }
+
+        // Update boss
+        if (this.boss) {
+          this.boss.angle += 0.02;
+          this.boss.x = this.width / 2 + Math.sin(this.boss.angle) * 160;
+
+          this.boss.shootCooldown--;
+          if (this.boss.shootCooldown <= 0) {
+            this.boss.shootCooldown = 40;
+            // Radial multi-shot
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+              this.enemyProjectiles.push({
+                x: this.boss.x, y: this.boss.y,
+                vx: Math.cos(a + this.boss.angle) * 4,
+                vy: Math.sin(a + this.boss.angle) * 4,
+                radius: 5,
+                color: '#f59e0b'
+              });
+            }
+          }
+
+          // Projectile collisions with boss
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            if (checkCircleCollision(p, this.boss)) {
+              this.boss.hp -= 20;
+              this.projectiles.splice(j, 1);
+
+              if (this.boss.hp <= 0) {
+                this.destroyBoss();
+                break;
+              }
+            }
+          }
+        }
+
+        // Wave progression check
+        if (this.enemies.length === 0 && !this.boss) {
+          this.wave++;
+          this.spawnWaveEnemies();
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.fillStyle = '#090314';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw stars
+        this.stars.forEach(star => {
+          this.ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+          this.ctx.beginPath();
+          this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          this.ctx.fill();
+        });
+
+        // Draw singularity novas
+        this.singularityNovas.forEach(nova => {
+          this.ctx.strokeStyle = '#c084fc';
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = '#c084fc';
+          this.ctx.beginPath();
+          this.ctx.arc(nova.x, nova.y, nova.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.shadowBlur = 0;
+        });
+
+        // Draw projectiles
+        this.projectiles.forEach(p => {
+          this.ctx.fillStyle = p.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        });
+
+        // Draw enemy projectiles
+        this.enemyProjectiles.forEach(ep => {
+          this.ctx.fillStyle = ep.color;
+          this.ctx.shadowBlur = 8;
+          this.ctx.shadowColor = ep.color;
+          this.ctx.beginPath();
+          this.ctx.arc(ep.x, ep.y, ep.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        });
+
+        // Draw enemies
+        this.enemies.forEach(e => {
+          this.ctx.fillStyle = e.color;
+          this.ctx.shadowBlur = 12;
+          this.ctx.shadowColor = e.color;
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        });
+
+        // Draw boss
+        if (this.boss) {
+          this.ctx.fillStyle = this.boss.color;
+          this.ctx.shadowBlur = 25;
+          this.ctx.shadowColor = this.boss.color;
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+
+          // Boss health bar
+          const barW = 200, barH = 10;
+          const barX = (this.width - barW) / 2;
+          const barY = 20;
+          this.ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          this.ctx.fillRect(barX, barY, barW, barH);
+          this.ctx.fillStyle = '#f59e0b';
+          this.ctx.fillRect(barX, barY, barW * (this.boss.hp / this.boss.maxHp), barH);
+        }
+
+        // Draw player
+        if (this.started && !this.over) {
+          this.ctx.save();
+          this.ctx.translate(this.player.x, this.player.y);
+          this.ctx.rotate(this.player.angle);
+
+          // Ship body
+          this.ctx.fillStyle = '#38bdf8';
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = '#38bdf8';
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.player.radius, 0);
+          this.ctx.lineTo(-this.player.radius, -this.player.radius * 0.7);
+          this.ctx.lineTo(-this.player.radius * 0.4, 0);
+          this.ctx.lineTo(-this.player.radius, this.player.radius * 0.7);
+          this.ctx.closePath();
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+
+          this.ctx.restore();
+
+          // Shield aura
+          if (this.player.shield > 0) {
+            this.ctx.strokeStyle = `rgba(56, 189, 248, ${0.3 + (this.player.shield / this.player.maxShield) * 0.5})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.player.x, this.player.y, this.player.radius + 6, 0, Math.PI * 2);
+            this.ctx.stroke();
+          }
+        }
+      }
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberNebulaEngine };
+    }
+  </script>
+
+  <script>
+    // Browser initialization & DOM wiring
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      const engine = new CyberNebulaEngine(canvas);
+
+      const startScreen = document.getElementById('start-screen');
+      const gameoverScreen = document.getElementById('gameover-screen');
+      const startBtn = document.getElementById('start-btn');
+      const restartBtn = document.getElementById('restart-btn');
+
+      const scoreDisplay = document.getElementById('score-display');
+      const highDisplay = document.getElementById('high-display');
+      const waveDisplay = document.getElementById('wave-display');
+      const singularityDisplay = document.getElementById('singularity-display');
+      const finalScore = document.getElementById('final-score');
+      const newHighNotice = document.getElementById('new-high-notice');
+
+      highDisplay.textContent = engine.highScore;
+
+      function updateUI() {
+        scoreDisplay.textContent = engine.score;
+        highDisplay.textContent = engine.highScore;
+        waveDisplay.textContent = engine.wave;
+        singularityDisplay.textContent = '🌌' + engine.player.singularityCharges;
+      }
+
+      startBtn.addEventListener('click', () => {
+        startScreen.classList.add('hidden');
+        gameoverScreen.classList.add('hidden');
+        engine.start();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        startScreen.classList.add('hidden');
+        gameoverScreen.classList.add('hidden');
+        engine.start();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        engine.keys[e.code] = true;
+        if (e.code === 'KeyE') {
+          engine.triggerSingularity();
+        }
+        if (e.code === 'KeyP') {
+          engine.togglePause();
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        engine.keys[e.code] = false;
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        engine.mousePos.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        engine.mousePos.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      });
+
+      canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+          engine.isMouseDown = true;
+          engine.fireLaser();
+        } else if (e.button === 2) {
+          e.preventDefault();
+          engine.triggerSingularity();
+        }
+      });
+
+      canvas.addEventListener('mouseup', () => {
+        engine.isMouseDown = false;
+      });
+
+      canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      let lastTime = performance.now();
+      function loop(now) {
+        const dt = (now - lastTime) / 1000;
+        lastTime = now;
+
+        engine.update(dt);
+        engine.draw();
+        updateUI();
+
+        if (engine.over && !gameoverScreen.classList.contains('active-over')) {
+          gameoverScreen.classList.remove('hidden');
+          gameoverScreen.classList.add('active-over');
+          finalScore.textContent = engine.score;
+          if (engine.score >= engine.highScore && engine.score > 0) {
+            newHighNotice.style.display = 'block';
+          } else {
+            newHighNotice.style.display = 'none';
+          }
+        } else if (!engine.over) {
+          gameoverScreen.classList.remove('active-over');
+        }
+
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+    });
+  </script>
+</body>
+</html>

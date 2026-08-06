@@ -59,6 +59,7 @@ const Leaderboard = {
     { id: 'cybersingularity', name: 'Cyber Singularity', key: 'cybersingularity_best', icon: '🌌' },
     { id: 'cyberpulsar', name: 'Cyber Pulsar', key: 'cyberpulsar_best', icon: '💫' },
     { id: 'cyberquasar', name: 'Cyber Quasar', key: 'cyberquasar_best', icon: '✨' },
+    { id: 'cybernebula', name: 'Cyber Nebula', key: 'cybernebula_best', icon: '🌌' },
     { id: 'minesweeper', name: 'Minesweeper', key: 'minesweeper_best', icon: '💣' }
   ],
 
