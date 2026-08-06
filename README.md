@@ -47,6 +47,8 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🤖 **[Cyber Titan](https://arcadehub.telekit.link/cybertitan.html)** — High-octane 360° orbital titan core defender arcade game with quad plasma cannons, hyper shields, EMP shockwaves, and Colossus Overlord Bosses.
 - 🌌 **[Cyber Zenith](https://arcadehub.telekit.link/cyberzenith.html)** — High-octane 360° apex quantum orbital star-fighter defender arcade game with plasma pulse cannons, EMP zenith shockwaves, barrier shields, and Zenith Overlord Bosses.
 - 🛡️ **[Cyber Vanguard](https://arcadehub.telekit.link/cybervanguard.html)** — High-octane 360° quantum fortress defender arcade game with plasma lance cannons, EMP vanguard shockwaves, Aegis barrier shields, and Vanguard Titan Bosses.
+- 🌒 **[Cyber Eclipse](https://arcadehub.telekit.link/cybereclipse.html)** — High-octane 360° quantum solar-lunar eclipse defender arcade game with dark-matter plasma cannons, eclipse phase shields, EMP eclipse novas, and Eclipse Titan Bosses.
+- 🌅 **[Cyber Horizon](https://arcadehub.telekit.link/cyberhorizon.html)** — High-octane synthwave 360° quantum horizon defender arcade game with tachyon plasma cannons, void phase shields, EMP solar novas, and Horizon Titan Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
