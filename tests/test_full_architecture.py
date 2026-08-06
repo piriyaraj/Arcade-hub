@@ -55,6 +55,7 @@ def test_html_script_and_css_links():
         "cybergrid.html",
         "cyberflare.html",
         "cyberprism.html",
+        "cybernova.html",
         "leaderboard.html"
     ]
 

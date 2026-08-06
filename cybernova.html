@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Nova — Quantum Starlight Core Arena Defender</title>
+  <meta name="description" content="High-octane 360° Quantum Starlight Core defender arcade game with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybernova.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Nova — Quantum Starlight Core Arena Defender">
+  <meta property="og:description" content="High-octane 360° Quantum Starlight Core defender arcade game with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybernova.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Nova — Quantum Starlight Core Arena Defender">
+  <meta name="twitter:description" content="Defend the Starlight Core with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Nova",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cybernova.html",
+    "description": "High-octane 360° Quantum Starlight Core defender arcade game with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff00aa, #7000ff, #00ffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 0, 170, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #ff00aa;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #060212;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 170, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 0, 170, 0.3);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 2, 18, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay-screen.hidden {
+      display: none;
+    }
+
+    .overlay-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ff00aa, #00ffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay-desc {
+      color: #94a3b8;
+      max-width: 480px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #ff00aa, #7000ff);
+      color: #ffffff;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 0, 170, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 0, 170, 0.6);
+    }
+
+    .controls-panel {
+      width: 100%;
+      max-width: 800px;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .nav-btn:hover {
+      color: #ff00aa;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">🌟 Cyber Nova</h1>
+      <div class="stats-bar">
+        <div class="stat-item">Score: <span id="scoreVal" class="stat-value">0</span></div>
+        <div class="stat-item">High Score: <span id="highScoreVal" class="stat-value">0</span></div>
+        <div class="stat-item">Wave: <span id="waveVal" class="stat-value">1</span></div>
+        <div class="stat-item">EMP: <span id="empVal" class="stat-value">3</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="startOverlay" class="overlay-screen">
+        <h2 class="overlay-title">CYBER NOVA</h2>
+        <p class="overlay-desc">Defend the Quantum Starlight Core from void swarms and Supernova Titan Bosses! Fire plasma bursts, trigger Nova EMP shockwaves, and collect fusion nodes.</p>
+        <button id="startBtn" class="btn-action">Deploy Core Defender</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameOverOverlay" class="overlay-screen hidden">
+        <h2 class="overlay-title" style="background: linear-gradient(135deg, #ff0055, #ff5500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CORE COLLAPSE</h2>
+        <p class="overlay-desc" id="finalScoreDesc">Your score: 0</p>
+        <button id="restartBtn" class="btn-action">Reboot Core Engine</button>
+      </div>
+    </div>
+
+    <div class="controls-panel">
+      <a href="index.html" class="nav-btn">← Back to Arcade Hub</a>
+      <div style="color: #64748b; font-size: 0.85rem;">
+        Move: [WASD / Arrows] &bull; Fire: [Left Click / Space] &bull; EMP Nova: [Right Click / E] &bull; Pause: [P]
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class CyberNovaEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = this.loadHighScore();
+        this.wave = 1;
+        this.waveTime = 0;
+        this.spawnTimer = 0;
+
+        this.novaCore = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 35,
+          hp: 200,
+          maxHp: 200,
+          pulse: 0
+        };
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2 - 120,
+          radius: 16,
+          angle: -Math.PI / 2,
+          speed: 4.5,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          shieldRechargeTimer: 0,
+          empCharges: 3,
+          fireCooldown: 0,
+          powerupType: null,
+          powerupTimer: 0
+        };
+
+        this.projectiles = [];
+        this.enemies = [];
+        this.powerups = [];
+        this.particles = [];
+        this.explosions = [];
+        this.boss = null;
+      }
+
+      loadHighScore() {
+        if (typeof localStorage === 'undefined') return 0;
+        try {
+          const val = localStorage.getItem('cybernova_best');
+          return val ? parseInt(val, 10) || 0 : 0;
+        } catch (e) {
+          return 0;
+        }
+      }
+
+      saveHighScore() {
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof localStorage !== 'undefined') {
+            try {
+              localStorage.setItem('cybernova_best', this.highScore.toString());
+            } catch (e) {}
+          }
+        }
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.waveTime = 0;
+        this.spawnTimer = 0;
+
+        this.novaCore.hp = this.novaCore.maxHp;
+        this.player.hp = this.player.maxHp;
+        this.player.shield = this.player.maxShield;
+        this.player.empCharges = 3;
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2 - 120;
+        this.player.powerupType = null;
+        this.player.powerupTimer = 0;
+
+        this.projectiles = [];
+        this.enemies = [];
+        this.powerups = [];
+        this.particles = [];
+        this.explosions = [];
+        this.boss = null;
+      }
+
+      pause() { this.paused = true; }
+      resume() { this.paused = false; }
+      togglePause() { this.paused = !this.paused; }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.projectiles = [];
+        this.enemies = [];
+        this.powerups = [];
+        this.particles = [];
+        this.explosions = [];
+        this.boss = null;
+      }
+
+      setScore(val) {
+        if (!Number.isFinite(val) || val < 0) {
+          this.score = 0;
+          return;
+        }
+        this.score = val;
+        this.saveHighScore();
+      }
+
+      movePlayer(dx, dy) {
+        if (!Number.isFinite(dx)) dx = 0;
+        if (!Number.isFinite(dy)) dy = 0;
+
+        this.player.x += dx * this.player.speed;
+        this.player.y += dy * this.player.speed;
+
+        this.player.x = Math.max(this.player.radius, Math.min(this.width - this.player.radius, this.player.x));
+        this.player.y = Math.max(this.player.radius, Math.min(this.height - this.player.radius, this.player.y));
+      }
+
+      aimAt(targetX, targetY) {
+        if (!Number.isFinite(targetX) || !Number.isFinite(targetY)) return;
+        this.player.angle = Math.atan2(targetY - this.player.y, targetX - this.player.x);
+      }
+
+      fireNovaBeam() {
+        if (this.player.fireCooldown > 0) return;
+        this.player.fireCooldown = 10;
+
+        const speed = 11;
+        const angle = this.player.angle;
+
+        if (this.player.powerupType === 'tri_nova') {
+          for (let offset of [-0.25, -0.08, 0.08, 0.25]) {
+            const a = angle + offset;
+            this.projectiles.push({
+              x: this.player.x + Math.cos(a) * 15,
+              y: this.player.y + Math.sin(a) * 15,
+              vx: Math.cos(a) * speed,
+              vy: Math.sin(a) * speed,
+              radius: 4,
+              damage: 25,
+              fromPlayer: true,
+              color: '#ff00aa'
+            });
+          }
+        } else {
+          this.projectiles.push({
+            x: this.player.x + Math.cos(angle) * 15,
+            y: this.player.y + Math.sin(angle) * 15,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 5,
+            damage: 35,
+            fromPlayer: true,
+            color: '#00ffff'
+          });
+        }
+      }
+
+      triggerEMP() {
+        if (this.player.empCharges <= 0) return false;
+        this.player.empCharges--;
+
+        this.explosions.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 0,
+          maxRadius: 320,
+          color: '#ff00aa',
+          fromEMP: true
+        });
+
+        // Clear enemy projectiles
+        this.projectiles = this.projectiles.filter(p => p.fromPlayer);
+
+        // Damage all active enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const enemy = this.enemies[i];
+          const dist = Math.hypot(enemy.x - this.player.x, enemy.y - this.player.y);
+          if (dist <= 320) {
+            enemy.hp -= 120;
+            if (enemy.hp <= 0) {
+              this.score += enemy.type === 'pulsar' ? 250 : 100;
+              this.createExplosion(enemy.x, enemy.y, enemy.color);
+              this.enemies.splice(i, 1);
+            }
+          }
+        }
+
+        if (this.boss) {
+          const dist = Math.hypot(this.boss.x - this.player.x, this.boss.y - this.player.y);
+          if (dist <= 320) {
+            this.boss.hp -= 150;
+            if (this.boss.hp <= 0) {
+              this.score += 2500;
+              this.createExplosion(this.boss.x, this.boss.y, '#ff00aa', 60);
+              this.boss = null;
+            }
+          }
+        }
+
+        this.saveHighScore();
+        return true;
+      }
+
+      spawnBoss(wave) {
+        this.boss = {
+          x: this.width / 2,
+          y: 90,
+          radius: 42,
+          hp: 800 + wave * 400,
+          maxHp: 800 + wave * 400,
+          angle: 0,
+          shootTimer: 0,
+          color: '#7000ff'
+        };
+      }
+
+      spawnEnemy() {
+        const types = ['drone', 'crusher', 'pulsar'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const edge = Math.floor(Math.random() * 4);
+
+        let x, y;
+        if (edge === 0) { x = Math.random() * this.width; y = -20; }
+        else if (edge === 1) { x = this.width + 20; y = Math.random() * this.height; }
+        else if (edge === 2) { x = Math.random() * this.width; y = this.height + 20; }
+        else { x = -20; y = Math.random() * this.height; }
+
+        let hp = 40;
+        let speed = 2.2;
+        let color = '#00ffff';
+
+        if (type === 'crusher') {
+          hp = 80;
+          speed = 1.4;
+          color = '#ff5500';
+        } else if (type === 'pulsar') {
+          hp = 60;
+          speed = 1.8;
+          color = '#ff00aa';
+        }
+
+        this.enemies.push({
+          x, y, type, hp, maxHp: hp, speed, color, radius: type === 'crusher' ? 18 : 14, shootCooldown: 60
+        });
+      }
+
+      createExplosion(x, y, color, count = 18) {
+        for (let i = 0; i < count; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 4 + 1;
+          this.particles.push({
+            x, y,
+            vx: Math.cos(a) * spd,
+            vy: Math.sin(a) * spd,
+            radius: Math.random() * 3 + 1,
+            color: color || '#ff00aa',
+            life: 25
+          });
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        this.started = false;
+        this.saveHighScore();
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        this.waveTime++;
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+        // Powerup timer decay
+        if (this.player.powerupTimer > 0) {
+          this.player.powerupTimer--;
+          if (this.player.powerupTimer <= 0) {
+            this.player.powerupType = null;
+          }
+        }
+
+        // Shield auto recharge
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shieldRechargeTimer++;
+          if (this.player.shieldRechargeTimer > 120) {
+            this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.3);
+          }
+        }
+
+        // Pulse nova core
+        this.novaCore.pulse = (this.novaCore.pulse + 0.05) % (Math.PI * 2);
+
+        // Spawn Enemies / Boss
+        if (this.waveTime % 300 === 0 && !this.boss && this.waveTime % 900 === 0) {
+          this.spawnBoss(this.wave);
+        }
+
+        this.spawnTimer++;
+        if (this.spawnTimer > Math.max(30, 90 - this.wave * 10)) {
+          this.spawnTimer = 0;
+          if (this.enemies.length < 15) {
+            this.spawnEnemy();
+          }
+        }
+
+        // Wave progression
+        if (this.waveTime > 1800 && this.enemies.length === 0 && !this.boss) {
+          this.wave++;
+          this.waveTime = 0;
+          this.player.empCharges = Math.min(5, this.player.empCharges + 1);
+        }
+
+        // Update projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > this.width || p.y < 0 || p.y > this.height) {
+            this.projectiles.splice(i, 1);
+            continue;
+          }
+
+          if (p.fromPlayer) {
+            // Check hit against boss
+            if (this.boss) {
+              const d = Math.hypot(p.x - this.boss.x, p.y - this.boss.y);
+              if (d <= p.radius + this.boss.radius) {
+                this.boss.hp -= p.damage;
+                this.createExplosion(p.x, p.y, '#00ffff', 4);
+                this.projectiles.splice(i, 1);
+                if (this.boss.hp <= 0) {
+                  this.score += 2500;
+                  this.createExplosion(this.boss.x, this.boss.y, '#7000ff', 50);
+                  this.boss = null;
+                }
+                continue;
+              }
+            }
+
+            // Check hit against enemies
+            for (let j = this.enemies.length - 1; j >= 0; j--) {
+              const e = this.enemies[j];
+              const d = Math.hypot(p.x - e.x, p.y - e.y);
+              if (d <= p.radius + e.radius) {
+                e.hp -= p.damage;
+                this.createExplosion(p.x, p.y, p.color, 4);
+                this.projectiles.splice(i, 1);
+
+                if (e.hp <= 0) {
+                  this.score += e.type === 'crusher' ? 150 : 80;
+                  this.createExplosion(e.x, e.y, e.color, 16);
+
+                  // Drop powerup chance
+                  if (Math.random() < 0.25) {
+                    this.powerups.push({
+                      x: e.x,
+                      y: e.y,
+                      type: Math.random() < 0.5 ? 'tri_nova' : 'shield_boost',
+                      radius: 12
+                    });
+                  }
+
+                  this.enemies.splice(j, 1);
+                }
+                break;
+              }
+            }
+          } else {
+            // Hostile projectile hits player or core
+            const distPlayer = Math.hypot(p.x - this.player.x, p.y - this.player.y);
+            if (distPlayer <= p.radius + this.player.radius) {
+              this.damagePlayer(p.damage);
+              this.projectiles.splice(i, 1);
+              continue;
+            }
+
+            const distCore = Math.hypot(p.x - this.novaCore.x, p.y - this.novaCore.y);
+            if (distCore <= p.radius + this.novaCore.radius) {
+              this.novaCore.hp -= p.damage;
+              this.projectiles.splice(i, 1);
+              if (this.novaCore.hp <= 0) {
+                this.gameOver();
+              }
+            }
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          this.boss.angle += 0.02;
+          this.boss.shootTimer++;
+          if (this.boss.shootTimer % 45 === 0) {
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+              this.projectiles.push({
+                x: this.boss.x + Math.cos(a) * 30,
+                y: this.boss.y + Math.sin(a) * 30,
+                vx: Math.cos(a) * 4,
+                vy: Math.sin(a) * 4,
+                radius: 6,
+                damage: 18,
+                fromPlayer: false,
+                color: '#7000ff'
+              });
+            }
+          }
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const target = (i % 2 === 0) ? this.novaCore : this.player;
+          const a = Math.atan2(target.y - e.y, target.x - e.x);
+
+          e.x += Math.cos(a) * e.speed;
+          e.y += Math.sin(a) * e.speed;
+
+          // Enemy shooting
+          if (e.type === 'pulsar') {
+            e.shootCooldown--;
+            if (e.shootCooldown <= 0) {
+              e.shootCooldown = 90;
+              this.projectiles.push({
+                x: e.x,
+                y: e.y,
+                vx: Math.cos(a) * 5,
+                vy: Math.sin(a) * 5,
+                radius: 4,
+                damage: 12,
+                fromPlayer: false,
+                color: '#ff00aa'
+              });
+            }
+          }
+
+          // Enemy collisions with player
+          const dPlayer = Math.hypot(e.x - this.player.x, e.y - this.player.y);
+          if (dPlayer <= e.radius + this.player.radius) {
+            this.damagePlayer(25);
+            this.createExplosion(e.x, e.y, e.color, 12);
+            this.enemies.splice(i, 1);
+            continue;
+          }
+
+          // Enemy collisions with core
+          const dCore = Math.hypot(e.x - this.novaCore.x, e.y - this.novaCore.y);
+          if (dCore <= e.radius + this.novaCore.radius) {
+            this.novaCore.hp -= 20;
+            this.createExplosion(e.x, e.y, e.color, 12);
+            this.enemies.splice(i, 1);
+            if (this.novaCore.hp <= 0) {
+              this.gameOver();
+            }
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const pw = this.powerups[i];
+          const d = Math.hypot(pw.x - this.player.x, pw.y - this.player.y);
+          if (d <= pw.radius + this.player.radius) {
+            if (pw.type === 'tri_nova') {
+              this.player.powerupType = 'tri_nova';
+              this.player.powerupTimer = 400;
+            } else if (pw.type === 'shield_boost') {
+              this.player.shield = Math.min(this.player.maxShield, this.player.shield + 40);
+              this.player.hp = Math.min(this.player.maxHp, this.player.hp + 20);
+            }
+            this.score += 150;
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Update Particles & EMP Explosions
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          if (pt.life <= 0) this.particles.splice(i, 1);
+        }
+
+        for (let i = this.explosions.length - 1; i >= 0; i--) {
+          const ex = this.explosions[i];
+          ex.radius += 12;
+          if (ex.radius >= ex.maxRadius) this.explosions.splice(i, 1);
+        }
+      }
+
+      damagePlayer(amount) {
+        this.player.shieldRechargeTimer = 0;
+        if (this.player.shield > 0) {
+          this.player.shield -= amount;
+          if (this.player.shield < 0) {
+            this.player.hp += this.player.shield; // Overflow to HP
+            this.player.shield = 0;
+          }
+        } else {
+          this.player.hp -= amount;
+        }
+
+        if (this.player.hp <= 0) {
+          this.gameOver();
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+
+        // Clear canvas
+        ctx.fillStyle = '#060212';
+        ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw Core
+        const coreGradient = ctx.createRadialGradient(
+          this.novaCore.x, this.novaCore.y, 5,
+          this.novaCore.x, this.novaCore.y, this.novaCore.radius + Math.sin(this.novaCore.pulse) * 6
+        );
+        coreGradient.addColorStop(0, '#ffffff');
+        coreGradient.addColorStop(0.5, '#ff00aa');
+        coreGradient.addColorStop(1, 'rgba(112, 0, 255, 0.2)');
+
+        ctx.fillStyle = coreGradient;
+        ctx.beginPath();
+        ctx.arc(this.novaCore.x, this.novaCore.y, this.novaCore.radius + Math.sin(this.novaCore.pulse) * 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Core HP ring
+        ctx.strokeStyle = '#ff00aa';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(this.novaCore.x, this.novaCore.y, this.novaCore.radius + 12, 0, (this.novaCore.hp / this.novaCore.maxHp) * Math.PI * 2);
+        ctx.stroke();
+
+        // Draw Player
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+        ctx.rotate(this.player.angle);
+
+        ctx.fillStyle = this.player.powerupType ? '#ff00aa' : '#00ffff';
+        ctx.beginPath();
+        ctx.moveTo(18, 0);
+        ctx.lineTo(-12, -10);
+        ctx.lineTo(-6, 0);
+        ctx.lineTo(-12, 10);
+        ctx.closePath();
+        ctx.fill();
+
+        if (this.player.shield > 0) {
+          ctx.strokeStyle = `rgba(0, 255, 255, ${this.player.shield / 100})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, this.player.radius + 4, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // Draw Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.translate(this.boss.x, this.boss.y);
+          ctx.rotate(this.boss.angle);
+          ctx.fillStyle = '#7000ff';
+          ctx.beginPath();
+          ctx.arc(0, 0, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#ff00aa';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Draw Enemies
+        for (let e of this.enemies) {
+          ctx.fillStyle = e.color;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Projectiles
+        for (let p of this.projectiles) {
+          ctx.fillStyle = p.color || (p.fromPlayer ? '#00ffff' : '#ff0055');
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Powerups
+        for (let pw of this.powerups) {
+          ctx.fillStyle = pw.type === 'tri_nova' ? '#ff00aa' : '#00ffff';
+          ctx.beginPath();
+          ctx.arc(pw.x, pw.y, pw.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Particles & EMP Explosions
+        for (let pt of this.particles) {
+          ctx.fillStyle = pt.color;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        for (let ex of this.explosions) {
+          ctx.strokeStyle = `rgba(255, 0, 170, ${1 - ex.radius / ex.maxRadius})`;
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(ex.x, ex.y, ex.radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberNovaEngine };
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        const engine = new CyberNovaEngine(canvas);
+
+        const scoreVal = document.getElementById('scoreVal');
+        const highScoreVal = document.getElementById('highScoreVal');
+        const waveVal = document.getElementById('waveVal');
+        const empVal = document.getElementById('empVal');
+
+        const startOverlay = document.getElementById('startOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const finalScoreDesc = document.getElementById('finalScoreDesc');
+
+        const keys = {};
+        let mouseX = 0, mouseY = 0;
+
+        window.addEventListener('keydown', e => {
+          keys[e.code] = true;
+          if (e.code === 'KeyE') engine.triggerEMP();
+          if (e.code === 'KeyP') engine.togglePause();
+          if (e.code === 'Space') engine.fireNovaBeam();
+        });
+
+        window.addEventListener('keyup', e => { keys[e.code] = false; });
+        canvas.addEventListener('mousemove', e => {
+          const rect = canvas.getBoundingClientRect();
+          mouseX = e.clientX - rect.left;
+          mouseY = e.clientY - rect.top;
+          engine.aimAt(mouseX, mouseY);
+        });
+
+        canvas.addEventListener('mousedown', e => {
+          if (e.button === 0) engine.fireNovaBeam();
+          if (e.button === 2) {
+            e.preventDefault();
+            engine.triggerEMP();
+          }
+        });
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+          startOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+          gameOverOverlay.classList.add('hidden');
+          engine.start();
+        });
+
+        function gameLoop() {
+          if (engine.started && !engine.paused) {
+            let dx = 0, dy = 0;
+            if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+            if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+            if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+            if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+            engine.movePlayer(dx, dy);
+
+            engine.update();
+            engine.render();
+
+            scoreVal.textContent = formatScore(engine.score);
+            highScoreVal.textContent = formatScore(engine.highScore);
+            waveVal.textContent = engine.wave;
+            empVal.textContent = engine.player.empCharges;
+
+            if (engine.over) {
+              finalScoreDesc.textContent = `Final Score: ${formatScore(engine.score)}`;
+              gameOverOverlay.classList.remove('hidden');
+            }
+          }
+          requestAnimationFrame(gameLoop);
+        }
+
+        highScoreVal.textContent = formatScore(engine.highScore);
+        requestAnimationFrame(gameLoop);
+      });
+    }
+  </script>
+</body>
+</html>
