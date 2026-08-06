@@ -130,6 +130,7 @@ test('Leaderboard aggregations', () => {
   const cyberApexScore = scores.find(s => s.id === 'cyberapex');
   const cyberTitanScore = scores.find(s => s.id === 'cybertitan');
   const cyberZenithScore = scores.find(s => s.id === 'cyberzenith');
+  const cyberEclipseScore = scores.find(s => s.id === 'cybereclipse');
 
   assert.strictEqual(snakeScore.score, 120);
   assert.strictEqual(pongScore.score, 5);
@@ -178,4 +179,5 @@ test('Leaderboard aggregations', () => {
   assert.strictEqual(mockStorage['cyberapex_best'], undefined);
   assert.strictEqual(mockStorage['cybertitan_best'], undefined);
   assert.strictEqual(mockStorage['cyberzenith_best'], undefined);
+  assert.strictEqual(mockStorage['cybereclipse_best'], undefined);
 });
