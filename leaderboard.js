@@ -41,6 +41,8 @@ const Leaderboard = {
     { id: 'cyberforge', name: 'Cyber Forge', key: 'cyberforge_best', icon: '🔥' },
     { id: 'cyberrift', name: 'Cyber Rift', key: 'cyberrift_best', icon: '🌌' },
     { id: 'cybercore', name: 'Cyber Core', key: 'cybercore_best', icon: '⚛️' },
+    { id: 'cybergrid', name: 'Cyber Grid', key: 'cybergrid_best', icon: '⚡' },
+    { id: 'cyberflare', name: 'Cyber Flare', key: 'cyberflare_best', icon: '☀️' },
     { id: 'minesweeper', name: 'Minesweeper', key: 'minesweeper_best', icon: '💣' }
   ],
 
