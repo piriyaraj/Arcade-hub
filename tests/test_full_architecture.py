@@ -58,6 +58,7 @@ def test_html_script_and_css_links():
         "cybernova.html",
         "cyberspectre.html",
         "cybershadow.html",
+        "cyberhelix.html",
         "leaderboard.html"
     ]
 
