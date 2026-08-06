@@ -38,6 +38,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚛️ **[Cyber Core](https://arcadehub.telekit.link/cybercore.html)** — High-octane orbital cyber core defense & power grid relay arcade game with plasma discharge waves, EMP pulse surges, kinetic shield barriers, and Overlord Core Bosses.
 - ⚡ **[Cyber Grid](https://arcadehub.telekit.link/cybergrid.html)** — High-octane orbital quantum grid defender & laser node overload arcade game with plasma beam pulses, EMP shockwaves, kinetic shields, and Grid Overlord Bosses.
 - ☀️ **[Cyber Flare](https://arcadehub.telekit.link/cyberflare.html)** — High-octane solar-matrix defender & plasma flare arcade game with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses.
+- 💎 **[Cyber Prism](https://arcadehub.telekit.link/cyberprism.html)** — High-octane 360° quantum light-refraction defender arcade game with rainbow plasma beams, prism refraction novastorms, kinetic crystal shields, and Prism Overlord Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
