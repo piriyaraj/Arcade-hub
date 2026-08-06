@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Flare — Cyberpunk Solar-Matrix Defense Arcade</title>
+  <meta name="description" content="High-octane solar-matrix defender & plasma flare arcade game with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberflare.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Flare — Cyberpunk Solar-Matrix Defense Arcade">
+  <meta property="og:description" content="High-octane solar-matrix defender & plasma flare arcade game with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberflare.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Flare — Cyberpunk Solar-Matrix Defense Arcade">
+  <meta name="twitter:description" content="Defend the Sol-Matrix core with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Flare",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberflare.html",
+    "description": "High-octane solar-matrix defender & plasma flare arcade game with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffaa00, #ff5500, #ff0055);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 170, 0, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #ffaa00;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 170, 0, 0.25), 0 0 10px rgba(255, 85, 0, 0.15);
+      border: 2px solid rgba(255, 170, 0, 0.3);
+      background: #08030f;
+    }
+
+    #gameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 3, 15, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #f8fafc;
+      text-align: center;
+      padding: 2rem;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ffaa00, #ff5500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay p {
+      color: #94a3b8;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #ffaa00, #ff5500);
+      color: #0d0914;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 170, 0, 0.6);
+    }
+
+    .controls-guide {
+      margin-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.8rem;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .control-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 170, 0, 0.2);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .key-badge {
+      background: rgba(255, 170, 0, 0.2);
+      color: #ffaa00;
+      border: 1px solid rgba(255, 170, 0, 0.4);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-icon">🎮</span> ARCADE HUB
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Games</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">🌙</button>
+    </nav>
+  </header>
+
+  <main class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">☀️ CYBER FLARE</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="scoreVal" class="stat-value">0</span></div>
+        <div class="stat-item">HIGH: <span id="highVal" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="waveVal" class="stat-value">1</span></div>
+        <div class="stat-item">SOL-MATRIX: <span id="matrixVal" class="stat-value">100%</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <div id="startOverlay" class="overlay">
+        <h2>SOL-MATRIX ONLINE</h2>
+        <p>Defend the radiant Sol-Matrix from rogue plasma swarmers and Solar Overlord Bosses. Collect flare energy, trigger EMP Novas, and unleash Tri-Beam plasma blasts!</p>
+        <button id="startBtn" class="btn">INITIALIZE FLARE DEFENSE</button>
+      </div>
+
+      <div id="gameOverOverlay" class="overlay hidden">
+        <h2 style="background: linear-gradient(135deg, #ff0055, #ff5500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SOL-MATRIX CRITICAL</h2>
+        <p id="finalScoreText">Your Sol-Matrix succumbed to plasma corruption.</p>
+        <button id="restartBtn" class="btn">RESTART FLARE DEFENSE</button>
+      </div>
+    </div>
+
+    <div class="controls-guide">
+      <div class="control-card"><span class="key-badge">WASD / ARROWS</span> Move Ship</div>
+      <div class="control-card"><span class="key-badge">MOUSE / SPACE</span> Fire Plasma</div>
+      <div class="control-card"><span class="key-badge">E / KEY E</span> EMP Solar Flare</div>
+      <div class="control-card"><span class="key-badge">SHIFT / F</span> Flare Shield</div>
+    </div>
+  </main>
+
+  <script>
+    class CyberFlareEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberflare') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2 + 150,
+          vx: 0,
+          vy: 0,
+          radius: 16,
+          hp: 100,
+          maxHp: 100,
+          shield: 50,
+          maxShield: 50,
+          energy: 100,
+          maxEnergy: 100,
+          powerupType: null,
+          powerupTimer: 0,
+          empCharges: 3,
+          fireCooldown: 0
+        };
+
+        this.solMatrix = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 36,
+          hp: 100,
+          maxHp: 100,
+          pulseAngle: 0
+        };
+
+        this.drones = [];
+        this.projectiles = [];
+        this.solarFlares = [];
+        this.explosions = [];
+        this.powerups = [];
+        this.floatingTexts = [];
+        this.particles = [];
+
+        this.boss = null;
+        this.waveTimer = 0;
+        this.droneSpawnTimer = 0;
+
+        this.keys = {};
+        this.mousePos = { x: this.width / 2, y: 0 };
+        this.mouseFiring = false;
+
+        this.initParticles();
+      }
+
+      initParticles() {
+        this.solarFlares = [];
+        for (let i = 0; i < 40; i++) {
+          this.solarFlares.push({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            size: Math.random() * 2 + 1,
+            speed: Math.random() * 0.5 + 0.2,
+            alpha: Math.random() * 0.7 + 0.3,
+            angle: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2 + 150;
+        this.player.vx = 0;
+        this.player.vy = 0;
+        this.player.hp = 100;
+        this.player.shield = 50;
+        this.player.energy = 100;
+        this.player.powerupType = null;
+        this.player.powerupTimer = 0;
+        this.player.empCharges = 3;
+
+        this.solMatrix.hp = 100;
+
+        this.drones = [];
+        this.projectiles = [];
+        this.explosions = [];
+        this.powerups = [];
+        this.floatingTexts = [];
+        this.boss = null;
+
+        this.spawnWave(this.wave);
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.drones = [];
+        this.projectiles = [];
+        this.explosions = [];
+        this.powerups = [];
+        this.floatingTexts = [];
+        this.boss = null;
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      setScore(val) {
+        this.score = Math.max(0, Number.isFinite(val) ? val : 0);
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberflare', this.highScore);
+          }
+        }
+      }
+
+      spawnWave(w) {
+        const count = 4 + w * 2;
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+          const dist = 300 + Math.random() * 100;
+          const type = Math.random() > 0.4 ? 'swarmer' : 'sentinel';
+          this.drones.push({
+            x: this.solMatrix.x + Math.cos(angle) * dist,
+            y: this.solMatrix.y + Math.sin(angle) * dist,
+            vx: 0,
+            vy: 0,
+            radius: type === 'swarmer' ? 12 : 18,
+            hp: type === 'swarmer' ? 30 : 60,
+            maxHp: type === 'swarmer' ? 30 : 60,
+            type: type,
+            speed: type === 'swarmer' ? 2.5 : 1.6,
+            shootTimer: Math.random() * 60
+          });
+        }
+
+        if (w % 3 === 0) {
+          this.spawnBoss(w);
+        }
+      }
+
+      spawnBoss(w) {
+        this.boss = {
+          x: this.width / 2,
+          y: 80,
+          vx: 2,
+          vy: 0,
+          radius: 38,
+          hp: 300 + w * 100,
+          maxHp: 300 + w * 100,
+          phase: 1,
+          shootTimer: 0,
+          novaTimer: 0
+        };
+        this.addFloatingText(this.width / 2, 120, '⚠️ SOL-CORE OVERLORD DETECTED', '#ff0055');
+      }
+
+      movePlayer(dx, dy) {
+        if (!Number.isFinite(dx)) dx = 0;
+        if (!Number.isFinite(dy)) dy = 0;
+        this.player.x = typeof clamp === 'function' ? clamp(this.player.x + dx, this.player.radius, this.width - this.player.radius) : Math.max(this.player.radius, Math.min(this.width - this.player.radius, this.player.x + dx));
+        this.player.y = typeof clamp === 'function' ? clamp(this.player.y + dy, this.player.radius, this.height - this.player.radius) : Math.max(this.player.radius, Math.min(this.height - this.player.radius, this.player.y + dy));
+      }
+
+      firePlasma() {
+        if (this.player.fireCooldown > 0) return;
+        this.player.fireCooldown = this.player.powerupType === 'tri_beam' ? 6 : 10;
+
+        const targetX = this.mousePos.x;
+        const targetY = this.mousePos.y;
+        const dx = targetX - this.player.x;
+        const dy = targetY - this.player.y;
+        const angle = Math.atan2(dy, dx);
+        const speed = 12;
+
+        if (this.player.powerupType === 'tri_beam') {
+          for (let offset of [-0.25, 0, 0.25]) {
+            this.projectiles.push({
+              x: this.player.x,
+              y: this.player.y,
+              vx: Math.cos(angle + offset) * speed,
+              vy: Math.sin(angle + offset) * speed,
+              radius: 5,
+              color: '#ffaa00',
+              fromPlayer: true,
+              damage: 25
+            });
+          }
+        } else {
+          this.projectiles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 6,
+            color: '#ffaa00',
+            fromPlayer: true,
+            damage: 30
+          });
+        }
+
+        if (typeof SoundFX !== 'undefined' && SoundFX.play) {
+          SoundFX.play('laser');
+        }
+      }
+
+      triggerEMP() {
+        if (this.player.empCharges <= 0) return false;
+        this.player.empCharges--;
+
+        this.projectiles = this.projectiles.filter(p => p.fromPlayer);
+
+        for (let d of this.drones) {
+          d.hp -= 50;
+          d.vx += (d.x - this.player.x) * 0.1;
+          d.vy += (d.y - this.player.y) * 0.1;
+        }
+
+        if (this.boss) {
+          this.boss.hp -= 80;
+        }
+
+        this.explosions.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 200,
+          color: '#ffaa00',
+          alpha: 1
+        });
+
+        this.addFloatingText(this.player.x, this.player.y - 20, 'SOLAR EMP NOVA!', '#ffaa00');
+
+        if (typeof SoundFX !== 'undefined' && SoundFX.play) {
+          SoundFX.play('explosion');
+        }
+        return true;
+      }
+
+      addFloatingText(x, y, text, color) {
+        this.floatingTexts.push({
+          x: x || this.width / 2,
+          y: y || this.height / 2,
+          text: text,
+          color: color || '#ffaa00',
+          alpha: 1,
+          vy: -1
+        });
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+        if (this.player.powerupTimer > 0) {
+          this.player.powerupTimer--;
+          if (this.player.powerupTimer <= 0) {
+            this.player.powerupType = null;
+          }
+        }
+
+        // Sol matrix pulse animation
+        this.solMatrix.pulseAngle += 0.05;
+
+        // Player energy regeneration near Sol Matrix
+        const distToMatrix = Math.hypot(this.player.x - this.solMatrix.x, this.player.y - this.solMatrix.y);
+        if (distToMatrix < 150) {
+          this.player.energy = Math.min(this.player.maxEnergy, this.player.energy + 0.3);
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.1);
+        }
+
+        // Mouse firing
+        if (this.mouseFiring) {
+          this.firePlasma();
+        }
+
+        // Update projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < -20 || p.x > this.width + 20 || p.y < -20 || p.y > this.height + 20) {
+            this.projectiles.splice(i, 1);
+            continue;
+          }
+
+          if (p.fromPlayer) {
+            // Check drone hit
+            for (let j = this.drones.length - 1; j >= 0; j--) {
+              const d = this.drones[j];
+              const hit = typeof checkCircleCollision === 'function' ? checkCircleCollision(p, d) : Math.hypot(p.x - d.x, p.y - d.y) < p.radius + d.radius;
+              if (hit) {
+                d.hp -= p.damage;
+                this.projectiles.splice(i, 1);
+                if (d.hp <= 0) {
+                  this.setScore(this.score + (d.type === 'swarmer' ? 100 : 250));
+                  if (Math.random() < 0.2) {
+                    this.powerups.push({
+                      x: d.x,
+                      y: d.y,
+                      type: Math.random() < 0.5 ? 'tri_beam' : 'shield_boost',
+                      radius: 12
+                    });
+                  }
+                  this.drones.splice(j, 1);
+                }
+                break;
+              }
+            }
+
+            // Check boss hit
+            if (this.boss && this.projectiles[i]) {
+              const bHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(p, this.boss) : Math.hypot(p.x - this.boss.x, p.y - this.boss.y) < p.radius + this.boss.radius;
+              if (bHit) {
+                this.boss.hp -= p.damage;
+                this.projectiles.splice(i, 1);
+                if (this.boss.hp <= 0) {
+                  this.setScore(this.score + 2000);
+                  this.addFloatingText(this.boss.x, this.boss.y, 'OVERLORD DESTROYED +2000', '#ffaa00');
+                  this.boss = null;
+                }
+              }
+            }
+          } else {
+            // Enemy projectile hits player
+            const pHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(p, this.player) : Math.hypot(p.x - this.player.x, p.y - this.player.y) < p.radius + this.player.radius;
+            if (pHit) {
+              if (this.player.shield > 0) {
+                this.player.shield = Math.max(0, this.player.shield - p.damage);
+              } else {
+                this.player.hp -= p.damage;
+              }
+              this.projectiles.splice(i, 1);
+              if (this.player.hp <= 0) {
+                this.gameOver();
+              }
+              continue;
+            }
+
+            // Enemy projectile hits sol matrix
+            const mHit = typeof checkCircleCollision === 'function' ? checkCircleCollision(p, this.solMatrix) : Math.hypot(p.x - this.solMatrix.x, p.y - this.solMatrix.y) < p.radius + this.solMatrix.radius;
+            if (mHit) {
+              this.solMatrix.hp -= p.damage * 0.5;
+              this.projectiles.splice(i, 1);
+              if (this.solMatrix.hp <= 0) {
+                this.gameOver();
+              }
+            }
+          }
+        }
+
+        // Update drones
+        for (let d of this.drones) {
+          const target = Math.random() < 0.5 ? this.solMatrix : this.player;
+          const dx = target.x - d.x;
+          const dy = target.y - d.y;
+          const angle = Math.atan2(dy, dx);
+
+          d.vx = Math.cos(angle) * d.speed;
+          d.vy = Math.sin(angle) * d.speed;
+          d.x += d.vx;
+          d.y += d.vy;
+
+          d.shootTimer++;
+          if (d.shootTimer > 90) {
+            d.shootTimer = 0;
+            this.projectiles.push({
+              x: d.x,
+              y: d.y,
+              vx: Math.cos(angle) * 5,
+              vy: Math.sin(angle) * 5,
+              radius: 4,
+              color: '#ff0055',
+              fromPlayer: false,
+              damage: 10
+            });
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          this.boss.x += this.boss.vx;
+          if (this.boss.x < 100 || this.boss.x > this.width - 100) {
+            this.boss.vx *= -1;
+          }
+
+          this.boss.shootTimer++;
+          if (this.boss.shootTimer > 45) {
+            this.boss.shootTimer = 0;
+            const bAngle = Math.atan2(this.player.y - this.boss.y, this.player.x - this.boss.x);
+            for (let offset of [-0.3, 0, 0.3]) {
+              this.projectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(bAngle + offset) * 6,
+                vy: Math.sin(bAngle + offset) * 6,
+                radius: 6,
+                color: '#ff0055',
+                fromPlayer: false,
+                damage: 15
+              });
+            }
+          }
+        }
+
+        // Powerups collection
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const pw = this.powerups[i];
+          const hit = typeof checkCircleCollision === 'function' ? checkCircleCollision(pw, this.player) : Math.hypot(pw.x - this.player.x, pw.y - this.player.y) < pw.radius + this.player.radius;
+          if (hit) {
+            if (pw.type === 'tri_beam') {
+              this.player.powerupType = 'tri_beam';
+              this.player.powerupTimer = 300;
+              this.addFloatingText(this.player.x, this.player.y, 'TRI-BEAM ONLINE!', '#ffaa00');
+            } else if (pw.type === 'shield_boost') {
+              this.player.shield = Math.min(this.player.maxShield, this.player.shield + 25);
+              this.addFloatingText(this.player.x, this.player.y, 'SHIELD RECHARGED!', '#00ffff');
+            }
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Check wave completion
+        if (this.drones.length === 0 && !this.boss) {
+          this.wave++;
+          this.addFloatingText(this.width / 2, this.height / 2, `WAVE ${this.wave} INCOMING`, '#ffaa00');
+          this.spawnWave(this.wave);
+        }
+
+        // Explosions
+        for (let i = this.explosions.length - 1; i >= 0; i--) {
+          const ex = this.explosions[i];
+          ex.radius += 5;
+          ex.alpha -= 0.04;
+          if (ex.alpha <= 0) {
+            this.explosions.splice(i, 1);
+          }
+        }
+
+        // Floating texts
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+          const ft = this.floatingTexts[i];
+          ft.y += ft.vy;
+          ft.alpha -= 0.02;
+          if (ft.alpha <= 0) {
+            this.floatingTexts.splice(i, 1);
+          }
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        this.started = false;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberflare', this.highScore);
+          }
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.fillStyle = '#08030f';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw ambient solar flares
+        for (let sf of this.solarFlares) {
+          this.ctx.fillStyle = `rgba(255, 170, 0, ${sf.alpha})`;
+          this.ctx.beginPath();
+          this.ctx.arc(sf.x, sf.y, sf.size, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        // Draw Sol Matrix Core
+        this.ctx.save();
+        this.ctx.translate(this.solMatrix.x, this.solMatrix.y);
+        const grad = this.ctx.createRadialGradient(0, 0, 5, 0, 0, this.solMatrix.radius);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.5, '#ffaa00');
+        grad.addColorStop(1, 'rgba(255, 85, 0, 0.2)');
+        this.ctx.fillStyle = grad;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.solMatrix.radius + Math.sin(this.solMatrix.pulseAngle) * 4, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Sol Matrix health ring
+        this.ctx.strokeStyle = '#ffaa00';
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.solMatrix.radius + 8, 0, (Math.PI * 2 * this.solMatrix.hp) / this.solMatrix.maxHp);
+        this.ctx.stroke();
+        this.ctx.restore();
+
+        // Draw Player Ship
+        this.ctx.save();
+        this.ctx.translate(this.player.x, this.player.y);
+        this.ctx.fillStyle = '#ffaa00';
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -this.player.radius);
+        this.ctx.lineTo(this.player.radius, this.player.radius);
+        this.ctx.lineTo(-this.player.radius, this.player.radius);
+        this.ctx.closePath();
+        this.ctx.fill();
+
+        // Shield indicator
+        if (this.player.shield > 0) {
+          this.ctx.strokeStyle = `rgba(0, 242, 254, ${this.player.shield / this.player.maxShield})`;
+          this.ctx.lineWidth = 3;
+          this.ctx.beginPath();
+          this.ctx.arc(0, 0, this.player.radius + 6, 0, Math.PI * 2);
+          this.ctx.stroke();
+        }
+        this.ctx.restore();
+
+        // Draw Drones
+        for (let d of this.drones) {
+          this.ctx.fillStyle = d.type === 'swarmer' ? '#ff0055' : '#e11d48';
+          this.ctx.beginPath();
+          this.ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        // Draw Boss
+        if (this.boss) {
+          this.ctx.save();
+          this.ctx.fillStyle = '#ff0055';
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // Boss Health Bar
+          this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          this.ctx.fillRect(this.boss.x - 40, this.boss.y - 50, 80, 8);
+          this.ctx.fillStyle = '#ff0055';
+          this.ctx.fillRect(this.boss.x - 40, this.boss.y - 50, (80 * this.boss.hp) / this.boss.maxHp, 8);
+          this.ctx.restore();
+        }
+
+        // Draw Projectiles
+        for (let p of this.projectiles) {
+          this.ctx.fillStyle = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        // Draw Powerups
+        for (let pw of this.powerups) {
+          this.ctx.fillStyle = pw.type === 'tri_beam' ? '#ffaa00' : '#00ffff';
+          this.ctx.beginPath();
+          this.ctx.arc(pw.x, pw.y, pw.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        // Draw Explosions
+        for (let ex of this.explosions) {
+          this.ctx.strokeStyle = `rgba(255, 170, 0, ${ex.alpha})`;
+          this.ctx.lineWidth = 4;
+          this.ctx.beginPath();
+          this.ctx.arc(ex.x, ex.y, ex.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+        }
+
+        // Draw Floating Texts
+        for (let ft of this.floatingTexts) {
+          this.ctx.fillStyle = ft.color;
+          this.ctx.font = 'bold 14px monospace';
+          this.ctx.fillText(ft.text, ft.x - 40, ft.y);
+        }
+      }
+    }
+
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberFlareEngine };
+    }
+
+    // DOM Integration
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      if (!canvas) return;
+
+      const engine = new CyberFlareEngine(canvas);
+
+      const scoreVal = document.getElementById('scoreVal');
+      const highVal = document.getElementById('highVal');
+      const waveVal = document.getElementById('waveVal');
+      const matrixVal = document.getElementById('matrixVal');
+      const startOverlay = document.getElementById('startOverlay');
+      const gameOverOverlay = document.getElementById('gameOverOverlay');
+      const startBtn = document.getElementById('startBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const finalScoreText = document.getElementById('finalScoreText');
+
+      highVal.textContent = engine.highScore;
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      // Keyboard Controls
+      window.addEventListener('keydown', (e) => {
+        engine.keys[e.code] = true;
+
+        if (typeof KeyManager !== 'undefined') {
+          if (KeyManager.isKey(e, 'emp') || e.code === 'KeyE') {
+            engine.triggerEMP();
+          }
+          if (KeyManager.isKey(e, 'pause') || e.code === 'KeyP') {
+            engine.togglePause();
+          }
+        } else {
+          if (e.code === 'KeyE') engine.triggerEMP();
+          if (e.code === 'KeyP') engine.togglePause();
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        engine.keys[e.code] = false;
+      });
+
+      // Mouse & Touch Controls
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        engine.mousePos.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        engine.mousePos.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      });
+
+      canvas.addEventListener('mousedown', () => { engine.mouseFiring = true; });
+      canvas.addEventListener('mouseup', () => { engine.mouseFiring = false; });
+
+      // Main Loop
+      function gameLoop() {
+        let dx = 0, dy = 0;
+        if (engine.keys['KeyW'] || engine.keys['ArrowUp']) dy -= 5;
+        if (engine.keys['KeyS'] || engine.keys['ArrowDown']) dy += 5;
+        if (engine.keys['KeyA'] || engine.keys['ArrowLeft']) dx -= 5;
+        if (engine.keys['KeyD'] || engine.keys['ArrowRight']) dx += 5;
+
+        if (dx !== 0 || dy !== 0) {
+          engine.movePlayer(dx, dy);
+        }
+
+        if (engine.keys['Space']) {
+          engine.firePlasma();
+        }
+
+        engine.update();
+        engine.draw();
+
+        scoreVal.textContent = engine.score;
+        highVal.textContent = engine.highScore;
+        waveVal.textContent = engine.wave;
+        matrixVal.textContent = Math.max(0, Math.round(engine.solMatrix.hp)) + '%';
+
+        if (engine.over && !gameOverOverlay.classList.contains('hidden') === false) {
+          finalScoreText.textContent = `Final Score: ${engine.score} | Waves Cleared: ${engine.wave - 1}`;
+          gameOverOverlay.classList.remove('hidden');
+        }
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>

@@ -52,6 +52,8 @@ def test_html_script_and_css_links():
         "cyberforge.html",
         "cyberrift.html",
         "cybercore.html",
+        "cybergrid.html",
+        "cyberflare.html",
         "leaderboard.html"
     ]
 
