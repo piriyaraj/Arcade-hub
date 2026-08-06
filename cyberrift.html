@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Rift - Arcade Hub</title>
+  <meta name="description" content="Play Cyber Rift - High-Octane 360° Quantum Dimensional Rift & Laser Weaver Arena Shooter. Teleport through void rifts, fire laser weaver beams, deploy EMP singularity novas, and eradicate Rift Titan Bosses." />
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberrift.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arcade Hub" />
+  <meta property="og:title" content="Cyber Rift - Arcade Hub" />
+  <meta property="og:description" content="Play Cyber Rift - High-Octane 360° Quantum Dimensional Rift & Laser Weaver Arena Shooter." />
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberrift.html" />
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cyber Rift - Arcade Hub" />
+  <meta name="twitter:description" content="Play Cyber Rift - High-Octane 360° Quantum Dimensional Rift & Laser Weaver Arena Shooter." />
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Cyber Rift",
+    "url": "https://arcadehub.telekit.link/cyberrift.html",
+    "description": "High-Octane 360° Quantum Dimensional Rift & Laser Weaver Arena Shooter.",
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "genre": "Arcade",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+  <style>
+    :root {
+      --bg: #030712;
+      --board-bg: #0b0f19;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent-neon: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-green: #39ff14;
+      --rift-glow: #00e5ff;
+      --rift-void: #a855f7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      padding: 16px 20px 8px;
+      text-align: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--rift-glow);
+      background: rgba(0, 229, 255, 0.15);
+    }
+
+    .header-controls {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .hdr-btn {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .hdr-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: var(--rift-glow);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #00f0ff, #a855f7, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .game-container {
+      position: relative;
+      margin-top: 10px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+      border: 1px solid var(--border);
+      background: var(--board-bg);
+      overflow: hidden;
+    }
+
+    .hud-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(11, 15, 25, 0.95);
+      border-bottom: 1px solid var(--border);
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .hud-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .hud-label {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .hud-val {
+      color: var(--rift-glow);
+      font-weight: bold;
+    }
+
+    .bar-container {
+      width: 100px;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      transition: width 0.15s ease-out;
+    }
+
+    .health-fill { background: linear-gradient(90deg, #ff0055, #ff3300); }
+    .shield-fill { background: linear-gradient(90deg, #00e5ff, #0077ff); }
+    .rift-fill { background: linear-gradient(90deg, #a855f7, #ec4899); }
+
+    canvas {
+      display: block;
+      background: #030712;
+      cursor: crosshair;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .overlay h2 {
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #00e5ff, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .overlay p {
+      color: var(--text-dim);
+      max-width: 420px;
+      text-align: center;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #00e5ff, #a855f7);
+      color: #030712;
+      font-weight: bold;
+      border: none;
+      padding: 12px 32px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-start:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+    }
+
+    .controls-guide {
+      margin-top: 10px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .controls-guide span {
+      color: var(--rift-glow);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-btn">← Back to Hub</a>
+    <h1>Cyber Rift</h1>
+    <div class="subtitle">360° Quantum Dimensional Rift & Laser Weaver Shooter</div>
+    <div class="header-controls">
+      <button class="hdr-btn" id="muteBtn">🔊 Sound: ON</button>
+      <button class="hdr-btn" id="themeBtn">🎨 Theme</button>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="hud-bar">
+      <div class="hud-group">
+        <div><span class="hud-label">SCORE</span><span class="hud-val" id="scoreVal">0</span></div>
+        <div><span class="hud-label">BEST</span><span class="hud-val" id="highScoreVal">0</span></div>
+        <div><span class="hud-label">WAVE</span><span class="hud-val" id="waveVal">1</span></div>
+      </div>
+      <div class="hud-group">
+        <div>
+          <span class="hud-label">HP</span>
+          <div class="bar-container"><div class="bar-fill health-fill" id="healthBar"></div></div>
+        </div>
+        <div>
+          <span class="hud-label">SHIELD</span>
+          <div class="bar-container"><div class="bar-fill shield-fill" id="shieldBar"></div></div>
+        </div>
+        <div>
+          <span class="hud-label">RIFT DASH</span>
+          <div class="bar-container"><div class="bar-fill rift-fill" id="riftBar"></div></div>
+        </div>
+        <div><span class="hud-label">EMP</span><span class="hud-val" id="empVal">3</span></div>
+      </div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="550"></canvas>
+
+    <div class="overlay" id="startOverlay">
+      <h2>Cyber Rift</h2>
+      <p>Defend the quantum dimensional matrix against rogue void anomalies and Rift Titan Bosses. Warp through dimensional rifts and weave laser pulses!</p>
+      <div class="controls-guide">
+        <span>WASD / Arrows</span> Move | <span>Mouse / Aim</span> Direction | <span>Click / F</span> Laser Beam | <span>Shift / Space</span> Rift Portal Teleport | <span>E / X</span> EMP Nova
+      </div>
+      <button class="btn-start" id="startBtn">Engage Matrix</button>
+    </div>
+
+    <div class="overlay hidden" id="pauseOverlay">
+      <h2>Rift Paused</h2>
+      <p>Press ESC or P to Resume combat</p>
+      <button class="btn-start" id="resumeBtn">Resume</button>
+    </div>
+
+    <div class="overlay hidden" id="gameOverOverlay">
+      <h2>Matrix Collapsed</h2>
+      <p>Your spatial rift generator was overwhelmed by the void swarm.</p>
+      <button class="btn-start" id="restartBtn">Re-initialize Core</button>
+    </div>
+  </div>
+
+  <script>
+    class CyberRiftEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 550;
+
+        this.reset();
+      }
+
+      start() {
+        this.reset();
+        this.started = true;
+        this.spawnWave();
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberrift') : 0;
+        this.wave = 1;
+        this.multiplier = 1;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 16,
+          speed: 5.0,
+          angle: 0,
+          health: 100,
+          maxHealth: 100,
+          shield: 60,
+          maxShield: 100,
+          empCharges: 3,
+          maxEmpCharges: 5,
+          riftCooldown: 0,
+          maxRiftCooldown: 80,
+          shootCooldown: 0,
+          maxShootCooldown: 10,
+          triBeamTimer: 0,
+          invulnerableTimer: 0,
+          shieldRegenTimer: 0
+        };
+
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.drones = [];
+        this.boss = null;
+        this.powerups = [];
+        this.particles = [];
+        this.floatingTexts = [];
+        this.rifts = [];
+        this.empNovas = [];
+      }
+
+      setScore(score) {
+        const val = parseInt(score, 10);
+        this.score = Number.isFinite(val) ? Math.max(0, val) : 0;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberrift', this.highScore);
+          }
+        }
+      }
+
+      movePlayer(dx, dy) {
+        if (!this.started || this.paused || this.over) return;
+        const normDx = Number.isFinite(dx) ? dx : 0;
+        const normDy = Number.isFinite(dy) ? dy : 0;
+
+        this.player.x += normDx * this.player.speed;
+        this.player.y += normDy * this.player.speed;
+
+        const margin = this.player.radius;
+        this.player.x = typeof clamp === 'function' ? clamp(this.player.x, margin, this.width - margin) : Math.max(margin, Math.min(this.width - margin, this.player.x));
+        this.player.y = typeof clamp === 'function' ? clamp(this.player.y, margin, this.height - margin) : Math.max(margin, Math.min(this.height - margin, this.player.y));
+      }
+
+      setPlayerAngle(angle) {
+        if (Number.isFinite(angle)) {
+          this.player.angle = angle;
+        }
+      }
+
+      fireBeam() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.shootCooldown > 0) return;
+
+        this.player.shootCooldown = this.player.maxShootCooldown;
+        if (typeof SoundFX !== 'undefined') SoundFX.play('shoot');
+
+        const bSpeed = 9.5;
+        if (this.player.triBeamTimer > 0) {
+          const angles = [this.player.angle - 0.22, this.player.angle, this.player.angle + 0.22];
+          for (const a of angles) {
+            this.projectiles.push({
+              x: this.player.x,
+              y: this.player.y,
+              vx: Math.cos(a) * bSpeed,
+              vy: Math.sin(a) * bSpeed,
+              radius: 5,
+              color: '#00e5ff',
+              damage: 25
+            });
+          }
+        } else {
+          this.projectiles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(this.player.angle) * bSpeed,
+            vy: Math.sin(this.player.angle) * bSpeed,
+            radius: 5,
+            color: '#00e5ff',
+            damage: 32
+          });
+        }
+      }
+
+      triggerRiftDash() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.riftCooldown > 0) return;
+
+        this.player.riftCooldown = this.player.maxRiftCooldown;
+        if (typeof SoundFX !== 'undefined') SoundFX.play('dash');
+
+        // Create rift portal at origin location
+        this.rifts.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 38,
+          life: 35,
+          maxLife: 35,
+          color: '#a855f7'
+        });
+
+        // Teleport player forward in aiming direction
+        const warpDistance = 150;
+        this.player.x += Math.cos(this.player.angle) * warpDistance;
+        this.player.y += Math.sin(this.player.angle) * warpDistance;
+
+        const margin = this.player.radius;
+        this.player.x = typeof clamp === 'function' ? clamp(this.player.x, margin, this.width - margin) : Math.max(margin, Math.min(this.width - margin, this.player.x));
+        this.player.y = typeof clamp === 'function' ? clamp(this.player.y, margin, this.height - margin) : Math.max(margin, Math.min(this.height - margin, this.player.y));
+
+        this.player.invulnerableTimer = 30; // phase immunity
+        this.spawnParticles(this.player.x, this.player.y, '#00e5ff', 24);
+
+        // Vacuum damage drones near destination
+        for (let i = this.drones.length - 1; i >= 0; i--) {
+          const d = this.drones[i];
+          const dist = Math.hypot(d.x - this.player.x, d.y - this.player.y);
+          if (dist < 70) {
+            d.hp -= 45;
+            this.spawnParticles(d.x, d.y, '#a855f7', 12);
+            if (d.hp <= 0) {
+              this.onDroneKilled(d, i);
+            }
+          }
+        }
+      }
+
+      triggerEMP() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.empCharges <= 0) return;
+
+        this.player.empCharges--;
+        if (typeof SoundFX !== 'undefined') SoundFX.play('emp');
+
+        this.empNovas.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 380,
+          speed: 14,
+          color: '#00e5ff'
+        });
+
+        // Clear all enemy projectiles
+        this.enemyProjectiles = [];
+
+        // Damage all active drones & boss
+        for (let i = this.drones.length - 1; i >= 0; i--) {
+          const d = this.drones[i];
+          d.hp -= 85;
+          this.spawnParticles(d.x, d.y, '#00e5ff', 10);
+          if (d.hp <= 0) {
+            this.onDroneKilled(d, i);
+          }
+        }
+
+        if (this.boss) {
+          this.boss.hp -= 160;
+          this.spawnParticles(this.boss.x, this.boss.y, '#00e5ff', 28);
+          if (this.boss.hp <= 0) {
+            this.onBossKilled();
+          }
+        }
+      }
+
+      spawnWave() {
+        this.drones = [];
+        this.boss = null;
+
+        if (this.wave % 5 === 0) {
+          // Boss wave
+          this.boss = {
+            x: this.width / 2,
+            y: 90,
+            radius: 42,
+            hp: 450 + this.wave * 120,
+            maxHp: 450 + this.wave * 120,
+            angle: 0,
+            shootTimer: 0,
+            shootInterval: 45,
+            bossType: 'Rift Titan Overlord',
+            shield: 100,
+            maxShield: 100
+          };
+          this.addFloatingText(this.width / 2, this.height / 2, '⚠️ RIFT TITAN DETECTED', '#ff0055');
+          if (typeof SoundFX !== 'undefined') SoundFX.play('bossWarning');
+        } else {
+          // Standard anomaly drone wave
+          const count = 5 + this.wave * 3;
+          for (let i = 0; i < count; i++) {
+            let x, y;
+            if (Math.random() < 0.5) {
+              x = Math.random() < 0.5 ? -20 : this.width + 20;
+              y = Math.random() * this.height;
+            } else {
+              x = Math.random() * this.width;
+              y = Math.random() < 0.5 ? -20 : this.height + 20;
+            }
+
+            const types = ['seeker', 'weaver', 'heavy'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            let speed = 2.2 + Math.random() * 1.2;
+            let hp = 30 + this.wave * 5;
+            let radius = 14;
+            let color = '#ff007f';
+
+            if (type === 'weaver') {
+              speed = 3.2;
+              hp = 22 + this.wave * 4;
+              radius = 12;
+              color = '#00e5ff';
+            } else if (type === 'heavy') {
+              speed = 1.4;
+              hp = 60 + this.wave * 10;
+              radius = 18;
+              color = '#a855f7';
+            }
+
+            this.drones.push({
+              x, y, vx: 0, vy: 0,
+              radius, speed, hp, maxHp: hp,
+              type, color,
+              shootTimer: Math.floor(Math.random() * 60)
+            });
+          }
+        }
+      }
+
+      onDroneKilled(drone, index) {
+        this.drones.splice(index, 1);
+        const pts = drone.type === 'heavy' ? 150 : (drone.type === 'weaver' ? 120 : 90);
+        this.addScore(pts);
+        this.spawnParticles(drone.x, drone.y, drone.color, 16);
+        if (typeof SoundFX !== 'undefined') SoundFX.play('explosion');
+
+        // Powerup drop chance
+        if (Math.random() < 0.22) {
+          const pTypes = ['triBeam', 'shield', 'emp', 'score'];
+          const type = pTypes[Math.floor(Math.random() * pTypes.length)];
+          this.powerups.push({
+            x: drone.x,
+            y: drone.y,
+            radius: 10,
+            type,
+            life: 300
+          });
+        }
+      }
+
+      onBossKilled() {
+        if (!this.boss) return;
+        this.spawnParticles(this.boss.x, this.boss.y, '#ff007f', 50);
+        this.addScore(2500 + this.wave * 500);
+        this.addFloatingText(this.boss.x, this.boss.y, 'RIFT TITAN PURGED!', '#39ff14');
+        if (typeof SoundFX !== 'undefined') SoundFX.play('bossDefeat');
+        this.boss = null;
+      }
+
+      addScore(pts) {
+        this.score += Math.round(pts * this.multiplier);
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberrift', this.highScore);
+          }
+        }
+      }
+
+      addFloatingText(x, y, text, color = '#ffffff') {
+        this.floatingTexts.push({
+          x, y, text, color,
+          life: 45, maxLife: 45
+        });
+      }
+
+      spawnParticles(x, y, color, count = 12) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const spd = 1.5 + Math.random() * 4.5;
+          this.particles.push({
+            x, y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd,
+            radius: 2 + Math.random() * 2.5,
+            color,
+            life: 25 + Math.random() * 20,
+            maxLife: 45
+          });
+        }
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Player timers
+        if (this.player.shootCooldown > 0) this.player.shootCooldown--;
+        if (this.player.riftCooldown > 0) this.player.riftCooldown--;
+        if (this.player.invulnerableTimer > 0) this.player.invulnerableTimer--;
+        if (this.player.triBeamTimer > 0) this.player.triBeamTimer--;
+
+        // Shield regen
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shieldRegenTimer++;
+          if (this.player.shieldRegenTimer >= 10) {
+            this.player.shieldRegenTimer = 0;
+            this.player.shield = Math.min(this.player.maxShield, this.player.shield + 1);
+          }
+        }
+
+        // Projectiles update
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < -10 || p.x > this.width + 10 || p.y < -10 || p.y > this.height + 10) {
+            this.projectiles.splice(i, 1);
+            continue;
+          }
+
+          // Hit drones
+          let hit = false;
+          for (let j = this.drones.length - 1; j >= 0; j--) {
+            const d = this.drones[j];
+            if (Math.hypot(d.x - p.x, d.y - p.y) < d.radius + p.radius) {
+              d.hp -= p.damage;
+              this.spawnParticles(p.x, p.y, p.color, 6);
+              this.projectiles.splice(i, 1);
+              hit = true;
+              if (d.hp <= 0) {
+                this.onDroneKilled(d, j);
+              }
+              break;
+            }
+          }
+
+          // Hit boss
+          if (!hit && this.boss) {
+            if (Math.hypot(this.boss.x - p.x, this.boss.y - p.y) < this.boss.radius + p.radius) {
+              if (this.boss.shield > 0) {
+                this.boss.shield -= p.damage;
+                if (this.boss.shield < 0) {
+                  this.boss.hp += this.boss.shield;
+                  this.boss.shield = 0;
+                }
+              } else {
+                this.boss.hp -= p.damage;
+              }
+              this.spawnParticles(p.x, p.y, '#00e5ff', 8);
+              this.projectiles.splice(i, 1);
+              if (this.boss.hp <= 0) {
+                this.onBossKilled();
+              }
+            }
+          }
+        }
+
+        // Enemy projectiles update
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+          const ep = this.enemyProjectiles[i];
+          ep.x += ep.vx;
+          ep.y += ep.vy;
+
+          if (ep.x < -10 || ep.x > this.width + 10 || ep.y < -10 || ep.y > this.height + 10) {
+            this.enemyProjectiles.splice(i, 1);
+            continue;
+          }
+
+          // Hit player
+          if (Math.hypot(this.player.x - ep.x, this.player.y - ep.y) < this.player.radius + ep.radius) {
+            this.enemyProjectiles.splice(i, 1);
+            this.damagePlayer(ep.damage || 15);
+          }
+        }
+
+        // Drones movement & behavior
+        for (let i = 0; i < this.drones.length; i++) {
+          const d = this.drones[i];
+          const angle = Math.atan2(this.player.y - d.y, this.player.x - d.x);
+          d.vx = Math.cos(angle) * d.speed;
+          d.vy = Math.sin(angle) * d.speed;
+          d.x += d.vx;
+          d.y += d.vy;
+
+          // Drone shooting
+          d.shootTimer++;
+          if (d.shootTimer >= 90) {
+            d.shootTimer = 0;
+            if (d.type === 'weaver') {
+              this.enemyProjectiles.push({
+                x: d.x, y: d.y,
+                vx: Math.cos(angle) * 4.8,
+                vy: Math.sin(angle) * 4.8,
+                radius: 4,
+                damage: 12
+              });
+            }
+          }
+
+          // Drone collision with player
+          if (Math.hypot(this.player.x - d.x, this.player.y - d.y) < this.player.radius + d.radius) {
+            this.damagePlayer(20);
+          }
+        }
+
+        // Boss update
+        if (this.boss) {
+          this.boss.angle += 0.02;
+          this.boss.x += Math.sin(this.boss.angle) * 1.5;
+
+          // Boss shooting
+          this.boss.shootTimer++;
+          if (this.boss.shootTimer >= this.boss.shootInterval) {
+            this.boss.shootTimer = 0;
+            const shots = 8;
+            for (let k = 0; k < shots; k++) {
+              const a = (Math.PI * 2 / shots) * k + this.boss.angle;
+              this.enemyProjectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(a) * 4.2,
+                vy: Math.sin(a) * 4.2,
+                radius: 6,
+                damage: 18
+              });
+            }
+          }
+
+          if (Math.hypot(this.player.x - this.boss.x, this.player.y - this.boss.y) < this.player.radius + this.boss.radius) {
+            this.damagePlayer(35);
+          }
+        }
+
+        // Powerups update
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const p = this.powerups[i];
+          p.life--;
+          if (p.life <= 0) {
+            this.powerups.splice(i, 1);
+            continue;
+          }
+
+          if (Math.hypot(this.player.x - p.x, this.player.y - p.y) < this.player.radius + p.radius) {
+            if (p.type === 'triBeam') {
+              this.player.triBeamTimer = 350;
+              this.addFloatingText(this.player.x, this.player.y, 'TRI-BEAM READY!', '#00e5ff');
+            } else if (p.type === 'shield') {
+              this.player.shield = this.player.maxShield;
+              this.player.health = Math.min(this.player.maxHealth, this.player.health + 25);
+              this.addFloatingText(this.player.x, this.player.y, 'SHIELD RESTORED!', '#39ff14');
+            } else if (p.type === 'emp') {
+              this.player.empCharges = Math.min(this.player.maxEmpCharges, this.player.empCharges + 1);
+              this.addFloatingText(this.player.x, this.player.y, '+1 EMP CORE', '#a855f7');
+            } else if (p.type === 'score') {
+              this.addScore(500);
+              this.addFloatingText(this.player.x, this.player.y, '+500 DATA CORE', '#ff007f');
+            }
+            if (typeof SoundFX !== 'undefined') SoundFX.play('powerup');
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Rifts portal lifetime update
+        for (let i = this.rifts.length - 1; i >= 0; i--) {
+          const r = this.rifts[i];
+          r.life--;
+          if (r.life <= 0) {
+            this.rifts.splice(i, 1);
+          }
+        }
+
+        // EMP Novas update
+        for (let i = this.empNovas.length - 1; i >= 0; i--) {
+          const emp = this.empNovas[i];
+          emp.radius += emp.speed;
+          if (emp.radius >= emp.maxRadius) {
+            this.empNovas.splice(i, 1);
+          }
+        }
+
+        // Particles update
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          if (pt.life <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+
+        // Floating text update
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+          const ft = this.floatingTexts[i];
+          ft.y -= 0.8;
+          ft.life--;
+          if (ft.life <= 0) {
+            this.floatingTexts.splice(i, 1);
+          }
+        }
+
+        // Next wave check
+        if (this.drones.length === 0 && !this.boss) {
+          this.wave++;
+          this.addFloatingText(this.width / 2, this.height / 2, `WAVE ${this.wave} INCOMING`, '#00e5ff');
+          this.spawnWave();
+        }
+      }
+
+      damagePlayer(amount) {
+        if (this.player.invulnerableTimer > 0 || this.over) return;
+
+        let rem = amount;
+        if (this.player.shield > 0) {
+          if (this.player.shield >= rem) {
+            this.player.shield -= rem;
+            rem = 0;
+          } else {
+            rem -= this.player.shield;
+            this.player.shield = 0;
+          }
+        }
+
+        if (rem > 0) {
+          this.player.health -= rem;
+        }
+
+        this.player.invulnerableTimer = 20;
+        this.spawnParticles(this.player.x, this.player.y, '#ff0055', 15);
+        if (typeof SoundFX !== 'undefined') SoundFX.play('hit');
+
+        if (this.player.health <= 0) {
+          this.player.health = 0;
+          this.over = true;
+          if (typeof SoundFX !== 'undefined') SoundFX.play('gameOver');
+          if (typeof Leaderboard !== 'undefined') Leaderboard.setGameScore('cyberrift', this.score);
+        }
+      }
+
+      draw() {
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+
+        // Clear canvas
+        ctx.fillStyle = '#030712';
+        ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw grid
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.05)';
+        ctx.lineWidth = 1;
+        const step = 40;
+        for (let x = 0; x < this.width; x += step) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, this.height);
+          ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += step) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(this.width, y);
+          ctx.stroke();
+        }
+
+        // Draw Rifts
+        for (const r of this.rifts) {
+          ctx.save();
+          ctx.globalAlpha = r.life / r.maxLife;
+          ctx.strokeStyle = r.color;
+          ctx.lineWidth = 3;
+          ctx.shadowColor = r.color;
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.arc(r.x, r.y, r.radius * (1 - r.life / r.maxLife * 0.3), 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Draw EMP Novas
+        for (const emp of this.empNovas) {
+          ctx.save();
+          ctx.strokeStyle = emp.color;
+          ctx.lineWidth = 4;
+          ctx.shadowColor = emp.color;
+          ctx.shadowBlur = 20;
+          ctx.beginPath();
+          ctx.arc(emp.x, emp.y, emp.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Draw Powerups
+        for (const p of this.powerups) {
+          ctx.save();
+          ctx.fillStyle = p.type === 'triBeam' ? '#00e5ff' : (p.type === 'shield' ? '#39ff14' : (p.type === 'emp' ? '#a855f7' : '#ff007f'));
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Drones
+        for (const d of this.drones) {
+          ctx.save();
+          ctx.fillStyle = d.color;
+          ctx.shadowColor = d.color;
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Boss
+        if (this.boss) {
+          ctx.save();
+          ctx.fillStyle = '#ff0055';
+          ctx.shadowColor = '#ff0055';
+          ctx.shadowBlur = 25;
+          ctx.beginPath();
+          ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Boss shield ring
+          if (this.boss.shield > 0) {
+            ctx.strokeStyle = '#00e5ff';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(this.boss.x, this.boss.y, this.boss.radius + 8, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // Draw Player Projectiles
+        for (const p of this.projectiles) {
+          ctx.save();
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Enemy Projectiles
+        for (const ep of this.enemyProjectiles) {
+          ctx.save();
+          ctx.fillStyle = '#ff0055';
+          ctx.shadowColor = '#ff0055';
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.arc(ep.x, ep.y, ep.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Player Ship
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+        ctx.rotate(this.player.angle);
+
+        if (this.player.invulnerableTimer % 4 < 2) {
+          ctx.fillStyle = '#00e5ff';
+          ctx.shadowColor = '#00e5ff';
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.moveTo(18, 0);
+          ctx.lineTo(-12, -12);
+          ctx.lineTo(-6, 0);
+          ctx.lineTo(-12, 12);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // Draw Particles
+        for (const pt of this.particles) {
+          ctx.save();
+          ctx.globalAlpha = pt.life / pt.maxLife;
+          ctx.fillStyle = pt.color;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Floating Text
+        for (const ft of this.floatingTexts) {
+          ctx.save();
+          ctx.globalAlpha = ft.life / ft.maxLife;
+          ctx.fillStyle = ft.color;
+          ctx.font = 'bold 14px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(ft.text, ft.x, ft.y);
+          ctx.restore();
+        }
+      }
+    }
+
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = { CyberRiftEngine };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      if (!canvas) return;
+
+      const engine = new CyberRiftEngine(canvas);
+
+      const startOverlay = document.getElementById('startOverlay');
+      const pauseOverlay = document.getElementById('pauseOverlay');
+      const gameOverOverlay = document.getElementById('gameOverOverlay');
+
+      const startBtn = document.getElementById('startBtn');
+      const resumeBtn = document.getElementById('resumeBtn');
+      const restartBtn = document.getElementById('restartBtn');
+
+      const scoreVal = document.getElementById('scoreVal');
+      const highScoreVal = document.getElementById('highScoreVal');
+      const waveVal = document.getElementById('waveVal');
+      const empVal = document.getElementById('empVal');
+
+      const healthBar = document.getElementById('healthBar');
+      const shieldBar = document.getElementById('shieldBar');
+      const riftBar = document.getElementById('riftBar');
+
+      const muteBtn = document.getElementById('muteBtn');
+      const themeBtn = document.getElementById('themeBtn');
+
+      if (themeBtn && typeof cycleTheme === 'function') {
+        themeBtn.addEventListener('click', cycleTheme);
+      }
+
+      startBtn.addEventListener('click', () => {
+        startOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      resumeBtn.addEventListener('click', () => {
+        pauseOverlay.classList.add('hidden');
+        engine.resume();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverOverlay.classList.add('hidden');
+        engine.start();
+      });
+
+      let mouseX = engine.width / 2;
+      let mouseY = engine.height / 2;
+      const keys = {};
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+
+      canvas.addEventListener('click', () => {
+        if (engine.started && !engine.paused && !engine.over) {
+          engine.fireBeam();
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (e.code === 'KeyE' || e.code === 'KeyX') {
+          engine.triggerEMP();
+        } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight' || e.code === 'Space') {
+          engine.triggerRiftDash();
+        } else if (e.code === 'KeyF') {
+          engine.fireBeam();
+        } else if (e.code === 'KeyP' || e.code === 'Escape') {
+          if (engine.started && !engine.over) {
+            engine.togglePause();
+            if (engine.paused) pauseOverlay.classList.remove('hidden');
+            else pauseOverlay.classList.add('hidden');
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+      });
+
+      if (muteBtn && typeof getMuteState === 'function') {
+        let muted = getMuteState();
+        muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        muteBtn.addEventListener('click', () => {
+          muted = !muted;
+          if (typeof saveMuteState === 'function') saveMuteState(muted);
+          muteBtn.textContent = muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+        });
+      }
+
+      function updateHUD() {
+        scoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.score) : engine.score;
+        highScoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.highScore) : engine.highScore;
+        waveVal.textContent = engine.wave;
+        empVal.textContent = engine.player.empCharges;
+
+        healthBar.style.width = Math.max(0, (engine.player.health / engine.player.maxHealth) * 100) + '%';
+        shieldBar.style.width = Math.max(0, (engine.player.shield / engine.player.maxShield) * 100) + '%';
+
+        const riftPercent = 100 - (engine.player.riftCooldown / engine.player.maxRiftCooldown) * 100;
+        riftBar.style.width = Math.max(0, riftPercent) + '%';
+
+        if (engine.over) {
+          gameOverOverlay.classList.remove('hidden');
+        }
+      }
+
+      function gameLoop() {
+        if (engine.started && !engine.paused && !engine.over) {
+          let dx = 0;
+          let dy = 0;
+          if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+          if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+          if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+          if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+          if (dx !== 0 && dy !== 0) {
+            dx *= 0.7071;
+            dy *= 0.7071;
+          }
+          engine.movePlayer(dx, dy);
+
+          const angle = Math.atan2(mouseY - engine.player.y, mouseX - engine.player.x);
+          engine.setPlayerAngle(angle);
+
+          engine.update();
+          engine.draw();
+        }
+        updateHUD();
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
