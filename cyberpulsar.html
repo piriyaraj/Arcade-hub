@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Pulsar — 360° Orbital Pulsar Core Defender & Stellar Singularity Shooter</title>
+  <meta name="description" content="High-octane 360° orbital energy core defender arcade game with dual pulsar beam cannons, phase surge shields, gravity wave shockwaves, and Pulsar Titan Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberpulsar.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Pulsar — 360° Orbital Pulsar Core Defender & Stellar Singularity Shooter">
+  <meta property="og:description" content="High-octane 360° orbital energy core defender arcade game with dual pulsar beam cannons, phase surge shields, gravity wave shockwaves, and Pulsar Titan Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberpulsar.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Pulsar — 360° Orbital Pulsar Core Defender & Stellar Singularity Shooter">
+  <meta name="twitter:description" content="Defend the Stellar Core Matrix with Cyan & Gold pulsar cannons, phase shields, gravity wave EMP novas, and defeat Pulsar Titan Overlords.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Pulsar",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberpulsar.html",
+    "description": "High-octane 360° orbital energy core defender arcade game with dual pulsar beam cannons, phase surge shields, gravity wave shockwaves, and Pulsar Titan Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00f2fe, #4facfe, #ff0844, #ffb199);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #00f2fe;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #040817;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 8, 23, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 10;
+    }
+
+    .overlay-screen.hidden {
+      display: none !important;
+    }
+
+    .overlay-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #00f2fe, #4facfe, #ff0844);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .overlay-subtitle {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+      max-width: 540px;
+      line-height: 1.5;
+    }
+
+    .btn-cyber {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      color: #040817;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-cyber:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+      filter: brightness(1.1);
+    }
+
+    .controls-hint {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    .key-badge {
+      background: rgba(0, 242, 254, 0.2);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      color: #00f2fe;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .mobile-controls {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 1rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: grid;
+      }
+    }
+
+    .mobile-btn {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      color: #00f2fe;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <header class="game-header">
+      <h1 class="game-title">💫 CYBER PULSAR</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="scoreVal" class="stat-value">0</span></div>
+        <div class="stat-item">BEST: <span id="bestVal" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="waveVal" class="stat-value">1</span></div>
+        <div class="stat-item">EMP: <span id="empVal" class="stat-value">3</span></div>
+      </div>
+    </header>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="startScreen" class="overlay-screen">
+        <h2 class="overlay-title">CYBER PULSAR</h2>
+        <p class="overlay-subtitle">
+          Defend the Orbital Pulsar Core against hostile stellar drones & Titan Bosses. Alternate between Cyan & Gold Pulsar Frequencies, fire quantum plasma beams, and release Gravity Wave EMP Novas.
+        </p>
+        <button id="startBtn" class="btn-cyber">ENGAGE PULSAR CORE</button>
+        <div class="controls-hint">
+          <div><span class="key-badge">WASD</span> / <span class="key-badge">Arrows</span> Move Ship</div>
+          <div><span class="key-badge">Mouse</span> / <span class="key-badge">Click</span> Aim & Fire Plasma</div>
+          <div><span class="key-badge">SPACE</span> / <span class="key-badge">Shift</span> Frequency Shift</div>
+          <div><span class="key-badge">E</span> / <span class="key-badge">Q</span> Gravity Wave EMP Nova</div>
+        </div>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pauseScreen" class="overlay-screen hidden">
+        <h2 class="overlay-title">SYSTEM PAUSED</h2>
+        <p class="overlay-subtitle">Pulsar energy stream frozen. Ready to resume operation.</p>
+        <button id="resumeBtn" class="btn-cyber">RESUME MATRIX</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameOverScreen" class="overlay-screen hidden">
+        <h2 class="overlay-title" style="background: linear-gradient(135deg, #ff0844, #ffb199); -webkit-background-clip: text;">CORE DESTROYED</h2>
+        <p class="overlay-subtitle" id="gameOverSub">Final Score: 0</p>
+        <button id="restartBtn" class="btn-cyber">REINITIALIZE CORE</button>
+      </div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div class="mobile-controls">
+      <button class="mobile-btn" id="mShift">SHIFT</button>
+      <button class="mobile-btn" id="mEmp">EMP NOVA</button>
+      <button class="mobile-btn" id="mPause">PAUSE</button>
+      <button class="mobile-btn" id="mFire">FIRE</button>
+    </div>
+  </div>
+
+  <script>
+    class CyberPulsarEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = (typeof getBestScore === 'function') ? getBestScore('cyberpulsar_best') : 0;
+        this.wave = 1;
+        this.combo = 1;
+        this.comboTimer = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          phase: 'cyan', // 'cyan' or 'gold'
+          shootCooldown: 0,
+          empCooldown: 0,
+          invulnerableTimer: 0,
+          angle: 0
+        };
+
+        this.empCharges = 3;
+        this.boss = null;
+        this.enemies = [];
+        this.projectiles = [];
+        this.particles = [];
+        this.floatingTexts = [];
+        this.stars = [];
+
+        this.initStars();
+      }
+
+      initStars() {
+        this.stars = [];
+        for (let i = 0; i < 70; i++) {
+          this.stars.push({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.8 + 0.2,
+            speed: Math.random() * 15 + 5
+          });
+        }
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.combo = 1;
+        this.empCharges = 3;
+        this.player.hp = 100;
+        this.player.shield = 100;
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.phase = 'cyan';
+        this.player.invulnerableTimer = 0;
+        this.enemies = [];
+        this.projectiles = [];
+        this.particles = [];
+        this.floatingTexts = [];
+        this.boss = null;
+
+        this.spawnWave();
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.enemies = [];
+        this.projectiles = [];
+        this.particles = [];
+        this.boss = null;
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      setScore(val) {
+        this.score = val;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberpulsar_best', this.highScore);
+          }
+        }
+      }
+
+      setPlayerPosition(x, y) {
+        const clampFn = (typeof clamp === 'function') ? clamp : (v, min, max) => Math.max(min, Math.min(max, v));
+        this.player.x = clampFn(x, this.player.radius, this.width - this.player.radius);
+        this.player.y = clampFn(y, this.player.radius, this.height - this.player.radius);
+      }
+
+      movePlayer(dx, dy, dt) {
+        const speed = 320;
+        const newX = this.player.x + dx * speed * dt;
+        const newY = this.player.y + dy * speed * dt;
+        this.setPlayerPosition(newX, newY);
+      }
+
+      togglePhase() {
+        this.player.phase = (this.player.phase === 'cyan') ? 'gold' : 'cyan';
+        this.createPhaseEffects();
+        return this.player.phase;
+      }
+
+      createPhaseEffects() {
+        const color = this.player.phase === 'cyan' ? '#00f2fe' : '#ffb199';
+        for (let i = 0; i < 16; i++) {
+          const ang = (Math.PI * 2 / 16) * i;
+          this.particles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(ang) * 120,
+            vy: Math.sin(ang) * 120,
+            life: 0.35,
+            maxLife: 0.35,
+            color: color,
+            size: 3
+          });
+        }
+      }
+
+      triggerEmpNova() {
+        if (this.empCharges <= 0 || this.player.empCooldown > 0) {
+          return false;
+        }
+
+        this.empCharges--;
+        this.player.empCooldown = 5.0;
+
+        // Destroy normal projectiles & damage all enemies
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          if (!this.projectiles[i].isPlayer) {
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        this.enemies.forEach(enemy => {
+          enemy.hp -= 80;
+        });
+
+        if (this.boss) {
+          this.boss.hp -= 150;
+        }
+
+        // Expand shockwave visual
+        for (let i = 0; i < 45; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 350 + 150;
+          this.particles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            life: 0.6,
+            maxLife: 0.6,
+            color: '#00f2fe',
+            size: 5
+          });
+        }
+
+        this.addFloatingText('GRAVITY EMP NOVA!', this.player.x, this.player.y - 30, '#00f2fe');
+        return true;
+      }
+
+      shoot(targetX, targetY) {
+        if (this.player.shootCooldown > 0) return false;
+
+        this.player.shootCooldown = 0.16;
+
+        const dx = targetX - this.player.x;
+        const dy = targetY - this.player.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const vx = (dx / dist) * 650;
+        const vy = (dy / dist) * 650;
+
+        const color = this.player.phase === 'cyan' ? '#00f2fe' : '#ffb199';
+
+        this.projectiles.push({
+          x: this.player.x,
+          y: this.player.y,
+          vx: vx,
+          vy: vy,
+          radius: 5,
+          isPlayer: true,
+          phase: this.player.phase,
+          color: color,
+          damage: 25
+        });
+
+        return true;
+      }
+
+      spawnWave() {
+        this.enemies = [];
+        const enemyCount = 4 + this.wave * 2;
+
+        if (this.wave % 5 === 0) {
+          // Boss Wave!
+          this.boss = {
+            x: this.width / 2,
+            y: 120,
+            radius: 45,
+            hp: 400 + this.wave * 120,
+            maxHp: 400 + this.wave * 120,
+            phase: 'gold',
+            color: '#ff0844',
+            attackTimer: 0,
+            direction: 1
+          };
+          this.addFloatingText(`TITAN PULSAR BOSS ENCOUNTER!`, this.width / 2, 200, '#ff0844');
+        } else {
+          this.boss = null;
+          for (let i = 0; i < enemyCount; i++) {
+            const side = Math.floor(Math.random() * 4);
+            let ex = 0, ey = 0;
+            if (side === 0) { ex = Math.random() * this.width; ey = -20; }
+            else if (side === 1) { ex = this.width + 20; ey = Math.random() * this.height; }
+            else if (side === 2) { ex = Math.random() * this.width; ey = this.height + 20; }
+            else { ex = -20; ey = Math.random() * this.height; }
+
+            const phase = Math.random() > 0.5 ? 'cyan' : 'gold';
+
+            this.enemies.push({
+              x: ex,
+              y: ey,
+              radius: 14,
+              hp: 30 + this.wave * 5,
+              maxHp: 30 + this.wave * 5,
+              phase: phase,
+              color: phase === 'cyan' ? '#00f2fe' : '#ffb199',
+              speed: 90 + Math.random() * 40,
+              shootTimer: Math.random() * 2
+            });
+          }
+        }
+      }
+
+      takePlayerDamage(amount) {
+        if (this.player.invulnerableTimer > 0) return;
+
+        let remaining = amount;
+        if (this.player.shield > 0) {
+          if (this.player.shield >= remaining) {
+            this.player.shield -= remaining;
+            remaining = 0;
+          } else {
+            remaining -= this.player.shield;
+            this.player.shield = 0;
+          }
+        }
+
+        if (remaining > 0) {
+          this.player.hp -= remaining;
+          if (this.player.hp <= 0) {
+            this.player.hp = 0;
+            this.over = true;
+          }
+        }
+
+        this.player.invulnerableTimer = 0.5;
+      }
+
+      addFloatingText(text, x, y, color = '#ffffff') {
+        this.floatingTexts.push({
+          text: text,
+          x: x,
+          y: y,
+          color: color,
+          alpha: 1.0,
+          vy: -30
+        });
+      }
+
+      update(dt) {
+        if (!this.started || this.paused || this.over) return;
+
+        // Timers
+        if (this.player.shootCooldown > 0) this.player.shootCooldown -= dt;
+        if (this.player.empCooldown > 0) this.player.empCooldown -= dt;
+        if (this.player.invulnerableTimer > 0) this.player.invulnerableTimer -= dt;
+
+        // Recharge shield slowly
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 8 * dt);
+        }
+
+        // Combo timer
+        if (this.comboTimer > 0) {
+          this.comboTimer -= dt;
+          if (this.comboTimer <= 0) {
+            this.combo = 1;
+          }
+        }
+
+        // Update starfield
+        this.stars.forEach(star => {
+          star.y += star.speed * dt;
+          if (star.y > this.height) {
+            star.y = 0;
+            star.x = Math.random() * this.width;
+          }
+        });
+
+        // Update projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+
+          if (p.x < -20 || p.x > this.width + 20 || p.y < -20 || p.y > this.height + 20) {
+            this.projectiles.splice(i, 1);
+            continue;
+          }
+
+          // Player projectile vs enemies
+          if (p.isPlayer) {
+            let hit = false;
+            for (let j = this.enemies.length - 1; j >= 0; j--) {
+              const e = this.enemies[j];
+              const dist = Math.hypot(p.x - e.x, p.y - e.y);
+              if (dist < p.radius + e.radius) {
+                const bonus = (p.phase === e.phase) ? 1.5 : 1.0;
+                e.hp -= p.damage * bonus;
+                hit = true;
+
+                if (e.hp <= 0) {
+                  const pts = 100 * this.combo;
+                  this.setScore(this.score + pts);
+                  this.combo++;
+                  this.comboTimer = 3.0;
+                  this.addFloatingText(`+${pts}`, e.x, e.y, '#00f2fe');
+                  this.enemies.splice(j, 1);
+                }
+                break;
+              }
+            }
+
+            if (!hit && this.boss) {
+              const dist = Math.hypot(p.x - this.boss.x, p.y - this.boss.y);
+              if (dist < p.radius + this.boss.radius) {
+                const bonus = (p.phase === this.boss.phase) ? 1.5 : 1.0;
+                this.boss.hp -= p.damage * bonus;
+                hit = true;
+
+                if (this.boss.hp <= 0) {
+                  const pts = 2500 * this.combo;
+                  this.setScore(this.score + pts);
+                  this.addFloatingText(`BOSS DESTROYED! +${pts}`, this.boss.x, this.boss.y, '#ff0844');
+                  this.boss = null;
+                  this.wave++;
+                  setTimeout(() => this.spawnWave(), 1500);
+                }
+              }
+            }
+
+            if (hit) {
+              this.projectiles.splice(i, 1);
+            }
+          } else {
+            // Enemy projectile vs Player
+            const dist = Math.hypot(p.x - this.player.x, p.y - this.player.y);
+            if (dist < p.radius + this.player.radius) {
+              this.takePlayerDamage(p.damage);
+              this.projectiles.splice(i, 1);
+            }
+          }
+        }
+
+        // Update enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const dx = this.player.x - e.x;
+          const dy = this.player.y - e.y;
+          const dist = Math.hypot(dx, dy) || 1;
+
+          e.x += (dx / dist) * e.speed * dt;
+          e.y += (dy / dist) * e.speed * dt;
+
+          // Enemy shooting
+          e.shootTimer -= dt;
+          if (e.shootTimer <= 0) {
+            e.shootTimer = 2.0 + Math.random() * 1.5;
+            this.projectiles.push({
+              x: e.x,
+              y: e.y,
+              vx: (dx / dist) * 260,
+              vy: (dy / dist) * 260,
+              radius: 4,
+              isPlayer: false,
+              damage: 12
+            });
+          }
+
+          // Enemy collision with player
+          if (dist < e.radius + this.player.radius) {
+            this.takePlayerDamage(20);
+            this.enemies.splice(i, 1);
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          this.boss.x += this.boss.direction * 100 * dt;
+          if (this.boss.x < 80 || this.boss.x > this.width - 80) {
+            this.boss.direction *= -1;
+          }
+
+          this.boss.attackTimer += dt;
+          if (this.boss.attackTimer >= 1.2) {
+            this.boss.attackTimer = 0;
+            // Radial pulsar barrage
+            for (let a = 0; a < 8; a++) {
+              const ang = (Math.PI * 2 / 8) * a + Math.random() * 0.2;
+              this.projectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(ang) * 220,
+                vy: Math.sin(ang) * 220,
+                radius: 5,
+                isPlayer: false,
+                damage: 15
+              });
+            }
+          }
+        }
+
+        // Wave clearing check
+        if (this.enemies.length === 0 && !this.boss) {
+          this.wave++;
+          this.spawnWave();
+        }
+
+        // Floating texts
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+          const ft = this.floatingTexts[i];
+          ft.y += ft.vy * dt;
+          ft.alpha -= 0.8 * dt;
+          if (ft.alpha <= 0) {
+            this.floatingTexts.splice(i, 1);
+          }
+        }
+
+        // Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx * dt;
+          pt.y += pt.vy * dt;
+          pt.life -= dt;
+          if (pt.life <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        // Starfield
+        this.stars.forEach(s => {
+          ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        if (!this.started) return;
+
+        // Render Particles
+        this.particles.forEach(pt => {
+          ctx.fillStyle = pt.color;
+          ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1.0;
+        });
+
+        // Render Projectiles
+        this.projectiles.forEach(p => {
+          ctx.fillStyle = p.isPlayer ? p.color : '#ff0844';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        });
+
+        // Render Enemies
+        this.enemies.forEach(e => {
+          ctx.fillStyle = e.color;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = e.color;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        });
+
+        // Render Boss
+        if (this.boss) {
+          ctx.fillStyle = this.boss.color;
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = this.boss.color;
+          ctx.beginPath();
+          ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // Boss HP bar
+          const barW = 200;
+          const barH = 10;
+          const bx = this.width / 2 - barW / 2;
+          const by = 20;
+          ctx.fillStyle = 'rgba(255,255,255,0.2)';
+          ctx.fillRect(bx, by, barW, barH);
+          ctx.fillStyle = '#ff0844';
+          ctx.fillRect(bx, by, barW * (this.boss.hp / this.boss.maxHp), barH);
+        }
+
+        // Render Player Ship
+        if (!this.over) {
+          const pColor = this.player.phase === 'cyan' ? '#00f2fe' : '#ffb199';
+          ctx.fillStyle = pColor;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = pColor;
+          ctx.beginPath();
+          ctx.arc(this.player.x, this.player.y, this.player.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // Shield indicator ring
+          if (this.player.shield > 0) {
+            ctx.strokeStyle = `rgba(0, 242, 254, ${this.player.shield / 100})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(this.player.x, this.player.y, this.player.radius + 6, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+
+        // Render Floating Texts
+        this.floatingTexts.forEach(ft => {
+          ctx.fillStyle = ft.color;
+          ctx.globalAlpha = Math.max(0, ft.alpha);
+          ctx.font = 'bold 16px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(ft.text, ft.x, ft.y);
+          ctx.globalAlpha = 1.0;
+        });
+      }
+    }
+
+    // DOM Binding & Initialization
+    let engine = null;
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        engine = new CyberPulsarEngine(canvas);
+
+        const startScreen = document.getElementById('startScreen');
+        const pauseScreen = document.getElementById('pauseScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const startBtn = document.getElementById('startBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        const scoreVal = document.getElementById('scoreVal');
+        const bestVal = document.getElementById('bestVal');
+        const waveVal = document.getElementById('waveVal');
+        const empVal = document.getElementById('empVal');
+        const gameOverSub = document.getElementById('gameOverSub');
+
+        const keys = {};
+
+        window.addEventListener('keydown', (e) => {
+          keys[e.code] = true;
+
+          if (e.code === 'KeyP') {
+            engine.togglePause();
+            if (engine.paused) pauseScreen.classList.remove('hidden');
+            else pauseScreen.classList.add('hidden');
+          }
+
+          if (e.code === 'Space' || e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+            engine.togglePhase();
+          }
+
+          if (e.code === 'KeyE' || e.code === 'KeyQ') {
+            engine.triggerEmpNova();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          keys[e.code] = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+          const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+          engine.targetX = mx;
+          engine.targetY = my;
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+          if (engine.started && !engine.paused && !engine.over) {
+            const rect = canvas.getBoundingClientRect();
+            const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+            engine.shoot(mx, my);
+          }
+        });
+
+        startBtn.addEventListener('click', () => {
+          startScreen.classList.add('hidden');
+          engine.start();
+        });
+
+        resumeBtn.addEventListener('click', () => {
+          engine.resume();
+          pauseScreen.classList.add('hidden');
+        });
+
+        restartBtn.addEventListener('click', () => {
+          gameOverScreen.classList.add('hidden');
+          engine.start();
+        });
+
+        // Mobile control buttons
+        document.getElementById('mShift')?.addEventListener('click', () => engine.togglePhase());
+        document.getElementById('mEmp')?.addEventListener('click', () => engine.triggerEmpNova());
+        document.getElementById('mPause')?.addEventListener('click', () => {
+          engine.togglePause();
+          if (engine.paused) pauseScreen.classList.remove('hidden');
+          else pauseScreen.classList.add('hidden');
+        });
+
+        let lastTime = performance.now();
+        function gameLoop(now) {
+          const dt = Math.min((now - lastTime) / 1000, 0.1);
+          lastTime = now;
+
+          if (engine.started && !engine.paused && !engine.over) {
+            let dx = 0, dy = 0;
+            if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+            if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+            if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+            if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+
+            if (dx !== 0 || dy !== 0) {
+              const len = Math.hypot(dx, dy);
+              engine.movePlayer(dx / len, dy / len, dt);
+            }
+
+            engine.update(dt);
+
+            scoreVal.textContent = engine.score;
+            bestVal.textContent = engine.highScore;
+            waveVal.textContent = engine.wave;
+            empVal.textContent = engine.empCharges;
+
+            if (engine.over) {
+              gameOverSub.textContent = `Final Score: ${engine.score} | Wave Reached: ${engine.wave}`;
+              gameOverScreen.classList.remove('hidden');
+              if (typeof Leaderboard !== 'undefined' && Leaderboard.setGameScore) {
+                Leaderboard.setGameScore('cyberpulsar', engine.score);
+              }
+            }
+          }
+
+          engine.render();
+          requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+      });
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberPulsarEngine };
+    }
+  </script>
+</body>
+</html>

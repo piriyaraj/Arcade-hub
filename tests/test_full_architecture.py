@@ -66,6 +66,7 @@ def test_html_script_and_css_links():
         "cybereclipse.html",
         "cyberhorizon.html",
         "cybernebula.html",
+        "cyberpulsar.html",
         "leaderboard.html"
     ]
 
