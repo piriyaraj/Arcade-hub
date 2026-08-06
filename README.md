@@ -39,6 +39,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Grid](https://arcadehub.telekit.link/cybergrid.html)** — High-octane orbital quantum grid defender & laser node overload arcade game with plasma beam pulses, EMP shockwaves, kinetic shields, and Grid Overlord Bosses.
 - ☀️ **[Cyber Flare](https://arcadehub.telekit.link/cyberflare.html)** — High-octane solar-matrix defender & plasma flare arcade game with radiant EMP novastorms, kinetic thermal shields, tri-beam plasma blasts, and Sol-Core Overlord Bosses.
 - 💎 **[Cyber Prism](https://arcadehub.telekit.link/cyberprism.html)** — High-octane 360° quantum light-refraction defender arcade game with rainbow plasma beams, prism refraction novastorms, kinetic crystal shields, and Prism Overlord Bosses.
+- 🌟 **[Cyber Nova](https://arcadehub.telekit.link/cybernova.html)** — High-octane 360° quantum starlight core defender arcade game with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -143,3 +144,4 @@ All game HTML files available in this repository:
 | [spaceinvaders.html](spaceinvaders.html) | Space Invaders — Classic arcade shooter |
 | [tetris.html](tetris.html) | Tetris — Classic falling block puzzle game |
 | [towerdefense.html](towerdefense.html) | Retro Tower Defense — Defend database cores against cyber viruses |
+| [cybernova.html](cybernova.html) | Cyber Nova — High-octane 360° quantum starlight core defender arcade game |
