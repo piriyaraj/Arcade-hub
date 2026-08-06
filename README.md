@@ -44,6 +44,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 👤 **[Cyber Shadow](https://arcadehub.telekit.link/cybershadow.html)** — High-octane 360° quantum shadow ninja & astral void arena defender arcade game with astral shuriken bursts, shadow strike dashes, EMP shadow novas, and Shadow Emperor Bosses.
 - 🧬 **[Cyber Helix](https://arcadehub.telekit.link/cyberhelix.html)** — High-voltage twin-strand quantum matrix arena defender arcade game with dual helical plasma cannons, EMP resonance shocks, DNA decoys, and Helix Overlord Bosses.
 - 🔺 **[Cyber Apex](https://arcadehub.telekit.link/cyberapex.html)** — High-octane orbital apex matrix defender arcade game with twin apex lasers, phase barrier decoys, EMP pulse novas, and Apex Titan Bosses.
+- 🤖 **[Cyber Titan](https://arcadehub.telekit.link/cybertitan.html)** — High-octane 360° orbital titan core defender arcade game with quad plasma cannons, hyper shields, EMP shockwaves, and Colossus Overlord Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
