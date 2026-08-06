@@ -67,6 +67,7 @@ def test_html_script_and_css_links():
         "cyberhorizon.html",
         "cyberfusion.html",
         "cybertempest.html",
+        "cyberchrono.html",
         "leaderboard.html"
     ]
 
