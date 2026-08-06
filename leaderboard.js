@@ -50,6 +50,7 @@ const Leaderboard = {
     { id: 'cyberhelix', name: 'Cyber Helix', key: 'cyberhelix_best', icon: '🧬' },
     { id: 'cyberapex', name: 'Cyber Apex', key: 'cyberapex_best', icon: '🔺' },
     { id: 'cybertitan', name: 'Cyber Titan', key: 'cybertitan_best', icon: '🤖' },
+    { id: 'cyberzenith', name: 'Cyber Zenith', key: 'cyberzenith_best', icon: '🌌' },
     { id: 'minesweeper', name: 'Minesweeper', key: 'minesweeper_best', icon: '💣' }
   ],
 
