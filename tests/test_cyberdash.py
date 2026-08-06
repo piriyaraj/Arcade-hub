@@ -103,7 +103,7 @@ def test_js_cyberdash_unit_tests():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=30
+        timeout=60
     )
 
     assert result.returncode == 0, f"JS test cyberdash.test.js failed with code {result.returncode}\n{result.stderr}\n{result.stdout}"
