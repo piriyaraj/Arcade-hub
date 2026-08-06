@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Vanguard — High-Octane 360° Quantum Fortress Defender</title>
+  <meta name="description" content="High-octane 360° quantum fortress defender arcade game with plasma lance cannons, EMP vanguard shockwaves, Aegis barrier shields, and Vanguard Titan Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cybervanguard.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Vanguard — High-Octane 360° Quantum Fortress Defender">
+  <meta property="og:description" content="Command the Cyber Vanguard starship with dual plasma beam cannons, tactical EMP shockwaves, energy shield overdrive, and vanquish Vanguard Titan Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cybervanguard.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Vanguard — High-Octane 360° Quantum Fortress Defender">
+  <meta name="twitter:description" content="Command the Cyber Vanguard starship with dual plasma beam cannons, tactical EMP shockwaves, energy shield overdrive, and vanquish Vanguard Titan Bosses.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Vanguard",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cybervanguard.html",
+    "description": "High-octane 360° quantum fortress defender arcade game with plasma lance cannons, EMP vanguard shockwaves, Aegis barrier shields, and Vanguard Titan Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #06b6d4, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #10b981;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.25), inset 0 0 15px rgba(6, 182, 212, 0.15);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      background: #030712;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.hidden {
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay p {
+      color: #94a3b8;
+      max-width: 500px;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
+    }
+
+    .controls-hint {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: #cbd5e1;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">🛡️ Cyber Vanguard</h1>
+      <div class="stats-bar">
+        <div class="stat-item">Score: <span id="score-display" class="stat-value">0</span></div>
+        <div class="stat-item">Wave: <span id="wave-display" class="stat-value">1</span></div>
+        <div class="stat-item">HP: <span id="hp-display" class="stat-value">100%</span></div>
+        <div class="stat-item">EMP: <span id="emp-display" class="stat-value">3</span></div>
+        <div class="stat-item">Best: <span id="best-display" class="stat-value">0</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="start-overlay" class="overlay">
+        <h2>CYBER VANGUARD</h2>
+        <p>Protect the Sector Core from incoming Cyber-Swarm Drones and Vanguard Dreadnoughts. Deploy Plasma Lances, EMP Shockwaves, and Kinetic Shield Overdrive.</p>
+        <button id="start-btn" class="btn">INITIALIZE DEFENSE</button>
+        <div class="controls-hint">
+          <span><span class="key-badge">WASD / Arrows</span> Move Vanguard</span>
+          <span><span class="key-badge">Mouse / Space</span> Aim & Fire</span>
+          <span><span class="key-badge">E / Shift</span> EMP Shockwave</span>
+          <span><span class="key-badge">P</span> Pause</span>
+        </div>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pause-overlay" class="overlay hidden">
+        <h2>PAUSED</h2>
+        <p>Tactical battle overlay engaged.</p>
+        <button id="resume-btn" class="btn">RESUME MISSION</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameover-overlay" class="overlay hidden">
+        <h2>CORE OVERLOADED</h2>
+        <p>Final Score: <span id="final-score">0</span></p>
+        <button id="restart-btn" class="btn">REDEPLOY VANGUARD</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class CyberVanguardEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cybervanguard_best') : 0;
+        this.wave = 1;
+        this.waveTimer = 0;
+        this.spawnTimer = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          angle: 0,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          empCharges: 3,
+          weaponLevel: 1,
+          speed: 5
+        };
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.empShockwaves = [];
+        this.powerups = [];
+        this.boss = null;
+        this.keys = {};
+      }
+
+      start() {
+        this.reset();
+        this.started = true;
+        this.startWave(1);
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) {
+          this.resume();
+        } else {
+          this.pause();
+        }
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.waveTimer = 0;
+        this.spawnTimer = 0;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.hp = 100;
+        this.player.shield = 100;
+        this.player.empCharges = 3;
+        this.player.weaponLevel = 1;
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.empShockwaves = [];
+        this.powerups = [];
+        this.boss = null;
+      }
+
+      setScore(val) {
+        this.score = val;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cybervanguard_best', this.highScore);
+          }
+          if (typeof Leaderboard !== 'undefined' && Leaderboard.setGameScore) {
+            Leaderboard.setGameScore('cybervanguard', this.highScore);
+          }
+        }
+      }
+
+      movePlayer(dx, dy) {
+        this.player.x = clamp(this.player.x + dx, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y + dy, this.player.radius, this.height - this.player.radius);
+      }
+
+      rotatePlayer(targetX, targetY) {
+        this.player.angle = Math.atan2(targetY - this.player.y, targetX - this.player.x);
+      }
+
+      firePlayerWeapon() {
+        if (!this.started || this.paused || this.over) return;
+
+        const speed = 12;
+        const cos = Math.cos(this.player.angle);
+        const sin = Math.sin(this.player.angle);
+
+        if (this.player.weaponLevel === 1) {
+          this.projectiles.push({
+            x: this.player.x + cos * 20,
+            y: this.player.y + sin * 20,
+            vx: cos * speed,
+            vy: sin * speed,
+            radius: 4,
+            damage: 25,
+            color: '#10b981'
+          });
+        } else if (this.player.weaponLevel === 2) {
+          // Spread beam
+          for (let angleOffset of [-0.15, 0.15]) {
+            const a = this.player.angle + angleOffset;
+            this.projectiles.push({
+              x: this.player.x + Math.cos(a) * 20,
+              y: this.player.y + Math.sin(a) * 20,
+              vx: Math.cos(a) * speed,
+              vy: Math.sin(a) * speed,
+              radius: 4,
+              damage: 20,
+              color: '#06b6d4'
+            });
+          }
+        } else {
+          // Triple Vanguard beam
+          for (let angleOffset of [-0.2, 0, 0.2]) {
+            const a = this.player.angle + angleOffset;
+            this.projectiles.push({
+              x: this.player.x + Math.cos(a) * 20,
+              y: this.player.y + Math.sin(a) * 20,
+              vx: Math.cos(a) * speed,
+              vy: Math.sin(a) * speed,
+              radius: 5,
+              damage: 25,
+              color: '#8b5cf6'
+            });
+          }
+        }
+
+        if (typeof playSound === 'function') {
+          playSound('laser', 0.2);
+        }
+      }
+
+      triggerEmp() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.empCharges <= 0) return;
+
+        this.player.empCharges--;
+        this.empShockwaves.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 350,
+          speed: 15,
+          damage: 150,
+          color: '#10b981'
+        });
+
+        if (typeof playSound === 'function') {
+          playSound('explosion', 0.5);
+        }
+      }
+
+      startWave(waveNum) {
+        this.wave = waveNum;
+        this.enemies = [];
+        this.boss = null;
+
+        if (this.wave % 5 === 0) {
+          this.spawnBoss();
+        } else {
+          const count = 5 + this.wave * 3;
+          for (let i = 0; i < count; i++) {
+            this.spawnEnemy();
+          }
+        }
+      }
+
+      spawnEnemy() {
+        const edge = Math.floor(Math.random() * 4);
+        let x, y;
+        if (edge === 0) { x = Math.random() * this.width; y = -20; }
+        else if (edge === 1) { x = this.width + 20; y = Math.random() * this.height; }
+        else if (edge === 2) { x = Math.random() * this.width; y = this.height + 20; }
+        else { x = -20; y = Math.random() * this.height; }
+
+        const type = Math.random() > 0.3 ? 'drone' : 'chaser';
+        this.enemies.push({
+          x, y,
+          radius: type === 'drone' ? 14 : 18,
+          hp: type === 'drone' ? 30 : 60,
+          maxHp: type === 'drone' ? 30 : 60,
+          speed: type === 'drone' ? 2.5 : 3.5,
+          type,
+          color: type === 'drone' ? '#f43f5e' : '#fbbf24'
+        });
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: 100,
+          radius: 45,
+          hp: 500 + this.wave * 200,
+          maxHp: 500 + this.wave * 200,
+          speed: 1.5,
+          vx: 2,
+          color: '#a855f7'
+        };
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Shield recharge
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.05);
+        }
+
+        // Update EMP shockwaves
+        for (let i = this.empShockwaves.length - 1; i >= 0; i--) {
+          const emp = this.empShockwaves[i];
+          emp.radius += emp.speed;
+
+          // Damage enemies hit
+          for (let enemy of this.enemies) {
+            if (checkCircleCollision(emp, enemy)) {
+              enemy.hp -= 2;
+            }
+          }
+
+          if (this.boss && checkCircleCollision(emp, this.boss)) {
+            this.boss.hp -= 1;
+          }
+
+          if (emp.radius >= emp.maxRadius) {
+            this.empShockwaves.splice(i, 1);
+          }
+        }
+
+        // Update player projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > this.width || p.y < 0 || p.y > this.height) {
+            this.projectiles.splice(i, 1);
+            continue;
+          }
+
+          // Check hit boss
+          if (this.boss && checkCircleCollision(p, this.boss)) {
+            this.boss.hp -= p.damage;
+            this.projectiles.splice(i, 1);
+            if (this.boss.hp <= 0) {
+              this.setScore(this.score + 1000);
+              this.boss = null;
+              this.startWave(this.wave + 1);
+            }
+            continue;
+          }
+
+          // Check hit enemies
+          let hit = false;
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            if (checkCircleCollision(p, e)) {
+              e.hp -= p.damage;
+              hit = true;
+              if (e.hp <= 0) {
+                this.setScore(this.score + (e.type === 'drone' ? 100 : 200));
+                // Chance to drop powerup
+                if (Math.random() < 0.15) {
+                  this.powerups.push({
+                    x: e.x, y: e.y, radius: 10,
+                    type: Math.random() < 0.5 ? 'emp' : 'weapon'
+                  });
+                }
+                this.enemies.splice(j, 1);
+              }
+              break;
+            }
+          }
+          if (hit) {
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        // Update powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const pw = this.powerups[i];
+          if (checkCircleCollision(this.player, pw)) {
+            if (pw.type === 'emp') {
+              this.player.empCharges = Math.min(5, this.player.empCharges + 1);
+            } else if (pw.type === 'weapon') {
+              this.player.weaponLevel = Math.min(3, this.player.weaponLevel + 1);
+            }
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Update enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+          e.x += Math.cos(angle) * e.speed;
+          e.y += Math.sin(angle) * e.speed;
+
+          if (checkCircleCollision(this.player, e)) {
+            const damage = 15;
+            if (this.player.shield > 0) {
+              this.player.shield = Math.max(0, this.player.shield - damage);
+            } else {
+              this.player.hp = Math.max(0, this.player.hp - damage);
+            }
+
+            this.enemies.splice(i, 1);
+
+            if (this.player.hp <= 0) {
+              this.over = true;
+            }
+          }
+        }
+
+        // Update boss
+        if (this.boss) {
+          this.boss.x += this.boss.vx;
+          if (this.boss.x - this.boss.radius < 0 || this.boss.x + this.boss.radius > this.width) {
+            this.boss.vx *= -1;
+          }
+
+          if (checkCircleCollision(this.player, this.boss)) {
+            if (this.player.shield > 0) {
+              this.player.shield = Math.max(0, this.player.shield - 1);
+            } else {
+              this.player.hp = Math.max(0, this.player.hp - 1);
+            }
+            if (this.player.hp <= 0) {
+              this.over = true;
+            }
+          }
+        }
+
+        // Check wave completion
+        if (this.enemies.length === 0 && !this.boss) {
+          this.startWave(this.wave + 1);
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.fillStyle = '#030712';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw grid lines
+        this.ctx.strokeStyle = 'rgba(16, 185, 129, 0.08)';
+        this.ctx.lineWidth = 1;
+        for (let x = 0; x < this.width; x += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        // Draw EMP Shockwaves
+        for (let emp of this.empShockwaves) {
+          this.ctx.save();
+          this.ctx.strokeStyle = emp.color;
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = emp.color;
+          this.ctx.beginPath();
+          this.ctx.arc(emp.x, emp.y, emp.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+
+        // Draw Powerups
+        for (let pw of this.powerups) {
+          this.ctx.save();
+          this.ctx.fillStyle = pw.type === 'emp' ? '#10b981' : '#06b6d4';
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = this.ctx.fillStyle;
+          this.ctx.beginPath();
+          this.ctx.arc(pw.x, pw.y, pw.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Projectiles
+        for (let p of this.projectiles) {
+          this.ctx.save();
+          this.ctx.fillStyle = p.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Enemies
+        for (let e of this.enemies) {
+          this.ctx.save();
+          this.ctx.fillStyle = e.color;
+          this.ctx.shadowBlur = 12;
+          this.ctx.shadowColor = e.color;
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Boss
+        if (this.boss) {
+          this.ctx.save();
+          this.ctx.fillStyle = this.boss.color;
+          this.ctx.shadowBlur = 20;
+          this.ctx.shadowColor = this.boss.color;
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // Boss health bar
+          const barWidth = 100;
+          const barHeight = 8;
+          const pct = Math.max(0, this.boss.hp / this.boss.maxHp);
+          this.ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          this.ctx.fillRect(this.boss.x - barWidth / 2, this.boss.y - this.boss.radius - 15, barWidth, barHeight);
+          this.ctx.fillStyle = '#a855f7';
+          this.ctx.fillRect(this.boss.x - barWidth / 2, this.boss.y - this.boss.radius - 15, barWidth * pct, barHeight);
+          this.ctx.restore();
+        }
+
+        // Draw Player Ship
+        this.ctx.save();
+        this.ctx.translate(this.player.x, this.player.y);
+        this.ctx.rotate(this.player.angle);
+
+        // Shield aura
+        if (this.player.shield > 0) {
+          this.ctx.strokeStyle = `rgba(6, 182, 212, ${this.player.shield / 100})`;
+          this.ctx.lineWidth = 3;
+          this.ctx.beginPath();
+          this.ctx.arc(0, 0, this.player.radius + 6, 0, Math.PI * 2);
+          this.ctx.stroke();
+        }
+
+        // Ship triangle
+        this.ctx.fillStyle = '#10b981';
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#10b981';
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.player.radius + 4, 0);
+        this.ctx.lineTo(-this.player.radius, -this.player.radius + 4);
+        this.ctx.lineTo(-this.player.radius + 6, 0);
+        this.ctx.lineTo(-this.player.radius, this.player.radius - 4);
+        this.ctx.closePath();
+        this.ctx.fill();
+
+        this.ctx.restore();
+      }
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberVanguardEngine };
+    }
+
+    // Browser Initialization
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) return;
+
+        const engine = new CyberVanguardEngine(canvas);
+
+        const scoreDisplay = document.getElementById('score-display');
+        const waveDisplay = document.getElementById('wave-display');
+        const hpDisplay = document.getElementById('hp-display');
+        const empDisplay = document.getElementById('emp-display');
+        const bestDisplay = document.getElementById('best-display');
+
+        const startOverlay = document.getElementById('start-overlay');
+        const pauseOverlay = document.getElementById('pause-overlay');
+        const gameoverOverlay = document.getElementById('gameover-overlay');
+        const finalScore = document.getElementById('final-score');
+
+        const startBtn = document.getElementById('start-btn');
+        const resumeBtn = document.getElementById('resume-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        function updateUI() {
+          if (scoreDisplay) scoreDisplay.textContent = formatScore(engine.score);
+          if (waveDisplay) waveDisplay.textContent = engine.wave;
+          if (hpDisplay) hpDisplay.textContent = Math.ceil(engine.player.hp) + '%';
+          if (empDisplay) empDisplay.textContent = engine.player.empCharges;
+          if (bestDisplay) bestDisplay.textContent = formatScore(engine.highScore);
+
+          if (engine.over) {
+            gameoverOverlay.classList.remove('hidden');
+            if (finalScore) finalScore.textContent = formatScore(engine.score);
+          } else {
+            gameoverOverlay.classList.add('hidden');
+          }
+
+          if (engine.paused) {
+            pauseOverlay.classList.remove('hidden');
+          } else {
+            pauseOverlay.classList.add('hidden');
+          }
+        }
+
+        if (startBtn) {
+          startBtn.addEventListener('click', () => {
+            startOverlay.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        if (restartBtn) {
+          restartBtn.addEventListener('click', () => {
+            gameoverOverlay.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        if (resumeBtn) {
+          resumeBtn.addEventListener('click', () => {
+            pauseOverlay.classList.add('hidden');
+            engine.resume();
+          });
+        }
+
+        // Input listeners
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'p' || e.key === 'P') {
+            engine.togglePause();
+          }
+          if (e.key === 'e' || e.key === 'E' || e.key === 'Shift') {
+            engine.triggerEmp();
+          }
+          if (e.key === ' ') {
+            engine.firePlayerWeapon();
+          }
+          engine.keys[e.key] = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+          engine.keys[e.key] = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+          const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+          engine.rotatePlayer(mouseX, mouseY);
+        });
+
+        canvas.addEventListener('click', () => {
+          engine.firePlayerWeapon();
+        });
+
+        function gameLoop() {
+          let dx = 0, dy = 0;
+          if (engine.keys['w'] || engine.keys['W'] || engine.keys['ArrowUp']) dy -= engine.player.speed;
+          if (engine.keys['s'] || engine.keys['S'] || engine.keys['ArrowDown']) dy += engine.player.speed;
+          if (engine.keys['a'] || engine.keys['A'] || engine.keys['ArrowLeft']) dx -= engine.player.speed;
+          if (engine.keys['d'] || engine.keys['D'] || engine.keys['ArrowRight']) dx += engine.player.speed;
+
+          if (dx !== 0 || dy !== 0) {
+            engine.movePlayer(dx, dy);
+          }
+
+          engine.update();
+          engine.render();
+          updateUI();
+          requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+      });
+    }
+  </script>
+</body>
+</html>

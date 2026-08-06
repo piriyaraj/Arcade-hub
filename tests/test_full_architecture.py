@@ -62,6 +62,7 @@ def test_html_script_and_css_links():
         "cyberapex.html",
         "cybertitan.html",
         "cyberzenith.html",
+        "cybervanguard.html",
         "leaderboard.html"
     ]
 
