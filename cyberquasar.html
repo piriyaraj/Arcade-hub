@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Quasar — 360° Quantum Starlight & Gravitational Shockwave Defender</title>
+  <meta name="description" content="High-octane orbital quantum starlight defender & gravitational shockwave shooter with plasma nova beams, cosmic flares, and Quasar Overlord Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberquasar.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Quasar — 360° Quantum Starlight Defender">
+  <meta property="og:description" content="High-octane orbital quantum starlight defender & gravitational shockwave shooter with plasma nova beams, cosmic flares, and Quasar Overlord Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberquasar.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Quasar — 360° Quantum Starlight Defender">
+  <meta name="twitter:description" content="Pilot the Quasar Core Interceptor, unleash starlight beams, trigger gravitational nova shockwaves, and conquer Quasar Overlord Titans.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Quasar",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberquasar.html",
+    "description": "High-octane orbital quantum starlight defender & gravitational shockwave shooter with plasma nova beams, cosmic flares, and Quasar Overlord Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a855f7, #ec4899, #00f2fe, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #ec4899;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #090314;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 3, 20, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 2rem;
+      text-align: center;
+      color: #f8fafc;
+      z-index: 10;
+      transition: opacity 0.25s ease;
+    }
+
+    .overlay-screen.hidden {
+      display: none;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #a855f7, #ec4899, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+    }
+
+    .controls-hint {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      max-width: 420px;
+      text-align: left;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-bar {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.9);
+      color: #ec4899;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">✨ CYBER QUASAR</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="score-display" class="stat-value">0</span></div>
+        <div class="stat-item">HIGH: <span id="high-display" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="wave-display" class="stat-value">1</span></div>
+        <div class="stat-item">NOVA: <span id="nova-display" class="stat-value">✨3</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="start-screen" class="overlay-screen">
+        <h2 class="overlay-title">CYBER QUASAR</h2>
+        <p style="max-width: 500px; color: #cbd5e1; font-size: 0.95rem;">
+          Defend the quantum starlight arena! Fire Plasma Nova Beams, trigger Gravitational Nova Shockwaves, and annihilate Quasar Overlord Titans!
+        </p>
+        <div class="controls-hint">
+          <div><strong style="color:#ec4899;">WASD / Arrows:</strong> Move Interceptor</div>
+          <div><strong style="color:#ec4899;">Mouse / Touch:</strong> Aim Target & Direction</div>
+          <div><strong style="color:#ec4899;">Left Click / Space:</strong> Fire Nova Beams</div>
+          <div><strong style="color:#ec4899;">E / Right Click:</strong> Trigger Gravitational Nova</div>
+        </div>
+        <button id="start-btn" class="btn-action">LAUNCH INTERCEPTOR</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameover-screen" class="overlay-screen hidden">
+        <h2 class="overlay-title" style="background: linear-gradient(135deg, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CORE OVERLOAD</h2>
+        <p style="font-size: 1.2rem; color: #e2e8f0; margin: 0;">FINAL SCORE: <span id="final-score" style="color:#ec4899; font-weight:800;">0</span></p>
+        <p id="new-high-notice" style="color: #4ade80; font-weight: 700; display: none;">NEW HIGH SCORE RECORD!</p>
+        <button id="restart-btn" class="btn-action">RE-ENGAGE CORE</button>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <a href="index.html" class="btn-secondary">🏠 Portal Home</a>
+      <a href="leaderboard.html" class="btn-secondary">🏆 Global Leaderboard</a>
+    </div>
+  </div>
+
+  <script>
+    class CyberQuasarEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.score = 0;
+        this.highScore = this.loadHighScore();
+        this.wave = 1;
+        this.enemiesDefeated = 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          speed: 6.0,
+          angle: 0,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          shieldRechargeDelay: 0,
+          novaCharges: 3,
+          maxNovaCharges: 5,
+          fireCooldown: 0
+        };
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.novaShockwaves = [];
+        this.powerups = [];
+        this.boss = null;
+
+        this.keys = {};
+        this.mousePos = { x: this.width / 2, y: 0 };
+        this.isMouseDown = false;
+
+        this.initStars();
+      }
+
+      loadHighScore() {
+        try {
+          if (typeof localStorage !== 'undefined') {
+            const saved = localStorage.getItem('cyberquasar_best');
+            return saved ? parseInt(saved, 10) || 0 : 0;
+          }
+        } catch (e) {
+          // Fallback
+        }
+        return 0;
+      }
+
+      saveHighScore() {
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          try {
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem('cyberquasar_best', this.highScore.toString());
+            }
+          } catch (e) {
+            // Fallback
+          }
+        }
+      }
+
+      initStars() {
+        this.stars = [];
+        for (let i = 0; i < 60; i++) {
+          this.stars.push({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            size: Math.random() * 2 + 0.8,
+            alpha: Math.random() * 0.7 + 0.3,
+            speed: Math.random() * 0.4 + 0.1
+          });
+        }
+      }
+
+      start() {
+        this.started = true;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.wave = 1;
+        this.enemiesDefeated = 0;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.hp = this.player.maxHp;
+        this.player.shield = this.player.maxShield;
+        this.player.novaCharges = 3;
+
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.novaShockwaves = [];
+        this.powerups = [];
+        this.boss = null;
+
+        this.spawnWaveEnemies();
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      reset() {
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+        this.score = 0;
+        this.enemies = [];
+        this.projectiles = [];
+        this.enemyProjectiles = [];
+        this.particles = [];
+        this.novaShockwaves = [];
+        this.powerups = [];
+        this.boss = null;
+      }
+
+      setScore(val) {
+        this.score = Math.max(0, val);
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          this.saveHighScore();
+        }
+      }
+
+      movePlayer(dx, dy) {
+        this.player.x = clamp(this.player.x + dx, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y + dy, this.player.radius, this.height - this.player.radius);
+      }
+
+      rotatePlayerTo(targetX, targetY) {
+        this.player.angle = Math.atan2(targetY - this.player.y, targetX - this.player.x);
+      }
+
+      fireLaser() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.fireCooldown > 0) return;
+
+        this.player.fireCooldown = 10;
+        const speed = 12;
+        const cos = Math.cos(this.player.angle);
+        const sin = Math.sin(this.player.angle);
+
+        this.projectiles.push({
+          x: this.player.x + cos * (this.player.radius + 6),
+          y: this.player.y + sin * (this.player.radius + 6),
+          vx: cos * speed,
+          vy: sin * speed,
+          radius: 5,
+          damage: 35,
+          color: '#ec4899'
+        });
+
+        if (typeof AudioEngine !== 'undefined' && AudioEngine.playLaser) {
+          AudioEngine.playLaser();
+        }
+      }
+
+      triggerNova() {
+        if (!this.started || this.paused || this.over) return;
+        if (this.player.novaCharges <= 0) return;
+
+        this.player.novaCharges--;
+        this.novaShockwaves.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 380,
+          speed: 16,
+          damage: 150,
+          color: '#a855f7'
+        });
+
+        // Add visual particle burst
+        for (let i = 0; i < 36; i++) {
+          const angle = (Math.PI * 2 / 36) * i;
+          this.particles.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(angle) * (Math.random() * 6 + 4),
+            vy: Math.sin(angle) * (Math.random() * 6 + 4),
+            radius: Math.random() * 3 + 2,
+            color: i % 2 === 0 ? '#a855f7' : '#ec4899',
+            life: 25,
+            maxLife: 25
+          });
+        }
+
+        if (typeof AudioEngine !== 'undefined' && AudioEngine.playExplosion) {
+          AudioEngine.playExplosion();
+        }
+      }
+
+      spawnWaveEnemies() {
+        const count = 6 + (this.wave - 1) * 3;
+        const isBossWave = (this.wave % 5 === 0);
+
+        if (isBossWave) {
+          this.spawnBoss();
+        }
+
+        for (let i = 0; i < count; i++) {
+          this.spawnEnemy();
+        }
+      }
+
+      spawnEnemy() {
+        // Spawn around edges
+        let x, y;
+        if (Math.random() < 0.5) {
+          x = Math.random() < 0.5 ? -20 : this.width + 20;
+          y = Math.random() * this.height;
+        } else {
+          x = Math.random() * this.width;
+          y = Math.random() < 0.5 ? -20 : this.height + 20;
+        }
+
+        const types = ['drone', 'scout', 'pulsar', 'heavy'];
+        const typeWeights = [0.4, 0.3, 0.2, 0.1];
+        let rand = Math.random();
+        let selectedType = 'drone';
+        let acc = 0;
+        for (let i = 0; i < types.length; i++) {
+          acc += typeWeights[i];
+          if (rand <= acc) {
+            selectedType = types[i];
+            break;
+          }
+        }
+
+        let radius = 14;
+        let hp = 40;
+        let speed = 2.2;
+        let scoreValue = 100;
+        let color = '#00f2fe';
+
+        if (selectedType === 'scout') {
+          radius = 11;
+          hp = 25;
+          speed = 3.8;
+          scoreValue = 150;
+          color = '#38bdf8';
+        } else if (selectedType === 'pulsar') {
+          radius = 16;
+          hp = 60;
+          speed = 2.0;
+          scoreValue = 200;
+          color = '#f59e0b';
+        } else if (selectedType === 'heavy') {
+          radius = 22;
+          hp = 110;
+          speed = 1.4;
+          scoreValue = 300;
+          color = '#ef4444';
+        }
+
+        this.enemies.push({
+          id: Math.random().toString(36).substring(2, 9),
+          x,
+          y,
+          vx: 0,
+          vy: 0,
+          radius,
+          hp,
+          maxHp: hp,
+          speed,
+          scoreValue,
+          type: selectedType,
+          color,
+          shootCooldown: Math.floor(Math.random() * 60 + 60)
+        });
+      }
+
+      spawnBoss() {
+        this.boss = {
+          x: this.width / 2,
+          y: -80,
+          targetY: 130,
+          radius: 46,
+          hp: 800 + (this.wave / 5 - 1) * 400,
+          maxHp: 800 + (this.wave / 5 - 1) * 400,
+          type: 'QuasarOverlord',
+          speed: 1.8,
+          vx: 2,
+          vy: 1,
+          angle: 0,
+          shootCooldown: 40,
+          scoreValue: 2500
+        };
+      }
+
+      update(dt = 1) {
+        if (!this.started || this.paused || this.over) return;
+
+        // Player input movement
+        let dx = 0;
+        let dy = 0;
+        if (this.keys['KeyW'] || this.keys['ArrowUp']) dy -= 1;
+        if (this.keys['KeyS'] || this.keys['ArrowDown']) dy += 1;
+        if (this.keys['KeyA'] || this.keys['ArrowLeft']) dx -= 1;
+        if (this.keys['KeyD'] || this.keys['ArrowRight']) dx += 1;
+
+        if (dx !== 0 && dy !== 0) {
+          dx *= 0.7071;
+          dy *= 0.7071;
+        }
+
+        this.movePlayer(dx * this.player.speed, dy * this.player.speed);
+
+        // Aiming towards mouse
+        this.rotatePlayerTo(this.mousePos.x, this.mousePos.y);
+
+        // Mouse firing
+        if (this.isMouseDown) {
+          this.fireLaser();
+        }
+
+        // Cooldowns
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+
+        // Shield recharge
+        if (this.player.shieldRechargeDelay > 0) {
+          this.player.shieldRechargeDelay--;
+        } else if (this.player.shield < this.player.maxShield) {
+          this.player.shield = Math.min(this.player.maxShield, this.player.shield + 0.2);
+        }
+
+        // Update Projectiles
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+          const p = this.projectiles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < -20 || p.x > this.width + 20 || p.y < -20 || p.y > this.height + 20) {
+            this.projectiles.splice(i, 1);
+          }
+        }
+
+        // Update Enemy Projectiles
+        for (let i = this.enemyProjectiles.length - 1; i >= 0; i--) {
+          const ep = this.enemyProjectiles[i];
+          ep.x += ep.vx;
+          ep.y += ep.vy;
+
+          // Check collision with player
+          if (checkCircleCollision(ep.x, ep.y, ep.radius, this.player.x, this.player.y, this.player.radius)) {
+            this.damagePlayer(ep.damage || 15);
+            this.enemyProjectiles.splice(i, 1);
+            continue;
+          }
+
+          if (ep.x < -20 || ep.x > this.width + 20 || ep.y < -20 || ep.y > this.height + 20) {
+            this.enemyProjectiles.splice(i, 1);
+          }
+        }
+
+        // Update Nova Shockwaves
+        for (let i = this.novaShockwaves.length - 1; i >= 0; i--) {
+          const shock = this.novaShockwaves[i];
+          shock.radius += shock.speed;
+
+          // Damage enemies in path
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const e = this.enemies[j];
+            const dist = Math.hypot(e.x - shock.x, e.y - shock.y);
+            if (dist <= shock.radius && dist >= shock.radius - shock.speed - e.radius) {
+              e.hp -= shock.damage;
+              if (e.hp <= 0) {
+                this.destroyEnemy(j);
+              }
+            }
+          }
+
+          // Damage Boss
+          if (this.boss) {
+            const dist = Math.hypot(this.boss.x - shock.x, this.boss.y - shock.y);
+            if (dist <= shock.radius && dist >= shock.radius - shock.speed - this.boss.radius) {
+              this.boss.hp -= shock.damage;
+              if (this.boss.hp <= 0) {
+                this.destroyBoss();
+              }
+            }
+          }
+
+          if (shock.radius >= shock.maxRadius) {
+            this.novaShockwaves.splice(i, 1);
+          }
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+
+          // Move towards player
+          const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+          e.vx = Math.cos(angle) * e.speed;
+          e.vy = Math.sin(angle) * e.speed;
+
+          e.x += e.vx;
+          e.y += e.vy;
+
+          // Pulsar enemy shooting
+          if (e.type === 'pulsar' || e.type === 'heavy') {
+            e.shootCooldown--;
+            if (e.shootCooldown <= 0) {
+              e.shootCooldown = 90;
+              this.enemyProjectiles.push({
+                x: e.x,
+                y: e.y,
+                vx: Math.cos(angle) * 4.5,
+                vy: Math.sin(angle) * 4.5,
+                radius: 4,
+                damage: 12,
+                color: '#f59e0b'
+              });
+            }
+          }
+
+          // Collision with Player
+          if (checkCircleCollision(e.x, e.y, e.radius, this.player.x, this.player.y, this.player.radius)) {
+            this.damagePlayer(20);
+            this.destroyEnemy(i);
+            continue;
+          }
+
+          // Collision with Player Projectiles
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            if (checkCircleCollision(p.x, p.y, p.radius, e.x, e.y, e.radius)) {
+              e.hp -= p.damage;
+              this.createImpactParticles(p.x, p.y, p.color);
+              this.projectiles.splice(j, 1);
+
+              if (e.hp <= 0) {
+                this.destroyEnemy(i);
+                break;
+              }
+            }
+          }
+        }
+
+        // Update Boss
+        if (this.boss) {
+          if (this.boss.y < this.boss.targetY) {
+            this.boss.y += this.boss.speed;
+          } else {
+            this.boss.x += this.boss.vx;
+            if (this.boss.x < 80 || this.boss.x > this.width - 80) {
+              this.boss.vx *= -1;
+            }
+          }
+
+          this.boss.angle += 0.02;
+          this.boss.shootCooldown--;
+
+          if (this.boss.shootCooldown <= 0) {
+            this.boss.shootCooldown = 35;
+            // Radial boss projectiles
+            for (let b = 0; b < 8; b++) {
+              const bAngle = this.boss.angle + (Math.PI * 2 / 8) * b;
+              this.enemyProjectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(bAngle) * 5,
+                vy: Math.sin(bAngle) * 5,
+                radius: 6,
+                damage: 15,
+                color: '#a855f7'
+              });
+            }
+          }
+
+          // Check Boss collision with Player Projectiles
+          for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            const p = this.projectiles[j];
+            if (checkCircleCollision(p.x, p.y, p.radius, this.boss.x, this.boss.y, this.boss.radius)) {
+              this.boss.hp -= p.damage;
+              this.createImpactParticles(p.x, p.y, '#ec4899');
+              this.projectiles.splice(j, 1);
+
+              if (this.boss.hp <= 0) {
+                this.destroyBoss();
+                break;
+              }
+            }
+          }
+
+          // Check Boss collision with Player
+          if (this.boss && checkCircleCollision(this.boss.x, this.boss.y, this.boss.radius, this.player.x, this.player.y, this.player.radius)) {
+            this.damagePlayer(40);
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const pow = this.powerups[i];
+          pow.y += pow.dy || 1;
+
+          if (checkCircleCollision(pow.x, pow.y, pow.radius, this.player.x, this.player.y, this.player.radius)) {
+            if (pow.type === 'hp') {
+              this.player.hp = Math.min(this.player.maxHp, this.player.hp + 30);
+            } else if (pow.type === 'shield') {
+              this.player.shield = Math.min(this.player.maxShield, this.player.shield + 40);
+            } else if (pow.type === 'nova') {
+              this.player.novaCharges = Math.min(this.player.maxNovaCharges, this.player.novaCharges + 1);
+            }
+            this.powerups.splice(i, 1);
+            continue;
+          }
+
+          if (pow.y > this.height + 30) {
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Update Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          if (pt.life <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+
+        // Check wave progression
+        if (this.enemies.length === 0 && !this.boss) {
+          this.wave++;
+          this.spawnWaveEnemies();
+        }
+      }
+
+      damagePlayer(amount) {
+        this.player.shieldRechargeDelay = 120; // 2 sec delay
+
+        if (this.player.shield > 0) {
+          const absorbed = Math.min(this.player.shield, amount);
+          this.player.shield -= absorbed;
+          amount -= absorbed;
+        }
+
+        if (amount > 0) {
+          this.player.hp -= amount;
+          if (this.player.hp <= 0) {
+            this.player.hp = 0;
+            this.gameOver();
+          }
+        }
+      }
+
+      destroyEnemy(index) {
+        const e = this.enemies[index];
+        if (!e) return;
+
+        this.score += e.scoreValue;
+        this.enemiesDefeated++;
+        this.createExplosionParticles(e.x, e.y, e.color);
+
+        // Powerup drop chance
+        if (Math.random() < 0.15) {
+          const types = ['hp', 'shield', 'nova'];
+          const pType = types[Math.floor(Math.random() * types.length)];
+          this.powerups.push({
+            x: e.x,
+            y: e.y,
+            radius: 10,
+            type: pType,
+            dy: 1.2
+          });
+        }
+
+        this.enemies.splice(index, 1);
+        this.saveHighScore();
+      }
+
+      destroyBoss() {
+        if (!this.boss) return;
+        this.score += this.boss.scoreValue;
+        this.createExplosionParticles(this.boss.x, this.boss.y, '#a855f7', 40);
+
+        // Powerup rewards
+        this.powerups.push({ x: this.boss.x - 20, y: this.boss.y, radius: 12, type: 'hp', dy: 1 });
+        this.powerups.push({ x: this.boss.x + 20, y: this.boss.y, radius: 12, type: 'nova', dy: 1 });
+
+        this.boss = null;
+        this.saveHighScore();
+      }
+
+      createImpactParticles(x, y, color) {
+        for (let i = 0; i < 5; i++) {
+          this.particles.push({
+            x,
+            y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            radius: Math.random() * 2 + 1,
+            color: color || '#ec4899',
+            life: 12,
+            maxLife: 12
+          });
+        }
+      }
+
+      createExplosionParticles(x, y, color, count = 16) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const spd = Math.random() * 5 + 1;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd,
+            radius: Math.random() * 3 + 2,
+            color: color || '#00f2fe',
+            life: 20 + Math.floor(Math.random() * 10),
+            maxLife: 30
+          });
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        this.saveHighScore();
+        if (typeof onCyberQuasarGameOver === 'function') {
+          onCyberQuasarGameOver(this.score, this.highScore);
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.fillStyle = '#090314';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Draw Starfield
+        for (let s of this.stars) {
+          this.ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+          this.ctx.beginPath();
+          this.ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+
+        // Draw Nova Shockwaves
+        for (let shock of this.novaShockwaves) {
+          this.ctx.strokeStyle = shock.color;
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = shock.color;
+          this.ctx.beginPath();
+          this.ctx.arc(shock.x, shock.y, shock.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Powerups
+        for (let pow of this.powerups) {
+          this.ctx.fillStyle = pow.type === 'hp' ? '#22c55e' : pow.type === 'shield' ? '#3b82f6' : '#a855f7';
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = this.ctx.fillStyle;
+          this.ctx.beginPath();
+          this.ctx.arc(pow.x, pow.y, pow.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Player Projectiles
+        for (let p of this.projectiles) {
+          this.ctx.fillStyle = p.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Enemy Projectiles
+        for (let ep of this.enemyProjectiles) {
+          this.ctx.fillStyle = ep.color;
+          this.ctx.shadowBlur = 8;
+          this.ctx.shadowColor = ep.color;
+          this.ctx.beginPath();
+          this.ctx.arc(ep.x, ep.y, ep.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Enemies
+        for (let e of this.enemies) {
+          this.ctx.fillStyle = e.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = e.color;
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // HP bar
+          if (e.hp < e.maxHp) {
+            const barW = e.radius * 2;
+            this.ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+            this.ctx.fillRect(e.x - e.radius, e.y - e.radius - 8, barW, 4);
+            this.ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
+            this.ctx.fillRect(e.x - e.radius, e.y - e.radius - 8, barW * (e.hp / e.maxHp), 4);
+          }
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Boss
+        if (this.boss) {
+          this.ctx.fillStyle = '#a855f7';
+          this.ctx.shadowBlur = 25;
+          this.ctx.shadowColor = '#ec4899';
+          this.ctx.beginPath();
+          this.ctx.arc(this.boss.x, this.boss.y, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // Boss HP Bar
+          const bBarW = 200;
+          this.ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+          this.ctx.fillRect(this.width / 2 - bBarW / 2, 20, bBarW, 12);
+          this.ctx.fillStyle = '#ec4899';
+          this.ctx.fillRect(this.width / 2 - bBarW / 2, 20, bBarW * (this.boss.hp / this.boss.maxHp), 12);
+          this.ctx.strokeStyle = '#ffffff';
+          this.ctx.lineWidth = 1;
+          this.ctx.strokeRect(this.width / 2 - bBarW / 2, 20, bBarW, 12);
+          this.ctx.shadowBlur = 0;
+        }
+
+        // Draw Player
+        if (!this.over) {
+          this.ctx.save();
+          this.ctx.translate(this.player.x, this.player.y);
+          this.ctx.rotate(this.player.angle);
+
+          // Ship body
+          this.ctx.fillStyle = '#ec4899';
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = '#a855f7';
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.player.radius, 0);
+          this.ctx.lineTo(-this.player.radius, -this.player.radius * 0.7);
+          this.ctx.lineTo(-this.player.radius * 0.5, 0);
+          this.ctx.lineTo(-this.player.radius, this.player.radius * 0.7);
+          this.ctx.closePath();
+          this.ctx.fill();
+
+          // Shield aura
+          if (this.player.shield > 0) {
+            this.ctx.strokeStyle = `rgba(56, 189, 248, ${0.3 + (this.player.shield / this.player.maxShield) * 0.5})`;
+            this.ctx.lineWidth = 3;
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, this.player.radius + 4, 0, Math.PI * 2);
+            this.ctx.stroke();
+          }
+
+          this.ctx.restore();
+        }
+
+        // Draw Particles
+        for (let pt of this.particles) {
+          this.ctx.fillStyle = pt.color;
+          this.ctx.globalAlpha = pt.life / pt.maxLife;
+          this.ctx.beginPath();
+          this.ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.globalAlpha = 1.0;
+        }
+      }
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberQuasarEngine };
+    }
+
+    // DOM Binding & Initialization
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) return;
+
+        const engine = new CyberQuasarEngine(canvas);
+
+        const scoreDisp = document.getElementById('score-display');
+        const highDisp = document.getElementById('high-display');
+        const waveDisp = document.getElementById('wave-display');
+        const novaDisp = document.getElementById('nova-display');
+
+        const startScreen = document.getElementById('start-screen');
+        const gameoverScreen = document.getElementById('gameover-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const finalScoreDisp = document.getElementById('final-score');
+        const newHighNotice = document.getElementById('new-high-notice');
+
+        highDisp.textContent = engine.highScore;
+
+        window.onCyberQuasarGameOver = (score, highScore) => {
+          finalScoreDisp.textContent = score;
+          highDisp.textContent = highScore;
+          newHighNotice.style.display = (score >= highScore && score > 0) ? 'block' : 'none';
+          gameoverScreen.classList.remove('hidden');
+        };
+
+        // Event listeners
+        window.addEventListener('keydown', (e) => {
+          engine.keys[e.code] = true;
+
+          if (e.code === 'KeyE' || e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+            engine.triggerNova();
+          }
+          if (e.code === 'Space') {
+            engine.fireLaser();
+          }
+          if (e.code === 'KeyP') {
+            engine.togglePause();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          engine.keys[e.code] = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          engine.mousePos.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+          engine.mousePos.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+          if (e.button === 0) {
+            engine.isMouseDown = true;
+            engine.fireLaser();
+          } else if (e.button === 2) {
+            engine.triggerNova();
+          }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+          engine.isMouseDown = false;
+        });
+
+        canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        startBtn.addEventListener('click', () => {
+          startScreen.classList.add('hidden');
+          engine.start();
+        });
+
+        restartBtn.addEventListener('click', () => {
+          gameoverScreen.classList.add('hidden');
+          engine.start();
+        });
+
+        // Game Loop
+        function loop() {
+          engine.update();
+          engine.render();
+
+          scoreDisp.textContent = engine.score;
+          waveDisp.textContent = engine.wave;
+          novaDisp.textContent = '✨' + engine.player.novaCharges;
+
+          requestAnimationFrame(loop);
+        }
+
+        loop();
+      });
+    }
+  </script>
+</body>
+</html>
