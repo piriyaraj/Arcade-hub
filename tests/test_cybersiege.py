@@ -75,5 +75,5 @@ def test_cybersiege_node_unit_tests():
     test_path = os.path.join(repo_root, "tests", "cybersiege.test.js")
     assert os.path.isfile(test_path), "cybersiege.test.js must exist"
 
-    res = subprocess.run(["node", "--test", test_path], cwd=repo_root, capture_output=True, text=True)
+    res = subprocess.run(["node", "--test", test_path], cwd=repo_root, capture_output=True, text=True, timeout=30)
     assert res.returncode == 0, f"Node unit tests failed:\n{res.stdout}\n{res.stderr}"
