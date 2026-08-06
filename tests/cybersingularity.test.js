@@ -1,0 +1,233 @@
+// Node.js Unit Tests for Cyber Singularity Engine logic
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+// Mock browser globals
+global.window = global.window || {
+  addEventListener: () => {}
+};
+global.document = global.document || {
+  addEventListener: () => {},
+  DOMContentLoaded: 'DOMContentLoaded'
+};
+global.localStorage = {
+  store: {},
+  getItem(key) { return this.store[key] || null; },
+  setItem(key, val) { this.store[key] = val.toString(); },
+  removeItem(key) { delete this.store[key]; }
+};
+
+// Require shared utilities
+const { getBestScore, saveBestScore, checkCollision, checkCircleCollision, clamp, formatScore, randomRange } = require('../utils.js');
+global.getBestScore = getBestScore;
+global.saveBestScore = saveBestScore;
+global.checkCollision = checkCollision;
+global.checkCircleCollision = checkCircleCollision;
+global.clamp = clamp;
+global.formatScore = formatScore;
+global.randomRange = randomRange;
+
+// Extract CyberSingularityEngine from cybersingularity.html
+const htmlPath = path.join(__dirname, '..', 'cybersingularity.html');
+const fileContent = fs.readFileSync(htmlPath, 'utf8');
+
+const startIndex = fileContent.indexOf('class CyberSingularityEngine {');
+const endIndex = fileContent.indexOf('if (typeof module !== \'undefined\' && typeof module.exports !== \'undefined\')');
+if (startIndex === -1 || endIndex === -1) {
+  throw new Error('Could not find CyberSingularityEngine boundaries in cybersingularity.html');
+}
+
+const engineCode = fileContent.substring(startIndex, endIndex) + '\nmodule.exports = { CyberSingularityEngine };';
+const evalFn = new Function('module', 'exports', 'checkCollision', 'checkCircleCollision', 'getBestScore', 'saveBestScore', 'clamp', 'formatScore', 'randomRange', engineCode);
+const mockModule = { exports: {} };
+evalFn(mockModule, mockModule.exports, checkCollision, checkCircleCollision, getBestScore, saveBestScore, clamp, formatScore, randomRange);
+
+const CyberSingularityEngine = mockModule.exports.CyberSingularityEngine;
+
+function createMockCanvas() {
+  return {
+    width: 800,
+    height: 600,
+    getContext: () => ({
+      clearRect: () => {},
+      beginPath: () => {},
+      arc: () => {},
+      fill: () => {},
+      stroke: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      closePath: () => {},
+      fillRect: () => {},
+      strokeRect: () => {},
+      fillText: () => {},
+      save: () => {},
+      restore: () => {},
+      translate: () => {},
+      rotate: () => {},
+      setLineDash: () => {},
+      shadowColor: '',
+      shadowBlur: 0,
+      fillStyle: '',
+      strokeStyle: '',
+      lineWidth: 1,
+      globalAlpha: 1
+    })
+  };
+}
+
+test('CyberSingularityEngine - Initial state', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+
+  assert.strictEqual(engine.score, 0);
+  assert.strictEqual(engine.wave, 1);
+  assert.strictEqual(engine.started, false);
+  assert.strictEqual(engine.over, false);
+  assert.strictEqual(engine.paused, false);
+  assert.strictEqual(engine.player.hp, 100);
+  assert.strictEqual(engine.player.empCharges, 3);
+  assert.strictEqual(engine.player.singularityEnergy, 100);
+});
+
+test('CyberSingularityEngine - Lifecycle controls & state resets', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+
+  engine.start();
+  assert.strictEqual(engine.started, true);
+  assert.strictEqual(engine.over, false);
+  assert.ok(engine.enemies.length > 0, 'Enemies should spawn on start');
+
+  engine.togglePause();
+  assert.strictEqual(engine.paused, true);
+  engine.togglePause();
+  assert.strictEqual(engine.paused, false);
+
+  engine.gameOver();
+  assert.strictEqual(engine.over, true);
+  assert.strictEqual(engine.started, false);
+});
+
+test('CyberSingularityEngine - Player movement & boundary clamping', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  const startX = engine.player.x;
+  const startY = engine.player.y;
+
+  // Move right & down
+  engine.keys['KeyD'] = true;
+  engine.keys['KeyS'] = true;
+  engine.update();
+
+  assert.ok(engine.player.x > startX, 'Player should move right');
+  assert.ok(engine.player.y > startY, 'Player should move down');
+
+  // Extreme movement beyond bounds
+  engine.player.x = 9999;
+  engine.player.y = 9999;
+  engine.update();
+
+  assert.ok(engine.player.x <= canvas.width - engine.player.radius, 'Player X clamped');
+  assert.ok(engine.player.y <= canvas.height - engine.player.radius, 'Player Y clamped');
+});
+
+test('CyberSingularityEngine - Firing Singularity Plasma Pulse & Overcharge', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  engine.lastShotTime = 0; // force ready
+  engine.aimAt(400, 0);
+  engine.firePulse();
+
+  assert.strictEqual(engine.bullets.length, 1);
+  assert.strictEqual(engine.bullets[0].damage, 25);
+
+  // Overcharge triple firing
+  engine.player.overchargeTimer = 100;
+  engine.lastShotTime = 0;
+  engine.firePulse();
+
+  assert.strictEqual(engine.bullets.length, 4); // 1 previous + 3 triple stream
+});
+
+test('CyberSingularityEngine - EMP Shockwave Nova detonation', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  const initialEMPs = engine.player.empCharges;
+  engine.triggerEMP();
+
+  assert.strictEqual(engine.player.empCharges, initialEMPs - 1);
+  assert.strictEqual(engine.empNovas.length, 1);
+});
+
+test('CyberSingularityEngine - Event Horizon Gravity Well deployment', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  engine.player.singularityEnergy = 100;
+  engine.deployGravityWell();
+
+  assert.strictEqual(engine.player.singularityEnergy, 60);
+  assert.strictEqual(engine.gravityWells.length, 1);
+});
+
+test('CyberSingularityEngine - Boss spawning & defeat', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  engine.spawnBoss();
+  assert.ok(engine.boss !== null, 'Boss spawned');
+  assert.ok(engine.boss.hp > 0, 'Boss has HP');
+
+  // Defeat boss
+  engine.boss.hp = 0;
+  engine.bullets.push({
+    x: engine.boss.x,
+    y: engine.boss.y,
+    vx: 0, vy: 0,
+    radius: 10,
+    damage: 100,
+    life: 10
+  });
+
+  const prevScore = engine.score;
+  engine.update();
+
+  assert.strictEqual(engine.boss, null, 'Boss defeated');
+  assert.ok(engine.score > prevScore, 'Score increased after boss defeat');
+});
+
+test('CyberSingularityEngine - Game over state & high score persistence', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  engine.score = 3500;
+  engine.gameOver();
+
+  assert.strictEqual(engine.highScore, 3500);
+  assert.strictEqual(global.localStorage.store['cybersingularity_best'], '3500');
+});
+
+test('CyberSingularityEngine - Resilient to invalid inputs & NaN edge cases', () => {
+  const canvas = createMockCanvas();
+  const engine = new CyberSingularityEngine(canvas);
+  engine.start();
+
+  // Test aimAt with NaN / Infinity
+  engine.aimAt(NaN, Infinity);
+  assert.strictEqual(Number.isNaN(engine.player.aimAngle), false);
+
+  // Run update safely
+  engine.update();
+  assert.strictEqual(engine.over, false);
+});
