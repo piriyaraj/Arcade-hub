@@ -50,6 +50,7 @@ def test_html_script_and_css_links():
         "cyberecho.html",
         "cyberwarp.html",
         "cyberforge.html",
+        "cyberrift.html",
         "leaderboard.html"
     ]
 
