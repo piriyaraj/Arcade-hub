@@ -42,6 +42,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🌟 **[Cyber Nova](https://arcadehub.telekit.link/cybernova.html)** — High-octane 360° quantum starlight core defender arcade game with supernova plasma bursts, EMP star novas, kinetic gravity shields, and Supernova Titan Bosses.
 - 👻 **[Cyber Spectre](https://arcadehub.telekit.link/cyberspectre.html)** — High-octane 360° quantum stealth & spectral arena defender arcade game with spectral plasma bolts, ghost decoys, EMP spectral novas, and Spectre Apex Overlord Bosses.
 - 👤 **[Cyber Shadow](https://arcadehub.telekit.link/cybershadow.html)** — High-octane 360° quantum shadow ninja & astral void arena defender arcade game with astral shuriken bursts, shadow strike dashes, EMP shadow novas, and Shadow Emperor Bosses.
+- 🧬 **[Cyber Helix](https://arcadehub.telekit.link/cyberhelix.html)** — High-voltage twin-strand quantum matrix arena defender arcade game with dual helical plasma cannons, EMP resonance shocks, DNA decoys, and Helix Overlord Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.

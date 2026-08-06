@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Helix — Quantum Helical Matrix Defender</title>
+  <meta name="description" content="High-voltage twin-strand quantum matrix arena defender with dual helical plasma cannons, EMP resonance shocks, DNA decoys, and Helix Overlord Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberhelix.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Helix — Quantum Helical Matrix Defender">
+  <meta property="og:description" content="High-voltage twin-strand quantum matrix arena defender with dual helical plasma cannons, EMP resonance shocks, DNA decoys, and Helix Overlord Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberhelix.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Helix — Quantum Helical Matrix Defender">
+  <meta name="twitter:description" content="Engage dual helical plasma cannons, deploy DNA strand decoys, detonate EMP resonance shocks, and vanquish Helix Overlord Bosses.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Helix",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberhelix.html",
+    "description": "High-voltage twin-strand quantum matrix arena defender with dual helical plasma cannons, EMP resonance shocks, DNA decoys, and Helix Overlord Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #06b6d4, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #10b981;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #020b14;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 11, 20, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #10b981, #06b6d4, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .overlay-desc {
+      font-size: 1rem;
+      color: #94a3b8;
+      max-width: 500px;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .controls-hint {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1.5rem;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.75);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .game-title { font-size: 1.4rem; }
+      .stats-bar { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+      .overlay-title { font-size: 1.8rem; }
+      .controls-hint { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">🧬 Cyber Helix</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="score" class="stat-value">0</span></div>
+        <div class="stat-item">BEST: <span id="high-score" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="wave" class="stat-value">1</span></div>
+        <div class="stat-item">SHIELD: <span id="shield" class="stat-value">100%</span></div>
+        <div class="stat-item">EMP: <span id="emp" class="stat-value">⚡3</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="startScreen" class="overlay-screen">
+        <div class="overlay-title">CYBER HELIX</div>
+        <div class="overlay-desc">Defend the quantum matrix genome! Fire twin helical plasma beams, deploy DNA strand decoys, and detonate EMP resonance shocks to eliminate the bio-cyber swarms.</div>
+        <div class="controls-hint">
+          <div>🕹️ <b>WASD / Arrows</b> : Move Node</div>
+          <div>🎯 <b>Mouse / Pointer</b> : Aim Cannon</div>
+          <div>💥 <b>Space / Click</b> : Fire Helical Cannon</div>
+          <div>💨 <b>Shift / E</b> : Helical Phase Dash</div>
+          <div>⚡ <b>Q / Right-Click</b> : EMP Resonance Shock</div>
+          <div>⏸️ <b>P / Esc</b> : Pause Game</div>
+        </div>
+        <button id="startBtn" class="btn-action">INITIALIZE HELIX CORE</button>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameOverScreen" class="overlay-screen hidden">
+        <div class="overlay-title" style="background: linear-gradient(135deg, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MATRIX COLLAPSED</div>
+        <div class="overlay-desc">Your quantum strand was overwhelmed by the viral mutation swarm.</div>
+        <div style="font-size: 1.3rem; margin-bottom: 1.5rem;">
+          Final Score: <span id="finalScore" style="color: #10b981; font-weight: bold;">0</span>
+        </div>
+        <button id="restartBtn" class="btn-action">RESTART SEQUENCE</button>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pauseScreen" class="overlay-screen hidden">
+        <div class="overlay-title">SYSTEM PAUSED</div>
+        <div class="overlay-desc">Quantum helix frequency frozen. Press RESUME or P to unpause.</div>
+        <button id="resumeBtn" class="btn-action">RESUME DEFENSE</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class CyberHelixEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas ? canvas.getContext('2d') : null;
+        this.width = canvas ? canvas.width : 800;
+        this.height = canvas ? canvas.height : 600;
+
+        this.score = 0;
+        this.highScore = this.loadHighScore();
+        this.wave = 1;
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.reset();
+      }
+
+      reset() {
+        this.score = 0;
+        this.wave = 1;
+        this.started = false;
+        this.paused = false;
+        this.over = false;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 16,
+          speed: 5.5,
+          hp: 100,
+          maxHp: 100,
+          shield: 100,
+          maxShield: 100,
+          shieldRegenTimer: 0,
+          angle: 0,
+          fireCooldown: 0,
+          fireRate: 8,
+          empCharges: 3,
+          dashCooldown: 0,
+          dashActiveTimer: 0,
+          invulnerableTimer: 0,
+          powerupType: 'normal',
+          powerupTimer: 0,
+          helixPhase: 0
+        };
+
+        this.projectiles = [];
+        this.enemies = [];
+        this.particles = [];
+        this.explosions = [];
+        this.decoys = [];
+        this.boss = null;
+        this.spawnTimer = 0;
+        this.waveTimer = 0;
+      }
+
+      start() {
+        this.reset();
+        this.started = true;
+      }
+
+      pause() {
+        if (this.started && !this.over) {
+          this.paused = true;
+        }
+      }
+
+      resume() {
+        if (this.started && !this.over) {
+          this.paused = false;
+        }
+      }
+
+      togglePause() {
+        if (this.paused) this.resume();
+        else this.pause();
+      }
+
+      loadHighScore() {
+        if (typeof getBestScore === 'function') {
+          return getBestScore('cyberhelix') || 0;
+        }
+        if (typeof localStorage === 'undefined') return 0;
+        try {
+          const val = localStorage.getItem('cyberhelix_best');
+          return val ? parseInt(val, 10) || 0 : 0;
+        } catch (e) {
+          return 0;
+        }
+      }
+
+      saveHighScore() {
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberhelix', this.highScore);
+          }
+          if (typeof localStorage !== 'undefined') {
+            try {
+              localStorage.setItem('cyberhelix_best', this.highScore.toString());
+            } catch (e) {}
+          }
+        }
+      }
+
+      setScore(val) {
+        const parsed = parseInt(val, 10);
+        this.score = Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+        this.saveHighScore();
+      }
+
+      movePlayer(dx, dy) {
+        if (!Number.isFinite(dx)) dx = 0;
+        if (!Number.isFinite(dy)) dy = 0;
+
+        let spd = this.player.speed;
+        if (this.player.dashActiveTimer > 0) spd *= 2.2;
+
+        this.player.x = clamp(this.player.x + dx * spd, this.player.radius, this.width - this.player.radius);
+        this.player.y = clamp(this.player.y + dy * spd, this.player.radius, this.height - this.player.radius);
+      }
+
+      aimAt(tx, ty) {
+        if (!Number.isFinite(tx)) tx = this.player.x;
+        if (!Number.isFinite(ty)) ty = this.player.y;
+        this.player.angle = Math.atan2(ty - this.player.y, tx - this.player.x);
+      }
+
+      fireHelixBeam() {
+        if (this.player.fireCooldown > 0 || !this.started || this.paused || this.over) return false;
+
+        this.player.fireCooldown = this.player.fireRate;
+        const angle = this.player.angle;
+        const pSpeed = 11;
+
+        if (this.player.powerupType === 'quad_helix') {
+          // 4 strand helical pulse
+          for (let offset of [-0.3, -0.1, 0.1, 0.3]) {
+            const finalAngle = angle + offset;
+            this.projectiles.push({
+              x: this.player.x + Math.cos(angle) * 20,
+              y: this.player.y + Math.sin(angle) * 20,
+              vx: Math.cos(finalAngle) * pSpeed,
+              vy: Math.sin(finalAngle) * pSpeed,
+              radius: 6,
+              fromPlayer: true,
+              damage: 35,
+              color: '#06b6d4',
+              helixOffset: offset * 10
+            });
+          }
+        } else {
+          // Dual strand helix projectile pair
+          [-0.12, 0.12].forEach(offset => {
+            const finalAngle = angle + offset;
+            this.projectiles.push({
+              x: this.player.x + Math.cos(angle) * 20,
+              y: this.player.y + Math.sin(angle) * 20,
+              vx: Math.cos(finalAngle) * pSpeed,
+              vy: Math.sin(finalAngle) * pSpeed,
+              radius: 5,
+              fromPlayer: true,
+              damage: 40,
+              color: '#10b981',
+              helixOffset: offset * 10
+            });
+          });
+        }
+
+        if (typeof playSound === 'function') playSound('pew');
+        return true;
+      }
+
+      executeHelixDash() {
+        if (this.player.dashCooldown > 0 || !this.started || this.paused || this.over) return false;
+
+        this.player.dashCooldown = 180; // 3 sec
+        this.player.dashActiveTimer = 15;
+        this.player.invulnerableTimer = 35;
+
+        // Leave DNA helix decoy behind
+        this.decoys.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 18,
+          duration: 180, // 3 sec decoy attraction
+          hp: 80
+        });
+
+        if (typeof playSound === 'function') playSound('synth');
+        return true;
+      }
+
+      triggerEMP() {
+        if (this.player.empCharges <= 0 || !this.started || this.paused || this.over) return false;
+
+        this.player.empCharges--;
+        if (typeof playSound === 'function') playSound('laser');
+
+        // Shockwave clear
+        this.explosions.push({
+          x: this.player.x,
+          y: this.player.y,
+          radius: 10,
+          maxRadius: 320,
+          color: '#10b981'
+        });
+
+        // Destroy hostile projectiles
+        this.projectiles = this.projectiles.filter(p => p.fromPlayer);
+
+        // Damage all active enemies
+        this.enemies.forEach(e => {
+          e.hp -= 200;
+          if (e.hp <= 0) {
+            this.score += 25;
+            this.createExplosion(e.x, e.y, e.color, 12);
+          }
+        });
+        this.enemies = this.enemies.filter(e => e.hp > 0);
+
+        if (this.boss) {
+          this.boss.hp -= 300;
+          if (this.boss.hp <= 0) {
+            this.destroyBoss();
+          }
+        }
+
+        return true;
+      }
+
+      spawnBoss(waveNum) {
+        this.boss = {
+          x: this.width / 2,
+          y: 100,
+          radius: 40,
+          hp: 1200 + waveNum * 600,
+          maxHp: 1200 + waveNum * 600,
+          angle: 0,
+          color: '#8b5cf6',
+          attackTimer: 0,
+          name: `HELIX OVERLORD MK-${waveNum}`
+        };
+      }
+
+      destroyBoss() {
+        if (!this.boss) return;
+        this.createExplosion(this.boss.x, this.boss.y, '#8b5cf6', 40);
+        this.score += 1500;
+        this.boss = null;
+        if (typeof playSound === 'function') playSound('victory');
+      }
+
+      createExplosion(x, y, color, count = 10) {
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = randomRange(1.5, 5);
+          this.particles.push({
+            x, y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            life: 30,
+            maxLife: 30,
+            color: color || '#10b981',
+            radius: randomRange(2, 5)
+          });
+        }
+      }
+
+      gameOver() {
+        this.over = true;
+        this.started = false;
+        this.saveHighScore();
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.setGameScore) {
+          Leaderboard.setGameScore('cyberhelix', this.score);
+        }
+        if (typeof playSound === 'function') playSound('gameover');
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Timers
+        if (this.player.fireCooldown > 0) this.player.fireCooldown--;
+        if (this.player.dashCooldown > 0) this.player.dashCooldown--;
+        if (this.player.dashActiveTimer > 0) this.player.dashActiveTimer--;
+        if (this.player.invulnerableTimer > 0) this.player.invulnerableTimer--;
+        this.player.helixPhase += 0.1;
+
+        // Shield regen
+        if (this.player.shield < this.player.maxShield) {
+          this.player.shieldRegenTimer++;
+          if (this.player.shieldRegenTimer >= 60) {
+            this.player.shield = Math.min(this.player.maxShield, this.player.shield + 2);
+          }
+        }
+
+        // Decoys
+        this.decoys.forEach(d => d.duration--);
+        this.decoys = this.decoys.filter(d => d.duration > 0 && d.hp > 0);
+
+        // Spawn logic
+        this.spawnTimer++;
+        if (this.spawnTimer > Math.max(25, 90 - this.wave * 5) && !this.boss) {
+          this.spawnTimer = 0;
+          const side = Math.floor(Math.random() * 4);
+          let ex, ey;
+          if (side === 0) { ex = Math.random() * this.width; ey = -20; }
+          else if (side === 1) { ex = this.width + 20; ey = Math.random() * this.height; }
+          else if (side === 2) { ex = Math.random() * this.width; ey = this.height + 20; }
+          else { ex = -20; ey = Math.random() * this.height; }
+
+          const types = ['viral_drone', 'helix_mutant', 'pulse_seeker'];
+          const type = types[Math.floor(Math.random() * types.length)];
+          let hp = 30, spd = 2.5, rad = 14, col = '#ef4444';
+          if (type === 'helix_mutant') { hp = 60; spd = 1.8; rad = 18; col = '#06b6d4'; }
+          if (type === 'pulse_seeker') { hp = 25; spd = 3.6; rad = 12; col = '#f59e0b'; }
+
+          this.enemies.push({ x: ex, y: ey, hp, maxHp: hp, speed: spd, radius: rad, color: col, type });
+        }
+
+        // Spawn boss every 5 waves
+        this.waveTimer++;
+        if (this.waveTimer > 1200) { // ~20s wave escalation
+          this.waveTimer = 0;
+          this.wave++;
+          if (this.wave % 3 === 0 && !this.boss) {
+            this.spawnBoss(Math.floor(this.wave / 3));
+          }
+        }
+
+        // Update Projectiles
+        this.projectiles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+        });
+
+        // Filter out-of-bounds projectiles
+        this.projectiles = this.projectiles.filter(p =>
+          p.x >= -30 && p.x <= this.width + 30 && p.y >= -30 && p.y <= this.height + 30
+        );
+
+        // Target selection for enemies (decoy or player)
+        const target = (this.decoys.length > 0) ? this.decoys[0] : this.player;
+
+        // Update Enemies
+        this.enemies.forEach(e => {
+          const ang = Math.atan2(target.y - e.y, target.x - e.x);
+          e.x += Math.cos(ang) * e.speed;
+          e.y += Math.sin(ang) * e.speed;
+
+          // Seeker enemy shoot logic
+          if (e.type === 'helix_mutant' && Math.random() < 0.01) {
+            this.projectiles.push({
+              x: e.x, y: e.y,
+              vx: Math.cos(ang) * 5,
+              vy: Math.sin(ang) * 5,
+              radius: 5,
+              fromPlayer: false,
+              damage: 12,
+              color: '#ef4444'
+            });
+          }
+        });
+
+        // Update Boss
+        if (this.boss) {
+          this.boss.angle += 0.02;
+          this.boss.x = this.width / 2 + Math.sin(this.boss.angle) * 150;
+          this.boss.attackTimer++;
+
+          if (this.boss.attackTimer > 60) {
+            this.boss.attackTimer = 0;
+            // Boss orbital laser burst
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+              this.projectiles.push({
+                x: this.boss.x,
+                y: this.boss.y,
+                vx: Math.cos(a + this.boss.angle) * 4.5,
+                vy: Math.sin(a + this.boss.angle) * 4.5,
+                radius: 6,
+                fromPlayer: false,
+                damage: 18,
+                color: '#8b5cf6'
+              });
+            }
+          }
+        }
+
+        // Collisions: Player Projectiles vs Enemies
+        this.projectiles.forEach(p => {
+          if (!p.fromPlayer) return;
+
+          this.enemies.forEach(e => {
+            if (checkCircleCollision(p, e)) {
+              e.hp -= p.damage;
+              p.toDelete = true;
+              if (e.hp <= 0) {
+                e.toDelete = true;
+                this.score += 20;
+                this.createExplosion(e.x, e.y, e.color, 8);
+              }
+            }
+          });
+
+          if (this.boss && checkCircleCollision(p, this.boss)) {
+            this.boss.hp -= p.damage;
+            p.toDelete = true;
+            this.createExplosion(p.x, p.y, '#8b5cf6', 4);
+            if (this.boss.hp <= 0) {
+              this.destroyBoss();
+            }
+          }
+        });
+
+        this.projectiles = this.projectiles.filter(p => !p.toDelete);
+        this.enemies = this.enemies.filter(e => !e.toDelete);
+
+        // Collisions: Enemy Projectiles & Enemy bodies vs Player / Decoys
+        if (this.player.invulnerableTimer <= 0) {
+          this.enemies.forEach(e => {
+            if (checkCircleCollision(e, this.player)) {
+              this.damagePlayer(15);
+              e.toDelete = true;
+              this.createExplosion(e.x, e.y, e.color, 6);
+            }
+          });
+          this.enemies = this.enemies.filter(e => !e.toDelete);
+
+          this.projectiles.forEach(p => {
+            if (p.fromPlayer) return;
+            if (checkCircleCollision(p, this.player)) {
+              this.damagePlayer(p.damage);
+              p.toDelete = true;
+            }
+          });
+          this.projectiles = this.projectiles.filter(p => !p.toDelete);
+        }
+
+        // Explosions
+        this.explosions.forEach(exp => {
+          exp.radius += 12;
+        });
+        this.explosions = this.explosions.filter(exp => exp.radius < exp.maxRadius);
+
+        // Particles
+        this.particles.forEach(pt => {
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+        });
+        this.particles = this.particles.filter(pt => pt.life > 0);
+      }
+
+      damagePlayer(amount) {
+        this.player.shieldRegenTimer = 0;
+        if (this.player.shield >= amount) {
+          this.player.shield -= amount;
+        } else {
+          const rem = amount - this.player.shield;
+          this.player.shield = 0;
+          this.player.hp -= rem;
+        }
+
+        if (typeof playSound === 'function') playSound('explosion');
+
+        if (this.player.hp <= 0) {
+          this.player.hp = 0;
+          this.gameOver();
+        }
+      }
+
+      render() {
+        if (!this.ctx) return;
+
+        // Background
+        this.ctx.fillStyle = '#020b14';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Grid lines
+        this.ctx.strokeStyle = 'rgba(16, 185, 129, 0.06)';
+        this.ctx.lineWidth = 1;
+        for (let x = 0; x < this.width; x += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += 40) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        // Render Decoys
+        this.decoys.forEach(d => {
+          this.ctx.save();
+          this.ctx.strokeStyle = '#06b6d4';
+          this.ctx.lineWidth = 2;
+          this.ctx.setLineDash([4, 4]);
+          this.ctx.beginPath();
+          this.ctx.arc(d.x, d.y, d.radius + 6, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        });
+
+        // Render Player
+        if (this.started && !this.over) {
+          this.ctx.save();
+          this.ctx.translate(this.player.x, this.player.y);
+          this.ctx.rotate(this.player.angle);
+
+          // Player Glow
+          this.ctx.shadowColor = '#10b981';
+          this.ctx.shadowBlur = 15;
+
+          // Double Helix core hull
+          this.ctx.fillStyle = '#10b981';
+          this.ctx.beginPath();
+          this.ctx.arc(0, 0, this.player.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // Cannon barrels
+          this.ctx.fillStyle = '#06b6d4';
+          this.ctx.fillRect(8, -10, 14, 4);
+          this.ctx.fillRect(8, 6, 14, 4);
+
+          this.ctx.restore();
+        }
+
+        // Render Boss
+        if (this.boss) {
+          this.ctx.save();
+          this.ctx.translate(this.boss.x, this.boss.y);
+          this.ctx.shadowColor = '#8b5cf6';
+          this.ctx.shadowBlur = 25;
+          this.ctx.fillStyle = '#8b5cf6';
+          this.ctx.beginPath();
+          this.ctx.arc(0, 0, this.boss.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          // Health bar
+          this.ctx.restore();
+          const barW = 200, barH = 10;
+          const bx = (this.width - barW) / 2;
+          const by = 20;
+          this.ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          this.ctx.fillRect(bx, by, barW, barH);
+          this.ctx.fillStyle = '#8b5cf6';
+          this.ctx.fillRect(bx, by, barW * (this.boss.hp / this.boss.maxHp), barH);
+          this.ctx.strokeStyle = '#ffffff';
+          this.ctx.strokeRect(bx, by, barW, barH);
+        }
+
+        // Render Enemies
+        this.enemies.forEach(e => {
+          this.ctx.save();
+          this.ctx.shadowColor = e.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.fillStyle = e.color;
+          this.ctx.beginPath();
+          this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Render Projectiles
+        this.projectiles.forEach(p => {
+          this.ctx.save();
+          this.ctx.shadowColor = p.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.fillStyle = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+
+        // Render Shockwaves
+        this.explosions.forEach(exp => {
+          this.ctx.save();
+          this.ctx.strokeStyle = exp.color;
+          this.ctx.lineWidth = 3;
+          this.ctx.beginPath();
+          this.ctx.arc(exp.x, exp.y, exp.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        });
+
+        // Render Particles
+        this.particles.forEach(pt => {
+          this.ctx.save();
+          this.ctx.fillStyle = pt.color;
+          this.ctx.globalAlpha = pt.life / pt.maxLife;
+          this.ctx.beginPath();
+          this.ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+      }
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberHelixEngine };
+    }
+
+    // Browser binding initialization
+    if (typeof window !== 'undefined' && document.getElementById('gameCanvas')) {
+      const canvas = document.getElementById('gameCanvas');
+      const game = new CyberHelixEngine(canvas);
+
+      const scoreEl = document.getElementById('score');
+      const highScoreEl = document.getElementById('high-score');
+      const waveEl = document.getElementById('wave');
+      const shieldEl = document.getElementById('shield');
+      const empEl = document.getElementById('emp');
+
+      const startScreen = document.getElementById('startScreen');
+      const gameOverScreen = document.getElementById('gameOverScreen');
+      const pauseScreen = document.getElementById('pauseScreen');
+
+      const startBtn = document.getElementById('startBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const resumeBtn = document.getElementById('resumeBtn');
+      const finalScoreEl = document.getElementById('finalScore');
+
+      highScoreEl.textContent = game.highScore;
+
+      function updateUI() {
+        scoreEl.textContent = game.score;
+        highScoreEl.textContent = game.highScore;
+        waveEl.textContent = game.wave;
+        shieldEl.textContent = `${Math.ceil(game.player.shield)}%`;
+        empEl.textContent = `⚡${game.player.empCharges}`;
+      }
+
+      startBtn.addEventListener('click', () => {
+        startScreen.classList.add('hidden');
+        game.start();
+      });
+
+      restartBtn.addEventListener('click', () => {
+        gameOverScreen.classList.add('hidden');
+        game.start();
+      });
+
+      resumeBtn.addEventListener('click', () => {
+        pauseScreen.classList.add('hidden');
+        game.resume();
+      });
+
+      // Controls
+      const keys = {};
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+
+        if (e.code === 'KeyP' || e.code === 'Escape') {
+          if (game.started && !game.over) {
+            game.togglePause();
+            if (game.paused) pauseScreen.classList.remove('hidden');
+            else pauseScreen.classList.add('hidden');
+          }
+        }
+        if (e.code === 'KeyQ') game.triggerEMP();
+        if (e.code === 'ShiftLeft' || e.code === 'KeyE') game.executeHelixDash();
+      });
+
+      window.addEventListener('keyup', (e) => {
+        keys[e.code] = false;
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+        game.aimAt(mouseX, mouseY);
+      });
+
+      canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 0) game.fireHelixBeam();
+        if (e.button === 2) {
+          e.preventDefault();
+          game.triggerEMP();
+        }
+      });
+      canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Loop
+      function gameLoop() {
+        let dx = 0, dy = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) dy -= 1;
+        if (keys['KeyS'] || keys['ArrowDown']) dy += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) dx -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) dx += 1;
+        if (keys['Space']) game.fireHelixBeam();
+
+        if (dx !== 0 || dy !== 0) {
+          game.movePlayer(dx, dy);
+        }
+
+        game.update();
+        game.render();
+        updateUI();
+
+        if (game.over && !gameOverScreen.classList.contains('hidden') === false) {
+          finalScoreEl.textContent = game.score;
+          gameOverScreen.classList.remove('hidden');
+        }
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+  </script>
+</body>
+</html>
