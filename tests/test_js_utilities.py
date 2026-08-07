@@ -180,5 +180,26 @@ def test_js_cyberflux_utilities():
     assert result.returncode == 0, f"JS test cyberflux.test.js failed with code {result.returncode}"
 
 
+def test_js_cyberquasar_utilities():
+    """Runs the JavaScript Node.js unit tests for cyberquasar.test.js and asserts success."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "cyberquasar.test.js")
+
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True,
+        timeout=60
+    )
+
+    print("STDOUT:")
+    print(result.stdout)
+    print("STDERR:", file=sys.stderr)
+    print(result.stderr, file=sys.stderr)
+
+    assert result.returncode == 0, f"JS test cyberquasar.test.js failed with code {result.returncode}"
+
+
+
 
 
