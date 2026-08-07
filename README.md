@@ -56,6 +56,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Dynamo](https://arcadehub.telekit.link/cyberdynamo.html)** — High-octane 360° Kinetic Energy Generator & Orbital Plasma Arena Shooter with kinetic surge shockwaves, EMP pulses, hyper beams, and Dynamo Titan Dreadnought Bosses.
 - ⚡ **[Cyber Kinetic](https://arcadehub.telekit.link/cyberkinetic.html)** — High-octane 360° Kinetic Energy Absorption & Orbital Arena Defender game with EMP shockwaves, plasma pulse cannons, kinetic shield surge, and Titan Kinetic Bosses.
 - 🌀 **[Cyber Flux](https://arcadehub.telekit.link/cyberflux.html)** — High-octane 360° Flux-Magnetic Energy Matrix Defender game with EMP shockwaves, magnetic polarity switching, particle surges, and Flux-Overlord Dreadnought Bosses.
+- ⚡ **[Cyber Blitz](https://arcadehub.telekit.link/cyberblitz.html)** — High-octane 360° Tachyon Speed-Dash & Quantum Lightning Arcade Shooter with EMP Overload Pulses, Polarity Tachyon Shields, and Apex Blitz Core Overlords.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
