@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Quantum — Phase-Shift Quantum Core Defender</title>
+  <meta name="description" content="High-octane 360° phase-shifting quantum core arena shooter with plasma pulse cannons, phase dash evasion, tactical EMP novas, and Quantum Overlord Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberquantum.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Quantum — Phase-Shift Quantum Core Defender">
+  <meta property="og:description" content="High-octane 360° phase-shifting quantum core arena shooter with plasma pulse cannons, phase dash evasion, tactical EMP novas, and Quantum Overlord Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberquantum.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Quantum — Phase-Shift Quantum Core Defender">
+  <meta name="twitter:description" content="Master phase-shift quantum dash, deploy EMP novas, blast quantum wave swarms, and defeat Quantum Overlord Bosses in this futuristic arcade shooter.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Quantum",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberquantum.html",
+    "description": "High-octane 360° phase-shifting quantum core arena shooter with plasma pulse cannons, phase dash evasion, tactical EMP novas, and Quantum Overlord Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00f0ff, #8a2be2, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #00f0ff;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #060913;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 9, 19, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 10;
+    }
+
+    .overlay-screen.hidden {
+      display: none !important;
+    }
+
+    .overlay-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #00f0ff, #8a2be2, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    .overlay-subtitle {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #00f0ff, #8a2be2);
+      color: #ffffff;
+      border: none;
+      padding: 0.8rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    .controls-guide {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      text-align: left;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .guide-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .guide-key {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: 700;
+      color: #00f0ff;
+    }
+
+    .hud-bar {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .meter-container {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .meter-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .meter-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .meter-fill-hp {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #ef4444, #f43f5e);
+      transition: width 0.15s ease;
+    }
+
+    .meter-fill-energy {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #00f0ff, #8a2be2);
+      transition: width 0.15s ease;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #00f0ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <a href="index.html" class="back-link">&larr; Back to Arcade Hub</a>
+
+    <header class="game-header">
+      <h1 class="game-title">⚛️ Cyber Quantum</h1>
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span>Score:</span>
+          <span id="score-display" class="stat-value">0</span>
+        </div>
+        <div class="stat-item">
+          <span>Wave:</span>
+          <span id="wave-display" class="stat-value">1</span>
+        </div>
+        <div class="stat-item">
+          <span>Best:</span>
+          <span id="high-score-display" class="stat-value">0</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+      <!-- Start Overlay -->
+      <div id="start-overlay" class="overlay-screen">
+        <h2 class="overlay-title">CYBER QUANTUM</h2>
+        <p class="overlay-subtitle">Pilot the Phase-Shift Quantum Fighter! Evade target matrices with Quantum Phase Shift, blast enemy swarms with Quantum Pulses, and detonate EMP Novas to clear the arena.</p>
+        <button id="start-btn" class="btn-action">START QUANTUM MISSION</button>
+
+        <div class="controls-guide">
+          <div class="guide-item"><span class="guide-key">W A S D</span> / <span class="guide-key">Arrows</span> Move Fighter</div>
+          <div class="guide-item"><span class="guide-key">Mouse Left</span> Aim & Shoot</div>
+          <div class="guide-item"><span class="guide-key">Shift</span> / <span class="guide-key">Space</span> Phase Shift</div>
+          <div class="guide-item"><span class="guide-key">E</span> / <span class="guide-key">Right Click</span> EMP Nova</div>
+          <div class="guide-item"><span class="guide-key">P</span> Pause / Resume</div>
+        </div>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameover-overlay" class="overlay-screen hidden">
+        <h2 class="overlay-title">CORE DESTROYED</h2>
+        <p class="overlay-subtitle" id="gameover-stats">Final Score: 0 | Wave Reached: 1</p>
+        <button id="restart-btn" class="btn-action">REPLAY MISSION</button>
+      </div>
+    </div>
+
+    <div class="hud-bar">
+      <div class="meter-container">
+        <div class="meter-label">
+          <span>HULL INTEGRITY</span>
+          <span id="hp-text">100%</span>
+        </div>
+        <div class="meter-bar">
+          <div id="hp-fill" class="meter-fill-hp" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <div class="meter-container">
+        <div class="meter-label">
+          <span>QUANTUM ENERGY</span>
+          <span id="energy-text">100%</span>
+        </div>
+        <div class="meter-bar">
+          <div id="energy-fill" class="meter-fill-energy" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <div class="meter-container" style="max-width: 160px;">
+        <div class="meter-label">
+          <span>EMP NOVAS</span>
+          <span id="emp-text">3 / 3</span>
+        </div>
+        <div class="meter-bar">
+          <div id="emp-fill" class="meter-fill-energy" style="width: 100%; background: linear-gradient(90deg, #a855f7, #ec4899);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+class CyberQuantumEngine {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas ? canvas.getContext('2d') : null;
+    this.width = canvas ? canvas.width : 800;
+    this.height = canvas ? canvas.height : 600;
+
+    this.started = false;
+    this.paused = false;
+    this.over = false;
+
+    this.score = 0;
+    this.wave = 1;
+    this.highScore = 0;
+    if (typeof localStorage !== 'undefined') {
+      this.highScore = parseInt(localStorage.getItem('cyberquantum_best')) || 0;
+    }
+
+    this.player = {
+      x: this.width / 2,
+      y: this.height / 2,
+      radius: 16,
+      speed: 4.5,
+      hp: 100,
+      maxHp: 100,
+      quantumEnergy: 100,
+      maxQuantumEnergy: 100,
+      empCharges: 3,
+      isPhasing: false,
+      phaseTimer: 0
+    };
+
+    this.enemies = [];
+    this.bullets = [];
+    this.empNovas = [];
+    this.particles = [];
+    this.boss = null;
+    this.mousePos = { x: this.width / 2, y: 100 };
+    this.keys = {};
+
+    this.lastShootTime = 0;
+    this.shootInterval = 120;
+
+    this.bindEvents();
+    this.updateHUD();
+  }
+
+  bindEvents() {
+    if (!this.canvas) return;
+
+    window.addEventListener('keydown', (e) => {
+      this.keys[e.key.toLowerCase()] = true;
+      this.keys[e.code] = true;
+
+      if (e.key.toLowerCase() === 'p') {
+        this.togglePause();
+      }
+      if ((e.code === 'Space' || e.key === 'Shift') && this.started && !this.over) {
+        this.triggerPhaseShift();
+      }
+      if (e.key.toLowerCase() === 'e' && this.started && !this.over) {
+        this.triggerEMP();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      this.keys[e.key.toLowerCase()] = false;
+      this.keys[e.code] = false;
+    });
+
+    this.canvas.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      this.mousePos = {
+        x: (e.clientX - rect.left) * (this.width / rect.width),
+        y: (e.clientY - rect.top) * (this.height / rect.height)
+      };
+    });
+
+    this.canvas.addEventListener('mousedown', (e) => {
+      if (e.button === 0 && this.started && !this.over && !this.paused) {
+        this.shootQuantumPulse();
+      } else if (e.button === 2 && this.started && !this.over) {
+        e.preventDefault();
+        this.triggerEMP();
+      }
+    });
+
+    this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
+
+  start() {
+    this.started = true;
+    this.paused = false;
+    this.over = false;
+    this.score = 0;
+    this.wave = 1;
+
+    this.player = {
+      x: this.width / 2,
+      y: this.height / 2,
+      radius: 16,
+      speed: 4.5,
+      hp: 100,
+      maxHp: 100,
+      quantumEnergy: 100,
+      maxQuantumEnergy: 100,
+      empCharges: 3,
+      isPhasing: false,
+      phaseTimer: 0
+    };
+
+    this.enemies = [];
+    this.bullets = [];
+    this.empNovas = [];
+    this.particles = [];
+    this.boss = null;
+
+    this.spawnWave();
+    this.updateHUD();
+  }
+
+  spawnWave() {
+    this.enemies = [];
+    const count = 4 + this.wave * 3;
+    for (let i = 0; i < count; i++) {
+      let x, y;
+      if (Math.random() < 0.5) {
+        x = Math.random() < 0.5 ? -20 : this.width + 20;
+        y = Math.random() * this.height;
+      } else {
+        x = Math.random() * this.width;
+        y = Math.random() < 0.5 ? -20 : this.height + 20;
+      }
+
+      const type = Math.random() < 0.25 ? 'fast' : (Math.random() < 0.2 ? 'tank' : 'standard');
+      let hp = 30;
+      let speed = 2.2;
+      let radius = 14;
+      let color = '#ff007f';
+
+      if (type === 'fast') {
+        hp = 20;
+        speed = 3.8;
+        radius = 11;
+        color = '#00f0ff';
+      } else if (type === 'tank') {
+        hp = 80;
+        speed = 1.4;
+        radius = 22;
+        color = '#a855f7';
+      }
+
+      this.enemies.push({ x, y, hp, maxHp: hp, speed, radius, type, color });
+    }
+  }
+
+  triggerPhaseShift() {
+    if (this.player.quantumEnergy >= 20 && !this.player.isPhasing) {
+      this.player.isPhasing = true;
+      this.player.phaseTimer = 120;
+      this.player.quantumEnergy -= 20;
+      if (typeof playSound === 'function') playSound('powerup');
+      this.updateHUD();
+    }
+  }
+
+  triggerEMP() {
+    if (this.player.empCharges > 0) {
+      this.player.empCharges--;
+      this.empNovas.push({
+        x: this.player.x,
+        y: this.player.y,
+        radius: 10,
+        maxRadius: 350,
+        speed: 12
+      });
+      if (typeof playSound === 'function') playSound('explosion');
+      this.updateHUD();
+    }
+  }
+
+  shootQuantumPulse() {
+    const dx = this.mousePos.x - this.player.x;
+    const dy = this.mousePos.y - this.player.y;
+    const len = Math.hypot(dx, dy) || 1;
+
+    const speed = 10;
+    const vx = (dx / len) * speed;
+    const vy = (dy / len) * speed;
+
+    this.bullets.push({
+      x: this.player.x,
+      y: this.player.y,
+      vx,
+      vy,
+      radius: 5,
+      damage: 30,
+      color: '#00f0ff'
+    });
+
+    if (typeof playSound === 'function') playSound('laser');
+  }
+
+  togglePause() {
+    if (!this.started || this.over) return;
+    this.paused = !this.paused;
+  }
+
+  endGame() {
+    this.over = true;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('cyberquantum_best', this.highScore.toString());
+      }
+    }
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.saveScore) {
+      Leaderboard.saveScore('cyberquantum', this.score);
+    }
+    this.updateHUD();
+  }
+
+  update() {
+    if (!this.started || this.paused || this.over) return;
+
+    // Movement
+    let dx = 0, dy = 0;
+    if (this.keys['w'] || this.keys['arrowup']) dy -= 1;
+    if (this.keys['s'] || this.keys['arrowdown']) dy += 1;
+    if (this.keys['a'] || this.keys['arrowleft']) dx -= 1;
+    if (this.keys['d'] || this.keys['arrowright']) dx += 1;
+
+    if (dx !== 0 && dy !== 0) {
+      dx *= 0.7071;
+      dy *= 0.7071;
+    }
+
+    this.player.x += dx * this.player.speed;
+    this.player.y += dy * this.player.speed;
+
+    if (typeof clamp === 'function') {
+      this.player.x = clamp(this.player.x, this.player.radius, this.width - this.player.radius);
+      this.player.y = clamp(this.player.y, this.player.radius, this.height - this.player.radius);
+    } else {
+      this.player.x = Math.max(this.player.radius, Math.min(this.width - this.player.radius, this.player.x));
+      this.player.y = Math.max(this.player.radius, Math.min(this.height - this.player.radius, this.player.y));
+    }
+
+    // Phase shift timer & energy recharge
+    if (this.player.isPhasing) {
+      this.player.phaseTimer--;
+      if (this.player.phaseTimer <= 0) {
+        this.player.isPhasing = false;
+      }
+    } else if (this.player.quantumEnergy < this.player.maxQuantumEnergy) {
+      this.player.quantumEnergy = Math.min(this.player.maxQuantumEnergy, this.player.quantumEnergy + 0.15);
+    }
+
+    // Bullets update
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const b = this.bullets[i];
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x < -20 || b.x > this.width + 20 || b.y < -20 || b.y > this.height + 20) {
+        this.bullets.splice(i, 1);
+        continue;
+      }
+
+      // Check collision with enemies
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const e = this.enemies[j];
+        const dist = Math.hypot(b.x - e.x, b.y - e.y);
+        if (dist < b.radius + e.radius) {
+          e.hp -= b.damage;
+          this.bullets.splice(i, 1);
+
+          if (e.hp <= 0) {
+            this.score += e.type === 'tank' ? 250 : (e.type === 'fast' ? 150 : 100);
+            this.enemies.splice(j, 1);
+            if (typeof playSound === 'function') playSound('explosion');
+          }
+          break;
+        }
+      }
+    }
+
+    // EMP Novas update
+    for (let i = this.empNovas.length - 1; i >= 0; i--) {
+      const nova = this.empNovas[i];
+      nova.radius += nova.speed;
+
+      for (let j = this.enemies.length - 1; j >= 0; j--) {
+        const e = this.enemies[j];
+        const dist = Math.hypot(nova.x - e.x, nova.y - e.y);
+        if (dist < nova.radius + e.radius) {
+          e.hp -= 5;
+          if (e.hp <= 0) {
+            this.score += 100;
+            this.enemies.splice(j, 1);
+          }
+        }
+      }
+
+      if (nova.radius >= nova.maxRadius) {
+        this.empNovas.splice(i, 1);
+      }
+    }
+
+    // Enemies update & player collision
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const e = this.enemies[i];
+      const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+      e.x += Math.cos(angle) * e.speed;
+      e.y += Math.sin(angle) * e.speed;
+
+      if (!this.player.isPhasing) {
+        const dist = Math.hypot(this.player.x - e.x, this.player.y - e.y);
+        if (dist < this.player.radius + e.radius) {
+          this.player.hp -= 15;
+          this.enemies.splice(i, 1);
+          if (typeof playSound === 'function') playSound('hit');
+
+          if (this.player.hp <= 0) {
+            this.player.hp = 0;
+            this.endGame();
+          }
+          this.updateHUD();
+        }
+      }
+    }
+
+    // Check wave clear
+    if (this.enemies.length === 0) {
+      this.wave++;
+      this.score += 500;
+      this.spawnWave();
+    }
+
+    this.updateHUD();
+  }
+
+  draw() {
+    if (!this.ctx) return;
+
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    // Grid lines background
+    this.ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+    this.ctx.lineWidth = 1;
+    for (let x = 0; x < this.width; x += 40) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.height);
+      this.ctx.stroke();
+    }
+    for (let y = 0; y < this.height; y += 40) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.width, y);
+      this.ctx.stroke();
+    }
+
+    if (!this.started) return;
+
+    // EMP Novas
+    for (const nova of this.empNovas) {
+      this.ctx.beginPath();
+      this.ctx.arc(nova.x, nova.y, nova.radius, 0, Math.PI * 2);
+      this.ctx.strokeStyle = 'rgba(168, 85, 247, ' + (1 - nova.radius / nova.maxRadius) + ')';
+      this.ctx.lineWidth = 4;
+      this.ctx.stroke();
+    }
+
+    // Bullets
+    for (const b of this.bullets) {
+      this.ctx.beginPath();
+      this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      this.ctx.fillStyle = b.color;
+      this.ctx.shadowColor = b.color;
+      this.ctx.shadowBlur = 10;
+      this.ctx.fill();
+      this.ctx.shadowBlur = 0;
+    }
+
+    // Enemies
+    for (const e of this.enemies) {
+      this.ctx.beginPath();
+      this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+      this.ctx.fillStyle = e.color;
+      this.ctx.shadowColor = e.color;
+      this.ctx.shadowBlur = 12;
+      this.ctx.fill();
+      this.ctx.shadowBlur = 0;
+    }
+
+    // Player
+    if (!this.over) {
+      this.ctx.save();
+      this.ctx.translate(this.player.x, this.player.y);
+
+      const angle = Math.atan2(this.mousePos.y - this.player.y, this.mousePos.x - this.player.x);
+      this.ctx.rotate(angle);
+
+      if (this.player.isPhasing) {
+        this.ctx.globalAlpha = 0.5;
+        this.ctx.strokeStyle = '#00f0ff';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.player.radius + 6, 0, Math.PI * 2);
+        this.ctx.stroke();
+      }
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(18, 0);
+      this.ctx.lineTo(-12, -12);
+      this.ctx.lineTo(-6, 0);
+      this.ctx.lineTo(-12, 12);
+      this.ctx.closePath();
+
+      this.ctx.fillStyle = '#00f0ff';
+      this.ctx.shadowColor = '#00f0ff';
+      this.ctx.shadowBlur = 15;
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+  }
+
+  updateHUD() {
+    if (typeof document === 'undefined' || typeof document.getElementById !== 'function') return;
+
+    const scoreEl = document.getElementById('score-display');
+    const waveEl = document.getElementById('wave-display');
+    const highEl = document.getElementById('high-score-display');
+    const hpText = document.getElementById('hp-text');
+    const hpFill = document.getElementById('hp-fill');
+    const energyText = document.getElementById('energy-text');
+    const energyFill = document.getElementById('energy-fill');
+    const empText = document.getElementById('emp-text');
+    const empFill = document.getElementById('emp-fill');
+
+    if (scoreEl) scoreEl.textContent = this.score;
+    if (waveEl) waveEl.textContent = this.wave;
+    if (highEl) highEl.textContent = this.highScore;
+
+    if (hpText) hpText.textContent = `${Math.round(this.player.hp)}%`;
+    if (hpFill) hpFill.style.width = `${Math.max(0, this.player.hp)}%`;
+
+    if (energyText) energyText.textContent = `${Math.round(this.player.quantumEnergy)}%`;
+    if (energyFill) energyFill.style.width = `${Math.max(0, this.player.quantumEnergy)}%`;
+
+    if (empText) empText.textContent = `${this.player.empCharges} / 3`;
+    if (empFill) empFill.style.width = `${(this.player.empCharges / 3) * 100}%`;
+  }
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = { CyberQuantumEngine };
+}
+
+// DOM Setup
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('gameCanvas');
+    const engine = new CyberQuantumEngine(canvas);
+
+    const startOverlay = document.getElementById('start-overlay');
+    const gameoverOverlay = document.getElementById('gameover-overlay');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const gameoverStats = document.getElementById('gameover-stats');
+
+    startBtn.addEventListener('click', () => {
+      startOverlay.classList.add('hidden');
+      engine.start();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      gameoverOverlay.classList.add('hidden');
+      engine.start();
+    });
+
+    function loop() {
+      engine.update();
+      engine.draw();
+
+      if (engine.over && !gameoverOverlay.classList.contains('show-triggered')) {
+        gameoverOverlay.classList.remove('hidden');
+        gameoverOverlay.classList.add('show-triggered');
+        if (gameoverStats) {
+          gameoverStats.textContent = `Final Score: ${engine.score} | Wave Reached: ${engine.wave}`;
+        }
+      } else if (!engine.over) {
+        gameoverOverlay.classList.remove('show-triggered');
+      }
+
+      requestAnimationFrame(loop);
+    }
+    loop();
+  });
+}
+  </script>
+</body>
+</html>
