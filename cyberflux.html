@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Flux — 360° Flux-Magnetic Energy Matrix Defender</title>
+  <meta name="description" content="High-octane 360° Flux-Magnetic Energy Matrix Defender game with EMP shockwaves, magnetic polarity switching, particle surges, and Flux-Overlord Dreadnought Bosses.">
+  <link rel="canonical" href="https://arcadehub.telekit.link/cyberflux.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cyber Flux — 360° Flux-Magnetic Energy Matrix Defender">
+  <meta property="og:description" content="High-octane 360° Flux-Magnetic Energy Matrix Defender game with EMP shockwaves, magnetic polarity switching, particle surges, and Flux-Overlord Dreadnought Bosses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arcadehub.telekit.link/cyberflux.html">
+  <meta property="og:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyber Flux — 360° Flux-Magnetic Energy Matrix Defender">
+  <meta name="twitter:description" content="Master magnetic polarities, unleash EMP waves, and destroy Flux-Overlord Bosses in an orbital arena.">
+  <meta name="twitter:image" content="https://arcadehub.telekit.link/og-image.png">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cyber Flux",
+    "operatingSystem": "Browser",
+    "applicationCategory": "GameApplication",
+    "genre": "Arcade",
+    "url": "https://arcadehub.telekit.link/cyberflux.html",
+    "description": "High-octane 360° Flux-Magnetic Energy Matrix Defender game with EMP shockwaves, magnetic polarity switching, particle surges, and Flux-Overlord Dreadnought Bosses."
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/theme.css">
+  <script src="theme.js"></script>
+  <script src="input.js"></script>
+  <script src="utils.js"></script>
+  <script src="audio.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <style>
+    .game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00f2fe, #ff007f, #7928ca);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.2rem;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-value {
+      color: #00f2fe;
+      font-family: monospace;
+      font-size: 1.1rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      background: #030814;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 8, 20, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 0.8rem;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+    }
+
+    .overlay-desc {
+      max-width: 540px;
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #00f2fe, #ff007f);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.8rem 2.2rem;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
+    }
+
+    .controls-guide {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #00f2fe;
+    }
+
+    .hud-meters {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .meter-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      padding: 6px 12px;
+      border-radius: 8px;
+      width: 170px;
+    }
+
+    .meter-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 600;
+      margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .meter-bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .meter-bar-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: 4px;
+      transition: width 0.15s ease;
+    }
+
+    .hp-fill { background: linear-gradient(90deg, #ff416c, #8a2387); }
+    .emp-fill { background: linear-gradient(90deg, #00f2fe, #4facfe); }
+
+    .polarity-indicator {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .polarity-pos {
+      color: #00f2fe;
+      border-color: #00f2fe;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+    }
+
+    .polarity-neg {
+      color: #ff007f;
+      border-color: #ff007f;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+    }
+
+    .touch-controls {
+      display: none;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 800px;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .touch-controls { display: flex; }
+      .meter-box { width: 120px; }
+    }
+
+    .touch-btn {
+      flex: 1;
+      padding: 0.9rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      color: #ffffff;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">🌀 Cyber Flux</h1>
+      <div class="stats-bar">
+        <div class="stat-item">SCORE: <span id="score-val" class="stat-value">0</span></div>
+        <div class="stat-item">WAVE: <span id="wave-val" class="stat-value">1</span></div>
+        <div class="stat-item">BEST: <span id="best-val" class="stat-value">0</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <!-- HUD meters overlay -->
+      <div class="hud-meters">
+        <div class="meter-box">
+          <div class="meter-label">CORE MATRIX <span id="hp-text">100%</span></div>
+          <div class="meter-bar-bg"><div id="hp-bar" class="meter-bar-fill hp-fill"></div></div>
+        </div>
+
+        <div id="polarity-badge" class="polarity-indicator polarity-pos">POS POLARITY</div>
+
+        <div class="meter-box">
+          <div class="meter-label">EMP FLUX <span id="emp-text">100%</span></div>
+          <div class="meter-bar-bg"><div id="emp-bar" class="meter-bar-fill emp-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- Start Screen Overlay -->
+      <div id="start-screen" class="overlay-screen">
+        <h2 class="overlay-title">CYBER FLUX ARENA</h2>
+        <p class="overlay-desc">
+          Defend the central orbital grid against inverted flux anomalies. Switch magnetic polarities [<span class="key-badge">Q</span>] to match target energy types, discharge EMP shockwaves [<span class="key-badge">Shift</span>], and vanquish Flux Overlords!
+        </p>
+        <button id="start-btn" class="btn-action">INITIATE MATRIX</button>
+        <div class="controls-guide">
+          <div><span class="key-badge">WASD</span> / <span class="key-badge">Arrows</span> Move</div>
+          <div><span class="key-badge">Mouse</span> / <span class="key-badge">Space</span> Aim & Fire</div>
+          <div><span class="key-badge">Q</span> Polarity Swap</div>
+          <div><span class="key-badge">Shift</span> / <span class="key-badge">E</span> EMP Pulse</div>
+          <div><span class="key-badge">P</span> Pause</div>
+        </div>
+      </div>
+
+      <!-- Pause Screen Overlay -->
+      <div id="pause-screen" class="overlay-screen hidden">
+        <h2 class="overlay-title">MATRIX PAUSED</h2>
+        <p class="overlay-desc">Systems suspended. Recalibrating flux resonance parameters.</p>
+        <button id="resume-btn" class="btn-action">RESUME FLUX</button>
+      </div>
+
+      <!-- Game Over Screen Overlay -->
+      <div id="gameover-screen" class="overlay-screen hidden">
+        <h2 class="overlay-title" style="color: #ff007f;">MATRIX BREACHED</h2>
+        <p class="overlay-desc">
+          Final Score: <span id="final-score" style="color: #00f2fe; font-weight: 800; font-family: monospace;">0</span><br>
+          <span id="new-high-score" style="color: #4ade80; display: none; font-weight: 700; margin-top: 6px;">NEW HIGH SCORE RECORDED!</span>
+        </p>
+        <button id="restart-btn" class="btn-action">RE-ENGAGE MATRIX</button>
+      </div>
+
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div class="touch-controls">
+      <button id="touch-swap" class="touch-btn" style="border-color: #00f2fe;">POLARITY (Q)</button>
+      <button id="touch-fire" class="touch-btn">FIRE (Space)</button>
+      <button id="touch-emp" class="touch-btn" style="border-color: #ff007f;">EMP PULSE (Shift)</button>
+    </div>
+  </div>
+
+  <script>
+    class CyberFluxEngine {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.width = canvas.width;
+        this.height = canvas.height;
+
+        this.score = 0;
+        this.wave = 1;
+        this.started = false;
+        this.over = false;
+        this.paused = false;
+
+        this.highScore = typeof getBestScore === 'function' ? getBestScore('cyberflux_best', 'cyberflux') : 0;
+
+        this.player = {
+          x: this.width / 2,
+          y: this.height / 2,
+          radius: 18,
+          angle: 0,
+          hp: 100,
+          maxHp: 100,
+          empEnergy: 100,
+          empCharges: 3,
+          polarity: 'POS', // POS (Cyan) or NEG (Magenta)
+          triShotTimer: 0,
+          speed: 4.5
+        };
+
+        this.mousePos = { x: this.width / 2, y: 0 };
+        this.keysPressed = {};
+        this.bullets = [];
+        this.enemies = [];
+        this.particles = [];
+        this.empWaves = [];
+        this.powerups = [];
+        this.spawnTimer = 0;
+        this.spawnInterval = 90;
+      }
+
+      start() {
+        this.score = 0;
+        this.wave = 1;
+        this.started = true;
+        this.over = false;
+        this.paused = false;
+        this.spawnTimer = 0;
+        this.spawnInterval = 90;
+
+        this.player.x = this.width / 2;
+        this.player.y = this.height / 2;
+        this.player.hp = 100;
+        this.player.empEnergy = 100;
+        this.player.empCharges = 3;
+        this.player.polarity = 'POS';
+        this.player.triShotTimer = 0;
+
+        this.bullets = [];
+        this.enemies = [];
+        this.particles = [];
+        this.empWaves = [];
+        this.powerups = [];
+
+        this.spawnWaveEnemies();
+      }
+
+      spawnWaveEnemies() {
+        const count = 4 + this.wave * 2;
+        for (let i = 0; i < count; i++) {
+          this.spawnEnemy();
+        }
+      }
+
+      spawnEnemy() {
+        let x, y;
+        if (Math.random() < 0.5) {
+          x = Math.random() < 0.5 ? -20 : this.width + 20;
+          y = Math.random() * this.height;
+        } else {
+          x = Math.random() * this.width;
+          y = Math.random() < 0.5 ? -20 : this.height + 20;
+        }
+
+        const isBossWave = this.wave % 5 === 0 && this.enemies.filter(e => e.type === 'boss').length === 0;
+
+        if (isBossWave) {
+          this.enemies.push({
+            x: this.width / 2,
+            y: 80,
+            radius: 38,
+            hp: 300 + this.wave * 50,
+            maxHp: 300 + this.wave * 50,
+            speed: 1.2,
+            type: 'boss',
+            polarity: Math.random() < 0.5 ? 'POS' : 'NEG',
+            angle: 0,
+            shootTimer: 0
+          });
+          return;
+        }
+
+        const rand = Math.random();
+        let type = 'drone';
+        let radius = 14;
+        let hp = 20;
+        let speed = 2.2 + Math.random() * 0.8;
+
+        if (rand > 0.7) {
+          type = 'hunter';
+          radius = 18;
+          hp = 45;
+          speed = 3.0;
+        } else if (rand > 0.4) {
+          type = 'tank';
+          radius = 24;
+          hp = 80;
+          speed = 1.4;
+        }
+
+        const polarity = Math.random() < 0.5 ? 'POS' : 'NEG';
+
+        this.enemies.push({
+          x, y, radius, hp, maxHp: hp, speed, type, polarity,
+          vx: 0, vy: 0, shootTimer: 0
+        });
+      }
+
+      togglePolarity() {
+        this.player.polarity = this.player.polarity === 'POS' ? 'NEG' : 'POS';
+        if (typeof SoundManager !== 'undefined' && SoundManager.playPowerup) {
+          SoundManager.playPowerup();
+        }
+        this.createExplosion(this.player.x, this.player.y, this.player.polarity === 'POS' ? '#00f2fe' : '#ff007f', 12);
+      }
+
+      triggerEMP() {
+        if (this.player.empEnergy >= 40 || this.player.empCharges > 0) {
+          if (this.player.empCharges > 0) {
+            this.player.empCharges--;
+          } else {
+            this.player.empEnergy -= 40;
+          }
+
+          this.empWaves.push({
+            x: this.player.x,
+            y: this.player.y,
+            radius: 10,
+            maxRadius: 280,
+            speed: 12
+          });
+
+          if (typeof SoundManager !== 'undefined' && SoundManager.playEmp) {
+            SoundManager.playEmp();
+          }
+        }
+      }
+
+      shootBullet() {
+        const speed = 11;
+        const angle = this.player.angle;
+        const color = this.player.polarity === 'POS' ? '#00f2fe' : '#ff007f';
+
+        if (this.player.triShotTimer > 0) {
+          [-0.2, 0, 0.2].forEach(offset => {
+            const a = angle + offset;
+            this.bullets.push({
+              x: this.player.x + Math.cos(a) * 20,
+              y: this.player.y + Math.sin(a) * 20,
+              vx: Math.cos(a) * speed,
+              vy: Math.sin(a) * speed,
+              radius: 4,
+              polarity: this.player.polarity,
+              color: color
+            });
+          });
+        } else {
+          this.bullets.push({
+            x: this.player.x + Math.cos(angle) * 20,
+            y: this.player.y + Math.sin(angle) * 20,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 4,
+            polarity: this.player.polarity,
+            color: color
+          });
+        }
+
+        if (typeof SoundManager !== 'undefined' && SoundManager.playLaser) {
+          SoundManager.playLaser();
+        }
+      }
+
+      togglePause() {
+        if (!this.started || this.over) return;
+        this.paused = !this.paused;
+      }
+
+      endGame() {
+        this.over = true;
+        if (this.score > this.highScore) {
+          this.highScore = this.score;
+          if (typeof saveBestScore === 'function') {
+            saveBestScore('cyberflux_best', this.highScore);
+          }
+        }
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.setGameScore) {
+          Leaderboard.setGameScore('cyberflux', this.score);
+        }
+      }
+
+      createExplosion(x, y, color, count = 15) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1 + Math.random() * 5;
+          this.particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 2 + Math.random() * 3,
+            color,
+            alpha: 1,
+            life: 25 + Math.random() * 15
+          });
+        }
+      }
+
+      update() {
+        if (!this.started || this.paused || this.over) return;
+
+        // Player Movement
+        let dx = 0;
+        let dy = 0;
+
+        if (this.keysPressed['KeyW'] || this.keysPressed['ArrowUp']) dy -= 1;
+        if (this.keysPressed['KeyS'] || this.keysPressed['ArrowDown']) dy += 1;
+        if (this.keysPressed['KeyA'] || this.keysPressed['ArrowLeft']) dx -= 1;
+        if (this.keysPressed['KeyD'] || this.keysPressed['ArrowRight']) dx += 1;
+
+        if (dx !== 0 && dy !== 0) {
+          dx *= 0.7071;
+          dy *= 0.7071;
+        }
+
+        this.player.x = Math.max(25, Math.min(this.width - 25, this.player.x + dx * this.player.speed));
+        this.player.y = Math.max(25, Math.min(this.height - 25, this.player.y + dy * this.player.speed));
+
+        // Aim towards mouse
+        this.player.angle = Math.atan2(this.mousePos.y - this.player.y, this.mousePos.x - this.player.x);
+
+        // Recharge EMP Energy gradually
+        if (this.player.empEnergy < 100) {
+          this.player.empEnergy = Math.min(100, this.player.empEnergy + 0.15);
+        }
+
+        if (this.player.triShotTimer > 0) {
+          this.player.triShotTimer--;
+        }
+
+        // Spawn timer
+        this.spawnTimer++;
+        if (this.spawnTimer >= this.spawnInterval) {
+          this.spawnTimer = 0;
+          if (this.enemies.length < 12 + this.wave * 2) {
+            this.spawnEnemy();
+          }
+        }
+
+        // Update Bullets
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          const b = this.bullets[i];
+          b.x += b.vx;
+          b.y += b.vy;
+
+          if (b.x < 0 || b.x > this.width || b.y < 0 || b.y > this.height) {
+            this.bullets.splice(i, 1);
+          }
+        }
+
+        // Update EMP Waves
+        for (let i = this.empWaves.length - 1; i >= 0; i--) {
+          const w = this.empWaves[i];
+          w.radius += w.speed;
+
+          // Clear enemy bullets & hit enemies
+          for (let j = this.enemies.length - 1; j >= 0; j--) {
+            const enemy = this.enemies[j];
+            const dist = Math.hypot(enemy.x - w.x, enemy.y - w.y);
+            if (dist <= w.radius + enemy.radius) {
+              enemy.hp -= 15;
+              if (enemy.hp <= 0) {
+                this.score += enemy.type === 'boss' ? 500 : 50;
+                this.createExplosion(enemy.x, enemy.y, enemy.polarity === 'POS' ? '#00f2fe' : '#ff007f');
+                this.enemies.splice(j, 1);
+              }
+            }
+          }
+
+          if (w.radius >= w.maxRadius) {
+            this.empWaves.splice(i, 1);
+          }
+        }
+
+        // Update Enemies
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+          const e = this.enemies[i];
+          const angle = Math.atan2(this.player.y - e.y, this.player.x - e.x);
+
+          if (e.type === 'boss') {
+            e.angle += 0.02;
+            e.x += Math.sin(e.angle) * e.speed;
+          } else {
+            e.x += Math.cos(angle) * e.speed;
+            e.y += Math.sin(angle) * e.speed;
+          }
+
+          // Check player collision
+          const distToPlayer = Math.hypot(this.player.x - e.x, this.player.y - e.y);
+          if (distToPlayer < this.player.radius + e.radius) {
+            const isMatch = e.polarity === this.player.polarity;
+            const dmg = isMatch ? 8 : 22;
+            this.player.hp -= dmg;
+            this.createExplosion(e.x, e.y, '#ff416c', 10);
+
+            if (e.type !== 'boss') {
+              this.enemies.splice(i, 1);
+            }
+
+            if (typeof SoundManager !== 'undefined' && SoundManager.playExplosion) {
+              SoundManager.playExplosion();
+            }
+
+            if (this.player.hp <= 0) {
+              this.player.hp = 0;
+              this.endGame();
+            }
+            continue;
+          }
+
+          // Bullet Collisions
+          for (let j = this.bullets.length - 1; j >= 0; j--) {
+            const b = this.bullets[j];
+            const distToBullet = Math.hypot(b.x - e.x, b.y - e.y);
+
+            if (distToBullet < b.radius + e.radius) {
+              // Matching polarity deals double damage
+              const multiplier = b.polarity === e.polarity ? 2.2 : 1.0;
+              const dmg = 25 * multiplier;
+
+              e.hp -= dmg;
+              this.bullets.splice(j, 1);
+              this.createExplosion(b.x, b.y, b.color, 6);
+
+              if (e.hp <= 0) {
+                this.score += e.type === 'boss' ? 1000 : (e.type === 'tank' ? 120 : 60);
+                this.createExplosion(e.x, e.y, e.polarity === 'POS' ? '#00f2fe' : '#ff007f', 18);
+
+                if (Math.random() < 0.25) {
+                  this.powerups.push({
+                    x: e.x, y: e.y,
+                    type: Math.random() < 0.5 ? 'tri' : 'hp',
+                    radius: 10,
+                    life: 300
+                  });
+                }
+
+                this.enemies.splice(i, 1);
+                if (typeof SoundManager !== 'undefined' && SoundManager.playExplosion) {
+                  SoundManager.playExplosion();
+                }
+              }
+              break;
+            }
+          }
+        }
+
+        // Update Powerups
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+          const p = this.powerups[i];
+          p.life--;
+          const dist = Math.hypot(this.player.x - p.x, this.player.y - p.y);
+
+          if (dist < this.player.radius + p.radius) {
+            if (p.type === 'hp') {
+              this.player.hp = Math.min(100, this.player.hp + 30);
+            } else if (p.type === 'tri') {
+              this.player.triShotTimer = 350;
+            }
+            if (typeof SoundManager !== 'undefined' && SoundManager.playPowerup) {
+              SoundManager.playPowerup();
+            }
+            this.powerups.splice(i, 1);
+          } else if (p.life <= 0) {
+            this.powerups.splice(i, 1);
+          }
+        }
+
+        // Check Wave Completion
+        if (this.enemies.length === 0) {
+          this.wave++;
+          this.player.empEnergy = 100;
+          this.spawnWaveEnemies();
+        }
+
+        // Update Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const pt = this.particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.life--;
+          pt.alpha = pt.life / 40;
+
+          if (pt.life <= 0) {
+            this.particles.splice(i, 1);
+          }
+        }
+      }
+
+      draw() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Draw Matrix Grid lines
+        this.ctx.strokeStyle = 'rgba(0, 242, 254, 0.06)';
+        this.ctx.lineWidth = 1;
+        const gridSize = 40;
+        for (let x = 0; x < this.width; x += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(x, 0);
+          this.ctx.lineTo(x, this.height);
+          this.ctx.stroke();
+        }
+        for (let y = 0; y < this.height; y += gridSize) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, y);
+          this.ctx.lineTo(this.width, y);
+          this.ctx.stroke();
+        }
+
+        if (!this.started) return;
+
+        // Draw Particles
+        for (const pt of this.particles) {
+          this.ctx.save();
+          this.ctx.globalAlpha = pt.alpha;
+          this.ctx.fillStyle = pt.color;
+          this.ctx.beginPath();
+          this.ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Powerups
+        for (const p of this.powerups) {
+          this.ctx.save();
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = p.type === 'hp' ? '#4ade80' : '#facc15';
+          this.ctx.fillStyle = p.type === 'hp' ? '#4ade80' : '#facc15';
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw EMP Waves
+        for (const w of this.empWaves) {
+          this.ctx.save();
+          this.ctx.strokeStyle = '#00f2fe';
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowBlur = 15;
+          this.ctx.shadowColor = '#00f2fe';
+          this.ctx.beginPath();
+          this.ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+
+        // Draw Bullets
+        for (const b of this.bullets) {
+          this.ctx.save();
+          this.ctx.fillStyle = b.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = b.color;
+          this.ctx.beginPath();
+          this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        // Draw Enemies
+        for (const e of this.enemies) {
+          this.ctx.save();
+          const color = e.polarity === 'POS' ? '#00f2fe' : '#ff007f';
+          this.ctx.strokeStyle = color;
+          this.ctx.fillStyle = color;
+          this.ctx.shadowBlur = 12;
+          this.ctx.shadowColor = color;
+          this.ctx.lineWidth = 2;
+
+          if (e.type === 'boss') {
+            this.ctx.beginPath();
+            this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+            this.ctx.beginPath();
+            this.ctx.arc(e.x, e.y, e.radius * 0.5, 0, Math.PI * 2);
+            this.ctx.fill();
+          } else if (e.type === 'tank') {
+            this.ctx.fillRect(e.x - e.radius, e.y - e.radius, e.radius * 2, e.radius * 2);
+          } else {
+            this.ctx.beginPath();
+            this.ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+          }
+          this.ctx.restore();
+        }
+
+        // Draw Player Ship
+        this.ctx.save();
+        this.ctx.translate(this.player.x, this.player.y);
+        this.ctx.rotate(this.player.angle);
+
+        const playerColor = this.player.polarity === 'POS' ? '#00f2fe' : '#ff007f';
+        this.ctx.strokeStyle = playerColor;
+        this.ctx.fillStyle = playerColor;
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = playerColor;
+        this.ctx.lineWidth = 3;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(22, 0);
+        this.ctx.lineTo(-14, -14);
+        this.ctx.lineTo(-6, 0);
+        this.ctx.lineTo(-14, 14);
+        this.ctx.closePath();
+        this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.restore();
+      }
+    }
+
+    // Initialize Game Engine on DOM ready
+    if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('game-canvas');
+        if (!canvas) return;
+
+        const engine = new CyberFluxEngine(canvas);
+        const startScreen = document.getElementById('start-screen');
+        const pauseScreen = document.getElementById('pause-screen');
+        const gameoverScreen = document.getElementById('gameover-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const resumeBtn = document.getElementById('resume-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const touchSwap = document.getElementById('touch-swap');
+        const touchFire = document.getElementById('touch-fire');
+        const touchEmp = document.getElementById('touch-emp');
+
+        const scoreVal = document.getElementById('score-val');
+        const waveVal = document.getElementById('wave-val');
+        const bestVal = document.getElementById('best-val');
+        const hpBar = document.getElementById('hp-bar');
+        const hpText = document.getElementById('hp-text');
+        const empBar = document.getElementById('emp-bar');
+        const empText = document.getElementById('emp-text');
+        const polarityBadge = document.getElementById('polarity-badge');
+        const finalScore = document.getElementById('final-score');
+        const newHighScoreNotice = document.getElementById('new-high-score');
+
+        window.addEventListener('keydown', (e) => {
+          engine.keysPressed[e.code] = true;
+          if (e.code === 'KeyQ') {
+            engine.togglePolarity();
+          } else if (e.code === 'KeyP') {
+            engine.togglePause();
+          } else if (e.code === 'Space') {
+            if (engine.started && !engine.paused && !engine.over) {
+              engine.shootBullet();
+            }
+          } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight' || e.code === 'KeyE') {
+            if (engine.started && !engine.paused && !engine.over) {
+              engine.triggerEMP();
+            }
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          engine.keysPressed[e.code] = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          engine.mousePos.x = e.clientX - rect.left;
+          engine.mousePos.y = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('click', () => {
+          if (engine.started && !engine.paused && !engine.over) {
+            engine.shootBullet();
+          }
+        });
+
+        if (startBtn) {
+          startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        if (resumeBtn) {
+          resumeBtn.addEventListener('click', () => {
+            pauseScreen.classList.add('hidden');
+            engine.togglePause();
+          });
+        }
+
+        if (restartBtn) {
+          restartBtn.addEventListener('click', () => {
+            gameoverScreen.classList.add('hidden');
+            engine.start();
+          });
+        }
+
+        if (touchSwap) {
+          touchSwap.addEventListener('click', () => engine.togglePolarity());
+        }
+        if (touchFire) {
+          touchFire.addEventListener('click', () => {
+            if (engine.started && !engine.paused && !engine.over) engine.shootBullet();
+          });
+        }
+        if (touchEmp) {
+          touchEmp.addEventListener('click', () => {
+            if (engine.started && !engine.paused && !engine.over) engine.triggerEMP();
+          });
+        }
+
+        function updateHUD() {
+          if (scoreVal) scoreVal.textContent = typeof formatScore === 'function' ? formatScore(engine.score) : engine.score;
+          if (waveVal) waveVal.textContent = engine.wave;
+          if (bestVal) bestVal.textContent = typeof formatScore === 'function' ? formatScore(engine.highScore) : engine.highScore;
+          if (hpBar) hpBar.style.width = Math.max(0, engine.player.hp) + '%';
+          if (hpText) hpText.textContent = Math.max(0, Math.round(engine.player.hp)) + '%';
+          if (empBar) empBar.style.width = Math.min(100, engine.player.empEnergy) + '%';
+          if (empText) empText.textContent = Math.round(engine.player.empEnergy) + '%';
+
+          if (polarityBadge) {
+            if (engine.player.polarity === 'POS') {
+              polarityBadge.textContent = 'POS POLARITY';
+              polarityBadge.className = 'polarity-indicator polarity-pos';
+            } else {
+              polarityBadge.textContent = 'NEG POLARITY';
+              polarityBadge.className = 'polarity-indicator polarity-neg';
+            }
+          }
+        }
+
+        function gameLoop() {
+          engine.update();
+          engine.draw();
+          updateHUD();
+
+          if (engine.paused && pauseScreen.classList.contains('hidden')) {
+            pauseScreen.classList.remove('hidden');
+          } else if (!engine.paused && !pauseScreen.classList.contains('hidden')) {
+            pauseScreen.classList.add('hidden');
+          }
+
+          if (engine.over && gameoverScreen.classList.contains('hidden')) {
+            gameoverScreen.classList.remove('hidden');
+            if (finalScore) finalScore.textContent = typeof formatScore === 'function' ? formatScore(engine.score) : engine.score;
+            if (newHighScoreNotice) {
+              newHighScoreNotice.style.display = engine.score >= engine.highScore && engine.score > 0 ? 'block' : 'none';
+            }
+          }
+
+          requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+      });
+    }
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+      module.exports = { CyberFluxEngine };
+    }
+  </script>
+</body>
+</html>
