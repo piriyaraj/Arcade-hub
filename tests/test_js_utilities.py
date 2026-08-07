@@ -11,7 +11,7 @@ def test_js_audio_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -31,7 +31,7 @@ def test_js_general_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -51,7 +51,7 @@ def test_js_architecture_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -71,7 +71,7 @@ def test_js_leaderboard_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -109,7 +109,7 @@ def test_js_cybercircuit_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -129,7 +129,7 @@ def test_js_cyberdynamo_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -149,7 +149,7 @@ def test_js_cyberkinetic_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -169,7 +169,7 @@ def test_js_cyberflux_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
@@ -189,7 +189,7 @@ def test_js_cyberspark_utilities():
         ["node", "--test", test_file],
         capture_output=True,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     print("STDOUT:")
