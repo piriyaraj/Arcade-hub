@@ -200,6 +200,27 @@ def test_js_cyberspark_utilities():
     assert result.returncode == 0, f"JS test cyberspark.test.js failed with code {result.returncode}"
 
 
+def test_js_cybercascade_utilities():
+    """Runs the JavaScript Node.js unit tests for cybercascade.test.js and asserts success."""
+    tests_dir = os.path.dirname(os.path.abspath(__file__))
+    test_file = os.path.join(tests_dir, "cybercascade.test.js")
+
+    result = subprocess.run(
+        ["node", "--test", test_file],
+        capture_output=True,
+        text=True,
+        timeout=120
+    )
+
+    print("STDOUT:")
+    print(result.stdout)
+    print("STDERR:", file=sys.stderr)
+    print(result.stderr, file=sys.stderr)
+
+    assert result.returncode == 0, f"JS test cybercascade.test.js failed with code {result.returncode}"
+
+
+
 
 
 

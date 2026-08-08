@@ -74,6 +74,7 @@ def test_html_script_and_css_links():
         "cyberkinetic.html",
         "cyberflux.html",
         "cyberspark.html",
+        "cybercascade.html",
         "leaderboard.html"
     ]
 

@@ -12,6 +12,7 @@ List of all web arcade games in this repository with GitHub source code links, g
 | [Cyber Apex](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberapex.html) | High-octane orbital apex matrix defender arcade game with twin apex lasers, phase barrier decoys, EMP pulse novas, and Apex Titan Bosses. | 2026-08-06 |
 | [Cyber Blade](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberblade.html) | High-octane 360° cyber katana deflector & quantum blade slicer arena game | 2026-08-05 |
 | [Cyber Breaker](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberbreaker.html) | High-octane neon matrix brick breaker with EMP shockwaves & Boss Security Cores | 2026-08-05 |
+| [Cyber Cascade](https://github.com/piriyaraj/Arcade-hub/blob/main/cybercascade.html) | High-octane 360° Quantum Energy Cascade & Chain-Reaction Laser Arena Defender game with cascading energy blasts, EMP novastorms, kinetic shield overcharge, and Cascade Titan Bosses. | 2026-08-08 |
 | [Cyber Circuit](https://github.com/piriyaraj/Arcade-hub/blob/main/cybercircuit.html) | High-voltage matrix pulse routing & node overload arcade game | 2026-08-05 |
 | [Cyber Core](https://github.com/piriyaraj/Arcade-hub/blob/main/cybercore.html) | High-octane orbital cyber core defense & power grid relay arcade game with plasma discharge waves, EMP pulse surges, kinetic shield barriers, and Overlord Core Bosses. | 2026-08-06 |
 | [Cyber Dash](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberdash.html) | Fast-paced neon matrix lane dash arcade game | 2026-08-05 |
