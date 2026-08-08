@@ -58,6 +58,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Kinetic](https://arcadehub.telekit.link/cyberkinetic.html)** — High-octane 360° Kinetic Energy Absorption & Orbital Arena Defender game with EMP shockwaves, plasma pulse cannons, kinetic shield surge, and Titan Kinetic Bosses.
 - 🌀 **[Cyber Flux](https://arcadehub.telekit.link/cyberflux.html)** — High-octane 360° Flux-Magnetic Energy Matrix Defender game with EMP shockwaves, magnetic polarity switching, particle surges, and Flux-Overlord Dreadnought Bosses.
 - ⚡ **[Cyber Spark](https://arcadehub.telekit.link/cyberspark.html)** — High-octane plasma spark connector & electric mesh defender game with EMP shockwaves, plasma arcs, power overload mechanics, and Tesla Titan Bosses.
+- 🌌 **[Cyber Void](https://arcadehub.telekit.link/cybervoid.html)** — High-octane 360° Quantum Void Core & Dark-Matter Event Horizon Defender game with void singularity blasts, EMP phase-implosions, dark-matter shield barriers, and Void Architect Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
