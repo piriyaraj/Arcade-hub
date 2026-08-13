@@ -30,6 +30,7 @@ List of all web arcade games in this repository with GitHub source code links, g
 | [Cyber Kinetic](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberkinetic.html) | High-octane 360° Kinetic Energy Absorption & Orbital Arena Defender game with EMP shockwaves, plasma pulse cannons, kinetic shield surge, and Titan Kinetic Bosses. | 2026-08-07 |
 | [Cyber Matrix](https://github.com/piriyaraj/Arcade-hub/blob/main/cybermatrix.html) | High-octane phase-shifting quantum arena with dual-color laser bolts & Matrix Overlord Bosses | 2026-08-05 |
 | [Cyber Nexus](https://github.com/piriyaraj/Arcade-hub/blob/main/cybernexus.html) | Orbital quantum grid defender & firewall breach shooter | 2026-08-05 |
+| [Cyber Nebula](https://github.com/piriyaraj/Arcade-hub/blob/main/cybernebula.html) | High-octane 360° cosmic cloud core defender & stardust beam collector with nebula plasma storms, EMP novas, starlight kinetic barriers, and Nebula Dreadnought Bosses. | 2026-08-13 |
 | [Cyber Nova](https://github.com/piriyaraj/Arcade-hub/blob/main/cybernova.html) | High-octane 360° quantum starlight core defender arcade game | 2026-08-06 |
 | [Cyber Overdrive](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberoverdrive.html) | High-octane matrix arena shooter & reflex dodger with plasma cannons, EMP shockwaves & Dreadnought Boss cores | 2026-08-05 |
 | [Cyber Phantom](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberphantom.html) | High-octane 360° Quantum Stealth & Tactical Phase-Slicing Arena Fighter | 2026-08-05 |
