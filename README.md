@@ -60,6 +60,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - ⚡ **[Cyber Spark](https://arcadehub.telekit.link/cyberspark.html)** — High-octane plasma spark connector & electric mesh defender game with EMP shockwaves, plasma arcs, power overload mechanics, and Tesla Titan Bosses.
 - 🌌 **[Cyber Void](https://arcadehub.telekit.link/cybervoid.html)** — High-octane 360° Quantum Void Core & Dark-Matter Event Horizon Defender game with void singularity blasts, EMP phase-implosions, dark-matter shield barriers, and Void Architect Bosses.
 - 💫 **[Cyber Nebula](https://arcadehub.telekit.link/cybernebula.html)** — High-octane 360° cosmic cloud core defender & stardust beam collector with nebula plasma storms, EMP novas, starlight kinetic barriers, and Nebula Dreadnought Bosses.
+- 🌌 **[Cyber Aurora](https://arcadehub.telekit.link/cyberaurora.html)** — High-octane 360° Polar Quantum Aurora & Solar Wind Plasma Matrix Defender with spectral ribbon waves, EMP aurora novas, magnetic deflection shields, and Aurora Titan Dreadnought Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
