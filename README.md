@@ -1,5 +1,5 @@
 <!-- worker-execution-verification: verified -->
-<!-- last-cron-run: 2026-08-04 -->
+<!-- last-cron-run: 2026-08-16 -->
 # Arcade Game Portal
 Live on : https://arcadehub.telekit.link/
 A lightweight, framework-free browser arcade built using pure HTML, CSS, and vanilla JavaScript.
@@ -47,6 +47,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🤖 **[Cyber Titan](https://arcadehub.telekit.link/cybertitan.html)** — High-octane 360° orbital titan core defender arcade game with quad plasma cannons, hyper shields, EMP shockwaves, and Colossus Overlord Bosses.
 - 🌌 **[Cyber Zenith](https://arcadehub.telekit.link/cyberzenith.html)** — High-octane 360° apex quantum orbital star-fighter defender arcade game with plasma pulse cannons, EMP zenith shockwaves, barrier shields, and Zenith Overlord Bosses.
 - ⚛️ **[Cyber Quantum](https://arcadehub.telekit.link/cyberquantum.html)** — High-octane 360° phase-shifting quantum core arena shooter with plasma pulse cannons, phase dash evasion, tactical EMP novas, and Quantum Overlord Bosses.
+- ☄️ **[Cyber Quasar](https://arcadehub.telekit.link/cyberquasar.html)** — High-octane 360° relativistic jet & quantum accretion core defender arcade game with relativistic particle beams, quasar gravity pulse waves, EMP magnetic flares, accretion disk kinetic barriers, and Quasar Leviathan Dreadnought Bosses.
 - 🛡️ **[Cyber Vanguard](https://arcadehub.telekit.link/cybervanguard.html)** — High-octane 360° quantum fortress defender arcade game with plasma lance cannons, EMP vanguard shockwaves, Aegis barrier shields, and Vanguard Titan Bosses.
 - 🌒 **[Cyber Eclipse](https://arcadehub.telekit.link/cybereclipse.html)** — High-octane 360° quantum solar-lunar eclipse defender arcade game with dark-matter plasma cannons, eclipse phase shields, EMP eclipse novas, and Eclipse Titan Bosses.
 - 🌅 **[Cyber Horizon](https://arcadehub.telekit.link/cyberhorizon.html)** — High-octane synthwave 360° quantum horizon defender arcade game with tachyon plasma cannons, void phase shields, EMP solar novas, and Horizon Titan Bosses.
