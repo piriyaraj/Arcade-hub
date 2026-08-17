@@ -76,6 +76,7 @@ def test_html_script_and_css_links():
         "cyberspark.html",
         "cybervoid.html",
         "cybernebula.html",
+        "cybermirage.html",
         "leaderboard.html"
     ]
 
