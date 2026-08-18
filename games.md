@@ -10,6 +10,7 @@ List of all web arcade games in this repository with GitHub source code links, g
 | [Breakout](https://github.com/piriyaraj/Arcade-hub/blob/main/breakout.html) | Classic brick-destroying arcade game | 2026-08-05 |
 | [Cyber Aegis](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberaegis.html) | 360° orbital kinetic shield & plasma pulse arena defender | 2026-08-05 |
 | [Cyber Apex](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberapex.html) | High-octane orbital apex matrix defender arcade game with twin apex lasers, phase barrier decoys, EMP pulse novas, and Apex Titan Bosses. | 2026-08-06 |
+| [Cyber Bastion](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberbastion.html) | High-octane 360° Quantum Bastion Heavy Artillery & Fortress Defender with twin plasma railguns, deployable kinetic sentinel turrets, overcharged bastion shields, orbital EMP shockwaves, and Bastion Titan Siege Bosses. | 2026-08-18 |
 | [Cyber Blade](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberblade.html) | High-octane 360° cyber katana deflector & quantum blade slicer arena game | 2026-08-05 |
 | [Cyber Breaker](https://github.com/piriyaraj/Arcade-hub/blob/main/cyberbreaker.html) | High-octane neon matrix brick breaker with EMP shockwaves & Boss Security Cores | 2026-08-05 |
 | [Cyber Circuit](https://github.com/piriyaraj/Arcade-hub/blob/main/cybercircuit.html) | High-voltage matrix pulse routing & node overload arcade game | 2026-08-05 |
