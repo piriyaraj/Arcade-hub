@@ -65,6 +65,7 @@ const Leaderboard = {
     { id: 'cybervoid', name: 'Cyber Void', key: 'cybervoid_best', icon: '🌌' },
     { id: 'cybernebula', name: 'Cyber Nebula', key: 'cybernebula_best', icon: '💫' },
     { id: 'cybermirage', name: 'Cyber Mirage', key: 'cybermirage_best', icon: '🪞' },
+    { id: 'cyberbastion', name: 'Cyber Bastion', key: 'cyberbastion_best', icon: '🏰' },
     { id: 'minesweeper', name: 'Minesweeper', key: 'minesweeper_best', icon: '💣' }
   ],
 
