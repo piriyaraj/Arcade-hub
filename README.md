@@ -63,6 +63,7 @@ This repository is configured for **GitHub Pages**. `index.html` serves as the p
 - 🪞 **[Cyber Mirage](https://arcadehub.telekit.link/cybermirage.html)** — High-octane 360° Holo-Decoy Matrix & Laser Reflector Arena Defender with holographic clone decoys, phase-distortion mirror shields, EMP Mirage Novas, and Mirage Archon Bosses.
 - 🏰 **[Cyber Bastion](https://arcadehub.telekit.link/cyberbastion.html)** — High-octane 360° Quantum Bastion Heavy Artillery & Fortress Defender with twin plasma railguns, deployable kinetic sentinel turrets, overcharged bastion shields, orbital EMP shockwaves, and Bastion Titan Siege Bosses.
 - 🦅 **[Cyber Valkyrie](https://arcadehub.telekit.link/cybervalkyrie.html)** — High-octane 360° Quantum Valkyrie Aerial Strike & Laser Wing Arena Defender with dual photon wing-cannons, hypersonic dash evasion, tactical EMP valkyrie novas, kinetic barrier overcharge, and Valkyrie Titan Archon Bosses.
+- 🔥 **[Cyber Phoenix](https://arcadehub.telekit.link/cyberphoenix.html)** — High-octane 360° Solar Cyber Phoenix & Radiant Rebirth Arena Defender with twin solar photon beams, kinetic rebirth overcharge, inferno dash, EMP Solar Flare Novas, and Solar Phoenix Archon Bosses.
 - 💻 **[Flappy Byte](https://arcadehub.telekit.link/flappybyte.html)** — Fly a data microchip through cyber motherboard columns.
 - 🐤 **[Flappy Neon](https://arcadehub.telekit.link/flappybird.html)** — Classic flap-and-dodge mechanics in neon cyber style.
 - 🐸 **[Neon Crossing](https://arcadehub.telekit.link/frogger.html)** — Classic Frogger-style crossing game in retro neon style.
@@ -168,3 +169,4 @@ All game HTML files available in this repository:
 | [tetris.html](tetris.html) | Tetris — Classic falling block puzzle game |
 | [towerdefense.html](towerdefense.html) | Retro Tower Defense — Defend database cores against cyber viruses |
 | [cybernova.html](cybernova.html) | Cyber Nova — High-octane 360° quantum starlight core defender arcade game |
+| [cyberphoenix.html](cyberphoenix.html) | Cyber Phoenix — High-octane 360° Solar Cyber Phoenix & Radiant Rebirth Arena Defender |
