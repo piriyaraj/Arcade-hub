@@ -78,6 +78,7 @@ def test_html_script_and_css_links():
         "cybernebula.html",
         "cybermirage.html",
         "cyberbastion.html",
+        "cybervalkyrie.html",
         "leaderboard.html"
     ]
 
